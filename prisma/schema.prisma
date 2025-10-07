@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/prisma/prismaClient"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MEMBER // can view and edit tasks
+  OWNER // can manage members
+  ADMIN // can manage everything
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  BLOCKED // cannot proceed until something else happens
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  REMOVED
+}
+
+enum Tariff {
+  FREE
+  PRO
+}
+
+enum AuditActions {
+  CREATE
+  UPDATE
+  DELETE
+  INVITE_SENT
+  INVITE_ACCEPTED
+  TASK_STATUS_CHANGED
+  TASK_ASSIGNEE_CHANGED
+  PROJECT_RENAMED
+  LOGIN
+  LOGOUT
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String? @unique // email может быть null, т.к. пользователь может зарегистрироваться через соц. сеть
+  lastName  String?
+  firstName String?
+  image     String?
+
+  emailVerified DateTime?
+  password      String?
+
+  memberships Membership[]
+
+  tasksAssigned Task[] // задачи, назначенные мне
+
+  auditLogs AuditLog[] // действия пользователя для аудита
+
+  invitationsSent     Invitation[] @relation("InvitationsSent") // я отправил
+  invitationsReceived Invitation[] @relation("InvitationsReceived") // мне пришли
+
+  accounts Account[]
+  sessions Session[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  wasOnline DateTime?
+}
+
+model Membership {
+  id   Int  @id @default(autoincrement())
+  role Role @default(MEMBER)
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId Int
+
+  status MembershipStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, workspaceId]) // чтобы один и тот же пользователь не мог быть в одном и том же воркспейсе несколько раз
+  @@index([workspaceId])
+  @@index([userId])
+}
+
+model Project {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId Int
+
+  tasks Task[]
+
+  auditLogs AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([workspaceId, name]) // чтобы в одном воркспейсе не было двух проектов с одинаковым именем
+  @@index([workspaceId])
+}
+
+model Workspace {
+  id     Int    @id @default(autoincrement())
+  name   String
+  tariff Tariff @default(FREE)
+
+  memberships Membership[]
+
+  projects Project[]
+
+  invitations Invitation[]
+
+  auditLogs AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  dueDate     DateTime?
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int
+
+  assignee   User? @relation(fields: [assigneeId], references: [id], onDelete: SetNull) // исполнитель задачи
+  assigneeId Int? // nullable, т.к. задача может быть без исполнителя
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@index([status])
+  @@index([projectId, status, createdAt]) // для быстрого получения задач в проекте по статусу и дате создания
+  @@index([dueDate]) // для быстрого получения задач по дате дедлайна
+}
+
+model Invitation {
+  id               Int    @id @default(autoincrement())
+  invitedUserEmail String // email of the invited user
+  invitedRole      Role   @default(MEMBER)
+
+  inviter     User? @relation("InvitationsSent", fields: [inviterId], references: [id], onDelete: SetNull)
+  inviterId   Int?
+  invitedUser User? @relation("InvitationsReceived", fields: [invitedUserId], references: [id], onDelete: SetNull)
+  // onDelete: SetNull — если удалить пригласившего/приглашённого пользователя,
+  // факт инвайта остаётся (для аудита и возможности принять/посмотреть историю),
+  // а ссылка на удалённого пользователя обнуляется.
+
+  invitedUserId Int?
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId Int
+
+  status     InvitationStatus @default(PENDING)
+  token      String           @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([workspaceId, invitedUserEmail]) // чтобы один и тот же email не мог быть приглашен в один и тот же воркспейс несколько раз
+  @@index([workspaceId, status])
+  @@index([expiresAt])
+  @@index([invitedUserEmail])
+}
+
+// -------- Next Auth.js models ----------------
+
+// это модель которая соединяет пользователя с его аккаунтами в соц. сетях и т.д.
+model Account {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  provider          String
+  providerAccountId String // уникальный идентификатор аккаунта в конкретном провайдере
+
+  type String
+
+  access_token       String? @db.Text
+  expires_at         Int? // время в секундах, когда истекает access_token
+  token_type         String? // обычно "Bearer" для заголовка Authorization
+  scope              String? @db.Text // права доступа, которые были запрошены
+  id_token           String? @db.Text // иногда используется в OpenID Connect
+  refresh_token      String? @db.Text
+  //access+refresh дают доступ. Но access временный, а refresh постоянный. В случае если access истёк, можно использовать refresh чтобы получить новый access. А если истек и refresh, то нужно заново логиниться. 
+  session_state      String? @db.Text // иногда используется в OpenID Connect
+  oauth_token_secret String? // используется в OAuth 1.0a
+  oauth_token        String? // используется в OAuth 1.0a
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider, providerAccountId]) // чтобы один и тот же аккаунт не мог быть привязан к разным пользователям
+  @@unique([userId, provider]) // чтобы один и тот же пользователь не мог привязать один и тот же провайдер несколько раз
+  @@index([userId])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  expires      DateTime // когда сессия истекает (обычно через несколько дней). После этого нужно заново логиниться.
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  id         Int      @id @default(autoincrement())
+  identifier String // обычно email
+  token      String   @unique
+  expires    DateTime // когда токен истекает (обычно через несколько часов). После этого нужно заново запрашивать.
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([identifier, token]) // чтобы один и тот же токен не мог быть использован несколько раз
+}
+
+model AuditLog {
+  id     Int   @id @default(autoincrement())
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull) // пользователь, совершивший действие
+  userId Int?
+
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  workspaceId Int? // контекст где было изменение
+
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  projectId Int? // контекст где было изменение
+
+  action     AuditActions // описание действия, например "CREATED_TASK", "DELETED_PROJECT" и т.д.
+  entityType String // тип сущности, над которой было совершено действие, например "TASK", "PROJECT"
+  entityId   Int? // ID сущности, над которой было совершено действие (если применимо)
+  details    String?      @db.Text // дополнительные детали в формате JSON или просто текст
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([workspaceId, createdAt])
+  @@index([projectId, createdAt])
+  @@index([entityType, entityId, createdAt])
+}
