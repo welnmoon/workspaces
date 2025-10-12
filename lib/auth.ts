@@ -1,11 +1,11 @@
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions } from 'next-auth';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
 
@@ -31,7 +31,6 @@ const handler = NextAuth({
         const ok = await bcrypt.compare(credentials.password, user.password);
         if (!ok) return null;
 
-        // Верни минимально нужные поля
         return {
           id: String(user.id),
           email: user.email,
@@ -52,7 +51,12 @@ const handler = NextAuth({
       if (session.user && token.id) session.user.id = token.id;
       return session;
     },
+
+    async signIn({ user, account, profile }) {
+      return true;
+    },
   },
-});
+};
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

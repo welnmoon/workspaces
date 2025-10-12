@@ -50,9 +50,9 @@ enum AuditActions {
   LOGIN
   LOGOUT
 }
-
+// prisma migrate - 
 model User {
-  id        Int     @id @default(autoincrement())
+  id        String     @id @default(cuid())
   email     String? @unique // email может быть null, т.к. пользователь может зарегистрироваться через соц. сеть
   lastName  String?
   firstName String?
@@ -74,7 +74,7 @@ model User {
   sessions Session[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   wasOnline DateTime?
 }
 
@@ -83,7 +83,7 @@ model Membership {
   role Role @default(MEMBER)
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
+  userId String
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId Int
@@ -145,7 +145,7 @@ model Task {
   projectId Int
 
   assignee   User? @relation(fields: [assigneeId], references: [id], onDelete: SetNull) // исполнитель задачи
-  assigneeId Int? // nullable, т.к. задача может быть без исполнителя
+  assigneeId String? // nullable, т.к. задача может быть без исполнителя
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -163,13 +163,13 @@ model Invitation {
   invitedRole      Role   @default(MEMBER)
 
   inviter     User? @relation("InvitationsSent", fields: [inviterId], references: [id], onDelete: SetNull)
-  inviterId   Int?
+  inviterId   String?
   invitedUser User? @relation("InvitationsReceived", fields: [invitedUserId], references: [id], onDelete: SetNull)
   // onDelete: SetNull — если удалить пригласившего/приглашённого пользователя,
   // факт инвайта остаётся (для аудита и возможности принять/посмотреть историю),
   // а ссылка на удалённого пользователя обнуляется.
 
-  invitedUserId Int?
+  invitedUserId String?
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId Int
@@ -192,9 +192,9 @@ model Invitation {
 
 // это модель которая соединяет пользователя с его аккаунтами в соц. сетях и т.д.
 model Account {
-  id     Int  @id @default(autoincrement())
+  id     String     @id @default(cuid())
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
+  userId String
 
   provider          String
   providerAccountId String // уникальный идентификатор аккаунта в конкретном провайдере
@@ -221,10 +221,10 @@ model Account {
 }
 
 model Session {
-  id           Int      @id @default(autoincrement())
+  id           String     @id @default(cuid())
   sessionToken String   @unique
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       Int
+  userId       String
   expires      DateTime // когда сессия истекает (обычно через несколько дней). После этого нужно заново логиниться.
 
   createdAt DateTime @default(now())
@@ -234,7 +234,7 @@ model Session {
 }
 
 model VerificationToken {
-  id         Int      @id @default(autoincrement())
+  id         String     @id @default(cuid())
   identifier String // обычно email
   token      String   @unique
   expires    DateTime // когда токен истекает (обычно через несколько часов). После этого нужно заново запрашивать.
@@ -248,7 +248,7 @@ model VerificationToken {
 model AuditLog {
   id     Int   @id @default(autoincrement())
   user   User? @relation(fields: [userId], references: [id], onDelete: SetNull) // пользователь, совершивший действие
-  userId Int?
+  userId String     
 
   workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
   workspaceId Int? // контекст где было изменение

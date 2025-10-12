@@ -1,12 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{html,js}'],
+  content: [
+    './app/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './lib/**/*.{js,ts,jsx,tsx}',
+  ],
   theme: {
     extend: {
       colors: {
         primary: {
           50: '#f0f5ff',
-          100: '#d6e4ff',
+          100: '#d6e4ff', // применение
           500: '#2f54eb', // основной цвет бренда - кнопки, акценты, активные элементы
           600: '#1d39c4',
         },
