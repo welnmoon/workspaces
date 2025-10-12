@@ -4,9 +4,11 @@ import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma';
 import { PrismaAdapter } from '@auth/prisma-adapter';
+import customPrismaAdapter from './custom-prisma-adapter';
 
 export const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma),
+  adapter: customPrismaAdapter, // устраняем конфликт между prisma и next-auth создав кастомный адаптер
   session: { strategy: 'jwt' },
 
   providers: [
