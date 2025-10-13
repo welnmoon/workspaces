@@ -11,7 +11,7 @@ const AddAccountButton = ({ provider }: AddAccountButtonProps) => {
     <Button>
       <span>{providerName}</span>
       <img
-        src={provider === 'google' ? '/google.svg' : '/github.svg'}
+        src={`public/icons/${provider}-icon.svg`} // ${provider === 'google' ? '/icons/google.svg' : '/icons/github.svg'}
         alt={providerName}
       />
     </Button>

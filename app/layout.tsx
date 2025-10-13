@@ -3,9 +3,9 @@ import { Manrope } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import RootProviders from '@/components/Providers/root-providers';
-import Header from '@/components/header/header';
 import Container from '@/components/container';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
@@ -47,13 +47,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body className={`${satoshi.variable} ${manrope.variable}`}>
         <Container>
-          <Header session={session} />
-          <RootProviders>{children}</RootProviders>{' '}
+          <RootProviders session={session}>{children}</RootProviders>{' '}
         </Container>
       </body>
     </html>

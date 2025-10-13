@@ -28,10 +28,15 @@ export const authOptions: AuthOptions = {
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
-        if (!user || !user.password) return null;
+        if (!user || !user.password)
+          throw new Error(
+            'Вы регистрировались через внешний сервис. Пожалуйста, войдите через соответствующую кнопку.'
+          );
 
         const ok = await bcrypt.compare(credentials.password, user.password);
-        if (!ok) return null;
+        if (!ok) {
+          throw new Error('Неверный email или пароль');
+        }
 
         return {
           id: String(user.id),

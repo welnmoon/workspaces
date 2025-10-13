@@ -6,7 +6,7 @@ const WorknestLogotype = () => {
   return (
     <Link className="text-3xl" href={'/'}>
       <span className="logo-work text-primary-600 font-bold">WORK</span>
-      <span className="logo-nest text-primary-500">NEST</span>
+      <span className="logo-nest text-primary-500 italic ">NEST</span>
     </Link>
   );
 };

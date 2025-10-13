@@ -3,8 +3,7 @@
 import { Session } from 'next-auth';
 import WorknestLogotype from '../ui/worknest-logotype';
 import LogOutButton from '../buttons/auth/log-out-btn';
-import LoginButton from '../buttons/auth/login-btn';
-import RegisterButton from '../buttons/auth/register-btn.';
+import LinkButton from '../buttons/link-btn';
 
 const Header = ({ session }: { session: Session | null }) => {
   return (
@@ -13,8 +12,8 @@ const Header = ({ session }: { session: Session | null }) => {
       {session?.user && <LogOutButton />}
       {!session?.user && (
         <div className="flex gap-2">
-          <LoginButton />
-          <RegisterButton />
+          <LinkButton href="/login" text="Войти" />
+          <LinkButton href="/register" text="Регистрация" />
         </div>
       )}
     </header>

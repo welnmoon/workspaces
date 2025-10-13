@@ -1,14 +1,28 @@
 'use client';
 
-import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
+import { Loader2 } from 'lucide-react';
 
-const SubmitBtn = ({ isLoading }: { isLoading: boolean }) => {
-    
-  const { t } = useTranslation('buttons');
+const SubmitBtn = ({
+  isLoading,
+  text,
+}: {
+  isLoading: boolean;
+  text?: string;
+}) => {
   return (
-    <Button  className="cursor-pointer" type="submit" disabled={isLoading}>
-      {t('submit')}
+    <Button
+      className="cursor-pointer bg-primary-600 text-primary-50 hover:bg-primary-500"
+      type="submit"
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      ) : text ? (
+        text
+      ) : (
+        'Отправить'
+      )}
     </Button>
   );
 };

@@ -28,7 +28,7 @@ export default withAuth(
   },
   {
     // Куда слать НЕавторизованных, если они лезут в приватные разделы
-    pages: { signIn: '/login' },
+    pages: { signIn: '/login' }, // кидает на адрес /login?callbackUrl=/profile
 
     // Главный фильтр допуска
     callbacks: {
