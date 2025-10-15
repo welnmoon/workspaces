@@ -78,7 +78,7 @@ model User {
   wasOnline DateTime?
 }
 
-model Membership {
+model Membership { // Членство пользователя в воркспейсе
   id   Int  @id @default(autoincrement())
   role Role @default(MEMBER)
 

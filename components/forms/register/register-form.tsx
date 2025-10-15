@@ -66,7 +66,7 @@ const RegisterForm = () => {
             aria-label="Форма регистрации"
           >
             <fieldset
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-5"
               disabled={form.formState.isSubmitting}
             >
               <legend className="sr-only">Регистрация</legend>

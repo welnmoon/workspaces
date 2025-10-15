@@ -6,7 +6,7 @@ import { withAuth } from 'next-auth/middleware';
 const AUTH_PAGES = ['/login', '/register', '/not-auth'];
 
 // Приватные разделы (пускаем только с токеном)
-const PRIVATE_PREFIXES = ['/profile', '/settings', '/dashboard'];
+const PRIVATE_PREFIXES = ['/settings', '/dashboard'];
 // Если есть админка — раскомментируй:
 // const ADMIN_PREFIX = "/admin"
 

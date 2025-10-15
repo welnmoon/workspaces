@@ -1,22 +1,23 @@
-// app/(root)/profile/page.tsx
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 
 import UnAuth from '@/components/profile/un-auth';
 import AddAccounts from '@/components/profile/add-accounts';
 import { Heading } from '@/components/ui/heading';
+import { requireUser } from '@/helpers/require-user';
+import type { SessionUser } from '@/helpers/require-user';
 
 const ProfilePage = async () => {
   // 1. Проверяем сессию
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
+  let sessionUser: SessionUser;
+  try {
+    sessionUser = await requireUser();
+  } catch (error) {
     return <UnAuth />;
   }
 
   // 2. Загружаем данные пользователя и связанные аккаунты
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: sessionUser.id },
     include: { accounts: true },
   });
 

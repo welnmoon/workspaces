@@ -56,7 +56,7 @@ const LoginForm = () => {
         <div className="flex flex-col gap-4">
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onLoginSubmit)}>
-              <fieldset className="flex flex-col gap-4">
+              <fieldset className="flex flex-col gap-5">
                 <legend className="sr-only">Авторизация</legend>
                 <FormInput
                   name="email"
