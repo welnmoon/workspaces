@@ -28,7 +28,11 @@ export const authOptions: AuthOptions = {
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
-        if (!user || !user.password)
+        if (!user) {
+          throw new Error('Пользователь с таким email не найден');
+        }
+
+        if (!user.password)
           throw new Error(
             'Вы регистрировались через внешний сервис. Пожалуйста, войдите через соответствующую кнопку.'
           );

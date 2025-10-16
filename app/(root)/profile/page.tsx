@@ -7,7 +7,6 @@ import { requireUser } from '@/helpers/require-user';
 import type { SessionUser } from '@/helpers/require-user';
 
 const ProfilePage = async () => {
-  // 1. Проверяем сессию
   let sessionUser: SessionUser;
   try {
     sessionUser = await requireUser();
@@ -15,20 +14,22 @@ const ProfilePage = async () => {
     return <UnAuth />;
   }
 
-  // 2. Загружаем данные пользователя и связанные аккаунты
   const user = await prisma.user.findUnique({
     where: { id: sessionUser.id },
-    include: { accounts: true },
+    include: {
+      accounts: true,
+      memberships: {
+        include: { workspace: true },
+      },
+    },
   });
 
   if (!user) {
     return <UnAuth />;
   }
 
-  // 3. Список провайдеров (Google, GitHub и т.д.)
   const accountProviders = user.accounts.map((a) => a.provider);
 
-  // 4. Отрисовка страницы
   return (
     <>
       <header>
@@ -62,6 +63,11 @@ const ProfilePage = async () => {
           )}
 
           <AddAccounts accountProviders={accountProviders} />
+        </section>
+
+        <section>
+          <Heading level={2}>Ваши Workspace:</Heading>
+          {user.memberships.map((m) => m.workspace.name)}
         </section>
       </main>
     </>
