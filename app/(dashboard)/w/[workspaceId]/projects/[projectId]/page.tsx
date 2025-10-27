@@ -1,3 +1,4 @@
+import CreateTaskForm from '@/components/forms/task/create-task-form';
 import NotFound from '@/components/not-found';
 import ProjectComponent from '@/components/projects/project';
 import { requireUser } from '@/helpers/require-user';
@@ -13,6 +14,9 @@ const ProjectPage = async ({
   const project = await prisma.project.findUnique({
     where: { id: Number(params.projectId) },
   });
+  if (!project) {
+    return <NotFound text="Project" />;
+  }
   const tasks = await getProjectTasks({
     projectId: Number(params.projectId),
   });
@@ -23,6 +27,10 @@ const ProjectPage = async ({
       {project && <ProjectComponent project={project} />}
       {tasks.length === 0 && <div>No tasks found</div>}
       {tasks.map((t) => t.title)}
+      <CreateTaskForm
+        projectId={project?.id}
+        workspaceId={Number(params.workspaceId)}
+      />
     </main>
   );
 };

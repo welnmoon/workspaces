@@ -1,5 +1,5 @@
 import Divider from '@/components/divider';
-import CreateProjectForm from '@/components/projects/create-project-form';
+import CreateProjectForm from '@/components/forms/project/create-project-form';
 import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';

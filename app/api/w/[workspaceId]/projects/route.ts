@@ -5,11 +5,13 @@ import { createProjectFormSchema } from '@/schemas/projects/create-project-form-
 import { Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
+// POST /api/w/[workspaceId]/projects
+// Create a new project in the workspace
 export async function POST(
   req: NextRequest,
   { params }: { params: { workspaceId: string } }
 ) {
-  const { workspaceId } = params;
+  const { workspaceId } =  params;
   const body: unknown = await req.json().catch(() => {});
   const res = createProjectFormSchema.safeParse(body);
   if (!res.success) return badRequest(res.error.message);
