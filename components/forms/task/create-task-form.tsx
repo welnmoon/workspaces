@@ -9,7 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from '../form-input';
 import SubmitBtn from '../../buttons/submit-btn';
 import toast from 'react-hot-toast';
-import { apiRoutes } from '@/lib/api-routes';
+import { apiRoutes } from '@/lib/routes/api-routes';
 import { DueDateField } from './due-date-field';
 import { useRouter } from 'next/navigation';
 

@@ -58,6 +58,34 @@ p,
   font-weight: 700;
 }
 
+/*------------------------------------------------------------------------------*/
+/* Underline                        */
+/*------------------------------------------------------------------------------*/
+.underline-anim {
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+  color: inherit;
+  font-size: 20px;
+}
+
+.underline-anim::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #000000;
+  transform: scaleX(0);
+  transform-origin: left; /* 👉 линия начинается слева */
+  transition: transform 0.3s ease;
+}
+
+.underline-anim:hover::after {
+  transform: scaleX(1);
+}
+
 /* Можно inline или обычным блоком @theme — разницы для этого случая нет */
 @theme inline {
   /* базовые оттенки бренда */

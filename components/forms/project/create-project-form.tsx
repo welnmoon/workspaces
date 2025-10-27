@@ -10,7 +10,7 @@ import FormInput from '../form-input';
 import SubmitBtn from '../../buttons/submit-btn';
 import { createProject } from '@/lib/createProject';
 import toast from 'react-hot-toast';
-import { apiRoutes } from '@/lib/api-routes';
+import { apiRoutes } from '@/lib/routes/api-routes';
 
 const CreateProjectForm = ({ workspaceId }: { workspaceId: number }) => {
   const form = useForm<CreateProjectFormValues>({
@@ -40,21 +40,20 @@ const CreateProjectForm = ({ workspaceId }: { workspaceId: number }) => {
       <form onSubmit={form.handleSubmit(onFormSubmit)}>
         <fieldset>
           <legend className="sr-only">Create Project Form</legend>
-          <FormInput
-            name="name"
-            label="Project Name"
-            placeholder="Project name"
-            required
-          />
-          <FormInput
-            name="description"
-            label="Description"
-            placeholder="Description"
-          />
-          <SubmitBtn
-            text="Create Project"
-            isLoading={form.formState.isSubmitting}
-          />
+          <div className="flex flex-col gap-2 mb-4">
+            <FormInput
+              name="name"
+              label="Project Name"
+              placeholder="Project name"
+              required
+            />
+            <FormInput
+              name="description"
+              label="Description"
+              placeholder="Description"
+            />
+          </div>
+          <SubmitBtn text="Создать" isLoading={form.formState.isSubmitting} />
         </fieldset>
       </form>
     </FormProvider>

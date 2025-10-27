@@ -1,5 +1,7 @@
+import CreateProjectDialog from '@/components/dialogs/create-project-dialog';
 import Divider from '@/components/divider';
 import CreateProjectForm from '@/components/forms/project/create-project-form';
+import ProjectCard from '@/components/projects/project-card';
 import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
@@ -31,14 +33,22 @@ const WorkspacePage = async ({
     <main className="flex flex-col gap-4">
       <Heading>Workspace {workspace?.name}</Heading>
       <Divider />
-      <Heading>Projects</Heading>
+      <div className="flex justify-between">
+        <Heading>Projects</Heading>
+        <CreateProjectDialog workspaceId={workspaceId} />
+      </div>
       <section className="flex flex-col gap-4">
         {projects.map((p) => (
-          <div key={p.id}>{p.name}</div>
+          <ProjectCard
+            title={p.name}
+            description={p.description || ''}
+            projectId={p.id}
+            workspaceId={workspace.id}
+            key={p.id}
+          />
         ))}
         {projects.length === 0 && <div>No projects found</div>}
       </section>
-      <CreateProjectForm workspaceId={Number(workspaceId)} />
     </main>
   );
 };
