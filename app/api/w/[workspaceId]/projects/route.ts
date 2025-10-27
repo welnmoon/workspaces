@@ -1,6 +1,7 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
+import { createProject } from '@/lib/createProject';
 import { badRequest, ok } from '@/lib/http';
-import prisma from '@/lib/prisma';
+import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
 import { Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
@@ -9,8 +10,10 @@ export async function POST(
   { params }: { params: { workspaceId: string } }
 ) {
   const { workspaceId } = params;
-  const body = await req.json().catch(() => {});
-  if (!body.name) return badRequest('Name is required');
+  const body: unknown = await req.json().catch(() => {});
+  const res = createProjectFormSchema.safeParse(body);
+  if (!res.success) return badRequest(res.error.message);
+
   const workspaceIdNumber = Number(workspaceId);
 
   const user = await requireWorkspaceMember({
@@ -18,11 +21,9 @@ export async function POST(
     allowed: ['OWNER', 'ADMIN'] as Role[],
   });
 
-  const project = await prisma.project.create({
-    data: {
-      name: body.name,
-      workspaceId: workspaceIdNumber,
-    },
+  const project = await createProject({
+    ...res.data,
+    workspaceId: workspaceIdNumber,
   });
 
   if (!project) return badRequest('Failed to create project');

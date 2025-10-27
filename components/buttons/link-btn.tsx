@@ -12,7 +12,11 @@ const LinkButton = ({ text, href, className }: LinkButtonProps) => {
   return (
     <Link href={href}>
       <Button
-        className={cn(className, 'bg-primary-500 rounded-xl text-primary-50', 'hover:bg-primary-600')}
+        className={cn(
+          className,
+          'bg-primary-500 text-primary-50',
+          'hover:bg-primary-600'
+        )}
       >
         {text}
       </Button>
