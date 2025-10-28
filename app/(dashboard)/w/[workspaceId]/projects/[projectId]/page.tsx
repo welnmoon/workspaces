@@ -5,6 +5,7 @@ import TaskCard from '@/components/tasks/task-card';
 import { requireUser } from '@/helpers/require-user';
 import { getProjectTasks } from '@/lib/get-project-tasks';
 import prisma from '@/lib/prisma';
+import { taskIsExpired } from '@/lib/task/isExpired';
 
 const ProjectPage = async ({
   params,
@@ -27,18 +28,21 @@ const ProjectPage = async ({
       {!project && <NotFound text="Project" />}
       {project && <ProjectComponent project={project} />}
       {tasks.length === 0 && <div>No tasks found</div>}
-      {tasks.map((t) => (
-        <TaskCard
-          description={t.description || ''}
-          dueDate={t.dueDate ? t.dueDate.toISOString() : ''}
-          key={t.id}
-          projectId={t.projectId}
-          workspaceId={Number(params.workspaceId)}
-          status={t.status}
-          title={t.title}
-          taskId={t.id}
-        />
-      ))}
+      <section role="list" className="grid grid-cols-2 gap-4 my-4">
+        {tasks.map((t) => (
+          <TaskCard
+            role="listitem"
+            description={t.description || ''}
+            dueDate={t.dueDate ? t.dueDate.toISOString() : ''}
+            key={t.id}
+            projectId={t.projectId}
+            workspaceId={Number(params.workspaceId)}
+            status={t.status}
+            title={t.title}
+            taskId={t.id}
+          />
+        ))}
+      </section>
       <CreateTaskForm
         projectId={project?.id}
         workspaceId={Number(params.workspaceId)}
