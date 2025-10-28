@@ -1,6 +1,7 @@
 import CreateTaskForm from '@/components/forms/task/create-task-form';
 import NotFound from '@/components/not-found';
 import ProjectComponent from '@/components/projects/project';
+import TaskCard from '@/components/tasks/task-card';
 import { requireUser } from '@/helpers/require-user';
 import { getProjectTasks } from '@/lib/get-project-tasks';
 import prisma from '@/lib/prisma';
@@ -26,7 +27,18 @@ const ProjectPage = async ({
       {!project && <NotFound text="Project" />}
       {project && <ProjectComponent project={project} />}
       {tasks.length === 0 && <div>No tasks found</div>}
-      {tasks.map((t) => t.title)}
+      {tasks.map((t) => (
+        <TaskCard
+          description={t.description || ''}
+          dueDate={t.dueDate ? t.dueDate.toISOString() : ''}
+          key={t.id}
+          projectId={t.projectId}
+          workspaceId={Number(params.workspaceId)}
+          status={t.status}
+          title={t.title}
+          taskId={t.id}
+        />
+      ))}
       <CreateTaskForm
         projectId={project?.id}
         workspaceId={Number(params.workspaceId)}
