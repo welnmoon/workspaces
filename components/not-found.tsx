@@ -9,12 +9,12 @@ const NotFound = ({ text }: { text: string }) => {
   const router = useRouter();
   return (
     <main className="flex flex-col gap-4 h-screen justify-center items-center">
-      <div className="flex flex-col ">
+      <div className="flex flex-col justify-center items-center gap-2">
         <Heading className="text-7xl text-primary-500">404</Heading>
         <div>{text} not found</div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 justify-center items-center">
         <GoBackButton router={router} />
         <LinkButton href="/" text={`На главную`} />
       </div>

@@ -50,6 +50,13 @@ enum AuditActions {
   LOGIN
   LOGOUT
 }
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT // это когда нужно сделать прямо сейчас
+}
 // prisma migrate - 
 model User {
   id        String     @id @default(cuid())
@@ -120,7 +127,8 @@ model Project {
 model Workspace {
   id     Int    @id @default(autoincrement())
   name   String
-  tariff Tariff @default(FREE)
+  description String?
+  tariff Tariff @default(FREE) 
 
   memberships Membership[] 
 
@@ -140,7 +148,7 @@ model Task {
   description String?
   status      TaskStatus @default(TODO)
   dueDate     DateTime?
-
+  priority    TaskPriority     @default(LOW) 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int
 

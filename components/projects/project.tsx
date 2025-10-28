@@ -5,6 +5,7 @@ import Description from '../ui/desc';
 import CreateTaskForm from '@/components/forms/task/create-task-form';
 import TaskCard from '../tasks/task-card';
 import CreateTaskDialog from '../dialogs/create-task-dialog';
+import { cardContainer } from '@/styles/styles';
 
 const ProjectComponent = ({
   project,
@@ -25,10 +26,7 @@ const ProjectComponent = ({
         <Heading>Tasks</Heading>
         <CreateTaskDialog projectId={project.id} workspaceId={workspaceId} />
       </div>
-      <section
-        role="list"
-        className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 my-4"
-      >
+      <section role="list" className={cardContainer}>
         {tasks.map((t) => (
           <TaskCard
             role="listitem"
