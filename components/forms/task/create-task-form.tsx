@@ -82,7 +82,7 @@ const CreateTaskForm = ({
           />
           <DueDateField control={form.control} name="dueDate" />
           <SubmitBtn
-            text="Create Task"
+            text="Создать задачу"
             isLoading={form.formState.isSubmitting}
           />
         </fieldset>

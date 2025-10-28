@@ -11,12 +11,12 @@ export const Heading = ({ level = 1, children, className }: HeadingProps) => {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
 
   const baseStyles = {
-    1: 'text-3xl font-bold tracking-tight',
-    2: 'text-2xl font-semibold',
-    3: 'text-xl font-medium',
-    4: 'text-lg font-medium',
-    5: 'text-base font-medium',
-    6: 'text-sm font-semibold uppercase text-muted-foreground',
+    1: 'text-3xl  tracking-tight',
+    2: 'text-2xl',
+    3: 'text-xl ',
+    4: 'text-lg ',
+    5: 'text-base ',
+    6: 'text-sm uppercase text-muted-foreground',
   }[level];
 
   return <Tag className={cn(baseStyles, className)}>{children}</Tag>;
