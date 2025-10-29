@@ -56,9 +56,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${satoshi.variable} ${manrope.variable}`}>
-        <Container>
-          <RootProviders session={session}>{children}</RootProviders>{' '}
-        </Container>
+        <RootProviders session={session}>{children}</RootProviders>{' '}
       </body>
     </html>
   );

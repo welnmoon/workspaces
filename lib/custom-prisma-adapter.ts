@@ -1,5 +1,5 @@
 import type { Adapter, AdapterUser } from 'next-auth/adapters';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import type { User as PrismaUser } from '@prisma/client';
 
 import prisma from '@/lib/prisma';
@@ -35,7 +35,7 @@ export const customPrismaAdapter: Adapter = {
     const user = await prisma.user.findUnique({ where: { id } });
     return user ? mapUser(user) : null;
   },
-  
+
   async getUserByEmail(email) {
     if (!email) return null;
 

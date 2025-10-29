@@ -1,4 +1,3 @@
-import { Workspace } from '@prisma/client';
 import {
   Card,
   CardContent,
@@ -8,8 +7,11 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Heading } from '../ui/heading';
-import Link from 'next/link';
+
+
 import { clientRoutes } from '@/lib/routes/client-routes';
+import { Workspace } from '@prisma/client';
+import Link from 'next/link';
 const WorkspaceCard = ({ workspace }: { workspace: Workspace }) => {
   return (
     <Card>

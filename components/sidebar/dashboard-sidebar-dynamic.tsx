@@ -6,7 +6,7 @@ import {
   SidebarHeader,
 } from '@/components/ui/sidebar';
 
-export function DashboardSidebar() {
+export function DashboardSidebarDynamic() {
   return (
     <Sidebar>
       <SidebarHeader />

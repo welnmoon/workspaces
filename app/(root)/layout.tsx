@@ -1,3 +1,4 @@
+import Container from '@/components/container';
 import Header from '@/components/header/header';
 import { authOptions } from '@/lib/auth';
 import type { Metadata } from 'next';
@@ -16,9 +17,9 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <>
+    <Container>
       <Header session={session} />
       {children}
-    </>
+    </Container>
   );
 }
