@@ -20,6 +20,19 @@ const ProjectPage = async ({
     projectId: Number(params.projectId),
   });
 
+  let workspaceName = await prisma.workspace.findUnique({
+    where: {
+      id: Number(params.workspaceId),
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  if (!workspaceName) {
+    workspaceName = { name: String(params.workspaceId) };
+  }
+
   return (
     <main>
       {!project && <NotFound text="Project" />}
@@ -28,6 +41,7 @@ const ProjectPage = async ({
           workspaceId={Number(params.workspaceId)}
           tasks={tasks}
           project={project}
+          workspaceName={workspaceName?.name || null}
         />
       )}
       {tasks.length === 0 && <div>No tasks found</div>}

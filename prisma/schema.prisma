@@ -57,12 +57,12 @@ enum TaskPriority {
   HIGH
   URGENT // это когда нужно сделать прямо сейчас
 }
-// prisma migrate - 
 model User {
   id        String     @id @default(cuid())
   email     String? @unique // email может быть null, т.к. пользователь может зарегистрироваться через соц. сеть
   lastName  String?
   firstName String?
+  nickname String?
   image     String?
 
   emailVerified DateTime?
@@ -83,6 +83,8 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt 
   wasOnline DateTime?
+
+  ownedWorkspaces Workspace[] @relation("WorkspaceOwner")
 }
 
 model Membership { // Членство пользователя в воркспейсе
@@ -95,7 +97,7 @@ model Membership { // Членство пользователя в ворксп�
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId Int
 
-  status MembershipStatus @default(ACTIVE)
+  status MembershipStatus @default(ACTIVE) 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,7 +109,7 @@ model Membership { // Членство пользователя в ворксп�
 
 model Project {
   id          Int     @id @default(autoincrement())
-  name        String
+  name        String 
   description String?
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
@@ -130,7 +132,10 @@ model Workspace {
   description String?
   tariff Tariff @default(FREE) 
 
-  memberships Membership[] 
+  ownerId String?
+  owner   User? @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+
+  memberships Membership[]
 
   projects Project[]
 
@@ -163,6 +168,7 @@ model Task {
   @@index([status])
   @@index([projectId, status, createdAt]) // для быстрого получения задач в проекте по статусу и дате создания
   @@index([dueDate]) // для быстрого получения задач по дате дедлайна
+  @@index([projectId, priority])
 }
 
 model Invitation {
@@ -190,7 +196,6 @@ model Invitation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([workspaceId, invitedUserEmail]) // чтобы один и тот же email не мог быть приглашен в один и тот же воркспейс несколько раз
   @@index([workspaceId, status])
   @@index([expiresAt])
   @@index([invitedUserEmail])
@@ -256,7 +261,7 @@ model VerificationToken {
 model AuditLog {
   id     Int   @id @default(autoincrement())
   user   User? @relation(fields: [userId], references: [id], onDelete: SetNull) // пользователь, совершивший действие
-  userId String     
+  userId String?    
 
   workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
   workspaceId Int? // контекст где было изменение
@@ -266,7 +271,7 @@ model AuditLog {
 
   action     AuditActions // описание действия, например "CREATED_TASK", "DELETED_PROJECT" и т.д.
   entityType String // тип сущности, над которой было совершено действие, например "TASK", "PROJECT"
-  entityId   Int? // ID сущности, над которой было совершено действие (если применимо)
+  entityId   String? // ID сущности, над которой было совершено действие (если применимо)
   details    String?      @db.Text // дополнительные детали в формате JSON или просто текст
 
   createdAt DateTime @default(now())

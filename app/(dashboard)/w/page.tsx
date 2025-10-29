@@ -1,4 +1,3 @@
-import { Heading } from '@/components/ui/heading';
 import WorkspacesComponent from '@/components/workspaces/workspaces';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';

@@ -1,17 +1,20 @@
+'use client';
+
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import MainBtn from '../buttons/main-btn';
 import CreateProjectForm from '../forms/project/create-project-form';
+import { useState } from 'react';
 
 const CreateProjectDialog = ({ workspaceId }: { workspaceId: string }) => {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <MainBtn text="Создать проект" />
       </DialogTrigger>
@@ -19,7 +22,10 @@ const CreateProjectDialog = ({ workspaceId }: { workspaceId: string }) => {
         <DialogHeader>
           <DialogTitle>Вы создаете проект</DialogTitle>
         </DialogHeader>
-        <CreateProjectForm workspaceId={Number(workspaceId)} />
+        <CreateProjectForm
+          setOpenModal={setOpen}
+          workspaceId={Number(workspaceId)}
+        />
       </DialogContent>
     </Dialog>
   );

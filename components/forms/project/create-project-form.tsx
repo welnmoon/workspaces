@@ -8,11 +8,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from '../form-input';
 import SubmitBtn from '../../buttons/submit-btn';
-import { createProject } from '@/lib/createProject';
 import toast from 'react-hot-toast';
 import { apiRoutes } from '@/lib/routes/api-routes';
+import { useRouter } from 'next/navigation';
+import { Dispatch, SetStateAction } from 'react';
 
-const CreateProjectForm = ({ workspaceId }: { workspaceId: number }) => {
+const CreateProjectForm = ({
+  workspaceId,
+  setOpenModal,
+}: {
+  workspaceId: number;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const router = useRouter();
   const form = useForm<CreateProjectFormValues>({
     resolver: zodResolver(createProjectFormSchema),
     defaultValues: {
@@ -30,8 +38,15 @@ const CreateProjectForm = ({ workspaceId }: { workspaceId: number }) => {
     if (res.ok) {
       form.reset();
       toast.success('Project created successfully');
+      router.refresh();
+      setOpenModal(false);
     } else {
-      toast.error(res.statusText || 'Failed to create project');
+      const data = await res.json().catch(() => undefined);
+      const message =
+        (data && (data.message || data.error)) ||
+        res.statusText ||
+        'Failed to create project';
+      toast.error(message);
     }
   };
 

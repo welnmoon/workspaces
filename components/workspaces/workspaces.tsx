@@ -7,7 +7,7 @@ import CreateWorkspaceDialog from '../dialogs/create-w-dialog';
 const WorkspacesComponent = ({ workspaces }: { workspaces: Workspace[] }) => {
   return (
     <main>
-      <div className="flex justify-between">
+      <div className="flex justify-between min-w-full">
         <Heading>Workspaces</Heading>
         <CreateWorkspaceDialog />
       </div>

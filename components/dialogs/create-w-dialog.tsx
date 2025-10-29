@@ -13,11 +13,11 @@ const CreateWorkspaceDialog = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <MainBtn text="Создать задачу" />
+        <MainBtn text="Создать воркспейс" />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Вы создаете задачу</DialogTitle>
+          <DialogTitle>Вы создаете вокрспейс</DialogTitle>
         </DialogHeader>
         <CreateWorkspaceForm />
       </DialogContent>

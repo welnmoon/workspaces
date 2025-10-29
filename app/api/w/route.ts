@@ -1,27 +1,53 @@
 import { requireUser } from '@/helpers/require-user';
+import { conflict, created, serverError, unprocessable } from '@/lib/http';
 import prisma from '@/lib/prisma';
+import { clientRoutes } from '@/lib/routes/client-routes';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
+import { MembershipStatus, Prisma, Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
+// POST /api/w
+// Create a new workspace
 export async function POST(req: NextRequest) {
   try {
-    const { id } = await requireUser();
+    const { id: userId } = await requireUser();
     const body = await req.json();
     const res = createWorkspaceFormSchema.safeParse(body);
-    if (!res.success) return new Response(res.error.message, { status: 400 });
+    if (!res.success)
+      return unprocessable(res.error.message, res.error.flatten());
 
-    await prisma.workspace.create({
-      data: {
-        name: res.data.name,
-        description: res.data.description,
-      },
+    // в одной транзации создаем воркспейс и добавляем в него владельца
+    const workspace = await prisma.$transaction(async (tx) => {
+      const w = await tx.workspace.create({
+        data: {
+          name: res.data.name,
+          description: res.data.description,
+          ownerId: userId,
+        },
+      });
+
+      await tx.membership.create({
+        data: {
+          userId,
+          workspaceId: w.id,
+          role: Role.OWNER,
+          status: MembershipStatus.ACTIVE,
+        },
+      });
+
+      return w;
     });
 
-    return NextResponse.json({ name: w.name }, { status: 200 });
-  } catch (e) {
-    return NextResponse.json(
-      { error: 'Failed to create workspace' },
-      { status: 500 }
-    );
+    return created(workspace, clientRoutes.workspacePage(workspace.id));
+  } catch (e: any) {
+    if (
+      e instanceof Prisma.PrismaClientKnownRequestError &&
+      e.code === 'P2002'
+    ) {
+      // P2002 - Нарушено ограничение уникальности в базе данных
+      return conflict(e.message);
+    }
+
+    return serverError('Failed to create workspace');
   }
 }

@@ -6,20 +6,38 @@ import CreateTaskForm from '@/components/forms/task/create-task-form';
 import TaskCard from '../tasks/task-card';
 import CreateTaskDialog from '../dialogs/create-task-dialog';
 import { cardContainer } from '@/styles/styles';
+import Link from 'next/link';
+import { clientRoutes } from '@/lib/routes/client-routes';
+import { Breadcrumbs } from '../bread-crumbs';
 
 const ProjectComponent = ({
   project,
   workspaceId,
   tasks,
+  workspaceName,
 }: {
   project: Project;
   workspaceId: number;
   tasks: Task[];
+  workspaceName: string | null;
 }) => {
   if (!project) return null;
   return (
     <article>
-      <Heading>Project {project.name}</Heading>
+      <Heading>
+        <Breadcrumbs
+          items={[
+            {
+              label: `Workspace ${workspaceName}`,
+              href: clientRoutes.workspacePage(workspaceId),
+            },
+            {
+              label: `Project ${project.name}`,
+              href: clientRoutes.projectPage(project.id, workspaceId),
+            },
+          ]}
+        />
+      </Heading>
       <Description text={project.description || 'No description'} />
       <Divider />
       <div className="flex justify-between">

@@ -1,8 +1,9 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { createProject } from '@/lib/createProject';
-import { badRequest, ok } from '@/lib/http';
+import { badRequest, conflict, created, serverError } from '@/lib/http';
+import { clientRoutes } from '@/lib/routes/client-routes';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
 // POST /api/w/[workspaceId]/projects
@@ -18,17 +19,31 @@ export async function POST(
 
   const workspaceIdNumber = Number(workspaceId);
 
-  const user = await requireWorkspaceMember({
+  await requireWorkspaceMember({
     workspaceId: workspaceIdNumber,
     allowed: ['OWNER', 'ADMIN'] as Role[],
   });
 
-  const project = await createProject({
-    ...res.data,
-    workspaceId: workspaceIdNumber,
-  });
+  try {
+    const project = await createProject({
+      ...res.data,
+      workspaceId: workspaceIdNumber,
+    });
 
-  if (!project) return badRequest('Failed to create project');
+    return created(
+      project,
+      clientRoutes.projectPage(workspaceIdNumber, project.id)
+    );
+  } catch (e) {
+    if (
+      e instanceof Prisma.PrismaClientKnownRequestError &&
+      e.code === 'P2002'
+    ) {
+      return conflict(
+        'Project with this name already exists in this workspace'
+      );
+    }
 
-  return ok(project, 201);
+    return serverError('Failed to create project');
+  }
 }
