@@ -1,14 +1,14 @@
 'use client';
 
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { DashboardSidebarDynamic } from '@/components/sidebar/dashboard-sidebar-dynamic';
+import { DashboardSidebarDynamic } from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
 import { CSSProperties } from 'react';
 import {
   Root as AvatarRoot,
   Image as AvatarImage,
   Fallback as AvatarFallback,
 } from '@radix-ui/react-avatar';
-import DashboardSidebarStatic from '@/components/sidebar/dashboard-sidebar-static';
+import DashboardSidebarStatic from '@/components/sidebar/static/dashboard-sidebar-static';
 
 export default function DashboardLayout({
   children,
@@ -46,7 +46,7 @@ export default function DashboardLayout({
                 alt="Colm Tuite"
               />
               <AvatarFallback className="AvatarFallback" delayMs={600}>
-                CT
+                Avatar
               </AvatarFallback>
             </AvatarRoot>
           </div>

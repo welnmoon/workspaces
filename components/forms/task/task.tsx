@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { taskIsExpired } from '@/lib/task/isExpired';
+import { taskIsExpired } from '@/helpers/task/isExpired';
 import Desc from '@/components/ui/desc';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Task, User } from '@prisma/client';

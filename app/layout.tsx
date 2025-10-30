@@ -3,7 +3,6 @@ import { Manrope } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import RootProviders from '@/components/Providers/root-providers';
-import Container from '@/components/container';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 

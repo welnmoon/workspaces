@@ -12,7 +12,7 @@ import CreateWorkspaceForm from '../forms/w/create-w-form';
 const CreateWorkspaceDialog = () => {
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <MainBtn text="Создать воркспейс" />
       </DialogTrigger>
       <DialogContent>

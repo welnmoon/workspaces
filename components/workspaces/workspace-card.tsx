@@ -1,18 +1,16 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { Heading } from '../ui/heading';
 
-
 import { clientRoutes } from '@/lib/routes/client-routes';
-import { Workspace } from '@prisma/client';
 import Link from 'next/link';
-const WorkspaceCard = ({ workspace }: { workspace: Workspace }) => {
+import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
+const WorkspaceCard = ({ workspace }: { workspace: WorkspaceListDTO }) => {
   return (
     <Card>
       <CardHeader>

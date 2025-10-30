@@ -4,14 +4,15 @@ import ProjectCard from '@/components/projects/project-card';
 import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
+import { ProjectServices } from '@/lib/services/project';
 
 const WorkspacePage = async ({
   params,
 }: {
-  params: { workspaceId: string };
+  params: Promise<{ workspaceId: string }>;
 }) => {
-  const user = await requireUser();
-  const { workspaceId } = params;
+await requireUser();
+  const { workspaceId } = await params;
   const workspace = await prisma.workspace.findUnique({
     where: {
       id: Number(workspaceId),
@@ -22,11 +23,7 @@ const WorkspacePage = async ({
     return <div>Workspace not found</div>;
   }
 
-  const projects = await prisma.project.findMany({
-    where: {
-      workspaceId: workspace.id,
-    },
-  });
+  const projects = await ProjectServices.getList(Number(workspaceId));
 
   return (
     <main className="flex flex-col gap-4 ">

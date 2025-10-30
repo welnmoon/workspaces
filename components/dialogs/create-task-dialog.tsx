@@ -18,7 +18,7 @@ const CreateTaskDialog = ({
 }) => {
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <MainBtn text="Создать задачу" />
       </DialogTrigger>
       <DialogContent>

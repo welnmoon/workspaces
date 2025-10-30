@@ -3,8 +3,9 @@ import { conflict, created, serverError, unprocessable } from '@/lib/http';
 import prisma from '@/lib/prisma';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
+import { WorkspaceService } from '@/lib/services/workspace';
 import { MembershipStatus, Prisma, Role } from '@prisma/client';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 // POST /api/w
 // Create a new workspace
@@ -50,4 +51,12 @@ export async function POST(req: NextRequest) {
 
     return serverError('Failed to create workspace');
   }
+}
+
+// GET workspaces /api/w
+
+export async function GET() {
+  const { id } = await requireUser();
+  const workspaces = await WorkspaceService.getList(id);
+  return created(workspaces);
 }

@@ -1,7 +1,7 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { createProject } from '@/lib/createProject';
 import { badRequest, conflict, created, serverError } from '@/lib/http';
 import { clientRoutes } from '@/lib/routes/client-routes';
+import { ProjectServices } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
 import { Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
@@ -10,9 +10,9 @@ import { NextRequest } from 'next/server';
 // Create a new project in the workspace
 export async function POST(
   req: NextRequest,
-  { params }: { params: { workspaceId: string } }
+  context: { params: Promise<{ workspaceId: string }> }
 ) {
-  const { workspaceId } =  params;
+  const { workspaceId } = await context.params;
   const body: unknown = await req.json().catch(() => {});
   const res = createProjectFormSchema.safeParse(body);
   if (!res.success) return badRequest(res.error.message);
@@ -25,7 +25,7 @@ export async function POST(
   });
 
   try {
-    const project = await createProject({
+    const project = await ProjectServices.createProject({
       ...res.data,
       workspaceId: workspaceIdNumber,
     });

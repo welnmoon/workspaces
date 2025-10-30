@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { TaskStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
-import { taskIsExpired } from '@/lib/task/isExpired';
+import { taskIsExpired } from '@/helpers/task/isExpired';
 
 interface TaskCardProps {
   title: string;

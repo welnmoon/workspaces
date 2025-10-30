@@ -1,8 +1,8 @@
 import NotFound from '@/components/not-found';
 import ProjectComponent from '@/components/projects/project';
 import { requireUser } from '@/helpers/require-user';
-import { getProjectTasks } from '@/lib/get-project-tasks';
 import prisma from '@/lib/prisma';
+import { TaskService } from '@/lib/services/tasks';
 
 const ProjectPage = async ({
   params,
@@ -16,9 +16,7 @@ const ProjectPage = async ({
   if (!project) {
     return <NotFound text="Project" />;
   }
-  const tasks = await getProjectTasks({
-    projectId: Number(params.projectId),
-  });
+  const tasks = await TaskService.getProjectTasks(Number(params.projectId));
 
   let workspaceName = await prisma.workspace.findUnique({
     where: {

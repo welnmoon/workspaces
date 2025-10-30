@@ -1,10 +1,13 @@
-import { Workspace } from '@prisma/client';
-
 import { Heading } from '../ui/heading';
 import { cardContainer } from '@/styles/styles';
 import WorkspaceCard from './workspace-card';
 import CreateWorkspaceDialog from '../dialogs/create-w-dialog';
-const WorkspacesComponent = ({ workspaces }: { workspaces: Workspace[] }) => {
+import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
+const WorkspacesComponent = ({
+  workspaces,
+}: {
+  workspaces: WorkspaceListDTO[];
+}) => {
   return (
     <main>
       <div className="flex justify-between min-w-full">
