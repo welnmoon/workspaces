@@ -1,5 +1,7 @@
+import { usePathname } from 'next/navigation';
 import EntitySelect from '../entity-select';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
 const WorkspaceSelect = ({
   workspaces,
@@ -30,6 +32,7 @@ const WorkspaceSelect = ({
       loading={loading}
       onChange={onChange}
       value={value}
+      getHref={(item) => clientRoutes.workspacePage(Number(item.id))}
     />
   );
 };

@@ -1,8 +1,7 @@
 'use client';
 import WorkspaceSelect from '@/components/ui/select/workspace-select';
 import WorknestLogotype from '../../ui/worknest-logotype';
-import { useEffect, useState } from 'react';
-import { fetchWorkspaces } from '@/lib/fetch-fns/fetch-workspaces';
+import { useState } from 'react';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 
 // Этот компонент показывается только на больших экранах
@@ -15,7 +14,8 @@ const DashboardSidebarStatic = ({
   const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(
     null
   );
-  const [loading, setLoading] = useState(false);
+
+  // const [loading, setLoading] = useState(false);
 
   // useEffect(() => {
   //   const getWorkspaces = async () => {
@@ -40,10 +40,7 @@ const DashboardSidebarStatic = ({
         <WorkspaceSelect
           workspaces={workspaces}
           onChange={setSelectedWorkspace}
-          loading={loading}
         />
-
-        {selectedWorkspace}
       </div>
     </aside>
   );

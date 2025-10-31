@@ -6,6 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select/select';
+import { clientRoutes } from '@/lib/routes/client-routes';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 type EntitySelectProps<T> = {
   items: T[];
@@ -18,6 +21,7 @@ type EntitySelectProps<T> = {
   disabled?: boolean;
   loading?: boolean;
   emptyLabel?: string;
+  getHref?: (item: T) => string | undefined;
 };
 
 function EntitySelect<T>({
@@ -31,11 +35,19 @@ function EntitySelect<T>({
   disabled,
   loading,
   emptyLabel = 'Нет данных',
+  getHref,
 }: EntitySelectProps<T>) {
+  const router = useRouter();
+
+  const idToHref = new Map(items.map((it) => [getId(it), getHref?.(it)]));
   return (
     <Select
       value={value ?? undefined}
-      onValueChange={onChange}
+      onValueChange={(v) => {
+        onChange?.(v);
+        const href = idToHref.get(v);
+        if (href) router.push(href);
+      }}
       disabled={disabled}
     >
       <SelectTrigger className={className}>
@@ -54,9 +66,10 @@ function EntitySelect<T>({
           items.map((item) => {
             const id = getId(item);
             const label = getLabel(item);
+            const href = getHref?.(item);
             return (
               <SelectItem key={id} value={id}>
-                {label}
+                {label} {value === id ? '✓ ' : ''}
               </SelectItem>
             );
           })}
