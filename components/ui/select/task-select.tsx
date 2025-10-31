@@ -1,25 +1,29 @@
 import EntitySelect from '../entity-select';
-import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import { clientRoutes } from '@/lib/routes/client-routes';
+import { TaskListDTO } from '@/types/prisma/DTO/tasks';
 
-const WorkspaceSelect = ({
-  workspaces,
+const TaskSelect = ({
+  tasks,
   className,
   disabled,
   loading,
   onChange,
   value,
   placeholder,
+  workspaceId,
+  projectId,
 }: {
-  workspaces: WorkspaceListDTO[];
+  tasks: TaskListDTO[];
   className?: string;
   disabled?: boolean;
   loading?: boolean;
   onChange?: (value: string) => void;
   value?: string | null;
   placeholder: string;
+  workspaceId: string;
+  projectId: string;
 }) => {
-  const options = workspaces.map((w) => ({ label: w.name, id: w.id }));
+  const options = tasks.map((t) => ({ label: t.title, id: t.id }));
 
   return (
     <EntitySelect
@@ -33,9 +37,15 @@ const WorkspaceSelect = ({
       loading={loading}
       onChange={onChange}
       value={value}
-      getHref={(item) => clientRoutes.workspacePage(Number(item.id))}
+      getHref={(item) =>
+        clientRoutes.taskPage(
+          Number(workspaceId),
+          Number(projectId),
+          Number(item.id)
+        )
+      }
     />
   );
 };
 
-export default WorkspaceSelect;
+export default TaskSelect;

@@ -1,5 +1,5 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { badRequest, conflict, created, serverError } from '@/lib/http';
+import { badRequest, conflict, created, ok, serverError } from '@/lib/http';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { ProjectServices } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
@@ -45,5 +45,25 @@ export async function POST(
     }
 
     return serverError('Failed to create project');
+  }
+}
+
+export async function GET(
+  _req: NextRequest,
+  context: { params: { workspaceId: string } }
+) {
+  try {
+    const workspaceIdNumber = Number(context.params.workspaceId);
+
+    await requireWorkspaceMember({
+      workspaceId: workspaceIdNumber,
+      allowed: ['OWNER', 'ADMIN'] as Role[],
+    });
+
+    const projects = await ProjectServices.getList(workspaceIdNumber);
+    return ok(projects);
+  } catch (e) {
+    console.error(e);
+    return serverError('Failed to get projects');
   }
 }
