@@ -14,6 +14,7 @@ import { apiRoutes } from '@/lib/routes/api-routes';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import TaskSelect from '@/components/ui/select/task-select';
 import { TaskListDTO } from '@/types/prisma/DTO/tasks';
+import { fetchTasks } from '@/lib/fetch-fns/fetch-tasks';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarStatic = ({
@@ -63,11 +64,15 @@ const DashboardSidebarStatic = ({
       return;
     }
 
-
     setTaskLoading(true);
-    setSelectedTaskId(null)
-
-    
+    setSelectedTaskId(null);
+    fetchTasks({
+      workspaceId: Number(selectedWorkspaceId),
+      projectId: Number(selectedProjectId),
+    })
+      .then(setTasks)
+      .catch(() => {})
+      .finally(() => setTaskLoading(false));
   }, [selectedProjectId]);
 
   const pathname = usePathname();
@@ -104,7 +109,8 @@ const DashboardSidebarStatic = ({
           <TaskSelect
             placeholder="Задача"
             projectId={selectedProjectId}
-            tasks={}
+            tasks={tasks}
+            workspaceId={selectedWorkspaceId}
           />
         )}
       </div>

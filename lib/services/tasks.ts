@@ -21,10 +21,19 @@ export class TaskService {
       },
     });
   }
-  static async getProjectTasks(projectId: number) {
+  static async getProjectTasks({
+    projectId,
+    workspaceId,
+  }: {
+    projectId: number;
+    workspaceId: number;
+  }) {
     return await prisma.task.findMany({
       where: {
         projectId,
+        project: {
+          workspaceId: workspaceId,
+        },
       },
     });
   }

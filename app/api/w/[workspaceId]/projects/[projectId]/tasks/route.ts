@@ -1,7 +1,10 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
+import { ok, serverError } from '@/lib/http';
 import prisma from '@/lib/prisma';
+import { TaskService } from '@/lib/services/tasks';
 import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
 import { Role } from '@prisma/client';
+import { Param } from '@prisma/client/runtime/library';
 import { NextRequest, NextResponse } from 'next/server';
 
 // POST /api/w/[workspaceId]/projects/[projectId]/tasks
@@ -30,9 +33,7 @@ export async function POST(
       data: {
         title: data.data.title,
         description: data.data.description,
-        dueDate: data.data.dueDate
-          ? new Date(data.data.dueDate)
-          : undefined,
+        dueDate: data.data.dueDate ? new Date(data.data.dueDate) : undefined,
         projectId: Number(projectId),
       },
     });
@@ -42,5 +43,26 @@ export async function POST(
       { error: 'Failed to create task' },
       { status: 500 }
     );
+  }
+}
+
+export async function GET(context: {
+  params: { workspaceId: string; projectId: string };
+}) {
+  try {
+    const { workspaceId, projectId } = await context.params;
+    await requireWorkspaceMember({
+      workspaceId: Number(workspaceId),
+      allowed: ['OWNER', 'ADMIN'] as Role[],
+    });
+
+    const tasks = await TaskService.getProjectTasks({
+      projectId: Number(projectId),
+      workspaceId: Number(workspaceId),
+    });
+    return ok(tasks);
+  } catch (e) {
+    console.log('Error fetching tasks', e);
+    return serverError('Failed to fetch tasks');
   }
 }
