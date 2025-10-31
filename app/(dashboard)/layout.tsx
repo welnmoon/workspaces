@@ -1,5 +1,3 @@
-'use client';
-
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { DashboardSidebarDynamic } from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
 import { CSSProperties } from 'react';
@@ -9,12 +7,18 @@ import {
   Fallback as AvatarFallback,
 } from '@radix-ui/react-avatar';
 import DashboardSidebarStatic from '@/components/sidebar/static/dashboard-sidebar-static';
+import { fetchWorkspaces } from '@/lib/fetch-fns/fetch-workspaces';
+import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
+import { WorkspaceService } from '@/lib/services/workspace';
+import { requireUser } from '@/helpers/require-user';
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { id } = await requireUser();
+  const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(id);
   return (
     <SidebarProvider
       className="flex min-h-screen"
@@ -27,7 +31,7 @@ export default function DashboardLayout({
     >
       {/* Статичный только на lg+ */}
       <div className="hidden lg:block">
-        <DashboardSidebarStatic />
+        <DashboardSidebarStatic workspaces={workspaces} />
       </div>
 
       {/* Динамичный только на <lg */}
