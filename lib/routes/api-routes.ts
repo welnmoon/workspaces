@@ -10,4 +10,5 @@ export const apiRoutes = {
   getProjects: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
   getTasks: (workspaceId: string, projectId: string) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
+  getUser: (id: string) => `/api/user/${id}`,
 };

@@ -1,0 +1,60 @@
+import { profileSchema } from '@/schemas/profile';
+import prisma from '../prisma';
+import { UserProfileDTO } from '@/types/prisma/DTO/user';
+
+export class UserService {
+  static async getUserById(userId: string) {
+    return await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+  }
+
+  static async getUserProfile(userId: string): Promise<UserProfileDTO | null> {
+    return await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        accounts: true,
+        memberships: { include: { workspace: true } },
+      },
+    });
+  }
+
+  static async getUserByEmail(email: string) {
+    return await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
+  static async updateUser(userId: string, data: unknown) {
+    const res = profileSchema.parse(data);
+    return await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: res,
+    });
+  }
+
+  static async deleteUser(userId: string) {
+    return await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+  }
+
+  static async getUsers() {
+    return await prisma.user.findMany({
+      select: {
+        id: true,
+        firstName: true,
+        email: true,
+        lastName: true,
+      },
+    });
+  }
+}

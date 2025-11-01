@@ -13,11 +13,8 @@ const BaseLink = ({
   return (
     <>
       {' '}
-      <Link
-        href={href}
-        className={cn(className, 'text-primary-500 hover:underline')}
-      >
-        {children}
+      <Link href={href} className={cn(className, '')}>
+        <span className="underline-anim">{children}</span>
       </Link>
     </>
   );
