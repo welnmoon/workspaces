@@ -108,9 +108,12 @@ const DashboardSidebarStatic = ({
 
   return (
     <aside className="hidden md:block md:w-60 lg:w-62 xl:w-64 bg-zinc-50 border-r h-screen px-4 py-4 mr-4">
-      <WorknestLogotype />
-      <div className="">
+      <div className="mb-6">
+        <WorknestLogotype />
+      </div>
+      <div className="flex flex-col gap-2">
         <WorkspaceSelect
+          label="Workspace"
           workspaces={workspaces}
           onChange={handleWorkspaceChange}
           value={selectedWorkspaceId}
@@ -119,6 +122,7 @@ const DashboardSidebarStatic = ({
 
         {selectedWorkspaceId && (
           <ProjectSelect
+            label="Project"
             onChange={handleProjectChange}
             value={selectedProjectId}
             projects={projects}
@@ -130,6 +134,7 @@ const DashboardSidebarStatic = ({
 
         {selectedWorkspaceId && selectedProjectId && (
           <TaskSelect
+            label="Task"
             onChange={setSelectedTaskId}
             placeholder="Задача"
             projectId={selectedProjectId}

@@ -30,11 +30,13 @@ const ProjectCard = ({
               className="underline-anim"
               href={clientRoutes.projectPage(workspaceId, projectId)}
             >
-              {title}
+              <span className="block truncate max-w-full">{title}</span>
             </Link>
           </Heading>
         </CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="block line-clamp-2 break-words">
+          {description}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p>Card Content</p>

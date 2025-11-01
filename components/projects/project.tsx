@@ -6,7 +6,6 @@ import CreateTaskForm from '@/components/forms/task/create-task-form';
 import TaskCard from '../tasks/task-card';
 import CreateTaskDialog from '../dialogs/create-task-dialog';
 import { cardContainer } from '@/styles/styles';
-import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { Breadcrumbs } from '../bread-crumbs';
 

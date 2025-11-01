@@ -5,13 +5,14 @@ import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
 import { ProjectServices } from '@/lib/services/project';
+import { cardContainer } from '@/styles/styles';
 
 const WorkspacePage = async ({
   params,
 }: {
   params: Promise<{ workspaceId: string }>;
 }) => {
-await requireUser();
+  await requireUser();
   const { workspaceId } = await params;
   const workspace = await prisma.workspace.findUnique({
     where: {
@@ -33,7 +34,7 @@ await requireUser();
         <Heading>Projects</Heading>
         <CreateProjectDialog workspaceId={workspaceId} />
       </div>
-      <section className="flex flex-col gap-4 min-w-full">
+      <section className={cardContainer}>
         {projects.map((p) => (
           <ProjectCard
             title={p.name}

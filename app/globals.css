@@ -63,7 +63,7 @@ p,
 .underline-anim {
   position: relative;
   text-decoration: none;
-  display: inline-block;
+
   color: inherit;
 }
 
@@ -84,6 +84,7 @@ p,
   transform: scaleX(1);
 }
 
+/*Стиль для переноса текста*/
 .your-text {
   display: block; /* займет доступную ширину и позволит перенос */
   max-width: 100%; /* не выйдет за контейнер */

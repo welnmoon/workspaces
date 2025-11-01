@@ -49,22 +49,17 @@ export default function TaskCard({
       role={role}
       className="flex flex-col h-full justify-between transition-all duration-200 hover:shadow-lg hover:-translate-y-[2px]"
     >
-      <CardHeader className="pb-2">
-        <CardTitle>
-          <Heading level={2} className="font-bold text-foreground">
+      <CardHeader className="pb-2 min-w-0">
+        <CardTitle className="min-w-0">
+          <Heading level={2} className="font-bold text-foreground min-w-0">
             <Link
               href={clientRoutes.taskPage(workspaceId, projectId, taskId)}
-              className="underline-anim"
+              className="underline-anim block min-w-0"
             >
-              <span className="your-text">{title}wwwwww</span>
+              <span className="block truncate max-w-full">{title}</span>
             </Link>
           </Heading>
         </CardTitle>
-        {description && (
-          <CardDescription className="text-md text-muted-foreground line-clamp-2">
-            {description}
-          </CardDescription>
-        )}
       </CardHeader>
 
       <div className="mt-auto">

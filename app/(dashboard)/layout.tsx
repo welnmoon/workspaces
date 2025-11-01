@@ -7,12 +7,9 @@ import {
   Fallback as AvatarFallback,
 } from '@radix-ui/react-avatar';
 import DashboardSidebarStatic from '@/components/sidebar/static/dashboard-sidebar-static';
-import { fetchWorkspaces } from '@/lib/fetch-fns/fetch-workspaces';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { requireUser } from '@/helpers/require-user';
-import { ProjectListDTO } from '@/types/prisma/DTO/projects';
-import { ProjectServices } from '@/lib/services/project';
 
 export default async function DashboardLayout({
   children,

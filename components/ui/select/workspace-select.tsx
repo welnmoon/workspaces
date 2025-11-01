@@ -1,4 +1,4 @@
-import EntitySelect from '../entity-select';
+import EntitySelect from './entity-select';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
@@ -10,6 +10,7 @@ const WorkspaceSelect = ({
   onChange,
   value,
   placeholder,
+  label,
 }: {
   workspaces: WorkspaceListDTO[];
   className?: string;
@@ -18,11 +19,13 @@ const WorkspaceSelect = ({
   onChange?: (value: string) => void;
   value?: string | null;
   placeholder: string;
+  label?: string;
 }) => {
   const options = workspaces.map((w) => ({ label: w.name, id: w.id }));
 
   return (
     <EntitySelect
+      label={label}
       className={className}
       placeholder={placeholder}
       disabled={disabled}

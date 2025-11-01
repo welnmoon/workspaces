@@ -1,4 +1,4 @@
-import EntitySelect from '../entity-select';
+import EntitySelect from './entity-select';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
 
@@ -11,6 +11,7 @@ const ProjectSelect = ({
   value,
   placeholder,
   workspaceId,
+  label,
 }: {
   projects: ProjectListDTO[];
   className?: string;
@@ -20,11 +21,13 @@ const ProjectSelect = ({
   value?: string | null;
   placeholder: string;
   workspaceId: string;
+  label?: string;
 }) => {
   const options = projects.map((w) => ({ label: w.name, id: w.id }));
 
   return (
     <EntitySelect
+      label={label}
       className={className}
       placeholder={placeholder}
       disabled={disabled}
