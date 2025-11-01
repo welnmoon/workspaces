@@ -16,7 +16,10 @@ const ProjectPage = async ({
   if (!project) {
     return <NotFound text="Project" />;
   }
-  const tasks = await TaskService.getProjectTasks(Number(params.projectId));
+  const tasks = await TaskService.getProjectTasks({
+    projectId: params.projectId,
+    workspaceId: params.workspaceId,
+  });
 
   let workspaceName = await prisma.workspace.findUnique({
     where: {

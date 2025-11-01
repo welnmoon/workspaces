@@ -46,19 +46,20 @@ export async function POST(
   }
 }
 
-export async function GET(context: {
-  params: { workspaceId: string; projectId: string };
-}) {
+export async function GET(
+  _req: NextRequest,
+  context: { params: { workspaceId: string; projectId: string } }
+) {
   try {
-    const { workspaceId, projectId } = await context.params;
+    const { workspaceId, projectId } = context.params;
     await requireWorkspaceMember({
       workspaceId: Number(workspaceId),
-      allowed: ['OWNER', 'ADMIN'] as Role[],
+      allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],
     });
 
     const tasks = await TaskService.getProjectTasks({
-      projectId: Number(projectId),
-      workspaceId: Number(workspaceId),
+      projectId: projectId,
+      workspaceId: workspaceId,
     });
     return ok(tasks);
   } catch (e) {

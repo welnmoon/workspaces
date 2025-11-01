@@ -2,19 +2,15 @@
 import WorkspaceSelect from '@/components/ui/select/workspace-select';
 import WorknestLogotype from '../../ui/worknest-logotype';
 import { useEffect, useState } from 'react';
-import {
-  WorkspaceListDTO,
-  WorkspaceSelectDTO,
-} from '@/types/prisma/DTO/workspaces';
+import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import ProjectSelect from '@/components/ui/select/project-select';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
-import { ProjectServices } from '@/lib/services/project';
 import { fetchProjects } from '@/lib/fetch-fns/fetch-projects';
-import { apiRoutes } from '@/lib/routes/api-routes';
-import { useParams, usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import TaskSelect from '@/components/ui/select/task-select';
 import { TaskListDTO } from '@/types/prisma/DTO/tasks';
 import { fetchTasks } from '@/lib/fetch-fns/fetch-tasks';
+import toast from 'react-hot-toast';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarStatic = ({
@@ -43,12 +39,10 @@ const DashboardSidebarStatic = ({
   useEffect(() => {
     if (!selectedWorkspaceId) {
       setProjects([]);
-      setSelectedProjectId(null); // Сбрасываем выбранный проект
       return;
     }
 
     setPLoading(true);
-    setSelectedProjectId(null); // Сбрасываем выбранный проект при смене workspace
 
     fetchProjects(Number(selectedWorkspaceId))
       .then(setProjects)
@@ -64,24 +58,53 @@ const DashboardSidebarStatic = ({
       return;
     }
 
-    setTaskLoading(true);
-    setSelectedTaskId(null);
-    fetchTasks({
-      workspaceId: Number(selectedWorkspaceId),
-      projectId: Number(selectedProjectId),
-    })
-      .then(setTasks)
-      .catch(() => {})
-      .finally(() => setTaskLoading(false));
-  }, [selectedProjectId]);
+    if (selectedWorkspaceId) {
+      setTaskLoading(true);
+      setSelectedTaskId(null);
+      fetchTasks({
+        workspaceId: selectedWorkspaceId,
+        projectId: selectedProjectId,
+      })
+        .then(setTasks)
+        .catch(() => {
+          toast.error('Не удалось загрузить задачи');
+        })
+        .finally(() => setTaskLoading(false));
+    }
+  }, [selectedProjectId, selectedWorkspaceId]);
 
+  // Routing --------------------------------
   const pathname = usePathname();
   useEffect(() => {
-    // ожидаем роут типа /w/123/...
-    const m = pathname.match(/\/w\/([^/]+)/);
-    const idFromPath = m?.[1] ?? null;
-    if (idFromPath) setSelectedWorkspaceId(idFromPath);
+    // ожидаем роуты вида /w/123 или /w/123/projects/456
+    const workspaceMatch = pathname.match(/\/w\/([^/]+)/);
+    const projectMatch = pathname.match(/\/projects\/([^/]+)/);
+    const workspaceIdFromPath = workspaceMatch?.[1] ?? null;
+    const projectIdFromPath = projectMatch?.[1] ?? null;
+
+    if (workspaceIdFromPath && workspaceIdFromPath !== selectedWorkspaceId) {
+      setSelectedWorkspaceId(workspaceIdFromPath);
+    }
+
+    // projectId может отсутствовать на странице списка проектов
+    if (projectIdFromPath !== selectedProjectId) {
+      setSelectedProjectId(projectIdFromPath);
+    }
   }, [pathname]);
+
+  // Handlers --------------------------------
+  const handleWorkspaceChange = (value: string) => {
+    setSelectedWorkspaceId(value);
+    setSelectedProjectId(null);
+    setSelectedTaskId(null);
+    setProjects([]);
+    setTasks([]);
+  };
+
+  const handleProjectChange = (value: string) => {
+    setSelectedProjectId(value);
+    setSelectedTaskId(null);
+  };
 
   return (
     <aside className="hidden md:block md:w-60 lg:w-62 xl:w-64 bg-zinc-50 border-r h-screen px-4 py-4 mr-4">
@@ -89,14 +112,14 @@ const DashboardSidebarStatic = ({
       <div className="">
         <WorkspaceSelect
           workspaces={workspaces}
-          onChange={setSelectedWorkspaceId}
+          onChange={handleWorkspaceChange}
           value={selectedWorkspaceId}
           placeholder="Workspace"
         />
 
         {selectedWorkspaceId && (
           <ProjectSelect
-            onChange={setSelectedProjectId}
+            onChange={handleProjectChange}
             value={selectedProjectId}
             projects={projects}
             loading={pLoading}
@@ -107,10 +130,13 @@ const DashboardSidebarStatic = ({
 
         {selectedWorkspaceId && selectedProjectId && (
           <TaskSelect
+            onChange={setSelectedTaskId}
             placeholder="Задача"
             projectId={selectedProjectId}
             tasks={tasks}
             workspaceId={selectedWorkspaceId}
+            value={selectedTaskId}
+            loading={taskLoading}
           />
         )}
       </div>

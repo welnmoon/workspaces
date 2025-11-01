@@ -5,8 +5,8 @@ export const fetchTasks = async ({
   workspaceId,
   projectId,
 }: {
-  workspaceId: number;
-  projectId: number;
+  workspaceId: string;
+  projectId: string;
 }): Promise<TaskListDTO[]> => {
   try {
     const res = await fetch(apiRoutes.getTasks(workspaceId, projectId), {

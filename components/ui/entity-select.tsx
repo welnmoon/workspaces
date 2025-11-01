@@ -40,9 +40,12 @@ function EntitySelect<T>({
   const router = useRouter();
 
   const idToHref = new Map(items.map((it) => [getId(it), getHref?.(it)]));
+
+  const normalizedValue =
+    value && items.some((i) => getId(i) === value) ? value : undefined;
   return (
     <Select
-      value={value ?? undefined}
+      value={normalizedValue}
       onValueChange={(v) => {
         onChange?.(v);
         const href = idToHref.get(v);
@@ -51,7 +54,7 @@ function EntitySelect<T>({
       disabled={disabled}
     >
       <SelectTrigger className={className}>
-        <SelectValue placeholder={loading ? 'Загрузка…' : placeholder} />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
 
       <SelectContent>
@@ -66,7 +69,7 @@ function EntitySelect<T>({
           items.map((item) => {
             const id = getId(item);
             const label = getLabel(item);
-            const href = getHref?.(item);
+
             return (
               <SelectItem key={id} value={id}>
                 {label} {value === id ? '✓ ' : ''}
