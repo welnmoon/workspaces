@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useProfile = (userId: string) => {
   return useQuery({
-    queryKey: ['profile'],
+    queryKey: ['profile', userId],
     queryFn: async () => {
       const response = await fetch(apiRoutes.getUser(userId));
       return response.json();

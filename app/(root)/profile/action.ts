@@ -1,6 +1,6 @@
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
-import { profileSchema } from '@/schemas/profile';
+import { profileSchema } from '@/schemas/profile/profile';
 
 export const changeUserInfo = async (raw: unknown) => {
   const { id } = await requireUser();

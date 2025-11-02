@@ -5,3 +5,5 @@ export const profileSchema = z.object({
   lastName: z.string().trim().max(50).optional().or(z.literal('')),
   img: z.string().trim().max(300).optional(),
 });
+
+export type ProfileSchema = z.infer<typeof profileSchema>;

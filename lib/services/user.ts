@@ -1,4 +1,4 @@
-import { profileSchema } from '@/schemas/profile';
+import { profileSchema } from '@/schemas/profile/profile';
 import prisma from '../prisma';
 import { UserProfileDTO } from '@/types/prisma/DTO/user';
 

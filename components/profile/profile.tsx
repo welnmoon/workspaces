@@ -1,8 +1,7 @@
-import UnAuth from '@/components/profile/un-auth';
+'use client';
+
 import AddAccounts from '@/components/profile/add-accounts';
 import { Heading } from '@/components/ui/heading';
-import { requireUser } from '@/helpers/require-user';
-import type { SessionUser } from '@/helpers/require-user';
 
 // shadcn/ui pieces
 import {
@@ -15,30 +14,39 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Mail, UserRoundCog, Link as LinkIcon } from 'lucide-react';
+import { Mail, Link as LinkIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import BaseLink from '@/components/base-link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { UserProfileDTO } from '@/types/prisma/DTO/user';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
+import { useState } from 'react';
+import ProfileEditDialog from '../dialogs/profile-edit-dialog';
 
 type Props = {
   user: UserProfileDTO;
 };
 const ProfileComponent = ({ user }: Props) => {
   const accountProviders = user.accounts.map((a) => a.provider);
+  const [editing, setEditing] = useState(false);
 
   return (
     <main className="">
+      <ProfileEditDialog
+        open={editing}
+        setEditing={setEditing}
+        userId={user.id}
+        firstName={user.firstName || ''}
+        lastName={user.lastName || ''}
+        image={user.image || ''}
+      />
+
       {/* Page header */}
       <header className="mb-8 flex items-center justify-between gap-4">
         <Heading level={1} className="text-3xl font-semibold tracking-tight">
           Профиль
         </Heading>
-        <Button variant="default" size="sm" className="gap-2">
-          <UserRoundCog className="h-4 w-4" /> Редактировать
-        </Button>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
