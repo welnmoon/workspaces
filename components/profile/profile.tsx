@@ -19,27 +19,52 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import BaseLink from '@/components/base-link';
 import { clientRoutes } from '@/lib/routes/client-routes';
-import { UserProfileDTO } from '@/types/prisma/DTO/user';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
 import { useState } from 'react';
 import ProfileEditDialog from '../dialogs/profile-edit-dialog';
+import { useProfile } from '@/hooks/profile/useProfile';
 
 type Props = {
-  user: UserProfileDTO;
+  userId: string;
 };
-const ProfileComponent = ({ user }: Props) => {
-  const accountProviders = user.accounts.map((a) => a.provider);
+const ProfileComponent = ({ userId }: Props) => {
   const [editing, setEditing] = useState(false);
+
+  const {
+    data: profile,
+    isLoading,
+    isError,
+    error,
+  } = useProfile(userId);
+
+  if (isLoading && !profile) {
+    return (
+      <div className="flex min-h-[200px] items-center justify-center text-muted-foreground">
+        Загрузка профиля…
+      </div>
+    );
+  }
+
+  if (isError || !profile) {
+    return (
+      <div className="flex min-h-[200px] flex-col items-center justify-center gap-2 text-sm text-red-600">
+        <span>Не удалось загрузить профиль</span>
+        {error instanceof Error && <span>{error.message}</span>}
+      </div>
+    );
+  }
+
+  const accountProviders = profile.accounts.map((a) => a.provider);
 
   return (
     <main className="">
       <ProfileEditDialog
         open={editing}
         setEditing={setEditing}
-        userId={user.id}
-        firstName={user.firstName || ''}
-        lastName={user.lastName || ''}
-        image={user.image || ''}
+        userId={profile.id}
+        firstName={profile.firstName || ''}
+        lastName={profile.lastName || ''}
+        image={profile.image || ''}
       />
 
       {/* Page header */}
@@ -55,19 +80,19 @@ const ProfileComponent = ({ user }: Props) => {
           <CardHeader className="flex flex-row items-center gap-4">
             <Avatar className="h-16 w-16">
               <AvatarImage
-                src={user.image ?? undefined}
-                alt={user.firstName ?? 'User'}
+                src={profile.image ?? undefined}
+                alt={profile.firstName ?? 'User'}
               />
               <AvatarFallback className="bg-slate-200">
-                {getInitials(user.firstName)}
+                {getInitials(profile.firstName)}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
               <CardTitle className="truncate">
-                {user.firstName || 'Без имени'}
+                {profile.firstName || 'Без имени'}
               </CardTitle>
               <CardDescription className="flex items-center gap-2 truncate">
-                <Mail className="h-4 w-4" /> {user.email}
+                <Mail className="h-4 w-4" /> {profile.email}
               </CardDescription>
             </div>
           </CardHeader>
@@ -75,11 +100,11 @@ const ProfileComponent = ({ user }: Props) => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Никнейм</span>
-                <Badge variant="secondary">{user.nickname ?? 'user'}</Badge>
+                <Badge variant="secondary">{profile.nickname ?? 'user'}</Badge>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">ID</span>
-                <span className="font-mono text-xs">{user.id}</span>
+                <span className="font-mono text-xs">{profile.id}</span>
               </div>
             </div>
           </CardContent>
@@ -101,9 +126,9 @@ const ProfileComponent = ({ user }: Props) => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {user.accounts.length > 0 ? (
+              {profile.accounts.length > 0 ? (
                 <ul className="divide-y divide-border rounded-md border">
-                  {user.accounts.map((acc) => (
+                  {profile.accounts.map((acc) => (
                     <li
                       key={acc.id}
                       className="flex items-center justify-between gap-4 p-4"
@@ -149,9 +174,9 @@ const ProfileComponent = ({ user }: Props) => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {user.memberships.length > 0 ? (
+              {profile.memberships.length > 0 ? (
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {user.memberships.map((m) => (
+                  {profile.memberships.map((m) => (
                     <div key={m.id} className="rounded-lg border p-3">
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-medium truncate">

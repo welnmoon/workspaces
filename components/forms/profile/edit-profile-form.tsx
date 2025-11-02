@@ -40,7 +40,6 @@ const EditProfileForm = ({
   const onFormSubmit = async (values: EditProfileValue) => {
     mutate(values, {
       onSuccess: () => {
-        router.refresh();
         setModalOpen(false);
         toast.success('Профиль успешно обновлен');
       },

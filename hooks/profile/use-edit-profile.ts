@@ -9,8 +9,7 @@ export function useEditProfile(userId: string) {
       const res = await fetchProfile({ userId, method: 'PUT', body: payload });
       return res;
     },
-    onSuccess: (updated) => {
-      if (updated) queryClient.setQueryData(['profile', userId], updated);
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile', userId] });
     },
   });

@@ -12,7 +12,7 @@ const ProfilePage = async () => {
     return <UnAuth />;
   }
 
-  return <ProfileComponent user={user} />;
+  return <ProfileComponent userId={user.id} />;
 };
 
 export default ProfilePage;

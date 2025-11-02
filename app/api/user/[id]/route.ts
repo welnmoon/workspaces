@@ -3,11 +3,13 @@ import { ok, serverError } from '@/lib/http';
 import { UserService } from '@/lib/services/user';
 import { NextRequest } from 'next/server';
 
-export async function GET(context: { params: { id: string } }) {
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     await requireUser();
-
-    const user = await UserService.getUserProfile(context.params.id);
+    const user = await UserService.getUserProfile(params.id);
     return ok(user);
   } catch (e) {
     console.error(e);
@@ -17,12 +19,11 @@ export async function GET(context: { params: { id: string } }) {
 
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const id = await context.params.id;
     await requireUser();
-    const updated = await UserService.updateUser(id, await req.json());
+    const updated = await UserService.updateUser(params.id, await req.json());
     return ok(updated);
   } catch (e) {
     console.error(e);
