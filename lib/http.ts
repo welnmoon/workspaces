@@ -67,8 +67,8 @@ export function notFound(message = 'Not Found') {
  * ⚔️ 409 Conflict — конфликт состояния
  * Используй, если уже существует запись (например, уникальное имя, e-mail и т.п.)
  */
-export function conflict(message = 'Conflict') {
-  return NextResponse.json({ message }, { status: 409 });
+export function conflict(message = 'Conflict', code?: string) {
+  return NextResponse.json({ code, message }, { status: 409 });
 }
 
 /**

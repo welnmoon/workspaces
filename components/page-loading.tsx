@@ -1,9 +1,9 @@
-import { Spinner } from "./ui/spinner";
+import { Spinner } from './ui/spinner';
 
-const PageLoading = () => {
+const PageLoading = ({ text }: { text?: string }) => {
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Spinner />
+    <div className="flex gap-2 justify-center items-center h-screen">
+      <Spinner /> {text}
     </div>
   );
 };

@@ -8,15 +8,16 @@ import SubmitBtn from '@/components/buttons/submit-btn';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { loginSchema, LoginSchema } from './login-schema';
-import { Heading } from '@/components/ui/heading';
-import { URLS } from '@/lib/urls';
 import LoginOauthButton from '@/components/buttons/auth/login-oauth-btn';
 import { PROVIDERS } from '@/lib/providers';
 import AuthFormLayout from '../oauth-form-layout';
 import BaseLink from '@/components/base-link';
 import Divider from '@/components/divider';
+import { clientRoutes } from '@/lib/routes/client-routes';
+import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
+  const router = useRouter();
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -31,7 +32,7 @@ const LoginForm = () => {
       const loginRes = await signIn('credentials', {
         email,
         password,
-        callbackUrl: URLS.LOGIN_CALLBACK,
+        callbackUrl: clientRoutes.workspacesPage(),
         redirect: false,
       });
 

@@ -3,14 +3,17 @@ import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import customPrismaAdapter from './custom-prisma-adapter';
+import { clientRoutes } from './routes/client-routes';
 
 export const authOptions: AuthOptions = {
   // adapter: PrismaAdapter(prisma),
   adapter: customPrismaAdapter, // устраняем конфликт между prisma и next-auth создав кастомный адаптер
   session: { strategy: 'jwt' },
-
+  pages: {
+    error: clientRoutes.authErrorPage(),
+    signIn: clientRoutes.authLoginPage(),
+  },
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -23,23 +26,22 @@ export const authOptions: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password)
+          throw new Error('CREDENTIALS_REQUIRED');
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
         if (!user) {
-          throw new Error('Пользователь с таким email не найден');
+          throw new Error('NO_USER');
         }
 
-        if (!user.password)
-          throw new Error(
-            'Вы регистрировались через внешний сервис. Пожалуйста, войдите через соответствующую кнопку.'
-          );
+        if (!user.password) throw new Error('OAUTH_ONLY');
 
         const ok = await bcrypt.compare(credentials.password, user.password);
+
         if (!ok) {
-          throw new Error('Неверный email или пароль');
+          throw new Error('WRONG_PASSWORD');
         }
 
         return {

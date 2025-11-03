@@ -21,28 +21,22 @@ import BaseLink from '@/components/base-link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
 import { useState } from 'react';
-import ProfileEditDialog from '../dialogs/profile-edit-dialog';
+import ProfileEditDialog from '../dialogs/profile/profile-edit-dialog';
 import { useProfile } from '@/hooks/profile/useProfile';
+import PageLoading from '../page-loading';
+import PasswordEditDialog from '../dialogs/profile/password-edit-dialog';
 
 type Props = {
   userId: string;
 };
 const ProfileComponent = ({ userId }: Props) => {
   const [editing, setEditing] = useState(false);
+  const [editPassword, setEditPassword] = useState(false);
 
-  const {
-    data: profile,
-    isLoading,
-    isError,
-    error,
-  } = useProfile(userId);
+  const { data: profile, isLoading, isError, error } = useProfile(userId);
 
   if (isLoading && !profile) {
-    return (
-      <div className="flex min-h-[200px] items-center justify-center text-muted-foreground">
-        Загрузка профиля…
-      </div>
-    );
+    return <PageLoading text="Профиль загружается" />;
   }
 
   if (isError || !profile) {
@@ -109,9 +103,10 @@ const ProfileComponent = ({ userId }: Props) => {
             </div>
           </CardContent>
           <CardFooter className="justify-end">
-            <Button variant="outline" size="sm">
-              Сменить пароль
-            </Button>
+            <PasswordEditDialog
+              open={editPassword}
+              setEditPassword={setEditPassword}
+            />
           </CardFooter>
         </Card>
 

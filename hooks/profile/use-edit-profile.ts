@@ -1,4 +1,4 @@
-import { fetchProfile } from '@/lib/fetch-fns/fetch-profile';
+import { apiRoutes } from '@/lib/routes/api-routes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useEditProfile(userId: string) {
@@ -6,8 +6,15 @@ export function useEditProfile(userId: string) {
 
   return useMutation({
     mutationFn: async (payload: unknown) => {
-      const res = await fetchProfile({ userId, method: 'PUT', body: payload });
-      return res;
+      //   const res = await fetchProfile({ userId, method: 'PUT', body: payload });
+      //   return res;
+      const res = await fetch(apiRoutes.getUser(userId), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile', userId] });

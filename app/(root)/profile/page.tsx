@@ -4,15 +4,17 @@ import ProfileComponent from '@/components/profile/profile';
 import { UserService } from '@/lib/services/user';
 
 const ProfilePage = async () => {
-  const { id } = await requireUser();
+  try {
+    const { id } = await requireUser();
 
-  const user = await UserService.getUserProfile(id);
+    const user = await UserService.getUserProfile(id);
 
-  if (!user) {
+    if (!user) return <UnAuth />;
+
+    return <ProfileComponent userId={user.id} />;
+  } catch {
     return <UnAuth />;
   }
-
-  return <ProfileComponent userId={user.id} />;
 };
 
 export default ProfilePage;

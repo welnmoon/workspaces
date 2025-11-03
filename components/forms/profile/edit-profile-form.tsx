@@ -11,7 +11,7 @@ import { useEditProfile } from '@/hooks/profile/use-edit-profile';
 import {
   editProfileSchema,
   EditProfileValue,
-} from '@/schemas/profile/edit-profile';
+} from '@/schemas/profile/edit-profile-info';
 
 const EditProfileForm = ({
   userId,
@@ -27,7 +27,6 @@ const EditProfileForm = ({
   image: string;
 }) => {
   const { mutate, isPending, error } = useEditProfile(userId);
-  const router = useRouter();
   const form = useForm<EditProfileValue>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {

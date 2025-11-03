@@ -5,10 +5,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import MainBtn from '../buttons/main-btn';
+import MainBtn from '../../buttons/main-btn';
 import { UserRoundCog } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
-import EditProfileForm from '../forms/profile/edit-profile-form';
+import EditProfileForm from '../../forms/profile/edit-profile-form';
 
 const ProfileEditDialog = ({
   setEditing,
@@ -41,7 +41,13 @@ const ProfileEditDialog = ({
         <DialogHeader>
           <DialogTitle>Редактировать профиль</DialogTitle>
         </DialogHeader>
-        <EditProfileForm userId={userId} setModalOpen={setEditing} firstName={firstName} lastName={lastName} image={image} />
+        <EditProfileForm
+          userId={userId}
+          setModalOpen={setEditing}
+          firstName={firstName}
+          lastName={lastName}
+          image={image}
+        />
       </DialogContent>
     </Dialog>
   );
