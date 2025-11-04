@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await requireUser();
+    await requireUser(); 
     const user = await UserService.getUserProfile(params.id);
     return ok(user);
   } catch (e) {
