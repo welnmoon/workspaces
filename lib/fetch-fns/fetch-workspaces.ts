@@ -1,11 +1,14 @@
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import { apiRoutes } from '@/lib/routes/api-routes';
 
-export const fetchWorkspaces = async (): Promise<WorkspaceListDTO[]> => {
+export const fetchWorkspaces = async (
+  cache?: RequestCache
+): Promise<WorkspaceListDTO[]> => {
   try {
     const res = await fetch(apiRoutes.getWorkspaces(), {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
+      cache,
     });
 
     if (!res.ok) {

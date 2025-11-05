@@ -56,7 +56,12 @@ export async function POST(req: NextRequest) {
 // GET workspaces /api/w
 
 export async function GET() {
-  const { id } = await requireUser();
-  const workspaces = await WorkspaceService.getList(id);
-  return created(workspaces);
+  try {
+    const { id } = await requireUser();
+    const workspaces = await WorkspaceService.getList(id);
+    return created(workspaces);
+  } catch (e) {
+    console.error(e);
+    return serverError('Failed to get workspaces');
+  }
 }

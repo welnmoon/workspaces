@@ -16,4 +16,4 @@ export const PROVIDER_NAMES = PROVIDERS.map((p) => {
 
 export type Provider = (typeof PROVIDERS)[number];
 
-export type ProviderId = Provider['id'];
+export type ProviderId = (typeof PROVIDERS)[number]['id'];

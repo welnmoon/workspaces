@@ -22,9 +22,12 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
 import { useState } from 'react';
 import ProfileEditDialog from '../dialogs/profile/profile-edit-dialog';
-import { useProfile } from '@/hooks/profile/useProfile';
+import { useProfile } from '@/hooks/profile/use-profile';
 import PageLoading from '../page-loading';
 import PasswordEditDialog from '../dialogs/profile/password-edit-dialog';
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
+import OAuthEditDialog from '../dialogs/profile/oauth-edit-dialog';
 
 type Props = {
   userId: string;
@@ -32,6 +35,7 @@ type Props = {
 const ProfileComponent = ({ userId }: Props) => {
   const [editing, setEditing] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
+  const [editOAuth, setEditOAuth] = useState(false);
 
   const { data: profile, isLoading, isError, error } = useProfile(userId);
 
@@ -130,8 +134,14 @@ const ProfileComponent = ({ userId }: Props) => {
                     >
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="capitalize">
+                          <Badge
+                            variant="outline"
+                            className="capitalize flex gap-1"
+                          >
                             {acc.provider}
+
+                            {acc.provider === 'google' && <FcGoogle />}
+                            {acc.provider === 'github' && <FaGithub />}
                           </Badge>
                           <span className="text-xs text-muted-foreground">
                             ID: {acc.providerAccountId}
@@ -143,9 +153,12 @@ const ProfileComponent = ({ userId }: Props) => {
                           </p>
                         )}
                       </div>
-                      <Button variant="ghost" size="sm" className="gap-2">
-                        <LinkIcon className="h-4 w-4" /> Управлять
-                      </Button>
+                      <OAuthEditDialog
+                        key={acc.id}
+                        account={acc}
+                        setEditOAuth={setEditOAuth}
+                        open={editOAuth}
+                      />
                     </li>
                   ))}
                 </ul>

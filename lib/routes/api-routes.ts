@@ -1,3 +1,5 @@
+import { ProviderId } from '../providers';
+
 export const apiRoutes = {
   createProject: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
   someProject: (workspaceId: number, projectId: number) =>
@@ -12,4 +14,5 @@ export const apiRoutes = {
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
+  deleteUserAccount: (provider: ProviderId) => `/api/auth/accounts/${provider}`,
 };

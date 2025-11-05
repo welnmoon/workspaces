@@ -11,6 +11,17 @@ export class UserService {
     });
   }
 
+  static async getUserByIdSelectPassword(userId: string) {
+    return await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        password: true,
+      },
+    });
+  }
+
   static async getUserProfile(userId: string): Promise<UserProfileDTO | null> {
     return await prisma.user.findUnique({
       where: { id: userId },

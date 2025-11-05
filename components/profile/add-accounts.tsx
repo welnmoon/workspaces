@@ -23,7 +23,7 @@ const AddAccounts = ({ accountProviders }: { accountProviders: string[] }) => {
       ) : (
         <ul className="flex gap-2">
           {availableProviders.map((provider) => (
-            <li>
+            <li key={provider.id}>
               <Button
                 className="bg-muted border border-foreground-muted hover:bg-foreground-muted/15 text-foreground hover:text-foreground-muted"
                 key={provider.id}

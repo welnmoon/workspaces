@@ -5,11 +5,12 @@ import { NextRequest } from 'next/server';
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireUser(); 
-    const user = await UserService.getUserProfile(params.id);
+    const id = (await context.params).id;
+    await requireUser();
+    const user = await UserService.getUserProfile(id);
     return ok(user);
   } catch (e) {
     console.error(e);
