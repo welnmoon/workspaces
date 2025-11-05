@@ -8,5 +8,5 @@ export const disconnect = async (provider: ProviderId) => {
 
   if (!res.ok) throw new Error('Failed to disconnect');
 
-  return res.json();
+  return res;
 };

@@ -36,9 +36,6 @@ const OAuthEditDialog = ({
           router.refresh();
           toast.success('Аккаунт успешно отвязан');
         },
-        onError: () => {
-          toast.error('Не удалось отвязать аккаунт');
-        },
       });
     } catch (e) {}
   };

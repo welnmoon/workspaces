@@ -10,9 +10,8 @@ export const PROVIDERS = [
     icon: '/icons/github.svg',
   },
 ];
-export const PROVIDER_NAMES = PROVIDERS.map((p) => {
-  return p.name;
-});
+
+export const PROVIDER_IDS = PROVIDERS.map((p) => p.id);
 
 export type Provider = (typeof PROVIDERS)[number];
 

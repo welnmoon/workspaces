@@ -3,7 +3,7 @@
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
 import { noContent } from '@/lib/http';
-import { PROVIDER_NAMES } from '@/lib/providers';
+import { PROVIDER_IDS } from '@/lib/providers';
 import { AuthService } from '@/lib/services/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -15,7 +15,7 @@ export async function DELETE(
     const { id } = await requireUser();
     const provider = (await context.params).provider.toLowerCase();
 
-    if (!provider || !PROVIDER_NAMES.includes(provider))
+    if (!provider || !PROVIDER_IDS.includes(provider))
       throw new AppError(400, 'INVALID_PROVIDER', 'Неверный провайдер');
 
     await AuthService.deleteUsersAccount(id, provider);
