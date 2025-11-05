@@ -35,7 +35,7 @@ type Props = {
 const ProfileComponent = ({ userId }: Props) => {
   const [editing, setEditing] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
-  const [editOAuth, setEditOAuth] = useState(false);
+  const [editOAuth, setEditOAuth] = useState('');
 
   const { data: profile, isLoading, isError, error } = useProfile(userId);
 
@@ -154,12 +154,13 @@ const ProfileComponent = ({ userId }: Props) => {
                         )}
                       </div>
                       <OAuthEditDialog
-                      countOfAccounts={countOfAccounts}
+                        countOfAccounts={countOfAccounts}
                         hasPassword={hasPassword}
-                        key={acc.id}
                         account={acc}
-                        setEditOAuth={setEditOAuth}
-                        open={editOAuth}
+                        setEditOAuth={(open) =>
+                          setEditOAuth(open ? acc.id : '')
+                        }
+                        open={editOAuth === acc.id}
                       />
                     </li>
                   ))}
