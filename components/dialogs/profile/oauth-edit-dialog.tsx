@@ -18,13 +18,17 @@ import { Spinner } from '@/components/ui/spinner';
 import { useRouter } from 'next/navigation';
 
 const OAuthEditDialog = ({
+  countOfAccounts,
+  hasPassword,
   setEditOAuth,
   open,
   account,
 }: {
   setEditOAuth: Dispatch<SetStateAction<boolean>>;
+  countOfAccounts: number;
   open: boolean;
   account: AccountFullDTO;
+  hasPassword: boolean;
 }) => {
   const { mutate, isPending } = useDeleteUsersAccount();
   const router = useRouter();
@@ -56,7 +60,10 @@ const OAuthEditDialog = ({
           <DialogTitle>Управление аккаунтами</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-2">{account.provider}</div>
-        <Button onClick={() => handleProviderDelete()}>
+        <Button
+          disabled={!hasPassword && countOfAccounts === 1}
+          onClick={() => handleProviderDelete()}
+        >
           {isPending ? <Spinner /> : 'Отвязать'}
         </Button>
       </DialogContent>

@@ -42,7 +42,6 @@ const ProfileComponent = ({ userId }: Props) => {
   if (isLoading && !profile) {
     return <PageLoading text="Профиль загружается" />;
   }
-
   if (isError || !profile) {
     return (
       <div className="flex min-h-[200px] flex-col items-center justify-center gap-2 text-sm text-red-600">
@@ -52,24 +51,25 @@ const ProfileComponent = ({ userId }: Props) => {
     );
   }
 
+  const hasPassword = !!(profile.password && profile.password !== '');
+  const countOfAccounts = profile.accounts.length;
   const accountProviders = profile.accounts.map((a) => a.provider);
 
   return (
     <main className="">
-      <ProfileEditDialog
-        open={editing}
-        setEditing={setEditing}
-        userId={profile.id}
-        firstName={profile.firstName || ''}
-        lastName={profile.lastName || ''}
-        image={profile.image || ''}
-      />
-
       {/* Page header */}
       <header className="mb-8 flex items-center justify-between gap-4">
         <Heading level={1} className="text-3xl font-semibold tracking-tight">
           Профиль
         </Heading>
+        <ProfileEditDialog
+          open={editing}
+          setEditing={setEditing}
+          userId={profile.id}
+          firstName={profile.firstName || ''}
+          lastName={profile.lastName || ''}
+          image={profile.image || ''}
+        />
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -154,6 +154,8 @@ const ProfileComponent = ({ userId }: Props) => {
                         )}
                       </div>
                       <OAuthEditDialog
+                      countOfAccounts={countOfAccounts}
+                        hasPassword={hasPassword}
                         key={acc.id}
                         account={acc}
                         setEditOAuth={setEditOAuth}

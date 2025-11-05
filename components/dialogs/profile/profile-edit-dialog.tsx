@@ -26,7 +26,7 @@ const ProfileEditDialog = ({
   image: string;
 }) => {
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={setEditing}>
       <DialogTrigger asChild>
         <MainBtn
           onClick={() => setEditing(true)}
