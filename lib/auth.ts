@@ -42,6 +42,7 @@ export const authOptions: AuthOptions = {
         }
 
         if (!user.password) throw new Error('OAUTH_ONLY');
+        if (!user.emailVerified) throw new Error('EMAIL_NOT_VERIFIED');
 
         const ok = await bcrypt.compare(credentials.password, user.password);
 

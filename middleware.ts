@@ -1,6 +1,9 @@
 // middleware.ts
 import { NextResponse } from 'next/server';
 import { withAuth } from 'next-auth/middleware';
+import { jwtVerify } from 'jose';
+
+const SECRET = new TextEncoder().encode(process.env.APP_SECRET!);
 
 // Страницы аутентификации (их не показываем авторизованным)
 const AUTH_PAGES = ['/login', '/register', '/not-auth'];
@@ -11,11 +14,31 @@ const PRIVATE_PREFIXES = ['/settings', '/dashboard'];
 // const ADMIN_PREFIX = "/admin"
 
 export default withAuth(
-  function middleware(req) {
+  async function middleware(req) {
     const url = req.nextUrl;
     const path = url.pathname;
     const isAuthPage = AUTH_PAGES.includes(path);
     const isLoggedIn = !!req.nextauth.token;
+
+    if (path === '/verify/success') {
+      const token = req.cookies.get('verify_ticket')?.value;
+      if (!token) {
+        return NextResponse.redirect(new URL('/', req.url));
+      }
+
+      try {
+        await jwtVerify(token, SECRET); // проверка подписи/срока
+        // Пропускаем и сразу очищаем билет (одноразовость)
+        const res = NextResponse.next();
+        res.cookies.set('verify_ticket', '', {
+          path: '/verify',
+          maxAge: 0,
+        });
+        return res;
+      } catch {
+        return NextResponse.redirect(new URL('/', req.url));
+      }
+    }
 
     // 1) Авторизован — не показываем /login /register /not-auth
     if (isLoggedIn && isAuthPage) {
@@ -43,12 +66,6 @@ export default withAuth(
           return !!token; // есть токен -> пускаем
         }
 
-        // Пример ролевой защиты админки (раскомментируй при необходимости):
-        // if (path.startsWith(ADMIN_PREFIX)) {
-        //   return !!token && (token as any).role === "admin"
-        // }
-
-        // Остальные пути — не контролируем данным middleware
         return true;
       },
     },

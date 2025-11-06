@@ -32,29 +32,21 @@ const RegisterForm = () => {
     });
 
     if (!res.ok) {
-      const payload = await res.json().catch(() => {}); // здесь мы пытаемся распарсить JSON, но если это не получится, то payload будет undefined
+      const payload = await res.json().catch(() => {});
       const msg = payload?.error || res.statusText || 'Ошибка регистрации';
       toast.error(msg);
       throw new Error(res.statusText);
     }
 
-    const loginRes = await signIn('credentials', {
-      email,
-      password,
-      callbackUrl: '/',
-      redirect: false,
-    });
-
-    if (!loginRes?.ok) {
-      toast.error(
-        loginRes?.error ||
-          'Регистрация прошла, но вход не выполнен. Пожалуйста попробуйте ещё раз.'
-      );
-      return;
-    }
-
-    toast.success('Вы успешно зарегистрировались');
-    router.replace(loginRes?.url || '/profile');
+    // const loginRes = await signIn('credentials', {
+    //   email,
+    //   password,
+    //   callbackUrl: '/',
+    //   redirect: false,
+    // });
+    toast.success(
+      'Мы отправили вам ссылку на почту, чтобы подтвердить аккаунт'
+    );
   };
 
   return (

@@ -121,3 +121,9 @@ export function methodNotAllowed(allowed: string[]) {
   res.headers.set('Allow', allowed.join(', '));
   return res;
 }
+
+export const fail = (reason: 'invalid' | 'expired' | 'server', url?: URL) =>
+  NextResponse.redirect(
+    new URL(`/auth/verify/fail?reason=${reason}`, url),
+    302
+  );

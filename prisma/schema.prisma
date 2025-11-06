@@ -65,7 +65,7 @@ model User {
   nickname String?
   image     String?
 
-  emailVerified DateTime?
+  emailVerified DateTime? 
   password      String?
 
   memberships Membership[]
