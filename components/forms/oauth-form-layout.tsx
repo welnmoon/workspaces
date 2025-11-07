@@ -1,6 +1,6 @@
 import { Heading } from '@/components/ui/heading';
 import { cn } from '@/lib/utils';
-import WorknestLogotype from '../ui/worknest-logotype';
+import WorknestLogotype from '../ui/workspace-logo';
 
 type AuthFormLayoutProps = {
   title: string;

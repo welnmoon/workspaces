@@ -1,6 +1,6 @@
 'use client';
 import WorkspaceSelect from '@/components/ui/select/workspace-select';
-import WorknestLogotype from '../../ui/worknest-logotype';
+import WorknestLogotype from '../../ui/workspace-logo';
 import { useEffect, useState } from 'react';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import ProjectSelect from '@/components/ui/select/project-select';

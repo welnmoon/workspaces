@@ -2,6 +2,7 @@ import UnAuth from '@/components/profile/un-auth';
 import { requireUser } from '@/helpers/require-user';
 import ProfileComponent from '@/components/profile/profile';
 import { UserService } from '@/lib/services/user';
+import { redirect } from 'next/navigation';
 
 const ProfilePage = async () => {
   try {
@@ -9,11 +10,11 @@ const ProfilePage = async () => {
 
     const user = await UserService.getUserProfile(id);
 
-    if (!user) return <UnAuth />;
+    if (!id || !user) redirect(process.env.NEXT_PUBLIC_BASE_URL!);
 
     return <ProfileComponent userId={user.id} />;
   } catch {
-    return <UnAuth />;
+    redirect(process.env.NEXT_PUBLIC_BASE_URL!);
   }
 };
 

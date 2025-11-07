@@ -1,4 +1,3 @@
-import BaseLink from '@/components/base-link';
 import LoginForm from '@/components/forms/login/login-form';
 import { authOptions } from '@/lib/auth';
 import { clientRoutes } from '@/lib/routes/client-routes';
