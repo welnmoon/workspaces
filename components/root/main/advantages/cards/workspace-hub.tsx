@@ -1,5 +1,7 @@
+import { FeatureBadge } from '@/components/ui/feature-badge';
 import { Heading } from '@/components/ui/heading';
 import { cn } from '@/lib/utils';
+import { PanelsTopLeft } from 'lucide-react';
 
 const WorkspaceHub = ({
   className,
@@ -13,8 +15,19 @@ const WorkspaceHub = ({
   //   children?: React.ReactNode;
 }) => {
   return (
-    <article className={cn(`bg-white flex relative pt-4`, className)}>
-      <div className="flex-1 pl-8 pt-4 flex flex-col gap-2">
+    <article
+      className={cn(
+        // до lg без флекса, на lg — как было
+        `bg-white relative pt-4 md:block lg:flex lg:flex-end md:min-h-[420px]`,
+        className
+      )}
+    >
+      <div className="flex-1 pl-8 pt-4 pb-8 pr-8 flex flex-col gap-2 md:pr-8">
+        <FeatureBadge
+          icon={<PanelsTopLeft className="h-4 w-4" />}
+          text="Единое пространство"
+          className="bg-blue-50 text-blue-600 border-blue-300/50"
+        />
         <Heading>Единое пространство для всей команды</Heading>
         <p>
           Создавайте рабочие пространства для проектов, отделов или клиентов.
@@ -22,9 +35,16 @@ const WorkspaceHub = ({
           контекста. Больше никаких разрозненных чатов и таблиц.
         </p>
       </div>
-      <figure className="w-1/2">
+
+      <figure
+        className="
+      hidden sm:block
+      md:absolute md:right-0 md:bottom-0 md:w-3/5
+      lg:static lg:flex lg:items-end lg:w-1/2
+    "
+      >
         <img
-          className="w-full pointer-events-none"
+          className="w-full pointer-events-none lg:h-full md:w-full"
           src="/images/advantages/WorkspaceHub.svg"
           alt="WorkspaceHub"
         />

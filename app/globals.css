@@ -95,6 +95,17 @@ p,
   -webkit-hyphens: auto;
 }
 
+@keyframes gentle-bounce {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-3px) rotate(8deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
 /* Можно inline или обычным блоком @theme — разницы для этого случая нет */
 @theme inline {
   /* базовые оттенки бренда */

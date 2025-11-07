@@ -1,18 +1,34 @@
-import { Heading } from '@/components/ui/heading';
 import RootContainer from '../../root-container';
-import AdvantageCard from './advantage-card';
 import WorkspaceHub from './cards/workspace-hub';
 import ProjectControl from './cards/project-control';
 import SmartTasks from './cards/smart-tasks';
 import TeamCollaboration from './cards/team-collab';
 import AnalyticsAudit from './cards/analytics-audit';
 import PricingGrowth from './cards/pricing-growth';
+import { RootHeading } from '../../root-heading';
+import { VscSparkleFilled } from 'react-icons/vsc';
 
 const Advantages = () => {
   return (
-    <section className="bg-gray-300 p-8">
+    <section className="bg-white p-8">
       <RootContainer>
-        <div className="grid grid-cols-5 gap-3 w-full py-8 px-40">
+        <RootHeading
+          className="text-center mx-auto tracking-tight font-extrabold leading-tight text-4xl md:text-5xl
+          "
+          level={2}
+        >
+          Работайте как{' '}
+          <span className=" items-center gap-1 text-primary-500 relative">
+            <VscSparkleFilled
+              className="w-10 h-10 absolute -right-4 -top-3 text-amber-300"
+              style={{ animation: 'gentle-bounce 2.2s ease-in-out infinite' }}
+            />
+            команда
+          </span>
+          , а не как разрозненные чаты и таблицы
+        </RootHeading>
+
+        <div className="md:grid md:grid-cols-5 gap-3 w-full lg:w-3/4 mx-auto mt-8">
           <WorkspaceHub className="col-span-5 rounded-md overflow-hidden bg-[#F4F8FF] border border-blue-300/40" />
 
           <ProjectControl className="col-span-3 rounded-md overflow-hidden bg-[#F8FFE8] border border-lime-300/40" />
