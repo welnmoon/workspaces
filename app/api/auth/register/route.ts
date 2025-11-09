@@ -3,8 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { requireUser } from '@/helpers/require-user';
-import { conflict, ok, serverError, unprocessable } from '@/lib/http';
+import {
+  badRequest,
+  conflict,
+  ok,
+  serverError,
+  unprocessable,
+} from '@/lib/http';
 import { resend } from '@/lib/email/resend-client';
 import { registerSchema } from '@/components/forms/register/register-schema';
 import crypto from 'crypto';
@@ -15,65 +20,86 @@ import crypto from 'crypto';
 
 export async function POST(req: NextRequest) {
   try {
-    const body: unknown = await req.json();
-    const result = registerSchema.safeParse(body);
-    if (!result.success) {
-      return unprocessable(result.error.message, result.error.flatten());
-    }
-    const { email, firstName, lastName, password } = result.data;
-
-    if (!email || !firstName || !lastName || !password) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
+    // 1) Сначала сессия
     const session = await getServerSession(authOptions);
+    if (session)
+      return badRequest('User already logged in', 'USER_ALREADY_LOGGED_IN');
 
-    if (session) {
-      return NextResponse.json(
-        { error: 'User already logged in' },
-        { status: 400 }
-      );
+    // 2) Парсинг + базовые проверки
+    const body = await req.json();
+    const parsed = registerSchema.safeParse(body);
+    if (!parsed.success) {
+      return unprocessable(parsed.error.message, parsed.error.flatten());
+    }
+    const firstName = parsed.data.firstName?.trim();
+    const lastName = parsed.data.lastName?.trim();
+    const email = parsed.data.email?.trim().toLowerCase();
+    const password = parsed.data.password;
+    if (!email || !firstName || !lastName || !password) {
+      return badRequest('Missing required fields');
     }
 
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return conflict('User already exists'); // 409
+    // 3) Ищем пользователя
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    // 4) Если верифицирован — 409
+    if (user?.emailVerified) {
+      return conflict('User already exists', 'USER_ALREADY_EXISTS');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const rawToken = crypto.randomBytes(32).toString('hex'); // сырой токен - не зашифрованный
+    // 5) Готовим токен
+    const rawToken = crypto.randomBytes(32).toString('hex'); // url-safe
     const tokenHash = crypto
       .createHash('sha256')
       .update(rawToken)
       .digest('hex');
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+    // 6) Запись в БД
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    try {
+      await prisma.$transaction(async (tx) => {
+        if (!user) {
+          await tx.user.create({
+            data: { email, firstName, lastName, password: hashedPassword },
+          });
+        } else {
+          await tx.user.update({
+            where: { email },
+            data: { firstName, lastName, password: hashedPassword },
+          });
+        }
+
+        // чистим старые токены и пишем новый
+        await tx.verificationToken.deleteMany({ where: { identifier: email } });
+        await tx.verificationToken.create({
+          data: { identifier: email, token: tokenHash, expires: expiresAt },
+        });
+      });
+    } catch (err: any) {
+      // перехват уникального индекса
+      if (err.code === 'P2002') {
+        return conflict('User already exists', 'USER_ALREADY_EXISTS');
+      }
+      throw err;
+    }
+
     const verifyLink = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verify?token=${rawToken}`;
-
-    await prisma.$transaction(async (tx) => {
-      await tx.user.create({
-        data: { email, firstName, lastName, password: hashedPassword },
-      });
-
-      await tx.verificationToken.create({
-        data: {
-          identifier: email,
-          token: tokenHash,
-          expires: expiresAt,
-        },
-      });
-      // verification email
-      await resend.emails.send({
-        from: 'MyApp <onboarding@resend.dev>',
-        to: email,
-        subject: 'Подтверждение регистрации',
-        html: `<p>Привет, ${firstName} ${lastName}! Пожалуйста, подтвердите свой email: <a href="${verifyLink}">Подтвердить</a></p>`,
-      });
+    await resend.emails.send({
+      from: 'MyApp <onboarding@resend.dev>',
+      to: email,
+      subject: 'Подтверждение регистрации',
+      html: `<p>Привет, ${firstName} ${lastName}! Пожалуйста, подтвердите свой email: <a href="${verifyLink}">Подтвердить</a></p>`,
     });
 
-    return ok('Пользователь зарегистрирован', { status: 201 });
+    return NextResponse.json(
+      {
+        message:
+          'Если адрес существует, мы отправили письмо для подтверждения.',
+      },
+      { status: 201 }
+    );
   } catch (e) {
     console.error(e);
     return serverError('Failed to register user');

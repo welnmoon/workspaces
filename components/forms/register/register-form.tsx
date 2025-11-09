@@ -1,14 +1,16 @@
+'use client';
+
 import { FormProvider, useForm } from 'react-hook-form';
 import { registerSchema, RegisterSchema } from './register-schema';
 import { zodResolver } from '@hookform/resolvers/zod'; // npm install @hookform/resolvers
 import FormInput from '../form-input';
 import SubmitBtn from '@/components/buttons/submit-btn';
-import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { Heading } from '@/components/ui/heading';
 import { useRouter } from 'next/navigation';
 import AuthFormLayout from '../oauth-form-layout';
 import BaseLink from '@/components/base-link';
+import { apiRoutes } from '@/lib/routes/api-routes';
+import { useState } from 'react';
 
 const RegisterForm = () => {
   const form = useForm<RegisterSchema>({
@@ -21,11 +23,12 @@ const RegisterForm = () => {
     },
   });
   const router = useRouter();
+  const [sended, setSended] = useState(false);
 
   const onRegisterSubmit = async () => {
     const { email, password, firstName, lastName } = form.getValues();
 
-    const res = await fetch('/api/auth/register', {
+    const res = await fetch(apiRoutes.register(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, firstName, lastName }),
@@ -35,7 +38,8 @@ const RegisterForm = () => {
       const payload = await res.json().catch(() => {});
       const msg = payload?.error || res.statusText || 'Ошибка регистрации';
       toast.error(msg);
-      throw new Error(res.statusText);
+      form.setError('email', { message: msg });
+      return;
     }
 
     // const loginRes = await signIn('credentials', {
@@ -44,6 +48,8 @@ const RegisterForm = () => {
     //   callbackUrl: '/',
     //   redirect: false,
     // });
+
+    setSended(true);
     toast.success(
       'Мы отправили вам ссылку на почту, чтобы подтвердить аккаунт'
     );
@@ -56,6 +62,7 @@ const RegisterForm = () => {
           <form
             onSubmit={form.handleSubmit(onRegisterSubmit)}
             aria-label="Форма регистрации"
+            className="mb-4"
           >
             <fieldset
               className="flex flex-col gap-5"
@@ -89,6 +96,16 @@ const RegisterForm = () => {
               />
             </fieldset>
           </form>
+          {sended && (
+            <p className="bg-success/10 rounded-2xl text-success px-4 py-2">
+              Мы отправили вам ссылку на почту{' '}
+              <span className="font-medium underline ">
+                {form.getValues().email}
+              </span>
+              , чтобы подтвердить аккаунт. Пожалуйста перейдите по ссылке в
+              письме.
+            </p>
+          )}
         </FormProvider>
         <p className="mt-4">
           Уже есть аккаунт? <BaseLink href="/login">Вход</BaseLink>

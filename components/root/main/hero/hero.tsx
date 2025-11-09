@@ -1,11 +1,11 @@
 const HeroSection = () => {
   return (
-    <section className="mb-10 pt-20">
+    <section className="mb-30 pt-20">
       <div className="text-center group">
         <h1
           className="
           mt-8 text-4xl sm:text-5xl md:text-6xl xl:text-7xl
-          font-extrabold leading-tight tracking-tight text-zinc-900
+          font-extrabold leading-tight tracking-tight text-zinc-800
           dark:text-white
         "
         >

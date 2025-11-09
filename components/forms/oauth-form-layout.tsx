@@ -1,6 +1,6 @@
 import { Heading } from '@/components/ui/heading';
 import { cn } from '@/lib/utils';
-import WorknestLogotype from '../ui/workspace-logo';
+import { WorkspaceLogo } from '../ui/workspace-logo';
 
 type AuthFormLayoutProps = {
   title: string;
@@ -20,7 +20,7 @@ const AuthFormLayout = ({
         className
       )}
     >
-      <WorknestLogotype />
+      <WorkspaceLogo className="mb-4 text-primary-500" />
       <Heading level={2}>{title}</Heading>
       <div className="mt-6">{children}</div>
     </main>

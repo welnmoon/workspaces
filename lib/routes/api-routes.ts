@@ -1,3 +1,4 @@
+import { register } from 'module';
 import { ProviderId } from '../providers';
 
 export const apiRoutes = {
@@ -15,4 +16,5 @@ export const apiRoutes = {
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
   deleteUserAccount: (provider: ProviderId) => `/api/auth/accounts/${provider}`,
+  register: () => `/api/auth/register`,
 };

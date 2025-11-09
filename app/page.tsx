@@ -1,10 +1,24 @@
+'use client';
+
 import { AuthButtons } from '@/components/root/buttons/auth-btns';
 import Advantages from '@/components/root/main/advantages/advantages';
 import HeroSection from '@/components/root/main/hero/hero';
+import CompaniesMarquee from '@/components/root/main/marquee/companies-marquee';
+
 import RootContainer from '@/components/root/root-container';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 
-export default async function Home() {
+// export type SessionUser =
+//   | {
+//       id: string;
+//       name?: string | null | undefined;
+//       email?: string | null | undefined;
+//       image?: string | null | undefined;
+//     }
+//   | undefined;
+
+export default function Home() {
+  // const user = useSession().data?.user;
   return (
     <main>
       <RootContainer>
@@ -16,6 +30,8 @@ export default async function Home() {
         {/*Hero*/}
         <HeroSection />
       </RootContainer>
+      <CompaniesMarquee />
+
       {/*Product Mockup*/}
       <section className="bg-gray-100 pt-8 relative mb-8">
         {/*gradient from bottom to top*/}

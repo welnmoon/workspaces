@@ -14,13 +14,13 @@ const Advantages = () => {
       <RootContainer>
         <RootHeading
           className="text-center mx-auto tracking-tight font-extrabold leading-tight text-4xl md:text-5xl
-          "
+          text-neutral-800 lg:w-3/4"
           level={2}
         >
           Работайте как{' '}
           <span className=" items-center gap-1 text-primary-500 relative">
             <VscSparkleFilled
-              className="w-10 h-10 absolute -right-4 -top-3 text-amber-300"
+              className=" absolute w-10 h-10  -right-4 -top-3 text-amber-300"
               style={{ animation: 'gentle-bounce 2.2s ease-in-out infinite' }}
             />
             команда
