@@ -24,6 +24,7 @@ const RegisterForm = () => {
   });
   const router = useRouter();
   const [sended, setSended] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState('');
 
   const onRegisterSubmit = async () => {
     const { email, password, firstName, lastName } = form.getValues();
@@ -48,7 +49,7 @@ const RegisterForm = () => {
     //   callbackUrl: '/',
     //   redirect: false,
     // });
-
+    setSubmittedEmail(form.getValues().email);
     setSended(true);
     toast.success(
       'Мы отправили вам ссылку на почту, чтобы подтвердить аккаунт'
@@ -98,12 +99,9 @@ const RegisterForm = () => {
           </form>
           {sended && (
             <p className="bg-success/10 rounded-2xl text-success px-4 py-2">
-              Мы отправили вам ссылку на почту{' '}
-              <span className="font-medium underline ">
-                {form.getValues().email}
-              </span>
-              , чтобы подтвердить аккаунт. Пожалуйста перейдите по ссылке в
-              письме.
+              Мы отправили вам ссылку на почту {submittedEmail}
+              <span className="font-medium underline "></span>, чтобы
+              подтвердить аккаунт. Пожалуйста перейдите по ссылке в письме.
             </p>
           )}
         </FormProvider>
