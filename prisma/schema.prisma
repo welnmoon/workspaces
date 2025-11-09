@@ -14,10 +14,11 @@ enum Role {
 }
 
 enum TaskStatus {
-  TODO
+  TODO // 
   IN_PROGRESS
   DONE
   BLOCKED // cannot proceed until something else happens
+  
 }
 
 enum InvitationStatus {

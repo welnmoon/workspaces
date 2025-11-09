@@ -1,6 +1,5 @@
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -10,16 +9,28 @@ import { Heading } from '../ui/heading';
 import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
-const ProjectCard = ({
+import ProjectCardBadge from './project-card-badge';
+
+const ProjectCard = async ({
   title,
   description,
   projectId,
   workspaceId,
+  tasksTotal,
+  tasksDone,
+  tasksInProgress,
+  tasksToDoCount,
+  tasksOverdue,
 }: {
   title: string;
   description: string;
   projectId: number;
   workspaceId: number;
+  tasksTotal: number;
+  tasksDone: number;
+  tasksInProgress: number;
+  tasksToDoCount: number;
+  tasksOverdue: number;
 }) => {
   return (
     <Card>
@@ -27,10 +38,12 @@ const ProjectCard = ({
         <CardTitle>
           <Heading className="text-bold " level={2}>
             <Link
-              className="underline-anim"
+              className=""
               href={clientRoutes.projectPage(workspaceId, projectId)}
             >
-              <span className="block truncate max-w-full">{title}</span>
+              <span className="underline-anim truncate max-w-full min-w-fit">
+                {title}
+              </span>
             </Link>
           </Heading>
         </CardTitle>
@@ -38,11 +51,18 @@ const ProjectCard = ({
           {description}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
+
+      <CardFooter className="block bg-zinc-50 px-4 py-2 ">
+        <Heading level={6} className="text-zinc-400 mb-2">
+          Задачи
+        </Heading>
+        <div className=" flex flex-wrap gap-1 ">
+          <ProjectCardBadge text="Всего" value={tasksTotal} />
+          <ProjectCardBadge text="Выполненные" value={tasksDone} />
+          <ProjectCardBadge text="В работе" value={tasksInProgress} />
+          <ProjectCardBadge text="Новые" value={tasksToDoCount} />
+          <ProjectCardBadge text="Просроченные" value={tasksOverdue} />
+        </div>
       </CardFooter>
     </Card>
   );

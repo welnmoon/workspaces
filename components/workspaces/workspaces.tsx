@@ -14,6 +14,7 @@ const WorkspacesComponent = ({
         <Heading>Workspaces</Heading>
         <CreateWorkspaceDialog />
       </div>
+
       <section className={cardContainer}>
         {workspaces.map((workspace) => (
           <WorkspaceCard key={workspace.id} workspace={workspace} />

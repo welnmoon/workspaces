@@ -16,7 +16,7 @@ export const Heading = ({ level = 1, children, className }: HeadingProps) => {
     3: 'text-xl ',
     4: 'text-lg ',
     5: 'text-base ',
-    6: 'text-sm uppercase',
+    6: 'text-sm',
   }[level];
 
   return <Tag className={cn(baseStyles, className)}>{children}</Tag>;

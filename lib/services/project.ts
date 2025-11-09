@@ -39,4 +39,12 @@ export class ProjectServices {
       },
     });
   }
+
+  static async getCount(workspaceId: number) {
+    return await prisma.project.count({
+      where: {
+        workspaceId,
+      },
+    });
+  }
 }

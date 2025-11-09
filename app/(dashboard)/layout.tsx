@@ -10,7 +10,6 @@ import DashboardSidebarStatic from '@/components/sidebar/static/dashboard-sideba
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { requireUser } from '@/helpers/require-user';
-import { HiOutlineUserCircle } from 'react-icons/hi';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { getInitials } from '@/helpers/profile.ts/getInitials';

@@ -5,6 +5,7 @@ import {
 } from '@/types/prisma/DTO/workspaces';
 import prisma from '@/lib/prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
+import { Membership, Workspace } from '@prisma/client';
 
 export class WorkspaceService {
   // Получение списка воркспейсов
@@ -50,6 +51,16 @@ export class WorkspaceService {
         id: true,
         name: true,
         description: true,
+      },
+    });
+  }
+
+  static async getWorkspaceById(
+    workspaceId: number
+  ): Promise<Workspace | null> {
+    return prisma.workspace.findUnique({
+      where: {
+        id: workspaceId,
       },
     });
   }

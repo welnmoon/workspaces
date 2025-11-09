@@ -78,7 +78,7 @@ button {
   left: 0;
   height: 2px;
   width: 100%;
-  background-color: #000000;
+  background-color: #7c7c7c;
   transform: scaleX(0);
   transform-origin: left; /* 👉 линия начинается слева */
   transition: transform 0.3s ease;
