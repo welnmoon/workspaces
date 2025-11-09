@@ -8,4 +8,5 @@ export const clientRoutes = {
   authErrorPage: () => `/auth/error`,
   authRegisterPage: () => `/register`,
   authLoginPage: () => `/login`,
+  profilePage: () => `/profile`,
 };

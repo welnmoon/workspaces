@@ -1,6 +1,5 @@
 'use client';
 import WorkspaceSelect from '@/components/ui/select/workspace-select';
-import WorknestLogotype from '../../ui/workspace-logo';
 import { useEffect, useState } from 'react';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import ProjectSelect from '@/components/ui/select/project-select';
@@ -11,6 +10,7 @@ import TaskSelect from '@/components/ui/select/task-select';
 import { TaskListDTO } from '@/types/prisma/DTO/tasks';
 import { fetchTasks } from '@/lib/fetch-fns/fetch-tasks';
 import toast from 'react-hot-toast';
+import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarStatic = ({
@@ -109,7 +109,7 @@ const DashboardSidebarStatic = ({
   return (
     <aside className="hidden md:block md:w-60 lg:w-62 xl:w-64 bg-zinc-50 border-r h-screen px-4 py-4 mr-4">
       <div className="mb-6">
-        <WorknestLogotype />
+        <WorkspaceLogo />
       </div>
       <div className="flex flex-col gap-2">
         <WorkspaceSelect

@@ -5,6 +5,7 @@ export type SessionUser = {
   id: string;
   email?: string | null;
   name?: string | null;
+  image?: string | null;
 };
 
 export class UnauthorizedError extends Error {

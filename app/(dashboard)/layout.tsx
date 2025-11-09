@@ -10,14 +10,21 @@ import DashboardSidebarStatic from '@/components/sidebar/static/dashboard-sideba
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { requireUser } from '@/helpers/require-user';
+import { HiOutlineUserCircle } from 'react-icons/hi';
+import { clientRoutes } from '@/lib/routes/client-routes';
+import Link from 'next/link';
+import { getInitials } from '@/helpers/profile.ts/getInitials';
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { id } = await requireUser();
-  const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(id);
+  const user = await requireUser();
+
+  const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(
+    user.id
+  );
 
   return (
     <SidebarProvider
@@ -44,14 +51,25 @@ export default async function DashboardLayout({
           <div className="flex items-center">
             <SidebarTrigger className="ml-auto lg:hidden" />
             <AvatarRoot className="AvatarRoot">
-              <AvatarImage
-                className="AvatarImage"
-                src="https://images.unsplash.com/photo-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
-                alt="Colm Tuite"
-              />
-              <AvatarFallback className="AvatarFallback" delayMs={600}>
-                Avatar
-              </AvatarFallback>
+              <Link
+                href={clientRoutes.profilePage()}
+                className="flex gap-2 text-center"
+              >
+                {user.image ? (
+                  <AvatarImage
+                    src={user.image ?? undefined}
+                    alt={user.name ?? 'User'}
+                  />
+                ) : (
+                  <div className="bg-slate-200 rounded-full p-2">
+                    {getInitials(user.name)}
+                  </div>
+                )}
+
+                <AvatarFallback className="flex items-center" delayMs={600}>
+                  <span className="underline-anim">{user.name}</span>
+                </AvatarFallback>
+              </Link>
             </AvatarRoot>
           </div>
         </div>

@@ -44,6 +44,7 @@ const LoginForm = () => {
       }
 
       toast.success('Вы успешно вошли в систему');
+      router.push(clientRoutes.workspacesPage());
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Неизвестная ошибка';
       toast.error(message);

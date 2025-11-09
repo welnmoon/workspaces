@@ -12,7 +12,7 @@ export function WorkspaceLogo({
   className = 'text-black',
 }: Props) {
   return (
-    <div className={`flex items-center gap-4 ${className}`}>
+    <div className={`flex items-center gap-2 ${className}`}>
       {/* Префикс W[space] */}
       <span
         className="font-extrabold leading-none select-none"
