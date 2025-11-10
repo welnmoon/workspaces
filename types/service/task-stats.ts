@@ -4,4 +4,5 @@ export type TaskStats = {
   tasksInProgressCount: number;
   tasksDoneCount: number;
   tasksBlockedCount: number;
+  tasksOverdueCount: number;
 };
