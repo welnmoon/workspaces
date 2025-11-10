@@ -76,20 +76,15 @@ const DashboardSidebarStatic = ({
   // Routing --------------------------------
   const pathname = usePathname();
   useEffect(() => {
-    // ожидаем роуты вида /w/123 или /w/123/projects/456
     const workspaceMatch = pathname.match(/\/w\/([^/]+)/);
     const projectMatch = pathname.match(/\/projects\/([^/]+)/);
+
     const workspaceIdFromPath = workspaceMatch?.[1] ?? null;
     const projectIdFromPath = projectMatch?.[1] ?? null;
 
-    if (workspaceIdFromPath && workspaceIdFromPath !== selectedWorkspaceId) {
-      setSelectedWorkspaceId(workspaceIdFromPath);
-    }
-
-    // projectId может отсутствовать на странице списка проектов
-    if (projectIdFromPath !== selectedProjectId) {
-      setSelectedProjectId(projectIdFromPath);
-    }
+    // Всегда синхронизируем стейт
+    setSelectedWorkspaceId(workspaceIdFromPath);
+    setSelectedProjectId(projectIdFromPath);
   }, [pathname]);
 
   // Handlers --------------------------------

@@ -23,7 +23,7 @@ const WorkspacePage = async ({
   const [userRole, workspace, projects] = await Promise.all([
     MembershipService.getUserRoleInWorkspace(id, workspaceIdNumber),
     WorkspaceService.getWorkspaceById(workspaceIdNumber),
-    ProjectServices.getList(Number(workspaceId)),
+    WorkspaceService.getWorkspaceProjects(Number(workspaceId)),
   ]);
 
   if (!workspace) {

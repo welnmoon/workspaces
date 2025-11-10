@@ -24,6 +24,22 @@ export class WorkspaceService {
     });
   }
 
+  static async getWorkspaceProjects(workspaceId: number) {
+    return prisma.project.findMany({
+      where: {
+        workspaceId,
+      },
+    });
+  }
+
+  static async getProjectsCount(workspaceId: number): Promise<number> {
+    return prisma.project.count({
+      where: {
+        workspaceId,
+      },
+    });
+  }
+
   // Получение данных для селекта
   static async getSelect(userId: string): Promise<WorkspaceSelectDTO[]> {
     return prisma.workspace.findMany({

@@ -2,6 +2,7 @@ import NotFound from '@/components/not-found';
 import ProjectComponent from '@/components/projects/project';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
+import { ProjectService } from '@/lib/services/project';
 import { TaskService } from '@/lib/services/tasks';
 
 const ProjectPage = async ({
@@ -16,10 +17,11 @@ const ProjectPage = async ({
   if (!project) {
     return <NotFound text="Project" />;
   }
-  const tasks = await TaskService.getProjectTasks({
-    projectId: params.projectId,
-    workspaceId: params.workspaceId,
-  });
+
+  const [tasks, taskStats] = await Promise.all([
+    ProjectService.getProjectTasks(project.id),
+    ProjectService.getProjectTasksStats(project.id),
+  ]);
 
   let workspaceName = await prisma.workspace.findUnique({
     where: {
@@ -43,6 +45,7 @@ const ProjectPage = async ({
           tasks={tasks}
           project={project}
           workspaceName={workspaceName?.name || null}
+          taskStats={taskStats}
         />
       )}
       {tasks.length === 0 && <div>No tasks found</div>}

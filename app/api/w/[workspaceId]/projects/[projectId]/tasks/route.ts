@@ -1,6 +1,7 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { ok, serverError } from '@/lib/http';
 import prisma from '@/lib/prisma';
+import { ProjectService } from '@/lib/services/project';
 import { TaskService } from '@/lib/services/tasks';
 import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
 import { Role } from '@prisma/client';
@@ -57,10 +58,7 @@ export async function GET(
       allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],
     });
 
-    const tasks = await TaskService.getProjectTasks({
-      projectId: projectId,
-      workspaceId: workspaceId,
-    });
+    const tasks = await ProjectService.getProjectTasks(Number(projectId));
     return ok(tasks);
   } catch (e) {
     console.log('Error fetching tasks', e);

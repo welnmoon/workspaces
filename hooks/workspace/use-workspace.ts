@@ -1,6 +1,7 @@
 import { MembershipService } from '@/lib/services/membership';
 import { ProjectServices } from '@/lib/services/project';
 import { TaskService } from '@/lib/services/tasks';
+import { WorkspaceService } from '@/lib/services/workspace';
 import { TaskStatus } from '@prisma/client';
 
 export const useWorkspace = async (workspaceId: number) => {
@@ -13,7 +14,7 @@ export const useWorkspace = async (workspaceId: number) => {
     tasksTotal,
     tasksOverdue,
   ] = await Promise.all([
-    ProjectServices.getCount(workspaceId),
+    WorkspaceService.getProjectsCount(workspaceId),
     MembershipService.getWorkspaceMembersCount(workspaceId),
     TaskService.getWorkspaceToDoTasksCount(workspaceId, TaskStatus.TODO),
     TaskService.getWorkspaceToDoTasksCount(workspaceId, TaskStatus.IN_PROGRESS),

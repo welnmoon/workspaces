@@ -1,7 +1,7 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { badRequest, conflict, created, ok, serverError } from '@/lib/http';
 import { clientRoutes } from '@/lib/routes/client-routes';
-import { ProjectServices } from '@/lib/services/project';
+import { ProjectService } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
 import { Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
@@ -25,7 +25,7 @@ export async function POST(
   });
 
   try {
-    const project = await ProjectServices.createProject({
+    const project = await ProjectService.createProject({
       ...res.data,
       workspaceId: workspaceIdNumber,
     });
@@ -60,7 +60,7 @@ export async function GET(
       allowed: ['OWNER', 'ADMIN'] as Role[],
     });
 
-    const projects = await ProjectServices.getList(workspaceIdNumber);
+    const projects = await ProjectService.getProjects(workspaceIdNumber);
     return ok(projects);
   } catch (e) {
     console.error(e);
