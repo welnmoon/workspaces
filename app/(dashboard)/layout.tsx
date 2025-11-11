@@ -1,6 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { DashboardSidebarDynamic } from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
-import { CSSProperties } from 'react';
 import {
   Root as AvatarRoot,
   Image as AvatarImage,
@@ -27,13 +26,8 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider
+      defaultOpen={false}
       className="flex min-h-screen"
-      style={
-        {
-          '--sidebar-width': '20rem',
-          '--sidebar-width-mobile': '18rem',
-        } as CSSProperties
-      }
     >
       {/* Статичный только на lg+ */}
       <div className="hidden lg:block">
@@ -41,14 +35,14 @@ export default async function DashboardLayout({
       </div>
 
       {/* Динамичный только на <lg */}
-      <div className="lg:hidden">
+      <div className="sm:visible lg:hidden">
         <DashboardSidebarDynamic />
       </div>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="sticky top-0 z-20 px-4 py-3 border-b bg-background/80 backdrop-blur">
-          <div className="flex items-center">
-            <SidebarTrigger className="ml-auto lg:hidden" />
+        <div className="sticky top-0 z-30 px-4 py-3 border-b bg-background/80 backdrop-blur">
+          <div className="flex items-center justify-between">
+            {/* <SidebarTrigger className="ml-0 lg:hidden z-40" /> */}
             <AvatarRoot className="AvatarRoot">
               <Link
                 href={clientRoutes.profilePage()}
