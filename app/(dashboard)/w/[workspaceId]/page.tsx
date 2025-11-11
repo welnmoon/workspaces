@@ -5,11 +5,11 @@ import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import { useWorkspace } from '@/hooks/workspace/use-workspace';
 import { MembershipService } from '@/lib/services/membership';
-import { ProjectServices } from '@/lib/services/project';
-import { TaskService } from '@/lib/services/tasks';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { cardContainer } from '@/styles/styles';
-import { Role, TaskStatus } from '@prisma/client';
+import { Role } from '@prisma/client';
+import { Breadcrumbs } from '@/components/bread-crumbs';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
 const WorkspacePage = async ({
   params,
@@ -42,9 +42,19 @@ const WorkspacePage = async ({
 
   return (
     <main className="flex flex-col gap-4 ">
+      <Breadcrumbs
+        items={[
+          { label: 'Workspaces', href: clientRoutes.workspacesPage() },
+          {
+            label: workspace.name,
+            href: clientRoutes.workspacePage(workspaceIdNumber),
+          },
+        ]}
+      />
       <div className="flex justify-between">
         <Heading>Workspace {workspace?.name}</Heading>
       </div>
+      {workspace.ownerId === id && 'Вы OWNER'}
       <div className="flex gap-4  text-sm text-muted-foreground items-center">
         <span>
           Участников: <b>{membersCount}</b>

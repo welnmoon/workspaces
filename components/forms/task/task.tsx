@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { Heading } from '@/components/ui/heading';
 import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
+import { Breadcrumbs } from '@/components/bread-crumbs';
 
 const TaskComponent = ({
   task,
@@ -51,23 +52,35 @@ const TaskComponent = ({
 
   return (
     <main className="space-y-6">
-      <Heading>
-        <Link
-          href={clientRoutes.workspacePage(workspaceId)}
-          className="underline-anim"
-        >
-          <span className="text-foreground-muted">
-            Workspace {workspaceName}
-          </span>
-        </Link>{' '}
-        {'>'}{' '}
-        <Link
-          href={clientRoutes.projectPage(workspaceId, projectId)}
-          className="underline-anim"
-        >
-          <span className="text-foreground-muted">Project {projectName}</span>
-        </Link>{' '}
-        {'>'} Task {task.title}
+      <Heading level={3}>
+        <Breadcrumbs
+          items={[
+            {
+              label: `Workspace`,
+              href: clientRoutes.workspacesPage(),
+            },
+            {
+              label: `${workspaceName}`,
+              href: clientRoutes.workspacePage(workspaceId),
+            },
+            {
+              label: `Project`,
+              href: clientRoutes.projectsPage(workspaceId),
+            },
+            {
+              label: `${projectName}`,
+              href: clientRoutes.projectPage(projectId, workspaceId),
+            },
+            {
+              label: `Task`,
+              href: clientRoutes.tasksPage(projectId, workspaceId),
+            },
+            {
+              label: `${task.title}`,
+              href: clientRoutes.tasksPage(projectId, workspaceId),
+            },
+          ]}
+        />
       </Heading>
       <div className="flex items-center justify-between">
         <GoBackBtn router={router} />

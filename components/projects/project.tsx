@@ -83,15 +83,23 @@ const ProjectComponent = ({
 
   return (
     <article>
-      <Heading>
+      <Heading level={3}>
         <Breadcrumbs
           items={[
             {
-              label: `Workspace ${workspaceName}`,
+              label: `Workspace`,
+              href: clientRoutes.workspacesPage(),
+            },
+            {
+              label: `${workspaceName}`,
               href: clientRoutes.workspacePage(workspaceId),
             },
             {
-              label: `Project ${project.name}`,
+              label: `Project`,
+              href: clientRoutes.projectsPage(workspaceId),
+            },
+            {
+              label: `${project.name}`,
               href: clientRoutes.projectPage(project.id, workspaceId),
             },
           ]}

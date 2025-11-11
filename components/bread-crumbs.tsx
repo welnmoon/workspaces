@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import clsx from 'clsx';
+import { ArrowRight } from 'lucide-react';
 
 interface Crumb {
   label: string;
@@ -34,7 +35,11 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
                 {item.label}
               </span>
             )}
-            {!isLast && <span className="mx-1">{'>'}</span>}
+            {!isLast && (
+              <span className="mx-1">
+                <ArrowRight size={20} />
+              </span>
+            )}
           </div>
         );
       })}
