@@ -12,6 +12,7 @@ import { requireUser } from '@/helpers/require-user';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
+import { InvitationService } from '@/lib/services/invitation';
 
 export default async function DashboardLayout({
   children,
@@ -23,12 +24,9 @@ export default async function DashboardLayout({
   const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(
     user.id
   );
-
+  const invitations = await InvitationService.getReceivedInvitations(user.id); // TODO
   return (
-    <SidebarProvider
-      defaultOpen={false}
-      className="flex min-h-screen"
-    >
+    <SidebarProvider defaultOpen={false} className="flex min-h-screen">
       {/* Статичный только на lg+ */}
       <div className="hidden lg:block">
         <DashboardSidebarStatic workspaces={workspaces} />
@@ -63,6 +61,8 @@ export default async function DashboardLayout({
                   <span className="underline-anim">{user.name}</span>
                 </AvatarFallback>
               </Link>
+              {/*Invitations*/}
+              <span>Уведомления</span> {invitations.length}
             </AvatarRoot>
           </div>
         </div>

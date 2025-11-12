@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Heading } from '../ui/heading';
+import { Heading } from '../../ui/heading';
 import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 

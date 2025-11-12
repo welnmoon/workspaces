@@ -179,11 +179,11 @@ model Invitation {
 
   inviter     User? @relation("InvitationsSent", fields: [inviterId], references: [id], onDelete: SetNull)
   inviterId   String?
+
   invitedUser User? @relation("InvitationsReceived", fields: [invitedUserId], references: [id], onDelete: SetNull)
   // onDelete: SetNull — если удалить пригласившего/приглашённого пользователя,
   // факт инвайта остаётся (для аудита и возможности принять/посмотреть историю),
   // а ссылка на удалённого пользователя обнуляется.
-
   invitedUserId String?
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
@@ -191,7 +191,7 @@ model Invitation {
 
   status     InvitationStatus @default(PENDING)
   token      String           @unique
-  expiresAt  DateTime
+  expiresAt  DateTime 
   acceptedAt DateTime?
 
   createdAt DateTime @default(now())

@@ -1,5 +1,5 @@
 import NotFound from '@/components/not-found';
-import ProjectComponent from '@/components/projects/project';
+import ProjectComponent from '@/components/entities/projects/project';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
