@@ -1,4 +1,3 @@
-import { requireWorkspaceMember } from '@/guards/workspace';
 
 import { requireUser } from '@/helpers/require-user';
 import { badRequest, conflict, created } from '@/lib/http';

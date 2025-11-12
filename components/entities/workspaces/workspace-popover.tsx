@@ -1,5 +1,5 @@
-import CreateInvitationButton from '@/components/buttons/create-invitation';
-import EditWorkspaceButton from '@/components/buttons/edit-workspace';
+import InviteUserDialog from '@/components/dialogs/invite-user-dialog';
+import EditWorkspaceDialog from '@/components/dialogs/edit-workspace-dialog';
 import {
   Popover,
   PopoverContent,
@@ -7,15 +7,29 @@ import {
 } from '@/components/ui/popover';
 import { IoMenu } from 'react-icons/io5';
 
-const WorkspacePopover = () => {
+type WorkspacePopoverProps = {
+  workspaceId: number;
+  workspaceName: string;
+  workspaceDescription?: string | null;
+};
+
+const WorkspacePopover = ({
+  workspaceId,
+  workspaceName,
+  workspaceDescription,
+}: WorkspacePopoverProps) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <IoMenu className="w-25 text-gray-800" />
+        <IoMenu className="text-xl text-gray-800" />
       </PopoverTrigger>
-      <PopoverContent className="w-full flex flex-col items-start">
-        <CreateInvitationButton />
-        <EditWorkspaceButton />
+      <PopoverContent className="w-full py-2 px-1 flex flex-col items-start">
+        <InviteUserDialog workspaceId={workspaceId} />
+        <EditWorkspaceDialog
+          workspaceId={workspaceId}
+          name={workspaceName}
+          description={workspaceDescription}
+        />
       </PopoverContent>
     </Popover>
   );

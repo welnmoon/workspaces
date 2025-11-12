@@ -54,7 +54,11 @@ const WorkspacePage = async ({
       />
       <div className="flex justify-between">
         <Heading>Workspace {workspace?.name}</Heading>
-        <WorkspacePopover />
+        <WorkspacePopover
+          workspaceId={workspaceIdNumber}
+          workspaceName={workspace.name}
+          workspaceDescription={workspace.description}
+        />
       </div>
       {workspace.ownerId === id && 'Вы OWNER'}
       <div className="flex gap-4  text-sm text-muted-foreground items-center">
