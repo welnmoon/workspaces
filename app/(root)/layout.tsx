@@ -1,5 +1,5 @@
 import Container from '@/components/container';
-import Header from '@/components/header/header';
+import Header from '@/components/layout/header/header';
 import { authOptions } from '@/lib/auth';
 import type { Metadata } from 'next';
 import { getServerSession } from 'next-auth';

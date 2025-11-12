@@ -1,7 +1,7 @@
 import CreateProjectDialog from '@/components/dialogs/create-project-dialog';
 import Divider from '@/components/divider';
 import { Breadcrumbs } from '@/components/bread-crumbs';
-import ProjectCard from '@/components/projects/project-card';
+import ProjectCard from '@/components/entities/projects/project-card';
 import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import { useWorkspace } from '@/hooks/workspace/use-workspace';

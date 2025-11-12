@@ -8,6 +8,9 @@ export const apiRoutes = {
   createTask: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
   createWorkspace: () => `/api/w`,
+  updateWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
+  createInvitation: (workspaceId: number) =>
+    `/api/w/${workspaceId}/inviations`,
   getWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
   getWorkspaces: () => `/api/w`,
   getProjects: (workspaceId: number) => `/api/w/${workspaceId}/projects`,

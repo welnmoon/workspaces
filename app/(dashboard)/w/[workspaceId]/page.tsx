@@ -1,6 +1,6 @@
 import CreateProjectDialog from '@/components/dialogs/create-project-dialog';
 import Divider from '@/components/divider';
-import ProjectCard from '@/components/projects/project-card';
+import ProjectCard from '@/components/entities/projects/project-card';
 import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import { useWorkspace } from '@/hooks/workspace/use-workspace';
@@ -10,6 +10,7 @@ import { cardContainer } from '@/styles/styles';
 import { Role } from '@prisma/client';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 import { clientRoutes } from '@/lib/routes/client-routes';
+import WorkspacePopover from '@/components/entities/workspaces/workspace-popover';
 
 const WorkspacePage = async ({
   params,
@@ -53,6 +54,11 @@ const WorkspacePage = async ({
       />
       <div className="flex justify-between">
         <Heading>Workspace {workspace?.name}</Heading>
+        <WorkspacePopover
+          workspaceId={workspaceIdNumber}
+          workspaceName={workspace.name}
+          workspaceDescription={workspace.description}
+        />
       </div>
       {workspace.ownerId === id && 'Вы OWNER'}
       <div className="flex gap-4  text-sm text-muted-foreground items-center">

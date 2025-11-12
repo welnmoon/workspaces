@@ -1,4 +1,4 @@
-import { Badge } from '../ui/badge';
+import { Badge } from '../../ui/badge';
 
 const ProjectCardBadge = ({ text, value }: { text: string; value: number }) => {
   return (

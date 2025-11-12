@@ -1,5 +1,5 @@
 import UnauthorizedClient from '@/components/un-auth-client';
-import WorkspacesComponent from '@/components/workspaces/workspaces';
+import WorkspacesComponent from '@/components/entities/workspaces/workspaces';
 import { requireUser, UnauthorizedError } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
 import { MembershipService } from '@/lib/services/membership';

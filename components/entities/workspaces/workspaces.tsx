@@ -1,7 +1,7 @@
-import { Heading } from '../ui/heading';
+import { Heading } from '../../ui/heading';
 import { cardContainer } from '@/styles/styles';
 import WorkspaceCard from './workspace-card';
-import CreateWorkspaceDialog from '../dialogs/create-w-dialog';
+import CreateWorkspaceDialog from '../../dialogs/create-w-dialog';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 const WorkspacesComponent = ({
   workspaces,

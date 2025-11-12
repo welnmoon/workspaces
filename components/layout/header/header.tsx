@@ -1,9 +1,9 @@
 'use client';
 
+import LogOutButton from '@/components/buttons/auth/log-out-btn';
+import LinkButton from '@/components/buttons/link-btn';
+import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import { Session } from 'next-auth';
-import { WorkspaceLogo } from '../ui/workspace-logo';
-import LogOutButton from '../buttons/auth/log-out-btn';
-import LinkButton from '../buttons/link-btn';
 
 const Header = ({ session }: { session: Session | null }) => {
   return (

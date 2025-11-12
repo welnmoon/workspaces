@@ -80,4 +80,15 @@ export class WorkspaceService {
       },
     });
   }
+
+  static async getWorkspaceName(workspaceId: number) {
+    return prisma.workspace.findUnique({
+      where: {
+        id: workspaceId,
+      },
+      select: {
+        name: true,
+      },
+    });
+  }
 }

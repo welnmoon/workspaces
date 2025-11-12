@@ -1,22 +1,22 @@
 'use client';
 
 import { Project, Task, TaskStatus } from '@prisma/client';
-import { Heading } from '../ui/heading';
-import Divider from '../divider';
-import Description from '../ui/desc';
+import { Heading } from '../../ui/heading';
+import Divider from '../../divider';
+import Description from '../../ui/desc';
 import TaskCard from '../tasks/task-card';
-import CreateTaskDialog from '../dialogs/create-task-dialog';
+import CreateTaskDialog from '../../dialogs/create-task-dialog';
 import { cardContainer } from '@/styles/styles';
 import { clientRoutes } from '@/lib/routes/client-routes';
-import { Breadcrumbs } from '../bread-crumbs';
+import { Breadcrumbs } from '../../bread-crumbs';
 import { TaskStats } from '@/types/service/task-stats';
-import ProjectTasksFilterByStatusSelect from '../filters/project-tasks-filter-by-status-select';
+import ProjectTasksFilterByStatusSelect from '../../filters/project-tasks-filter-by-status-select';
 import { useMemo, useState } from 'react';
-import { Button } from '../ui/button';
-import EmptyState from '../empty-state';
-import { MessageInfo } from '../message';
+import { Button } from '../../ui/button';
+import EmptyState from '../../empty-state';
+import { MessageInfo } from '../../message';
 import { DateRange } from 'react-day-picker';
-import FilterCalendar from '../filters/filter-calendar';
+import FilterCalendar from '../../filters/filter-calendar';
 import { endOfDay, startOfDay } from 'date-fns';
 
 import {
