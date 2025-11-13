@@ -13,6 +13,9 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
 import { InvitationService } from '@/lib/services/invitation';
+import InvitationsPopover, {
+  InvitationNotificationData,
+} from '@/components/notifications/invitations-popover';
 
 export default async function DashboardLayout({
   children,
@@ -24,7 +27,23 @@ export default async function DashboardLayout({
   const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(
     user.id
   );
-  const invitations = await InvitationService.getReceivedInvitations(user.id); // TODO
+  const invitations = await InvitationService.getReceivedInvitations(user.id);
+  const invitationNotifications: InvitationNotificationData[] = invitations.map(
+    (inv) => ({
+      id: inv.id,
+      workspaceId: inv.workspaceId,
+      workspaceName: inv.workspace?.name ?? null,
+      invitedRole: inv.invitedRole,
+      status: inv.status,
+      createdAt: inv.createdAt.toISOString(),
+      inviterName:
+        inv.inviter?.firstName || inv.inviter?.lastName
+          ? [inv.inviter?.firstName, inv.inviter?.lastName]
+              .filter(Boolean)
+              .join(' ')
+          : inv.inviter?.email ?? null,
+    })
+  );
   return (
     <SidebarProvider defaultOpen={false} className="flex min-h-screen">
       {/* Статичный только на lg+ */}
@@ -41,29 +60,30 @@ export default async function DashboardLayout({
         <div className="sticky top-0 z-30 px-4 py-3 border-b bg-background/80 backdrop-blur">
           <div className="flex items-center justify-between">
             {/* <SidebarTrigger className="ml-0 lg:hidden z-40" /> */}
-            <AvatarRoot className="AvatarRoot">
-              <Link
-                href={clientRoutes.profilePage()}
-                className="flex gap-2 text-center"
-              >
-                {user.image ? (
-                  <AvatarImage
-                    src={user.image ?? undefined}
-                    alt={user.name ?? 'User'}
-                  />
-                ) : (
-                  <div className="bg-slate-200 rounded-full p-2">
-                    {getInitials(user.name)}
-                  </div>
-                )}
+            <div className="flex items-center gap-2">
+              <InvitationsPopover invitations={invitationNotifications} />
+              <AvatarRoot className="AvatarRoot">
+                <Link
+                  href={clientRoutes.profilePage()}
+                  className="flex gap-2 text-center"
+                >
+                  {user.image ? (
+                    <AvatarImage
+                      src={user.image ?? undefined}
+                      alt={user.name ?? 'User'}
+                    />
+                  ) : (
+                    <div className="bg-slate-200 rounded-full p-2">
+                      {getInitials(user.name)}
+                    </div>
+                  )}
 
-                <AvatarFallback className="flex items-center" delayMs={600}>
-                  <span className="underline-anim">{user.name}</span>
-                </AvatarFallback>
-              </Link>
-              {/*Invitations*/}
-              <span>Уведомления</span> {invitations.length}
-            </AvatarRoot>
+                  <AvatarFallback className="flex items-center" delayMs={600}>
+                    <span className="underline-anim">{user.name}</span>
+                  </AvatarFallback>
+                </Link>
+              </AvatarRoot>
+            </div>
           </div>
         </div>
 

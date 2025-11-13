@@ -83,7 +83,24 @@ export class InvitationService {
   }
 
   static async getReceivedInvitations(userId: string) {
-    return prisma.invitation.findMany({ where: { invitedUserId: userId } });
+    return prisma.invitation.findMany({
+      where: { invitedUserId: userId },
+      include: {
+        workspace: {
+          select: {
+            name: true,
+          },
+        },
+        inviter: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
   }
   static async getSendInvitations(userId: string) {
     return prisma.invitation.findMany({ where: { inviterId: userId } });
