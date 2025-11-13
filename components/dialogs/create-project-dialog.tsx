@@ -11,7 +11,7 @@ import MainBtn from '../buttons/main-btn';
 import CreateProjectForm from '../forms/project/create-project-form';
 import { useState } from 'react';
 
-const CreateProjectDialog = ({ workspaceId }: { workspaceId: string }) => {
+const CreateProjectDialog = ({ workspaceId }: { workspaceId: number }) => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
