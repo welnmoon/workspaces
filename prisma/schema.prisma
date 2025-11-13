@@ -190,7 +190,7 @@ model Invitation {
   workspaceId Int
 
   status     InvitationStatus @default(PENDING)
-  token      String           @unique
+  token      String           @unique 
   expiresAt  DateTime 
   acceptedAt DateTime?
 

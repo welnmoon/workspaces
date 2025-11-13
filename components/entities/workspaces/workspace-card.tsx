@@ -10,7 +10,18 @@ import { Heading } from '../../ui/heading';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
-const WorkspaceCard = ({ workspace }: { workspace: WorkspaceListDTO }) => {
+import { MembershipService } from '@/lib/services/membership';
+const WorkspaceCard = async ({
+  workspace,
+  userId,
+}: {
+  workspace: WorkspaceListDTO;
+  userId: string;
+}) => {
+  const role = await MembershipService.getUserRoleInWorkspace(
+    userId,
+    workspace.id
+  );
   return (
     <Card>
       <CardHeader>
@@ -28,9 +39,7 @@ const WorkspaceCard = ({ workspace }: { workspace: WorkspaceListDTO }) => {
       <CardContent>
         <p>Card Content</p>
       </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
+      <CardFooter>Ваша роль: {role}</CardFooter>
     </Card>
   );
 };

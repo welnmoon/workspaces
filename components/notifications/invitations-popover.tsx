@@ -7,13 +7,30 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Bell } from 'lucide-react';
-import { InvitationNotificationData, InvitationNotification } from './invitation-notification';
+import {
+  InvitationNotificationData,
+  InvitationNotification,
+} from './invitation-notification';
+import { useInvitations } from '@/hooks/notifications/invitations/use-invitations';
 
-type InvitationsPopoverProps = {
-  invitations: InvitationNotificationData[];
-};
+// type InvitationsPopoverProps = {
+//   invitations: InvitationNotificationData[];
+// };
 
-const InvitationsPopover = ({ invitations }: InvitationsPopoverProps) => {
+const InvitationsPopover = ({
+  // invitations,
+  userId,
+}: {
+  // invitations: InvitationNotificationData[];
+  userId: string;
+}) => {
+  const {
+    data: invitations,
+    isLoading,
+    isError,
+    error,
+  } = useInvitations(userId);
+
   const hasInvitations = invitations.length > 0;
 
   return (
@@ -44,8 +61,9 @@ const InvitationsPopover = ({ invitations }: InvitationsPopoverProps) => {
           <ul className="max-h-80 divide-y overflow-y-auto">
             {invitations.map((invitation) => (
               <InvitationNotification
-                key={invitation.id}
                 invitation={invitation}
+                userId={userId}
+                key={invitation.id}
               />
             ))}
           </ul>

@@ -27,23 +27,23 @@ export default async function DashboardLayout({
   const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(
     user.id
   );
-  const invitations = await InvitationService.getReceivedInvitations(user.id);
-  const invitationNotifications: InvitationNotificationData[] = invitations.map(
-    (inv) => ({
-      id: inv.id,
-      workspaceId: inv.workspaceId,
-      workspaceName: inv.workspace?.name ?? null,
-      invitedRole: inv.invitedRole,
-      status: inv.status,
-      createdAt: inv.createdAt.toISOString(),
-      inviterName:
-        inv.inviter?.firstName || inv.inviter?.lastName
-          ? [inv.inviter?.firstName, inv.inviter?.lastName]
-              .filter(Boolean)
-              .join(' ')
-          : inv.inviter?.email ?? null,
-    })
-  );
+  // const invitations = await InvitationService.getReceivedInvitations(user.id);
+  // const invitationNotifications: InvitationNotificationData[] = invitations.map(
+  //   (inv) => ({
+  //     id: inv.id,
+  //     workspaceId: inv.workspaceId,
+  //     workspaceName: inv.workspace?.name ?? null,
+  //     invitedRole: inv.invitedRole,
+  //     status: inv.status,
+  //     createdAt: inv.createdAt.toISOString(),
+  //     inviterName:
+  //       inv.inviter?.firstName || inv.inviter?.lastName
+  //         ? [inv.inviter?.firstName, inv.inviter?.lastName]
+  //             .filter(Boolean)
+  //             .join(' ')
+  //         : (inv.inviter?.email ?? null),
+  //   })
+  // );
   return (
     <SidebarProvider defaultOpen={false} className="flex min-h-screen">
       {/* Статичный только на lg+ */}
@@ -61,7 +61,10 @@ export default async function DashboardLayout({
           <div className="flex items-center justify-between">
             {/* <SidebarTrigger className="ml-0 lg:hidden z-40" /> */}
             <div className="flex items-center gap-2">
-              <InvitationsPopover invitations={invitationNotifications} />
+              <InvitationsPopover
+                userId={user.id}
+                // invitations={invitationNotifications}
+              />
               <AvatarRoot className="AvatarRoot">
                 <Link
                   href={clientRoutes.profilePage()}

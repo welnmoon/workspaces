@@ -9,8 +9,7 @@ export const apiRoutes = {
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
   createWorkspace: () => `/api/w`,
   updateWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
-  createInvitation: (workspaceId: number) =>
-    `/api/w/${workspaceId}/inviations`,
+  createInvitation: (workspaceId: number) => `/api/w/${workspaceId}/inviations`,
   getWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
   getWorkspaces: () => `/api/w`,
   getProjects: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
@@ -20,4 +19,9 @@ export const apiRoutes = {
   changeUserPassword: () => `/api/auth/password`,
   deleteUserAccount: (provider: ProviderId) => `/api/auth/accounts/${provider}`,
   register: () => `/api/auth/register`,
+
+  // Invitations
+  acceptInvitationById: (workspaceId: number, invId: number) =>
+    `/api/w/${workspaceId}/invitations/${invId}/accept`,
+  getReceivedInvitations: (userId: string) => `/api/user/${userId}/invitations`,
 };

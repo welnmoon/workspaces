@@ -17,14 +17,16 @@ const WorkspacePage = async ({
 }: {
   params: Promise<{ workspaceId: string }>;
 }) => {
-  const { id } = await requireUser();
+  const user = await requireUser();
   const { workspaceId } = await params;
   const workspaceIdNumber = Number(workspaceId);
 
-  const [userRole, workspace, projects] = await Promise.all([
-    MembershipService.getUserRoleInWorkspace(id, workspaceIdNumber),
+  const [userRole, workspace, projects, memberships, role] = await Promise.all([
+    MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
     WorkspaceService.getWorkspaceById(workspaceIdNumber),
     WorkspaceService.getWorkspaceProjects(Number(workspaceId)),
+    WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
+    MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
   ]);
 
   if (!workspace) {
@@ -54,13 +56,17 @@ const WorkspacePage = async ({
       />
       <div className="flex justify-between">
         <Heading>Workspace {workspace?.name}</Heading>
-        <WorkspacePopover
-          workspaceId={workspaceIdNumber}
-          workspaceName={workspace.name}
-          workspaceDescription={workspace.description}
-        />
+        {role === Role.OWNER && Role.ADMIN && (
+          <WorkspacePopover
+            workspaceId={workspaceIdNumber}
+            workspaceName={workspace.name}
+            workspaceDescription={workspace.description}
+          />
+        )}
       </div>
-      {workspace.ownerId === id && 'Вы OWNER'}
+      Я:{user.email}
+      {memberships.map((m) => m.user.email)}
+      {workspace.ownerId === user.id && 'Вы OWNER'}
       <div className="flex gap-4  text-sm text-muted-foreground items-center">
         <span>
           Участников: <b>{membersCount}</b>

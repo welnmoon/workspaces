@@ -5,8 +5,10 @@ import CreateWorkspaceDialog from '../../dialogs/create-w-dialog';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 const WorkspacesComponent = ({
   workspaces,
+  userId,
 }: {
   workspaces: WorkspaceListDTO[];
+  userId: string;
 }) => {
   return (
     <main>
@@ -17,7 +19,7 @@ const WorkspacesComponent = ({
 
       <section className={cardContainer}>
         {workspaces.map((workspace) => (
-          <WorkspaceCard key={workspace.id} workspace={workspace} />
+          <WorkspaceCard userId={userId} key={workspace.id} workspace={workspace} />
         ))}
       </section>
     </main>

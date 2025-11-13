@@ -91,4 +91,15 @@ export class WorkspaceService {
       },
     });
   }
+
+  static async getWorkspaceMembers(workspaceId: number) {
+    return prisma.membership.findMany({
+      where: {
+        workspaceId,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
 }
