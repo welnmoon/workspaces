@@ -16,9 +16,11 @@ import { useRouter } from 'next/navigation';
 const CreateTaskForm = ({
   projectId,
   workspaceId,
+  onSuccess,
 }: {
   projectId: number;
   workspaceId: number;
+  onSuccess?: () => void;
 }) => {
   const router = useRouter();
   const form = useForm<CreateTaskFormValues>({
@@ -55,6 +57,7 @@ const CreateTaskForm = ({
       if (data.data) {
         form.reset();
         toast.success('Задача успешно создана');
+        onSuccess?.();
         router.refresh();
       }
     } catch (e) {
@@ -67,7 +70,7 @@ const CreateTaskForm = ({
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onFormSubmit)}>
-        <fieldset>
+        <fieldset className="mb-4">
           <legend className="sr-only">Create Project Form</legend>
           <FormInput
             name="title"
@@ -81,11 +84,11 @@ const CreateTaskForm = ({
             placeholder="Description"
           />
           <DueDateField control={form.control} name="dueDate" />
-          <SubmitBtn
-            text="Создать задачу"
-            isLoading={form.formState.isSubmitting}
-          />
         </fieldset>
+        <SubmitBtn
+          text="Создать задачу"
+          isLoading={form.formState.isSubmitting}
+        />
       </form>
     </FormProvider>
   );
