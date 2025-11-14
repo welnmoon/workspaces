@@ -75,9 +75,7 @@ const WorkspacePage = async ({
           />
         )}
       </div>
-      Я:{user.email}
-      {memberships.map((m) => m.user.email)}
-      {workspace.ownerId === user.id && 'Вы OWNER'}
+
       <div className="flex gap-4  text-sm text-muted-foreground items-center">
         <span>
           Участников: <b>{membersCount}</b>

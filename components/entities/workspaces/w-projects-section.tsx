@@ -4,6 +4,7 @@ import { cardContainer } from '@/styles/styles';
 import { Heading } from '@/components/ui/heading';
 import { Role } from '@prisma/client';
 import { ProjectFullDTO } from '@/types/prisma/DTO/projects';
+import { useProject } from '@/hooks/project/use-project';
 
 export type WProjectsSectionProps = {
   userRole: Role;
@@ -45,11 +46,11 @@ const WProjectsSection = ({
             projectId={p.id}
             workspaceId={workspace.id}
             key={p.id}
-            tasksTotal={tasksTotal}
-            tasksDone={tasksDone}
-            tasksInProgress={tasksInProgress}
-            tasksToDoCount={tasksToDoCount}
-            tasksOverdue={tasksOverdue}
+            // tasksTotal={tasksTotal}
+            // tasksDone={tasksDone}
+            // tasksInProgress={tasksInProgress}
+            // tasksToDoCount={tasksToDoCount}
+            // tasksOverdue={tasksOverdue}
           />
         ))}
         {projects.length === 0 && (
