@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { CreateWorkspaceFormValues } from '@/schemas/workspace/create-workspace-form-schema';
 import { useFormContext } from 'react-hook-form';
 
@@ -28,32 +29,34 @@ const workspaceAvatarImages = [
   // {id: 10, url: "/images/workspaces/avatar/avatar_10.jpeg"},
 ];
 
-const WorkspaceAvatars = () => {
+const WorkspaceAvatars = ({ className }: { className?: string }) => {
   const { setValue, watch } = useFormContext<CreateWorkspaceFormValues>();
   const selected = watch('avatarUrl');
   const handleSelect = (url: string) => {
     setValue('avatarUrl', url);
   };
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2 overflow-y-auto h-[400px]">
-      {workspaceAvatarImages.map((a) => {
-        const isActive = selected === a.url;
-        return (
-          <button
-            type="button"
-            className={`w-20 h-20 rounded-lg overflow-hidden border transition
+    <div className={cn(`flex-1 min-h-0 h-full`, className)}>
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2 overflow-y-auto h-full">
+        {workspaceAvatarImages.map((a) => {
+          const isActive = selected === a.url;
+          return (
+            <button
+              type="button"
+              className={`w-20 h-20 rounded-lg overflow-hidden border transition
               ${isActive ? 'ring-2 ring-blue-500 border-blue-500' : ''}`}
-            key={a.id}
-            onClick={() => handleSelect(a.url)}
-          >
-            <img
-              src={a.url}
-              alt="avatar"
-              className="w-full h-full object-cover"
-            />
-          </button>
-        );
-      })}
+              key={a.id}
+              onClick={() => handleSelect(a.url)}
+            >
+              <img
+                src={a.url}
+                alt="avatar"
+                className="w-full h-full object-cover"
+              />
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };

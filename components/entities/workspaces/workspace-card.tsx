@@ -30,13 +30,15 @@ const WorkspaceCard = async ({
   return (
     <Card className="flex flex-col">
       <CardHeader className="flex flex-1 flex-row items-start gap-3">
-        <Image
-          src={avatarUrl}
-          alt={`${workspace.name} avatar`}
-          width={40}
-          height={40}
-          className="rounded-full object-cover shrink-0"
-        />
+        <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
+          <Image
+            src={avatarUrl}
+            alt={`${workspace.name} avatar`}
+            width={40}
+            height={40}
+            className="object-cover"
+          />
+        </div>
 
         <CardTitle className="min-w-0">
           <Heading

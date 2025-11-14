@@ -42,7 +42,7 @@ const FormInput = ({
   return (
     <div>
       {label && (
-        <Label className={cn('text-[14px] font-bold mb-1', className)}>
+        <Label className={cn('text-md font-medium mb-1', className)}>
           {label} {required && <span className="text-red-500">*</span>}
         </Label>
       )}

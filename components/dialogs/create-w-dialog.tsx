@@ -8,12 +8,11 @@ import {
 } from '@/components/ui/dialog';
 import MainBtn from '../buttons/main-btn';
 import CreateWorkspaceForm from '../forms/w/create-w-form';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../ui/button';
 import WorkspaceAvatars from '../entities/workspaces/workspace-avatars';
 import { Heading } from '../ui/heading';
 
-import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -37,6 +36,7 @@ const CreateWorkspaceDialog = () => {
       avatarUrl: '',
     },
   });
+  const [open, setOpen] = useState(false);
 
   const nameValue = form.watch('name');
   const firstStepEnded = nameValue.trim() !== '';
@@ -69,6 +69,8 @@ const CreateWorkspaceDialog = () => {
       if (data.data) {
         form.reset();
         toast.success('Воркспейс успешно создан');
+        setOpen(false);
+        setStep(1);
         router.refresh();
       }
     } catch (e) {
@@ -79,37 +81,60 @@ const CreateWorkspaceDialog = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <MainBtn text="Создать воркспейс" />
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[80vh]">
         <DialogHeader>
           <DialogTitle>
             <Heading>Вы создаете вокрспейс</Heading>
           </DialogTitle>
         </DialogHeader>
         <FormProvider {...form}>
-          <form className="w-full" onSubmit={form.handleSubmit(onFormSubmit)}>
+          <form
+            className="w-full h-full flex flex-col"
+            onSubmit={form.handleSubmit(onFormSubmit)}
+          >
             {step === 1 && (
-              <div className="flex flex-col gap-2 items-end">
+              <div className="flex flex-col gap-2 items-end w-full">
                 <CreateWorkspaceForm />
                 <Button disabled={!firstStepEnded} onClick={() => goNext()}>
                   Далее
                 </Button>
+                <div className="w-full flex justify-center">
+                  <img
+                    className="max-w-full max-h-70 object-contain"
+                    alt="chill-time"
+                    src="/images/workspaces/chill-time-no-bg.png"
+                  />
+                </div>
               </div>
             )}
             {step === 2 && (
-              <div>
-                <Heading level={3} className="mb-4 text-zinc-700">
+              <div className="flex flex-col h-full items-end ">
+                <Heading level={3} className="mb-4 text-zinc-700 w-full">
                   Выберите аватар воркспейса
                 </Heading>
-                <WorkspaceAvatars />
-                <Button onClick={() => setStep(1)}>Назад</Button>
-                <SubmitBtn
-                  text="Создать вокрспейс"
-                  isLoading={form.formState.isSubmitting}
-                />
+                <WorkspaceAvatars className="flex-1 w-full mb-10 " />
+                <div className="flex gap-2">
+                  <Button
+                    variant={'outline'}
+                    onClick={() => {
+                      form.setValue('avatarUrl', '');
+                    }}
+                    type="submit"
+                  >
+                    Пропустить
+                  </Button>
+                  <Button variant={'outline'} onClick={() => setStep(1)}>
+                    Назад
+                  </Button>
+                  <SubmitBtn
+                    text="Создать вокрспейс"
+                    isLoading={form.formState.isSubmitting}
+                  />
+                </div>
               </div>
             )}
           </form>
