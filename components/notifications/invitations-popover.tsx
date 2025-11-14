@@ -30,8 +30,10 @@ const InvitationsPopover = ({
     isError,
     error,
   } = useInvitations(userId);
-
-  const hasInvitations = invitations.length > 0;
+  const notReadInvitations = invitations.filter(
+    (inv) => inv.status !== 'ACCEPTED'
+  );
+  const hasInvitations = notReadInvitations.length > 0;
 
   return (
     <Popover>

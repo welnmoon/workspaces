@@ -109,7 +109,10 @@ const WorkspacePage = async ({
         </div>
       </div>
       <Divider />
-      <WorkspaceTabs members={memberships} projectSectionProps={projectSectionProps} />
+      <WorkspaceTabs
+        members={memberships}
+        projectSectionProps={projectSectionProps}
+      />
     </main>
   );
 };
