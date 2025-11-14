@@ -48,18 +48,34 @@ const FormInput = ({
       )}
 
       <div className="relative">
-        <Input
-          {...register(name)}
-          type={type}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={cn(
-            `text-[16px] px-4 py-3 border-gray-100 dark:border-gray-800 ${
-              errorText && 'border-red-400'
-            }`,
-            className
-          )}
-        />
+        {name === 'description' ? (
+          <textarea
+            {...register(name)}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={cn(
+              `text-[16px] px-4 py-3 border border-gray-100 rounded-md dark:border-gray-800 
+              w-full resize-none max-h-40 overflow-y-auto ${
+                errorText && 'border-red-400'
+              }`,
+              className
+            )}
+          />
+        ) : (
+          <Input
+            {...register(name)}
+            type={type}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={cn(
+              `text-[16px] px-4 py-3 border-gray-100 dark:border-gray-800 ${
+                errorText && 'border-red-400'
+              }`,
+              className
+            )}
+          />
+        )}
+
         {value && !disabled && <ClearButton onClick={onClear} />}
       </div>
 

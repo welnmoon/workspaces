@@ -87,7 +87,7 @@ const ProjectComponent = ({
         <Breadcrumbs
           items={[
             {
-              label: `Workspace`,
+              label: `Workspaces`,
               href: clientRoutes.workspacesPage(),
             },
             {
@@ -95,7 +95,7 @@ const ProjectComponent = ({
               href: clientRoutes.workspacePage(workspaceId),
             },
             {
-              label: `Project`,
+              label: `Projects`,
               href: clientRoutes.projectsPage(workspaceId),
             },
             {

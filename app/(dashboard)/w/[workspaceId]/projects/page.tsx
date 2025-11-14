@@ -34,13 +34,13 @@ const ProjectsPage = async ({
     return <div>Workspace not found</div>;
   }
 
-  const {
-    tasksTotal,
-    tasksDone,
-    tasksInProgress,
-    tasksToDoCount,
-    tasksOverdue,
-  } = workspaceStats;
+  // const {
+  //   tasksTotal,
+  //   tasksDone,
+  //   tasksInProgress,
+  //   tasksToDoCount,
+  //   tasksOverdue,
+  // } = workspaceStats;
 
   return (
     <main className="flex flex-col gap-4">
@@ -58,7 +58,7 @@ const ProjectsPage = async ({
       <div className="flex justify-between items-center">
         <Heading level={2}>Projects</Heading>
         {(userRole === Role.ADMIN || userRole === Role.OWNER) && (
-          <CreateProjectDialog workspaceId={params.workspaceId} />
+          <CreateProjectDialog workspaceId={Number(params.workspaceId)} />
         )}
       </div>
 
@@ -72,11 +72,11 @@ const ProjectsPage = async ({
             description={project.description || ''}
             projectId={project.id}
             workspaceId={workspace.id}
-            tasksTotal={tasksTotal}
-            tasksDone={tasksDone}
-            tasksInProgress={tasksInProgress}
-            tasksToDoCount={tasksToDoCount}
-            tasksOverdue={tasksOverdue}
+            // tasksTotal={tasksTotal}
+            // tasksDone={tasksDone}
+            // tasksInProgress={tasksInProgress}
+            // tasksToDoCount={tasksToDoCount}
+            // tasksOverdue={tasksOverdue}
           />
         ))}
 

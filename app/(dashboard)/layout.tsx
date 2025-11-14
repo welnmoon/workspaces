@@ -16,6 +16,7 @@ import { InvitationService } from '@/lib/services/invitation';
 import InvitationsPopover, {
   InvitationNotificationData,
 } from '@/components/notifications/invitations-popover';
+import { Badge } from '@/components/ui/badge';
 
 export default async function DashboardLayout({
   children,
@@ -65,7 +66,7 @@ export default async function DashboardLayout({
                 userId={user.id}
                 // invitations={invitationNotifications}
               />
-              <AvatarRoot className="AvatarRoot">
+              <AvatarRoot className="flex gap-2 items-center justify-center">
                 <Link
                   href={clientRoutes.profilePage()}
                   className="flex gap-2 text-center"
@@ -85,6 +86,9 @@ export default async function DashboardLayout({
                     <span className="underline-anim">{user.name}</span>
                   </AvatarFallback>
                 </Link>
+                <Badge className="h-fit font-md" variant={'outline'}>
+                  {user.email}
+                </Badge>
               </AvatarRoot>
             </div>
           </div>

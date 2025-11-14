@@ -11,7 +11,7 @@ const WorkspaceTabs = ({
   members: MembershipSelectUserDTO[];
 }) => {
   return (
-    <Tabs defaultValue="account" className="w-full">
+    <Tabs defaultValue="projects" className="w-full">
       <TabsList>
         <TabsTrigger value="projects">Проекты</TabsTrigger>
         <TabsTrigger value="members">Участники</TabsTrigger>
