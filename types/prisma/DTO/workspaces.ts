@@ -4,7 +4,10 @@ export type WorkspaceCreateDTO = Pick<Workspace, 'name' | 'description'>;
 
 export type WorkspaceSelectDTO = Pick<Workspace, 'id' | 'name'>;
 
-export type WorkspaceListDTO = Pick<Workspace, 'id' | 'description' | 'name'>;
+export type WorkspaceListDTO = Pick<
+  Workspace,
+  'id' | 'description' | 'name' | 'avatarUrl'
+>;
 
 export type WorkspaceUpdateDTO = Partial<
   Pick<Workspace, 'name' | 'description'>

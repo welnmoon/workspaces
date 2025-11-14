@@ -21,6 +21,7 @@ export class WorkspaceService {
         id: true,
         name: true,
         description: true,
+        avatarUrl: true,
       },
     });
   }
