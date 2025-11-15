@@ -1,7 +1,6 @@
-import { sendInviteEmail } from '@/components/mails/inviations/send-inviation';
+import { sendInviteEmail } from '@/components/mails/invitations/send-invitation';
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { generateToken } from '@/helpers/generate-token';
-import { conflict } from '@/lib/http';
 import prisma from '@/lib/prisma';
 import { AuditLogService } from '@/lib/services/audit-log';
 import { WorkspaceService } from '@/lib/services/workspace';
