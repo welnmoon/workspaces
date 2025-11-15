@@ -22,6 +22,7 @@ import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
 import { filterTasks } from '@/helpers/task/filter-tasks';
 import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
 import ProjectTasksStats from './project-tasks-stats';
+import { cn } from '@/lib/utils';
 
 type StatusFilter = TaskStatus | 'ALL';
 
@@ -139,16 +140,33 @@ const ProjectComponent = ({
         />
       )}
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex gap-4 mt-4 overflow-x-auto">
+        <div className="flex mt-4 overflow-x-auto">
           {STATUS_COLUMNS.map((column) => (
             <Droppable droppableId={column.id} key={column.id}>
               {(provided) => (
                 <section
                   ref={provided.innerRef}
-                  className="min-w-[280px] max-w-xs flex-1"
+                  className={cn(
+                    'min-w-[280px] max-w-xs flex-1 px-2 py-2',
+                    column.id === 'BLOCKED' && 'bg-red-50',
+                    column.id === 'DONE' && 'bg-green-50',
+                    column.id === 'IN_PROGRESS' && 'bg-yellow-50',
+                    column.id === 'TODO' && 'bg-blue-50'
+                  )}
                   {...provided.droppableProps}
                 >
-                  <Heading level={3}>{column.title}</Heading>
+                  <Heading
+                    level={3}
+                    className={cn(
+                      'mb-2',
+                      column.id === 'BLOCKED' && 'text-red-600',
+                      column.id === 'DONE' && 'text-green-600',
+                      column.id === 'IN_PROGRESS' && 'text-yellow-600',
+                      column.id === 'TODO' && 'text-blue-600'
+                    )}
+                  >
+                    {column.title}
+                  </Heading>
                   <div className={''}>
                     {tasksByStatus[column.id]?.map((t, index) => (
                       <Draggable
@@ -158,6 +176,7 @@ const ProjectComponent = ({
                       >
                         {(dragProvided) => (
                           <div
+                            className="mb-2"
                             ref={dragProvided.innerRef}
                             {...dragProvided.dragHandleProps}
                             {...dragProvided.draggableProps}
