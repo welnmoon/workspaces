@@ -16,15 +16,6 @@ import EmptyState from '../../empty-state';
 import { MessageInfo } from '../../message';
 import { DateRange } from 'react-day-picker';
 import FilterCalendar from '../../filters/filter-calendar';
-
-import {
-  FaListUl,
-  FaRegClock,
-  FaPlay,
-  FaCheckCircle,
-  FaBan,
-  FaExclamationTriangle,
-} from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { STATUS_COLUMNS } from '@/const/tasks-status';
 import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';

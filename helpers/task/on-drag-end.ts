@@ -2,6 +2,9 @@ import { DropResult } from '@hello-pangea/dnd';
 import { Task, TaskStatus } from '@prisma/client';
 import { Dispatch, SetStateAction } from 'react';
 import { reorder } from './reorder';
+import { apiRoutes } from '@/lib/routes/api-routes';
+import toast from 'react-hot-toast';
+import { TaskFullDTO } from '@/types/prisma/DTO/tasks';
 
 export function createTasksBoardOnDragEnd(
   setBoardTasks: Dispatch<SetStateAction<Task[]>>
@@ -20,8 +23,16 @@ export function createTasksBoardOnDragEnd(
       return;
     }
 
+    const taskId = Number(draggableId);
+    const sourceStatus = source.droppableId as TaskStatus;
+    const destStatus = destination.droppableId as TaskStatus;
+
+    // Для отката
+    let prevSnapshot: TaskFullDTO[] = [];
+
     // Обновляем boardTasks — локальное состояние задач (оптимистично)
     setBoardTasks((prev) => {
+      prevSnapshot = prev;
       // ID перетаскиваемой задачи
       const taskId = Number(draggableId);
 
@@ -119,5 +130,29 @@ export function createTasksBoardOnDragEnd(
        */
       return [...others, ...fromList, ...toList];
     });
+
+    (async () => {
+      try {
+        const res = await fetch(apiRoutes.updateTaskStatus(taskId), {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: destStatus }),
+        });
+
+        if (!res.ok) {
+          toast.error('Не удалось обновить статус задачи');
+          console.error('Failed to update task status', await res.json());
+          setBoardTasks(prevSnapshot);
+          return;
+          // Добавить откат
+        }
+      } catch (e) {
+        toast.error('Не удалось обновить статус задачи');
+        setBoardTasks(prevSnapshot);
+        console.error('Failed to update task status', e);
+      }
+    })();
   };
 }

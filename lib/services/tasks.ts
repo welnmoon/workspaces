@@ -1,5 +1,6 @@
 import { TaskStatus } from '@prisma/client';
 import prisma from '../prisma';
+import { AppError } from '../errors';
 
 export class TaskService {
   static async getList(userId: string) {
@@ -22,8 +23,6 @@ export class TaskService {
       },
     });
   }
-
-
   static async getWorkspaceToDoTasksCount(
     workspaceId: number,
     status?: TaskStatus
@@ -46,7 +45,6 @@ export class TaskService {
       },
     });
   }
-
   static async getWorkspaceOverdueTasksCount(workspaceId: number) {
     return await prisma.task.count({
       where: {
@@ -56,6 +54,50 @@ export class TaskService {
         dueDate: {
           lt: new Date(),
         },
+      },
+    });
+  }
+  static async updateTaskStatus(
+    taskId: number,
+    status: TaskStatus,
+    userId: string
+  ) {
+    const task = await prisma.task.findUnique({
+      where: {
+        id: taskId,
+      },
+    });
+
+    if (!task) {
+      throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+    }
+
+    const w = await prisma.workspace.findFirst({
+      where: {
+        projects: {
+          some: {
+            tasks: {
+              some: {
+                id: taskId,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!w)
+      throw new AppError(404, 'WORKSPACE_NOT_FOUND', 'Пространство не найдено');
+
+    if (task?.assigneeId !== userId && userId !== w.ownerId)
+      throw new AppError(403, 'NOT_PERMITTED', 'Недостаточно прав');
+
+    return await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        status,
       },
     });
   }

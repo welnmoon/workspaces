@@ -6,3 +6,10 @@ export const STATUS_COLUMNS: { id: TaskStatus; title: string }[] = [
   { id: TaskStatus.DONE, title: 'Готово' },
   { id: TaskStatus.BLOCKED, title: 'Заблокировано' },
 ];
+
+export const TASK_STATUSES = [
+  'TODO',
+  'IN_PROGRESS',
+  'DONE',
+  'BLOCKED',
+] as const;

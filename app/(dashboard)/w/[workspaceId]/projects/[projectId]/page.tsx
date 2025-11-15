@@ -3,7 +3,7 @@ import ProjectComponent from '@/components/entities/projects/project';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
-import { TaskService } from '@/lib/services/tasks';
+import { use } from 'react';
 
 const ProjectPage = async ({
   params,
@@ -11,8 +11,9 @@ const ProjectPage = async ({
   params: { workspaceId: string; projectId: string };
 }) => {
   const { id } = await requireUser();
+  const { workspaceId, projectId } = await params;
   const project = await prisma.project.findUnique({
-    where: { id: Number(params.projectId) },
+    where: { id: Number(projectId) },
   });
   if (!project) {
     return <NotFound text="Project" />;
@@ -25,7 +26,7 @@ const ProjectPage = async ({
 
   let workspaceName = await prisma.workspace.findUnique({
     where: {
-      id: Number(params.workspaceId),
+      id: Number(workspaceId),
     },
     select: {
       name: true,
@@ -33,7 +34,7 @@ const ProjectPage = async ({
   });
 
   if (!workspaceName) {
-    workspaceName = { name: String(params.workspaceId) };
+    workspaceName = { name: String(workspaceId) };
   }
 
   return (
@@ -41,7 +42,7 @@ const ProjectPage = async ({
       {!project && <NotFound text="Project" />}
       {project && (
         <ProjectComponent
-          workspaceId={Number(params.workspaceId)}
+          workspaceId={Number(workspaceId)}
           tasks={tasks}
           project={project}
           workspaceName={workspaceName?.name || null}
