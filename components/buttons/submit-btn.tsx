@@ -12,7 +12,8 @@ const SubmitBtn = ({
 }) => {
   return (
     <Button
-      className="cursor-pointer bg-primary-600 text-primary-50 hover:bg-primary-500"
+      // className="cursor-pointer bg-primary-600 text-primary-50 hover:bg-primary-500"
+      className="w-40"
       type="submit"
       disabled={isLoading}
     >

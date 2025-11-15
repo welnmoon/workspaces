@@ -5,12 +5,17 @@ import { conflict } from '@/lib/http';
 import prisma from '@/lib/prisma';
 import { AuditLogService } from '@/lib/services/audit-log';
 import { WorkspaceService } from '@/lib/services/workspace';
-import { Role } from '@prisma/client';
+import { MembershipStatus, Role } from '@prisma/client';
 import { addHours } from 'date-fns';
+import { AppError } from '../errors';
 
 type CreateInvitationResult =
   | { kind: 'created'; id: number }
   | { kind: 'already_pending'; id: number };
+
+type AcceptInvitation =
+  | { token: string; userId?: string }
+  | { invitationId: string; userId: string };
 
 export class InvitationService {
   //-------------------------------------//
@@ -82,10 +87,84 @@ export class InvitationService {
     return { kind: 'created', id: inv.id };
   }
 
+  static async getInvitation(invId: number) {
+    return prisma.invitation.findUnique({ where: { id: invId } });
+  }
+
   static async getReceivedInvitations(userId: string) {
-    return prisma.invitation.findMany({ where: { invitedUserId: userId } });
+    return prisma.invitation.findMany({
+      where: { invitedUserId: userId },
+      include: {
+        workspace: {
+          select: {
+            name: true,
+          },
+        },
+        inviter: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
   }
   static async getSendInvitations(userId: string) {
     return prisma.invitation.findMany({ where: { inviterId: userId } });
+  }
+
+  static async acceptInvitationById({
+    invId,
+    userId,
+  }: {
+    invId: number;
+    userId: string;
+  }) {
+    const invitation = await InvitationService.getInvitation(invId);
+    if (!invitation)
+      throw new AppError(404, 'INVITATION_NOT_FOUND', 'Приглашение не найдено');
+
+    if (invitation.status !== 'PENDING')
+      throw new AppError(403, 'INVITATION_NOT_FOUND', 'Приглашение не найдено');
+
+    if (invitation.invitedUserId !== userId)
+      throw new AppError(403, 'INVITATION_NOT_FOUND', 'Приглашение не найдено');
+
+    if (invitation.expiresAt < new Date())
+      throw new AppError(403, 'INVITATION_EXPIRED', 'Приглашение истекло');
+
+    const result = await prisma.$transaction(async (tx) => {
+      const membership = await tx.membership.create({
+        data: {
+          userId,
+          workspaceId: invitation.workspaceId,
+          role: invitation.invitedRole,
+          status: MembershipStatus.ACTIVE,
+        },
+      });
+
+      await tx.invitation.update({
+        where: {
+          id: invId,
+        },
+        data: {
+          status: 'ACCEPTED',
+        },
+      });
+
+      return membership;
+    });
+
+    await AuditLogService.create({
+      userId,
+      workspaceId: invitation.workspaceId,
+      invitationId: invId,
+      email: invitation.invitedUserEmail,
+      role: invitation.invitedRole,
+    });
+
+    return result.id; // Membership ID
   }
 }

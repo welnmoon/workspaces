@@ -2,10 +2,8 @@ import { requireWorkspaceMember } from '@/guards/workspace';
 import { ok, serverError } from '@/lib/http';
 import prisma from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
-import { TaskService } from '@/lib/services/tasks';
 import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
 import { Role } from '@prisma/client';
-import { Param } from '@prisma/client/runtime/library';
 import { NextRequest, NextResponse } from 'next/server';
 
 // POST /api/w/[workspaceId]/projects/[projectId]/tasks

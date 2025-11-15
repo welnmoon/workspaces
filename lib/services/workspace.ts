@@ -5,7 +5,8 @@ import {
 } from '@/types/prisma/DTO/workspaces';
 import prisma from '@/lib/prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
-import { Membership, Workspace } from '@prisma/client';
+import { Workspace } from '@prisma/client';
+import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 export class WorkspaceService {
   // Получение списка воркспейсов
@@ -20,6 +21,7 @@ export class WorkspaceService {
         id: true,
         name: true,
         description: true,
+        avatarUrl: true,
       },
     });
   }
@@ -88,6 +90,19 @@ export class WorkspaceService {
       },
       select: {
         name: true,
+      },
+    });
+  }
+
+  static async getWorkspaceMembers(
+    workspaceId: number
+  ): Promise<MembershipSelectUserDTO[]> {
+    return prisma.membership.findMany({
+      where: {
+        workspaceId,
+      },
+      include: {
+        user: true,
       },
     });
   }

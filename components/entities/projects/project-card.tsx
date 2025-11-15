@@ -10,28 +10,38 @@ import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
 import ProjectCardBadge from './project-card-badge';
+import { useProject } from '@/hooks/project/use-project';
 
 const ProjectCard = async ({
   title,
   description,
   projectId,
   workspaceId,
-  tasksTotal,
-  tasksDone,
-  tasksInProgress,
-  tasksToDoCount,
-  tasksOverdue,
+  // tasksTotal,
+  // tasksDone,
+  // tasksInProgress,
+  // tasksToDoCount,
+  // tasksOverdue,
 }: {
   title: string;
   description: string;
   projectId: number;
   workspaceId: number;
-  tasksTotal: number;
-  tasksDone: number;
-  tasksInProgress: number;
-  tasksToDoCount: number;
-  tasksOverdue: number;
+  // tasksTotal: number;
+  // tasksDone: number;
+  // tasksInProgress: number;
+  // tasksToDoCount: number;
+  // tasksOverdue: number;
 }) => {
+  const projectStats = await useProject(projectId);
+  const {
+    tasksBlockedCount,
+    tasksOverdueCount,
+    tasksDoneCount,
+    tasksInProgressCount,
+    tasksCount,
+    tasksToDoCount,
+  } = projectStats.stats;
   return (
     <Card>
       <CardHeader>
@@ -57,11 +67,43 @@ const ProjectCard = async ({
           Задачи
         </Heading>
         <div className=" flex flex-wrap gap-1 ">
-          <ProjectCardBadge text="Всего" value={tasksTotal} />
-          <ProjectCardBadge text="Выполненные" value={tasksDone} />
-          <ProjectCardBadge text="В работе" value={tasksInProgress} />
-          <ProjectCardBadge text="Новые" value={tasksToDoCount} />
-          <ProjectCardBadge text="Просроченные" value={tasksOverdue} />
+          <div className="flex flex-wrap gap-1">
+            <ProjectCardBadge
+              variant="default"
+              text="Всего"
+              value={tasksCount}
+            />
+
+            <ProjectCardBadge
+              variant="success" 
+              text="Выполненные"
+              value={tasksDoneCount}
+            />
+
+            <ProjectCardBadge
+              variant="primary"
+              text="В работе"
+              value={tasksInProgressCount}
+            />
+
+            <ProjectCardBadge
+              variant="info" 
+              text="Новые"
+              value={tasksToDoCount}
+            />
+
+            <ProjectCardBadge
+              variant="destructive"
+              text="Просроченные"
+              value={tasksOverdueCount}
+            />
+
+            <ProjectCardBadge
+              variant="warning" 
+              text="Заблокированные"
+              value={tasksBlockedCount}
+            />
+          </div>
         </div>
       </CardFooter>
     </Card>

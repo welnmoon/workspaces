@@ -6,27 +6,22 @@ import Divider from '../../divider';
 import Description from '../../ui/desc';
 import TaskCard from '../tasks/task-card';
 import CreateTaskDialog from '../../dialogs/create-task-dialog';
-import { cardContainer } from '@/styles/styles';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { Breadcrumbs } from '../../bread-crumbs';
 import { TaskStats } from '@/types/service/task-stats';
 import ProjectTasksFilterByStatusSelect from '../../filters/project-tasks-filter-by-status-select';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '../../ui/button';
 import EmptyState from '../../empty-state';
 import { MessageInfo } from '../../message';
 import { DateRange } from 'react-day-picker';
 import FilterCalendar from '../../filters/filter-calendar';
-import { endOfDay, startOfDay } from 'date-fns';
-
-import {
-  FaListUl,
-  FaRegClock,
-  FaPlay,
-  FaCheckCircle,
-  FaBan,
-  FaExclamationTriangle,
-} from 'react-icons/fa';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { STATUS_COLUMNS } from '@/const/tasks-status';
+import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
+import { filterTasks } from '@/helpers/task/filter-tasks';
+import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
+import ProjectTasksStats from './project-tasks-stats';
 
 type StatusFilter = TaskStatus | 'ALL';
 
@@ -45,6 +40,11 @@ const ProjectComponent = ({
 }) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [boardTasks, setBoardTasks] = useState<Task[]>(tasks);
+
+  useEffect(() => {
+    setBoardTasks(tasks);
+  }, [tasks]);
 
   if (!project) return null;
 
@@ -52,34 +52,27 @@ const ProjectComponent = ({
   const hasStatusFilter = status !== 'ALL';
   const hasAnyFilter = hasStatusFilter || hasDateFilter;
 
+  // Functions
+  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks);
+
   const filteredTasks = useMemo(() => {
-    const from = dateRange?.from ? startOfDay(dateRange.from) : undefined;
-    const to = dateRange?.to
-      ? endOfDay(dateRange.to)
-      : dateRange?.from
-        ? endOfDay(dateRange.from)
-        : undefined;
-
-    return tasks.filter((t) => {
-      const statusOk = status === 'ALL' ? true : t.status === status;
-
-      if (!hasDateFilter) return statusOk;
-
-      if (!t.dueDate) return false;
-
-      const taskDate = new Date(t.dueDate);
-
-      const fromOk = from ? taskDate >= from : true;
-      const toOk = to ? taskDate <= to : true;
-
-      return statusOk && fromOk && toOk;
-    });
-  }, [tasks, status, dateRange, hasDateFilter]);
+    return filterTasks(boardTasks, status, dateRange);
+  }, [boardTasks, status, dateRange]);
 
   const resetFilters = () => {
     setStatus('ALL');
     setDateRange(undefined);
   };
+
+  const tasksByStatus = useMemo(() => {
+    return tasksFilterByStatus({ tasks: filteredTasks });
+    // {
+    //   "TODO": [Task, Task, ...],
+    //   "IN_PROGRESS": [...],
+    //   "DONE": [...],
+    //   "BLOCKED": [...],
+    // }
+  }, [filteredTasks]);
 
   return (
     <article>
@@ -87,7 +80,7 @@ const ProjectComponent = ({
         <Breadcrumbs
           items={[
             {
-              label: `Workspace`,
+              label: `Workspaces`,
               href: clientRoutes.workspacesPage(),
             },
             {
@@ -95,7 +88,7 @@ const ProjectComponent = ({
               href: clientRoutes.workspacePage(workspaceId),
             },
             {
-              label: `Project`,
+              label: `Projects`,
               href: clientRoutes.projectsPage(workspaceId),
             },
             {
@@ -114,33 +107,7 @@ const ProjectComponent = ({
         <CreateTaskDialog projectId={project.id} workspaceId={workspaceId} />
       </div>
 
-      {taskStats && (
-        <div className="flex flex-wrap gap-4 my-4 text-sm items-center">
-          <span className="flex items-center gap-2">
-            <FaListUl /> Всего: {taskStats.tasksCount}
-          </span>
-
-          <span className="flex items-center gap-2 text-blue-600">
-            <FaRegClock /> TODO: {taskStats.tasksToDoCount}
-          </span>
-
-          <span className="flex items-center gap-2 text-yellow-600">
-            <FaPlay /> В работе: {taskStats.tasksInProgressCount}
-          </span>
-
-          <span className="flex items-center gap-2 text-green-600">
-            <FaCheckCircle /> Готово: {taskStats.tasksDoneCount}
-          </span>
-
-          <span className="flex items-center gap-2 text-red-600">
-            <FaBan /> Заблокировано: {taskStats.tasksBlockedCount}
-          </span>
-
-          <span className="flex items-center gap-2 text-rose-600">
-            <FaExclamationTriangle /> Просрочено: {taskStats.tasksOverdueCount}
-          </span>
-        </div>
-      )}
+      {taskStats && <ProjectTasksStats taskStats={taskStats} />}
 
       <div className="flex gap-2">
         <Button onClick={resetFilters} variant="outline" className="w-fit">
@@ -171,22 +138,57 @@ const ProjectComponent = ({
           }
         />
       )}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex gap-4 mt-4 overflow-x-auto">
+          {STATUS_COLUMNS.map((column) => (
+            <Droppable droppableId={column.id} key={column.id}>
+              {(provided) => (
+                <section
+                  ref={provided.innerRef}
+                  className="min-w-[280px] max-w-xs flex-1"
+                  {...provided.droppableProps}
+                >
+                  <Heading level={3}>{column.title}</Heading>
+                  <div className={''}>
+                    {tasksByStatus[column.id]?.map((t, index) => (
+                      <Draggable
+                        key={t.id}
+                        draggableId={String(t.id)}
+                        index={index}
+                      >
+                        {(dragProvided) => (
+                          <div
+                            ref={dragProvided.innerRef}
+                            {...dragProvided.dragHandleProps}
+                            {...dragProvided.draggableProps}
+                          >
+                            <TaskCard
+                              role="listitem"
+                              description={t.description || ''}
+                              dueDate={
+                                t.dueDate
+                                  ? new Date(t.dueDate).toISOString()
+                                  : ''
+                              }
+                              projectId={t.projectId}
+                              workspaceId={Number(workspaceId)}
+                              status={t.status}
+                              title={t.title}
+                              taskId={t.id}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  </div>
 
-      <section role="list" className={cardContainer}>
-        {filteredTasks.map((t) => (
-          <TaskCard
-            role="listitem"
-            description={t.description || ''}
-            dueDate={t.dueDate ? new Date(t.dueDate).toISOString() : ''}
-            key={t.id}
-            projectId={t.projectId}
-            workspaceId={Number(workspaceId)}
-            status={t.status}
-            title={t.title}
-            taskId={t.id}
-          />
-        ))}
-      </section>
+                  {provided.placeholder}
+                </section>
+              )}
+            </Droppable>
+          ))}
+        </div>
+      </DragDropContext>
     </article>
   );
 };

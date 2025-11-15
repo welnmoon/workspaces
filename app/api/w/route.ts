@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
           name: res.data.name,
           description: res.data.description,
           ownerId: userId,
+          avatarUrl: res.data.avatarUrl || '/images/workspace-default.png',
         },
       });
 

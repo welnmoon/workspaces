@@ -10,7 +10,7 @@ const WorkspacesPage = async () => {
     const user = await requireUser();
     const workspaces = await WorkspaceService.getList(user.id);
 
-    return <WorkspacesComponent workspaces={workspaces} />;
+    return <WorkspacesComponent userId={user.id} workspaces={workspaces} />;
   } catch (e) {
     if (e instanceof UnauthorizedError) {
       return <UnauthorizedClient />;
