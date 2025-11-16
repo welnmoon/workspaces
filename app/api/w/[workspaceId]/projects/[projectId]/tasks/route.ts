@@ -28,7 +28,6 @@ export async function POST(
       dueDate,
       assigneeId,
     });
-    console.log(data);
     if (!data.success)
       return badRequest('Invalid task data', data.error.format());
 

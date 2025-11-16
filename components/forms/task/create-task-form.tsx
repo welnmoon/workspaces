@@ -39,7 +39,6 @@ const CreateTaskForm = ({
   });
 
   const onFormSubmit = async (values: CreateTaskFormValues) => {
-    console.log('Submitting form with values:', values);
     try {
       const res = await fetch(apiRoutes.createTask(workspaceId, projectId), {
         method: 'POST',
@@ -59,15 +58,10 @@ const CreateTaskForm = ({
         );
         return;
       }
-
-      const data = await res.json();
-
-      if (data.data) {
-        form.reset();
-        toast.success('Задача успешно создана');
-        onSuccess?.();
-        router.refresh();
-      }
+      onSuccess?.();
+      form.reset();
+      toast.success('Задача успешно создана');
+      router.refresh();
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Неизвестная ошибка';
       toast.error(message);

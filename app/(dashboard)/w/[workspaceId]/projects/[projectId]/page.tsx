@@ -52,7 +52,6 @@ const ProjectPage = async ({
           members={members}
         />
       )}
-      {tasks.length === 0 && <div>No tasks found</div>}
     </main>
   );
 };
