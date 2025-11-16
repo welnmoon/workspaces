@@ -20,7 +20,7 @@ const ProjectPage = async ({
   }
 
   const [tasks, taskStats] = await Promise.all([
-    ProjectService.getProjectTasks(project.id),
+    ProjectService.getProjectTasksWithAssignee(project.id),
     ProjectService.getProjectTasksStats(project.id),
   ]);
 

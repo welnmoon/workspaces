@@ -23,6 +23,7 @@ import { filterTasks } from '@/helpers/task/filter-tasks';
 import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
 import ProjectTasksStats from './project-tasks-stats';
 import { cn } from '@/lib/utils';
+import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 
 type StatusFilter = TaskStatus | 'ALL';
 
@@ -35,13 +36,13 @@ const ProjectComponent = ({
 }: {
   project: Project;
   workspaceId: number;
-  tasks: Task[];
+  tasks: TaskWithAssigneeDTO[];
   workspaceName: string | null;
   taskStats: TaskStats;
 }) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [boardTasks, setBoardTasks] = useState<Task[]>(tasks);
+  const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
 
   useEffect(() => {
     setBoardTasks(tasks);
@@ -77,7 +78,7 @@ const ProjectComponent = ({
 
   return (
     <article>
-      <Heading level={3}>
+      <Heading className="mb-2" level={3}>
         <Breadcrumbs
           items={[
             {
@@ -194,6 +195,7 @@ const ProjectComponent = ({
                               status={t.status}
                               title={t.title}
                               taskId={t.id}
+                              assignee={t.assignee}
                             />
                           </div>
                         )}

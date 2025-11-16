@@ -1,8 +1,12 @@
 import { STATUS_COLUMNS } from '@/const/tasks-status';
-import { TaskFullDTO } from '@/types/prisma/DTO/tasks';
+import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 
-export const tasksFilterByStatus = ({ tasks }: { tasks: TaskFullDTO[] }) => {
-  const groups: Record<string, TaskFullDTO[]> = {};
+export const tasksFilterByStatus = ({
+  tasks,
+}: {
+  tasks: TaskWithAssigneeDTO[];
+}) => {
+  const groups: Record<string, TaskWithAssigneeDTO[]> = {};
 
   for (const column of STATUS_COLUMNS) {
     groups[column.id] = [];

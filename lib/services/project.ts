@@ -50,6 +50,34 @@ export class ProjectService {
     });
   }
 
+  static async getProjectTasksWithAssignee(
+    projectId: number,
+    filters?: TaskFilters
+  ) {
+    const where: any = {
+      projectId: projectId,
+    };
+
+    if (filters?.status) where.status = filters.status;
+    if (filters?.done) where.done = filters.done;
+    if (filters?.todo) where.todo = filters.todo;
+    if (filters?.inProgress) where.inProgress = filters.inProgress;
+    if (filters?.overdue) where.overdue = filters.overdue;
+    if (filters?.fromDate) where.dueDate = { gte: filters.fromDate };
+    if (filters?.toDate) where.dueDate = { lte: filters.toDate };
+    if (filters?.assigneeId) where.assigneeId = filters.assigneeId;
+
+    return prisma.task.findMany({
+      where,
+      include: {
+        assignee: true,
+      },
+      orderBy: {
+        dueDate: 'asc',
+      },
+    });
+  }
+
   //-------------------------------------//
   //--------- For sidebar ---------------//
   //-------------------------------------//

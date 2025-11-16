@@ -4,10 +4,10 @@ import { Dispatch, SetStateAction } from 'react';
 import { reorder } from './reorder';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import toast from 'react-hot-toast';
-import { TaskFullDTO } from '@/types/prisma/DTO/tasks';
+import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 
 export function createTasksBoardOnDragEnd(
-  setBoardTasks: Dispatch<SetStateAction<Task[]>>
+  setBoardTasks: Dispatch<SetStateAction<TaskWithAssigneeDTO[]>>
 ) {
   return (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -28,7 +28,7 @@ export function createTasksBoardOnDragEnd(
     const destStatus = destination.droppableId as TaskStatus;
 
     // Для отката
-    let prevSnapshot: TaskFullDTO[] = [];
+    let prevSnapshot: TaskWithAssigneeDTO[] = [];
 
     // Обновляем boardTasks — локальное состояние задач (оптимистично)
     setBoardTasks((prev) => {
@@ -103,7 +103,7 @@ export function createTasksBoardOnDragEnd(
        * 2) Создаём копию задачи, но со статусом,
        * соответствующим колонке, куда перетащили.
        */
-      const movedUpdated: Task = {
+      const movedUpdated: TaskWithAssigneeDTO = {
         ...removed,
         status: destStatus,
       };

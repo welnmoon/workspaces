@@ -12,6 +12,7 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import { TaskStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
+import { UserDTO } from '@/types/prisma/DTO/user';
 
 interface TaskCardProps {
   title: string;
@@ -22,6 +23,7 @@ interface TaskCardProps {
   workspaceId: number;
   taskId: number;
   role: string | undefined;
+  assignee?: UserDTO | null;
 }
 
 export default function TaskCard({
@@ -33,6 +35,7 @@ export default function TaskCard({
   workspaceId,
   taskId,
   role,
+  assignee,
 }: TaskCardProps) {
   const dueDateFormatted = dueDate
     ? new Date(dueDate).toLocaleDateString(undefined, {

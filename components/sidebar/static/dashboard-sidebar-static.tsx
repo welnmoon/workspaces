@@ -100,9 +100,12 @@ const DashboardSidebarStatic = ({
     setSelectedProjectId(value);
     setSelectedTaskId(null);
   };
-
+ 
   return (
-    <aside className="hidden md:block md:w-60 lg:w-62 xl:w-64 bg-zinc-50 border-r h-screen px-4 py-4 mr-4">
+    <aside
+      className="hidden md:block md:w-60 lg:w-62 xl:w-64 bg-zinc-50 border-r h-screen px-4 py-4 mr-4
+    sticky top-0"
+    >
       <div className="mb-6">
         <WorkspaceLogo />
       </div>

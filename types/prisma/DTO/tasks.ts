@@ -1,5 +1,5 @@
 // ...existing code...
-import type { Task, TaskPriority, TaskStatus } from '@prisma/client';
+import type { Prisma, Task, TaskPriority, TaskStatus } from '@prisma/client';
 
 /**
  * DTOs для Task
@@ -44,3 +44,9 @@ export type TaskFullDTO = Task;
 
 // Частичное обновление (все поля опциональны, кроме системных)
 export type TaskUpdateDTO = Partial<TaskBaseDTO>;
+
+export type TaskWithAssigneeDTO = Prisma.TaskGetPayload<{
+  include: {
+    assignee: true;
+  };
+}>;
