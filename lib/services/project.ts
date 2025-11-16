@@ -1,4 +1,7 @@
-import { workspaceIdExistSchema } from '@/schemas/projects/create-project-form-schemas';
+import {
+  workspaceIdExistSchema,
+  CreateProjectFormValues,
+} from '@/schemas/projects/create-project-form-schemas';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
 import prisma from '../prisma';
 import { TaskFilters } from '@/types/service/task-filters';
@@ -25,6 +28,31 @@ export class ProjectService {
         workspaceId: data.workspaceId,
         description: data.description,
       },
+    });
+  }
+
+  static async getProjectById(projectId: number) {
+    return prisma.project.findUnique({
+      where: { id: projectId },
+    });
+  }
+
+  static async updateProject(
+    projectId: number,
+    data: CreateProjectFormValues
+  ) {
+    return prisma.project.update({
+      where: { id: projectId },
+      data: {
+        name: data.name,
+        description: data.description,
+      },
+    });
+  }
+
+  static async deleteProject(projectId: number) {
+    return prisma.project.delete({
+      where: { id: projectId },
     });
   }
 

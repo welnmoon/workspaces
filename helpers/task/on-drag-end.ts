@@ -142,7 +142,7 @@ export function createTasksBoardOnDragEnd(
         });
 
         if (!res.ok) {
-          toast.error('Не удалось обновить статус задачи');
+          toast.error('Не удалось обновить статус задачи', await res.json());
           console.error('Failed to update task status', await res.json());
           setBoardTasks(prevSnapshot);
           return;
