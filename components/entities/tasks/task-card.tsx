@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -41,21 +40,70 @@ export default function TaskCard({
   const dueDateFormatted = dueDate
     ? new Date(dueDate).toLocaleDateString(undefined, {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric',
       })
     : '';
 
-  const expired = taskIsExpired(new Date(dueDate));
-  const deadline = new Date().getDate() - new Date(dueDate).getDate();
+  const expired = dueDate ? taskIsExpired(new Date(dueDate)) : false;
+  const deadline = dueDate
+    ? new Date().getDate() - new Date(dueDate).getDate()
+    : 0;
+
+  const statusStripeClass = cn(
+    'absolute inset-y-0 left-0 w-1 rounded-l-md',
+    status === TaskStatus.DONE
+      ? 'bg-emerald-500'
+      : status === TaskStatus.IN_PROGRESS
+        ? 'bg-blue-500'
+        : 'bg-slate-300'
+  );
+
+  const statusTextClass = cn(
+    'text-[11px] font-medium uppercase tracking-wide',
+    status === TaskStatus.DONE
+      ? 'text-emerald-600'
+      : status === TaskStatus.IN_PROGRESS
+        ? 'text-blue-600'
+        : 'text-slate-500'
+  );
+
+  const assigneeInitials =
+    (assignee?.firstName?.[0] ?? '') + (assignee?.lastName?.[0] ?? '');
+
   return (
     <Card
       role={role}
-      className="flex flex-col h-full justify-between transition-all duration-200 hover:shadow-lg hover:-translate-y-[2px]"
+      className={cn(
+        'relative flex h-full flex-col gap-1 rounded-md border border-border bg-card',
+        'px-3 py-2 text-sm shadow-sm',
+        'transition-all duration-150 hover:-translate-y-[1px] hover:border-primary/40 hover:shadow-md'
+      )}
     >
-      <CardHeader className="pb-2 min-w-0">
-        <CardTitle className="min-w-0">
-          <Heading level={2} className="font-bold text-foreground min-w-0">
+      {/* цветная полоска слева, как у Jira */}
+      <span className={statusStripeClass} />
+
+      <CardHeader className="flex flex-col gap-1 p-0">
+        <div className="flex items-center justify-between gap-2">
+          {/* ID задачи в стиле issue key */}
+          <span className="text-[11px] font-medium text-muted-foreground">
+            ID: {taskId}
+          </span>
+
+          {/* статус-лоцента, компактная как в Jira */}
+          <Badge
+            variant="outline"
+            className="border-none bg-muted px-2 py-0.5 text-[11px] leading-none"
+          >
+            <span className={statusTextClass}>{status}</span>
+          </Badge>
+        </div>
+
+        <CardTitle className="mt-0.5">
+          <Heading
+            level={2}
+            className="text-[13px] font-semibold text-foreground leading-snug"
+          >
             <Link
               href={clientRoutes.taskPage(workspaceId, projectId, taskId)}
               className="underline-anim block min-w-0"
@@ -64,60 +112,56 @@ export default function TaskCard({
             </Link>
           </Heading>
         </CardTitle>
+
+        {description && (
+          <p className="line-clamp-2 text-[12px] text-muted-foreground mt-0.5">
+            {description}
+          </p>
+        )}
       </CardHeader>
 
-      <div className="mt-auto">
-        <CardContent className="flex gap-2 justify-between pt-0 text-sm bg-muted py-2">
-          <div className="">
-            <span className="font-medium">Срок: </span>
-            <span>
-              {dueDate ? (
-                <span
-                  className={cn(
-                    { 'text-red-600': expired },
-                    'flex flex-col gap-1'
-                  )}
-                >
-                  {dueDateFormatted}
-                  {expired ? (
-                    <span className="text-foreground-muted">
-                      {deadline === 0 && 'Сегодня'}
-
-                      {deadline > 0 &&
-                        `Просрочено на ${Math.abs(deadline)} дн.`}
-                    </span>
-                  ) : (
-                    ''
-                  )}
-                </span>
-              ) : (
-                'Нет срока'
-              )}
-            </span>
-          </div>
-          <Badge variant={'outline'} className="flex-1 h-fit">
-            <span className="font-medium">Статус: </span>
-            <span
-              className={`${
-                status === TaskStatus.DONE
-                  ? 'text-green-600'
-                  : status === TaskStatus.IN_PROGRESS
-                    ? 'text-blue-600'
-                    : 'text-gray-500'
-              }`}
-            >
-              {status}
-            </span>
-          </Badge>
-        </CardContent>
-
-        <CardFooter className="border-t py-2 text-xs text-muted-foreground flex justify-between">
-          <span>ID: {taskId}</span>
-          <span>
-            {assignee?.firstName} {assignee?.lastName}
+      <CardContent className="mt-2 flex items-center justify-between gap-2 p-0">
+        {/* Дедлайн, в духе Jira: маленький текст + красный если просрочено */}
+        <div className="flex flex-col gap-0.5">
+          <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+            <span>Срок</span>
           </span>
-        </CardFooter>
-      </div>
+          <span
+            className={cn(
+              'text-[12px]',
+              expired ? 'text-red-600 font-medium' : 'text-foreground'
+            )}
+          >
+            {dueDate ? dueDateFormatted : 'Нет срока'}
+          </span>
+          {dueDate && expired && (
+            <span className="text-[11px] text-muted-foreground">
+              {deadline === 0 && 'Сегодня'}
+              {deadline > 0 && `Просрочено на ${Math.abs(deadline)} дн.`}
+            </span>
+          )}
+        </div>
+
+        {/* Исполнитель в виде кружка с инициалами, как маленький аватар */}
+        <div className="flex items-center gap-2">
+          {assignee && (
+            <div className="flex items-center gap-1.5">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[11px] font-semibold text-foreground">
+                {assigneeInitials || '?'}
+              </div>
+              <span className="max-w-[120px] truncate text-[11px] text-muted-foreground">
+                {assignee.firstName} {assignee.lastName}
+              </span>
+            </div>
+          )}
+        </div>
+      </CardContent>
+
+      <CardFooter className="mt-1 border-t pt-1.5 px-0 pb-0 text-[11px] text-muted-foreground flex justify-between">
+        <span>
+          Проект: {projectId} · Workspace: {workspaceId}
+        </span>
+      </CardFooter>
     </Card>
   );
 }

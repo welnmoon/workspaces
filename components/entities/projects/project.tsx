@@ -151,14 +151,6 @@ const ProjectComponent = ({
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex mt-4 overflow-x-auto relative">
           {filteredTasks.length === 0 && (
-            // <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-            //   <div className="rounded-lg bg-white/80 backdrop-blur-md shadow-lg p-6">
-            //     <EmptyState
-            //       title="Пока нет задач."
-            //       subtitle="Создайте задачу, чтобы начать работу над проектом"
-            //     />
-            //   </div>
-            // </div>
             <div>
               <EmptyState
                 icon={
@@ -175,12 +167,7 @@ const ProjectComponent = ({
           )}
 
           {filteredTasks.length > 0 && (
-            <div
-              className={cn(
-                'flex min-h-[400px] select-none'
-                // filteredTasks.length === 0 ? 'blur-xs' : 'overflow-x-auto'
-              )}
-            >
+            <div className={cn('flex min-h-[400px] select-none w-full')}>
               {STATUS_COLUMNS.map((column) => (
                 <Droppable droppableId={column.id} key={column.id}>
                   {(provided) => (
