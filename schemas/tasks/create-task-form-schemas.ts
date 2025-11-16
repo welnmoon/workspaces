@@ -7,7 +7,8 @@ export const createTaskFormSchema = z.object({
     .min(1, 'Task title is required')
     .max(200, 'Task title must be at most 200 characters'),
   description: z.string().trim().max(1000).optional(),
-  dueDate: z.string().optional(),
+  dueDate: z.string(),
+  assigneeId: z.string().optional(),
 });
 
 export type CreateTaskFormValues = z.infer<typeof createTaskFormSchema>;

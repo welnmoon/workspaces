@@ -13,6 +13,7 @@ import { TaskStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
 import { UserDTO } from '@/types/prisma/DTO/user';
+import { Badge } from '@/components/ui/badge';
 
 interface TaskCardProps {
   title: string;
@@ -94,7 +95,7 @@ export default function TaskCard({
               )}
             </span>
           </div>
-          <div className="flex-1">
+          <Badge variant={'outline'} className="flex-1 h-fit">
             <span className="font-medium">Статус: </span>
             <span
               className={`${
@@ -107,12 +108,14 @@ export default function TaskCard({
             >
               {status}
             </span>
-          </div>
+          </Badge>
         </CardContent>
 
         <CardFooter className="border-t py-2 text-xs text-muted-foreground flex justify-between">
           <span>ID: {taskId}</span>
-          <span>Проект #{projectId}</span>
+          <span>
+            {assignee?.firstName} {assignee?.lastName}
+          </span>
         </CardFooter>
       </div>
     </Card>

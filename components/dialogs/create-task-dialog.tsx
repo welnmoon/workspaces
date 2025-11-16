@@ -12,13 +12,17 @@ import MainBtn from '../buttons/main-btn';
 import CreateTaskForm from '../forms/task/create-task-form';
 import { useState } from 'react';
 import { Heading } from '@/components/ui/heading';
+import { UserDTO } from '@/types/prisma/DTO/user';
+import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 const CreateTaskDialog = ({
   workspaceId,
   projectId,
+  members,
 }: {
   workspaceId: number;
   projectId: number;
+  members: MembershipSelectUserDTO[];
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -43,6 +47,7 @@ const CreateTaskDialog = ({
               projectId={Number(projectId)}
               workspaceId={Number(workspaceId)}
               onSuccess={() => setOpen(false)}
+              members={members}
             />
           </div>
           <div className="hidden w-52 shrink-0 items-center justify-center rounded-xl bg-muted/50 p-4 md:flex">

@@ -1,7 +1,8 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { ok, serverError } from '@/lib/http';
+import { badRequest, created, ok, serverError } from '@/lib/http';
 import prisma from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
+import { TaskService } from '@/lib/services/tasks';
 import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
 import { Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
@@ -20,23 +21,25 @@ export async function POST(
       allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],
     });
 
-    const { title, description, dueDate } = await req.json();
+    const { title, description, dueDate, assigneeId } = await req.json();
     const data = createTaskFormSchema.safeParse({
       title,
       description,
       dueDate,
+      assigneeId,
     });
-    if (!data.success) return new Response(data.error.message, { status: 400 });
+    console.log(data);
+    if (!data.success)
+      return badRequest('Invalid task data', data.error.format());
 
-    const task = await prisma.task.create({
-      data: {
-        title: data.data.title,
-        description: data.data.description,
-        dueDate: data.data.dueDate ? new Date(data.data.dueDate) : undefined,
-        projectId: Number(projectId),
-      },
+    const task = await TaskService.createTask({
+      projectId: Number(projectId),
+      title: data.data.title,
+      description: data.data.description,
+      dueDate: data.data.dueDate,
+      assigneeId: data.data.assigneeId,
     });
-    return NextResponse.json({ data: task }, { status: 201 });
+    return created(task);
   } catch (e) {
     return NextResponse.json(
       { error: 'Failed to create task' },

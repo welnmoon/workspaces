@@ -12,15 +12,20 @@ import toast from 'react-hot-toast';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { DueDateField } from './due-date-field';
 import { useRouter } from 'next/navigation';
+import { UserDTO } from '@/types/prisma/DTO/user';
+import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import SelectAssignee from './select-assignee';
 
 const CreateTaskForm = ({
   projectId,
   workspaceId,
   onSuccess,
+  members,
 }: {
   projectId: number;
   workspaceId: number;
   onSuccess?: () => void;
+  members: MembershipSelectUserDTO[];
 }) => {
   const router = useRouter();
   const form = useForm<CreateTaskFormValues>({
@@ -29,6 +34,7 @@ const CreateTaskForm = ({
       title: '',
       description: '',
       dueDate: new Date().toISOString().slice(0, 10),
+      assigneeId: undefined,
     },
   });
 
@@ -39,8 +45,10 @@ const CreateTaskForm = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...values,
+          title: values.title,
+          description: values.description,
           dueDate: values.dueDate,
+          assigneeId: values.assigneeId,
         }),
       });
 
@@ -71,7 +79,7 @@ const CreateTaskForm = ({
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onFormSubmit)}>
         <fieldset className="mb-4">
-          <legend className="sr-only">Create Project Form</legend>
+          <legend className="sr-only">Вы создаете задачу</legend>
           <FormInput
             name="title"
             label="Task title"
@@ -82,6 +90,11 @@ const CreateTaskForm = ({
             name="description"
             label="Description"
             placeholder="Description"
+          />
+          <SelectAssignee
+            control={form.control}
+            name="assigneeId"
+            members={members}
           />
           <DueDateField control={form.control} name="dueDate" />
         </fieldset>

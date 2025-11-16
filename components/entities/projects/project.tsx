@@ -24,6 +24,8 @@ import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
 import ProjectTasksStats from './project-tasks-stats';
 import { cn } from '@/lib/utils';
 import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import { UserDTO } from '@/types/prisma/DTO/user';
+import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 type StatusFilter = TaskStatus | 'ALL';
 
@@ -33,12 +35,14 @@ const ProjectComponent = ({
   tasks,
   workspaceName,
   taskStats,
+  members,
 }: {
   project: Project;
   workspaceId: number;
   tasks: TaskWithAssigneeDTO[];
   workspaceName: string | null;
   taskStats: TaskStats;
+  members: MembershipSelectUserDTO[];
 }) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -106,7 +110,11 @@ const ProjectComponent = ({
 
       <div className="flex justify-between">
         <Heading>Tasks</Heading>
-        <CreateTaskDialog projectId={project.id} workspaceId={workspaceId} />
+        <CreateTaskDialog
+          members={members}
+          projectId={project.id}
+          workspaceId={workspaceId}
+        />
       </div>
 
       {taskStats && <ProjectTasksStats taskStats={taskStats} />}
