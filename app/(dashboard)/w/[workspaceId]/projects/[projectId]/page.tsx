@@ -4,6 +4,7 @@ import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
 import { use } from 'react';
+import { WorkspaceService } from '@/lib/services/workspace';
 
 const ProjectPage = async ({
   params,
@@ -19,9 +20,10 @@ const ProjectPage = async ({
     return <NotFound text="Project" />;
   }
 
-  const [tasks, taskStats] = await Promise.all([
-    ProjectService.getProjectTasks(project.id),
+  const [tasks, taskStats, members] = await Promise.all([
+    ProjectService.getProjectTasksWithAssignee(project.id),
     ProjectService.getProjectTasksStats(project.id),
+    WorkspaceService.getWorkspaceMembers(Number(workspaceId)),
   ]);
 
   let workspaceName = await prisma.workspace.findUnique({
@@ -47,9 +49,9 @@ const ProjectPage = async ({
           project={project}
           workspaceName={workspaceName?.name || null}
           taskStats={taskStats}
+          members={members}
         />
       )}
-      {tasks.length === 0 && <div>No tasks found</div>}
     </main>
   );
 };

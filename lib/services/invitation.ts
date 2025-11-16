@@ -12,9 +12,6 @@ type CreateInvitationResult =
   | { kind: 'created'; id: number }
   | { kind: 'already_pending'; id: number };
 
-type AcceptInvitation =
-  | { token: string; userId?: string }
-  | { invitationId: string; userId: string };
 
 export class InvitationService {
   //-------------------------------------//

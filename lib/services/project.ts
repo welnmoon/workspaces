@@ -1,4 +1,7 @@
-import { workspaceIdExistSchema } from '@/schemas/projects/create-project-form-schemas';
+import {
+  workspaceIdExistSchema,
+  CreateProjectFormValues,
+} from '@/schemas/projects/create-project-form-schemas';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
 import prisma from '../prisma';
 import { TaskFilters } from '@/types/service/task-filters';
@@ -28,6 +31,31 @@ export class ProjectService {
     });
   }
 
+  static async getProjectById(projectId: number) {
+    return prisma.project.findUnique({
+      where: { id: projectId },
+    });
+  }
+
+  static async updateProject(
+    projectId: number,
+    data: CreateProjectFormValues
+  ) {
+    return prisma.project.update({
+      where: { id: projectId },
+      data: {
+        name: data.name,
+        description: data.description,
+      },
+    });
+  }
+
+  static async deleteProject(projectId: number) {
+    return prisma.project.delete({
+      where: { id: projectId },
+    });
+  }
+
   static async getProjectTasks(projectId: number, filters?: TaskFilters) {
     const where: any = {
       projectId: projectId,
@@ -44,6 +72,34 @@ export class ProjectService {
 
     return prisma.task.findMany({
       where,
+      orderBy: {
+        dueDate: 'asc',
+      },
+    });
+  }
+
+  static async getProjectTasksWithAssignee(
+    projectId: number,
+    filters?: TaskFilters
+  ) {
+    const where: any = {
+      projectId: projectId,
+    };
+
+    if (filters?.status) where.status = filters.status;
+    if (filters?.done) where.done = filters.done;
+    if (filters?.todo) where.todo = filters.todo;
+    if (filters?.inProgress) where.inProgress = filters.inProgress;
+    if (filters?.overdue) where.overdue = filters.overdue;
+    if (filters?.fromDate) where.dueDate = { gte: filters.fromDate };
+    if (filters?.toDate) where.dueDate = { lte: filters.toDate };
+    if (filters?.assigneeId) where.assigneeId = filters.assigneeId;
+
+    return prisma.task.findMany({
+      where,
+      include: {
+        assignee: true,
+      },
       orderBy: {
         dueDate: 'asc',
       },

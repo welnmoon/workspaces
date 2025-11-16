@@ -101,4 +101,29 @@ export class TaskService {
       },
     });
   }
+
+  static async createTask({
+    projectId,
+    title,
+    description,
+    dueDate,
+    assigneeId,
+  }: {
+    projectId: number;
+    title: string;
+    description: string | undefined;
+    dueDate: string;
+    assigneeId: string | undefined;
+  }) {
+    if (!description) description = 'No description';
+    await prisma.task.create({
+      data: {
+        title: title,
+        description: description,
+        dueDate: dueDate ? new Date(dueDate) : undefined,
+        projectId: Number(projectId),
+        assigneeId,
+      },
+    });
+  }
 }

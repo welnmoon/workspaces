@@ -11,6 +11,7 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 
 import ProjectCardBadge from './project-card-badge';
 import { useProject } from '@/hooks/project/use-project';
+import EditProjectPopover from './edit-project-popover';
 
 const ProjectCard = async ({
   title,
@@ -46,16 +47,24 @@ const ProjectCard = async ({
     <Card>
       <CardHeader>
         <CardTitle>
-          <Heading className="text-bold " level={2}>
-            <Link
-              className=""
-              href={clientRoutes.projectPage(workspaceId, projectId)}
-            >
-              <span className="underline-anim truncate max-w-full min-w-fit">
-                {title}
-              </span>
-            </Link>
-          </Heading>
+          <div className="flex items-start justify-between gap-2">
+            <Heading className="text-bold" level={2}>
+              <Link
+                className="flex items-center justify-between"
+                href={clientRoutes.projectPage(workspaceId, projectId)}
+              >
+                <span className="underline-anim truncate max-w-full min-w-fit">
+                  {title}
+                </span>
+              </Link>
+            </Heading>
+            <EditProjectPopover
+              projectId={projectId}
+              workspaceId={workspaceId}
+              projectName={title}
+              projectDescription={description}
+            />
+          </div>
         </CardTitle>
         <CardDescription className="block line-clamp-2 break-words">
           {description}
@@ -75,7 +84,7 @@ const ProjectCard = async ({
             />
 
             <ProjectCardBadge
-              variant="success" 
+              variant="success"
               text="Выполненные"
               value={tasksDoneCount}
             />
@@ -87,7 +96,7 @@ const ProjectCard = async ({
             />
 
             <ProjectCardBadge
-              variant="info" 
+              variant="info"
               text="Новые"
               value={tasksToDoCount}
             />
@@ -99,7 +108,7 @@ const ProjectCard = async ({
             />
 
             <ProjectCardBadge
-              variant="warning" 
+              variant="warning"
               text="Заблокированные"
               value={tasksBlockedCount}
             />

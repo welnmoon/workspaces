@@ -1,10 +1,10 @@
-import { TaskFullDTO } from '@/types/prisma/DTO/tasks';
+import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { TaskStatus } from '@prisma/client';
 import { endOfDay, startOfDay } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
 export const filterTasks = (
-  tasks: TaskFullDTO[],
+  tasks: TaskWithAssigneeDTO[],
   status: TaskStatus | 'ALL',
   dateRange?: DateRange
 ) => {

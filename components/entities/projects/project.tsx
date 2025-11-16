@@ -22,6 +22,10 @@ import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
 import { filterTasks } from '@/helpers/task/filter-tasks';
 import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
 import ProjectTasksStats from './project-tasks-stats';
+import { cn } from '@/lib/utils';
+import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import { UserDTO } from '@/types/prisma/DTO/user';
+import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 type StatusFilter = TaskStatus | 'ALL';
 
@@ -31,16 +35,18 @@ const ProjectComponent = ({
   tasks,
   workspaceName,
   taskStats,
+  members,
 }: {
   project: Project;
   workspaceId: number;
-  tasks: Task[];
+  tasks: TaskWithAssigneeDTO[];
   workspaceName: string | null;
   taskStats: TaskStats;
+  members: MembershipSelectUserDTO[];
 }) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [boardTasks, setBoardTasks] = useState<Task[]>(tasks);
+  const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
 
   useEffect(() => {
     setBoardTasks(tasks);
@@ -76,7 +82,7 @@ const ProjectComponent = ({
 
   return (
     <article>
-      <Heading level={3}>
+      <Heading className="mb-2" level={3}>
         <Breadcrumbs
           items={[
             {
@@ -104,7 +110,11 @@ const ProjectComponent = ({
 
       <div className="flex justify-between">
         <Heading>Tasks</Heading>
-        <CreateTaskDialog projectId={project.id} workspaceId={workspaceId} />
+        <CreateTaskDialog
+          members={members}
+          projectId={project.id}
+          workspaceId={workspaceId}
+        />
       </div>
 
       {taskStats && <ProjectTasksStats taskStats={taskStats} />}
@@ -139,54 +149,93 @@ const ProjectComponent = ({
         />
       )}
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex gap-4 mt-4 overflow-x-auto">
-          {STATUS_COLUMNS.map((column) => (
-            <Droppable droppableId={column.id} key={column.id}>
-              {(provided) => (
-                <section
-                  ref={provided.innerRef}
-                  className="min-w-[280px] max-w-xs flex-1"
-                  {...provided.droppableProps}
-                >
-                  <Heading level={3}>{column.title}</Heading>
-                  <div className={''}>
-                    {tasksByStatus[column.id]?.map((t, index) => (
-                      <Draggable
-                        key={t.id}
-                        draggableId={String(t.id)}
-                        index={index}
-                      >
-                        {(dragProvided) => (
-                          <div
-                            ref={dragProvided.innerRef}
-                            {...dragProvided.dragHandleProps}
-                            {...dragProvided.draggableProps}
-                          >
-                            <TaskCard
-                              role="listitem"
-                              description={t.description || ''}
-                              dueDate={
-                                t.dueDate
-                                  ? new Date(t.dueDate).toISOString()
-                                  : ''
-                              }
-                              projectId={t.projectId}
-                              workspaceId={Number(workspaceId)}
-                              status={t.status}
-                              title={t.title}
-                              taskId={t.id}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                  </div>
+        <div className="flex mt-4 overflow-x-auto relative">
+          {filteredTasks.length === 0 && (
+            <div>
+              <EmptyState
+                icon={
+                  <img
+                    src="/images/tasks-page-banner.png"
+                    alt="Иллюстрация проекта"
+                    className="mt-6 w-1/2 mx-auto h-auto object-contain"
+                  />
+                }
+                title="Ну что, начинаем?"
+                subtitle="Добавьте первую задачу — и ваш проект засияет."
+              />
+            </div>
+          )}
 
-                  {provided.placeholder}
-                </section>
-              )}
-            </Droppable>
-          ))}
+          {filteredTasks.length > 0 && (
+            <div className={cn('flex min-h-[400px] select-none w-full')}>
+              {STATUS_COLUMNS.map((column) => (
+                <Droppable droppableId={column.id} key={column.id}>
+                  {(provided) => (
+                    <section
+                      ref={provided.innerRef}
+                      className={cn(
+                        'min-w-[280px] max-w-xs flex-1 px-2 py-2',
+                        column.id === 'BLOCKED' && 'bg-red-50',
+                        column.id === 'DONE' && 'bg-green-50',
+                        column.id === 'IN_PROGRESS' && 'bg-yellow-50',
+                        column.id === 'TODO' && 'bg-blue-50'
+                      )}
+                      {...provided.droppableProps}
+                    >
+                      <Heading
+                        level={3}
+                        className={cn(
+                          'mb-2',
+                          column.id === 'BLOCKED' && 'text-red-600',
+                          column.id === 'DONE' && 'text-green-600',
+                          column.id === 'IN_PROGRESS' && 'text-yellow-600',
+                          column.id === 'TODO' && 'text-blue-600'
+                        )}
+                      >
+                        {column.title}
+                      </Heading>
+                      <div className={''}>
+                        {tasksByStatus[column.id]?.map((t, index) => (
+                          <Draggable
+                            key={t.id}
+                            draggableId={String(t.id)}
+                            index={index}
+                          >
+                            {(dragProvided) => (
+                              <div
+                                className="mb-2"
+                                ref={dragProvided.innerRef}
+                                {...dragProvided.dragHandleProps}
+                                {...dragProvided.draggableProps}
+                              >
+                                <TaskCard
+                                  role="listitem"
+                                  description={t.description || ''}
+                                  dueDate={
+                                    t.dueDate
+                                      ? new Date(t.dueDate).toISOString()
+                                      : ''
+                                  }
+                                  projectId={t.projectId}
+                                  workspaceId={Number(workspaceId)}
+                                  status={t.status}
+                                  title={t.title}
+                                  taskId={t.id}
+                                  assignee={t.assignee}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                      </div>
+
+                      {provided.placeholder}
+                    </section>
+                  )}
+                </Droppable>
+              ))}
+            </div>
+          )}
         </div>
       </DragDropContext>
     </article>

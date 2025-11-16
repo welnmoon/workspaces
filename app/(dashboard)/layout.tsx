@@ -1,5 +1,4 @@
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { DashboardSidebarDynamic } from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
 import {
   Root as AvatarRoot,
   Image as AvatarImage,
@@ -17,6 +16,7 @@ import InvitationsPopover, {
   InvitationNotificationData,
 } from '@/components/notifications/invitations-popover';
 import { Badge } from '@/components/ui/badge';
+import DashboardSidebarDynamic from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
 
 export default async function DashboardLayout({
   children,
@@ -54,7 +54,7 @@ export default async function DashboardLayout({
 
       {/* Динамичный только на <lg */}
       <div className="sm:visible lg:hidden">
-        <DashboardSidebarDynamic />
+        <DashboardSidebarDynamic workspaces={workspaces} />
       </div>
 
       <div className="flex-1 flex flex-col min-w-0">
