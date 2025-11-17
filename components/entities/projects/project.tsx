@@ -28,7 +28,7 @@ import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
 import DoneTasksFilter from './done-tasks-filter';
 
-type StatusFilter = TaskStatus | 'ALL';
+export type StatusFilter = TaskStatus | 'ALL';
 const counts = [10, 25, 50];
 
 const ProjectComponent = ({
