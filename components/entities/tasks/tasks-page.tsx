@@ -55,17 +55,22 @@ const TasksPageComponent = ({ tasks }: { tasks: TaskWithAssigneeDTO[] }) => {
       <section className="flex-1 flex flex-col">
         <Heading className="mb-6">Фильтрация</Heading>
 
-        <FilterCalendar
-          className="w-full mb-4"
-          dateRange={dateRange}
-          onSelectHandler={setDateRange}
-        />
-
-        <ProjectTasksFilterByStatusSelect
-          status={status}
-          setStatus={(s) => setStatus((s as StatusFilter) ?? 'ALL')}
-          className=""
-        />
+        <div className="flex flex-col gap-2">
+          <Heading level={3}>Дата создания и дедлайна</Heading>
+          <FilterCalendar
+            className="w-full mb-4"
+            dateRange={dateRange}
+            onSelectHandler={setDateRange}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Heading level={3}>Статус задачи</Heading>
+          <ProjectTasksFilterByStatusSelect
+            status={status}
+            setStatus={(s) => setStatus((s as StatusFilter) ?? 'ALL')}
+            className=""
+          />
+        </div>
       </section>
     </main>
   );
