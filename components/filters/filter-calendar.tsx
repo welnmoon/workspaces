@@ -4,21 +4,29 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Calendar } from '../ui/calendar';
 import { DateRange } from 'react-day-picker';
+import { cn } from '@/lib/utils';
+import { Calendar1 } from 'lucide-react';
 
 const FilterCalendar = ({
   dateRange,
   onSelectHandler,
+  className,
 }: {
   dateRange: DateRange | undefined;
   onSelectHandler: (dateRange: DateRange | undefined) => void;
+  className?: string;
 }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-auto justify-start text-left">
-          {dateRange?.from && dateRange?.to
-            ? `${format(dateRange.from, 'dd.MM.yyyy')} – ${format(dateRange.to, 'dd.MM.yyyy')}`
-            : 'Выберите диапазон'}
+        <Button variant="outline" className={cn('', className)}>
+          {dateRange?.from && dateRange?.to ? (
+            `${format(dateRange.from, 'dd.MM.yyyy')} – ${format(dateRange.to, 'dd.MM.yyyy')}`
+          ) : (
+            <span className="flex gap-2 items-center">
+              <Calendar1 /> Выберите диапазон
+            </span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto min-w-[500px] p-0" align="start">
