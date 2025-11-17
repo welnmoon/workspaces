@@ -3,6 +3,13 @@ import prisma from '../prisma';
 import { AppError } from '../errors';
 
 export class TaskService {
+  static async getAll(projectId: number) {
+    return await prisma.task.findMany({
+      where: {
+        projectId,
+      },
+    });
+  }
   static async getList(userId: string) {
     return await prisma.task.findMany({
       where: {

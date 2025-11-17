@@ -53,6 +53,19 @@ export class ProjectService {
     });
   }
 
+  static async isProjectInWorkspace(
+    projectId: number,
+    workspaceId: number
+  ): Promise<boolean> {
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        workspaceId: workspaceId,
+      },
+    });
+    return !!project;
+  }
+
   static async getProjectTasks(projectId: number, filters?: TaskFilters) {
     const where: any = {
       projectId: projectId,
