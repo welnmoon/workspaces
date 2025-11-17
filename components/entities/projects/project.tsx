@@ -1,6 +1,6 @@
 'use client';
 
-import { Project, Task, TaskStatus } from '@prisma/client';
+import { Project, TaskStatus } from '@prisma/client';
 import { Heading } from '../../ui/heading';
 import Divider from '../../divider';
 import Description from '../../ui/desc';
@@ -21,32 +21,40 @@ import { STATUS_COLUMNS } from '@/const/tasks-status';
 import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
 import { filterTasks } from '@/helpers/task/filter-tasks';
 import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
-import ProjectTasksStats from './project-tasks-stats';
+import ProjectTasksAllStats from './project-tasks-stats';
 import { cn } from '@/lib/utils';
-import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
-import { UserDTO } from '@/types/prisma/DTO/user';
+import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import ProjectMemberTasksAllStats from './project-member-tasks-stats';
+import DoneTasksFilter from './done-tasks-filter';
 
 type StatusFilter = TaskStatus | 'ALL';
+const counts = [10, 25, 50];
 
 const ProjectComponent = ({
   project,
   workspaceId,
   tasks,
   workspaceName,
-  taskStats,
+  allTaskStats,
+  memberTaskStats,
   members,
 }: {
   project: Project;
   workspaceId: number;
   tasks: TaskWithAssigneeDTO[];
   workspaceName: string | null;
-  taskStats: TaskStats;
+  allTaskStats: TaskStats;
+  memberTaskStats: TaskStats;
   members: MembershipSelectUserDTO[];
 }) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
+  // Done tasks filter
+  const [doneTasksCount, setDoneTasksCount] = useState<string>(
+    String(counts[0])
+  );
 
   useEffect(() => {
     setBoardTasks(tasks);
@@ -109,7 +117,7 @@ const ProjectComponent = ({
       <Divider />
 
       <div className="flex justify-between">
-        <Heading>Tasks</Heading>
+        <Heading>Задачи</Heading>
         <CreateTaskDialog
           members={members}
           projectId={project.id}
@@ -117,7 +125,10 @@ const ProjectComponent = ({
         />
       </div>
 
-      {taskStats && <ProjectTasksStats taskStats={taskStats} />}
+      {allTaskStats && <ProjectTasksAllStats allTaskStats={allTaskStats} />}
+      {memberTaskStats && (
+        <ProjectMemberTasksAllStats memberTaskStats={memberTaskStats} />
+      )}
 
       <div className="flex gap-2">
         <Button onClick={resetFilters} variant="outline" className="w-fit">
@@ -167,71 +178,86 @@ const ProjectComponent = ({
           )}
 
           {filteredTasks.length > 0 && (
-            <div className={cn('flex min-h-[400px] select-none w-full')}>
+            <div className={cn('flex min-h-dvh select-none w-full')}>
               {STATUS_COLUMNS.map((column) => (
                 <Droppable droppableId={column.id} key={column.id}>
-                  {(provided) => (
-                    <section
-                      ref={provided.innerRef}
-                      className={cn(
-                        'min-w-[280px] max-w-xs flex-1 px-2 py-2',
-                        column.id === 'BLOCKED' && 'bg-red-50',
-                        column.id === 'DONE' && 'bg-green-50',
-                        column.id === 'IN_PROGRESS' && 'bg-yellow-50',
-                        column.id === 'TODO' && 'bg-blue-50'
-                      )}
-                      {...provided.droppableProps}
-                    >
-                      <Heading
-                        level={3}
-                        className={cn(
-                          'mb-2',
-                          column.id === 'BLOCKED' && 'text-red-600',
-                          column.id === 'DONE' && 'text-green-600',
-                          column.id === 'IN_PROGRESS' && 'text-yellow-600',
-                          column.id === 'TODO' && 'text-blue-600'
-                        )}
-                      >
-                        {column.title}
-                      </Heading>
-                      <div className={''}>
-                        {tasksByStatus[column.id]?.map((t, index) => (
-                          <Draggable
-                            key={t.id}
-                            draggableId={String(t.id)}
-                            index={index}
-                          >
-                            {(dragProvided) => (
-                              <div
-                                className="mb-2"
-                                ref={dragProvided.innerRef}
-                                {...dragProvided.dragHandleProps}
-                                {...dragProvided.draggableProps}
-                              >
-                                <TaskCard
-                                  role="listitem"
-                                  description={t.description || ''}
-                                  dueDate={
-                                    t.dueDate
-                                      ? new Date(t.dueDate).toISOString()
-                                      : ''
-                                  }
-                                  projectId={t.projectId}
-                                  workspaceId={Number(workspaceId)}
-                                  status={t.status}
-                                  title={t.title}
-                                  taskId={t.id}
-                                  assignee={t.assignee}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                      </div>
+                  {(provided) => {
+                    const columnTasks = tasksByStatus[column.id] ?? [];
 
-                      {provided.placeholder}
-                    </section>
-                  )}
+                    const visibleTasks =
+                      column.id === 'DONE'
+                        ? columnTasks.slice(0, Number(doneTasksCount))
+                        : columnTasks;
+                    return (
+                      <section
+                        ref={provided.innerRef}
+                        className={cn(
+                          'min-w-[280px] max-w-xs flex-1 px-2 py-2',
+                          column.id === 'BLOCKED' && 'bg-red-50',
+                          column.id === 'DONE' && 'bg-green-50',
+                          column.id === 'IN_PROGRESS' && 'bg-yellow-50',
+                          column.id === 'TODO' && 'bg-blue-50'
+                        )}
+                        {...provided.droppableProps}
+                      >
+                        <Heading
+                          level={3}
+                          className={cn(
+                            'mb-2 flex justify-between items-center',
+                            column.id === 'BLOCKED' && 'text-red-600',
+                            column.id === 'DONE' && 'text-green-600',
+                            column.id === 'IN_PROGRESS' && 'text-yellow-600',
+                            column.id === 'TODO' && 'text-blue-600'
+                          )}
+                        >
+                          {column.title}{' '}
+                          {column.id === 'DONE' && (
+                            <DoneTasksFilter
+                              setDoneTasksCount={setDoneTasksCount}
+                              doneTasksCount={doneTasksCount}
+                              counts={counts}
+                            />
+                          )}
+                        </Heading>
+                        <div>
+                          {visibleTasks.map((t, index) => (
+                            <Draggable
+                              key={t.id}
+                              draggableId={String(t.id)}
+                              index={index}
+                            >
+                              {(dragProvided) => (
+                                <div
+                                  className="mb-2"
+                                  ref={dragProvided.innerRef}
+                                  {...dragProvided.dragHandleProps}
+                                  {...dragProvided.draggableProps}
+                                >
+                                  <TaskCard
+                                    role="listitem"
+                                    description={t.description || ''}
+                                    dueDate={
+                                      t.dueDate
+                                        ? new Date(t.dueDate).toISOString()
+                                        : ''
+                                    }
+                                    projectId={t.projectId}
+                                    workspaceId={Number(workspaceId)}
+                                    status={t.status}
+                                    title={t.title}
+                                    taskId={t.id}
+                                    assignee={t.assignee}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                        </div>
+
+                        {provided.placeholder}
+                      </section>
+                    );
+                  }}
                 </Droppable>
               ))}
             </div>

@@ -8,41 +8,42 @@ import {
   FaBan,
   FaExclamationTriangle,
 } from 'react-icons/fa';
-const ProjectTasksAllStats = ({
-  allTaskStats,
+const ProjectMemberTasksAllStats = ({
+  memberTaskStats,
 }: {
-  allTaskStats: TaskStats;
+  memberTaskStats: TaskStats;
 }) => {
   return (
     <section>
       <div className="flex flex-wrap gap-4 my-4 text-sm items-center">
-        <Badge variant={'outline'}>Для всех</Badge>
+        <Badge variant={'outline'}>Для вас</Badge>
         <span className="flex items-center gap-2">
-          <FaListUl /> Всего: {allTaskStats.tasksCount}
+          <FaListUl /> Всего: {memberTaskStats.tasksCount}
         </span>
 
         <span className="flex items-center gap-2 text-blue-600">
-          <FaRegClock /> TODO: {allTaskStats.tasksToDoCount}
+          <FaRegClock /> TODO: {memberTaskStats.tasksToDoCount}
         </span>
 
         <span className="flex items-center gap-2 text-yellow-600">
-          <FaPlay /> В работе: {allTaskStats.tasksInProgressCount}
+          <FaPlay /> В работе: {memberTaskStats.tasksInProgressCount}
         </span>
 
         <span className="flex items-center gap-2 text-green-600">
-          <FaCheckCircle /> Готово: {allTaskStats.tasksDoneCount}
+          <FaCheckCircle /> Готово: {memberTaskStats.tasksDoneCount}
         </span>
 
         <span className="flex items-center gap-2 text-red-600">
-          <FaBan /> Заблокировано: {allTaskStats.tasksBlockedCount}
+          <FaBan /> Заблокировано: {memberTaskStats.tasksBlockedCount}
         </span>
 
         <span className="flex items-center gap-2 text-rose-600">
-          <FaExclamationTriangle /> Просрочено: {allTaskStats.tasksOverdueCount}
+          <FaExclamationTriangle /> Просрочено:{' '}
+          {memberTaskStats.tasksOverdueCount}
         </span>
       </div>
     </section>
   );
 };
 
-export default ProjectTasksAllStats;
+export default ProjectMemberTasksAllStats;

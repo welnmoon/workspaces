@@ -33,8 +33,8 @@ const CreateTaskDialog = ({
       </DialogTrigger>
       <DialogContent className="max-h-[80vh] sm:max-w-2xl">
         <DialogHeader className="space-y-1 text-left">
-          <DialogTitle className="text-left">
-            <Heading level={3}>Новая задача</Heading>
+          <DialogTitle className="text-left text-xl font-semibold">
+            Новая задача
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Разбейте проект на конкретные шаги, обозначьте сроки и уточните

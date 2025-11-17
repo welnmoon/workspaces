@@ -50,6 +50,10 @@ export default function TaskCard({
     ? new Date().getDate() - new Date(dueDate).getDate()
     : 0;
 
+  const isSevenDaysLater = dueDate
+    ? new Date(dueDate) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    : false;
+
   const statusStripeClass = cn(
     'absolute inset-y-0 left-0 w-1 rounded-l-md',
     status === TaskStatus.DONE

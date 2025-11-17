@@ -37,10 +37,7 @@ export class ProjectService {
     });
   }
 
-  static async updateProject(
-    projectId: number,
-    data: CreateProjectFormValues
-  ) {
+  static async updateProject(projectId: number, data: CreateProjectFormValues) {
     return prisma.project.update({
       where: { id: projectId },
       data: {
@@ -144,6 +141,51 @@ export class ProjectService {
       prisma.task.count({
         where: {
           projectId,
+          dueDate: {
+            lt: new Date(),
+          },
+        },
+      }),
+    ]);
+
+    const statusCounts = {
+      TODO: 0,
+      IN_PROGRESS: 0,
+      DONE: 0,
+      BLOCKED: 0,
+    };
+
+    for (const item of grouped) {
+      statusCounts[item.status] = item._count;
+    }
+
+    return {
+      tasksCount: all,
+      tasksToDoCount: statusCounts.TODO,
+      tasksInProgressCount: statusCounts.IN_PROGRESS,
+      tasksDoneCount: statusCounts.DONE,
+      tasksBlockedCount: statusCounts.BLOCKED,
+      tasksOverdueCount: overdue,
+    };
+  }
+
+  static async getProjectMemberTasksStats(
+    projectId: number,
+    memberId: string
+  ): Promise<TaskStats> {
+    const [all, grouped, overdue] = await Promise.all([
+      prisma.task.count({
+        where: { projectId, assigneeId: memberId },
+      }),
+      prisma.task.groupBy({
+        by: ['status'],
+        where: { projectId, assigneeId: memberId },
+        _count: true,
+      }),
+      prisma.task.count({
+        where: {
+          projectId,
+          assigneeId: memberId,
           dueDate: {
             lt: new Date(),
           },
