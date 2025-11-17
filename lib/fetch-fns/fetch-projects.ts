@@ -1,5 +1,6 @@
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
+import { AppError } from '../errors';
 
 export const fetchProjects = async (
   workspaceId: number
