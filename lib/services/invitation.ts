@@ -4,13 +4,15 @@ import { generateToken } from '@/helpers/generate-token';
 import prisma from '@/lib/prisma';
 import { AuditLogService } from '@/lib/services/audit-log';
 import { WorkspaceService } from '@/lib/services/workspace';
-import { MembershipStatus, Role } from '@prisma/client';
+import { MembershipStatus, Prisma, Role } from '@prisma/client';
 import { addHours } from 'date-fns';
 import { AppError } from '../errors';
 
 type CreateInvitationResult =
   | { kind: 'created'; id: number }
-  | { kind: 'already_pending'; id: number };
+  | { kind: 'already_pending'; id: number }
+  | { kind: 'already_member' };
+
 
 
 export class InvitationService {
@@ -31,8 +33,15 @@ export class InvitationService {
     expiresInHours?: number;
   }): Promise<CreateInvitationResult> {
     await requireWorkspaceMember({ workspaceId, allowed: [Role.OWNER] });
-    // Нормализация
     email = email.toLowerCase().trim();
+
+    const workspaceMembers =
+      await WorkspaceService.getWorkspaceMembers(workspaceId);
+    const isAlreadyMember = workspaceMembers.some(
+      (m) => m.user.email === email
+    );
+
+    if (isAlreadyMember) return { kind: 'already_member' };
 
     const pending = await prisma.invitation.findFirst({
       where: { workspaceId, invitedUserEmail: email, status: 'PENDING' },

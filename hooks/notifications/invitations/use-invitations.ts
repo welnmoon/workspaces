@@ -1,5 +1,8 @@
 import { apiRoutes } from '@/lib/routes/api-routes';
-import { InvitationDTO } from '@/types/prisma/DTO/invitations';
+import {
+  InvitationDTO,
+  ReceivedInvitationDTO,
+} from '@/types/prisma/DTO/invitations';
 import { useQuery } from '@tanstack/react-query';
 
 export const useInvitations = (userId: string) => {
@@ -13,7 +16,7 @@ export const useInvitations = (userId: string) => {
 
       if (!res.ok) throw new Error('Failed to fetch invitations');
       const data = await res.json();
-      return data.data as InvitationDTO[];
+      return data.data as ReceivedInvitationDTO[];
     },
     initialData: [],
   });
