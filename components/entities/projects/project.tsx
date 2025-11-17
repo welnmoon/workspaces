@@ -27,6 +27,8 @@ import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
 import DoneTasksFilter from './done-tasks-filter';
+import LinkButton from '@/components/buttons/link-btn';
+import Link from 'next/link';
 
 export type StatusFilter = TaskStatus | 'ALL';
 const counts = [10, 25, 50];
@@ -252,6 +254,21 @@ const ProjectComponent = ({
                               )}
                             </Draggable>
                           ))}
+                          {column.id === 'DONE' && (
+                            <Button
+                              className="text-primary-500"
+                              variant={'link'}
+                            >
+                              <Link
+                                href={clientRoutes.tasksPage(
+                                  workspaceId,
+                                  project.id
+                                )}
+                              >
+                                Все задачи →
+                              </Link>
+                            </Button>
+                          )}
                         </div>
 
                         {provided.placeholder}
