@@ -11,14 +11,26 @@ export const fetchProjects = async (
     });
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch projects: ${res.status}`);
+      throw new AppError(
+        500,
+        'FETCH_PROJECTS_ERROR',
+        'Ошибка при получении проектов'
+      );
     }
 
     const json = (await res.json()) as { data?: ProjectListDTO[] };
 
     return json.data ?? [];
   } catch (e) {
-    console.error('Error fetching projects', e);
-    throw e;
+    if (e instanceof AppError) {
+      console.error(e);
+      throw e;
+    }
+    console.error(e);
+    throw new AppError(
+      500,
+      'FETCH_PROJECTS_ERROR',
+      'Ошибка при получении проектов'
+    );
   }
 };

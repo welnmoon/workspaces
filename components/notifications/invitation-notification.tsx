@@ -1,7 +1,10 @@
 import { Badge } from '@/components/ui/badge';
 import { Loader, Users } from 'lucide-react';
 import { Button } from '../ui/button';
-import { InvitationDTO } from '@/types/prisma/DTO/invitations';
+import {
+  InvitationDTO,
+  ReceivedInvitationDTO,
+} from '@/types/prisma/DTO/invitations';
 import { useAcceptInvitation } from '@/hooks/notifications/invitations/use-accept-inviation';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -28,12 +31,12 @@ export function InvitationNotification({
   invitation,
 }: {
   userId: string;
-  invitation: InvitationDTO;
+  invitation: ReceivedInvitationDTO;
 }) {
   const router = useRouter();
   const { mutate, isPending, isSuccess } = useAcceptInvitation(userId);
   const workspaceLabel =
-    invitation.workspaceId ?? `Workspace #${invitation.workspaceId}`;
+    invitation.workspace.name ?? `Workspace #${invitation.workspaceId}`;
 
   const dateLabel = new Intl.DateTimeFormat('ru-RU', {
     dateStyle: 'medium',

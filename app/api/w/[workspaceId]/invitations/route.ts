@@ -1,4 +1,3 @@
-
 import { requireUser } from '@/helpers/require-user';
 import { badRequest, conflict, created } from '@/lib/http';
 import { InvitationService } from '@/lib/services/invitation';
@@ -34,6 +33,12 @@ export async function POST(req: NextRequest) {
     newUserRole,
     expiresInHours,
   });
+
+  if (res.kind === 'already_member')
+    return badRequest(
+      'Пользователь уже в этом рабочем пространстве',
+      'already_member'
+    );
 
   if (res.kind === 'already_pending')
     return conflict('Приглашение уже отправлено', 'already_pending');

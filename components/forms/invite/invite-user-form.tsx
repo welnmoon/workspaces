@@ -122,6 +122,7 @@ const InviteUserForm = ({ workspaceId, onSuccess }: InviteUserFormProps) => {
         />
 
         <SubmitBtn
+          className="px-2"
           isLoading={form.formState.isSubmitting}
           text="Отправить приглашение"
         />
