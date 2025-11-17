@@ -35,8 +35,8 @@ const EditProjectDialog = ({
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="space-y-2 text-left">
-          <DialogTitle>
-            <Heading level={3}>Редактировать проект</Heading>
+          <DialogTitle className="text-left text-xl font-semibold">
+            Редактировать проект
           </DialogTitle>
           <DialogDescription>
             Обновите название или описание, чтобы команда видела актуальную

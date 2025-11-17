@@ -20,9 +20,10 @@ const ProjectPage = async ({
     return <NotFound text="Project" />;
   }
 
-  const [tasks, taskStats, members] = await Promise.all([
+  const [tasks, allTaskStats, memberTaskStats, members] = await Promise.all([
     ProjectService.getProjectTasksWithAssignee(project.id),
     ProjectService.getProjectTasksStats(project.id),
+    ProjectService.getProjectMemberTasksStats(project.id, id),
     WorkspaceService.getWorkspaceMembers(Number(workspaceId)),
   ]);
 
@@ -48,7 +49,8 @@ const ProjectPage = async ({
           tasks={tasks}
           project={project}
           workspaceName={workspaceName?.name || null}
-          taskStats={taskStats}
+          allTaskStats={allTaskStats}
+          memberTaskStats={memberTaskStats}
           members={members}
         />
       )}

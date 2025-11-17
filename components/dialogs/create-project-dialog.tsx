@@ -22,8 +22,8 @@ const CreateProjectDialog = ({ workspaceId }: { workspaceId: number }) => {
       </DialogTrigger>
       <DialogContent className="max-h-[80vh] sm:max-w-2xl">
         <DialogHeader className="space-y-1 text-left">
-          <DialogTitle className="text-left">
-            <Heading level={3}>Создать проект</Heading>
+          <DialogTitle className="text-left text-xl font-semibold">
+            Создать проект
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Опишите главную цель и базовые детали проекта, чтобы команда сразу
