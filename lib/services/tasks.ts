@@ -10,6 +10,16 @@ export class TaskService {
       },
     });
   }
+  static async getAllWithAssignees(projectId: number) {
+    return await prisma.task.findMany({
+      where: {
+        projectId,
+      },
+      include: {
+        assignee: true,
+      },
+    });
+  }
   static async getList(userId: string) {
     return await prisma.task.findMany({
       where: {

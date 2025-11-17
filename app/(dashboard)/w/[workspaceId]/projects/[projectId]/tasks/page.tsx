@@ -1,5 +1,8 @@
+import TasksPageComponent from '@/components/entities/tasks/tasks-page';
 import { TasksPageTaskCard } from '@/components/entities/tasks/tasks-page-task-card';
 import ErrorComponent from '@/components/error';
+import FilterCalendar from '@/components/filters/filter-calendar';
+import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
 import { clientRoutes } from '@/lib/routes/client-routes';
@@ -29,14 +32,8 @@ const TasksPage = async ({
     if (!projectExists) {
       throw new AppError(404, 'PROJECT_NOT_FOUND', 'Проект не найден');
     }
-    const tasks = await TaskService.getAll(projectId);
-    return (
-      <main>
-        {tasks.map((t) => (
-          <TasksPageTaskCard task={t} />
-        ))}
-      </main>
-    );
+    const tasks = await TaskService.getAllWithAssignees(projectId);
+    return <TasksPageComponent tasks={tasks} />;
   } catch (e) {
     if (e instanceof AppError) {
       return <ErrorComponent message={e.message} title={String(e.status)} />;
