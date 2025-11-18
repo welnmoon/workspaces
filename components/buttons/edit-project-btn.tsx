@@ -5,12 +5,15 @@ import { Edit } from 'lucide-react';
 const EditButton = ({
   className,
   children,
+  onClick,
   ...props
 }: {
   className?: string;
+  onClick?: () => void;
   children?: React.ReactNode;
 }) => (
   <Button
+    onClick={onClick}
     variant="ghost"
     className={cn(
       'w-full flex items-center justify-start gap-2 text-left',

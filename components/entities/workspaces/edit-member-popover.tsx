@@ -1,3 +1,5 @@
+'use client';
+import EditButton from '@/components/buttons/edit-project-btn';
 import EditMemberDialog from '@/components/dialogs/edit-member-dialog';
 import {
   Popover,
@@ -5,19 +7,35 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
-import { Role } from '@prisma/client';
+import { useState } from 'react';
 import { IoMenu } from 'react-icons/io5';
 
-const EditMemberPopover = ({ memberRole }: { memberRole: RoleWithoutOwnerDTO }) => {
+const EditMemberPopover = ({
+  memberRole,
+  memberId,
+}: {
+  memberRole: RoleWithoutOwnerDTO;
+  memberId: number;
+}) => {
+  const [openPopover, setOpenPopover] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   return (
-    <Popover>
-      <PopoverTrigger>
-        <IoMenu className="text-xl text-gray-800" />
-      </PopoverTrigger>
-      <PopoverContent className="w-full py-2 px-1 flex flex-col items-start">
-        <EditMemberDialog memberRole={memberRole}/>
-      </PopoverContent>
-    </Popover>
+    <>
+      <Popover open={openPopover} onOpenChange={setOpenPopover}>
+        <PopoverTrigger>
+          <IoMenu className="text-xl text-gray-800" />
+        </PopoverTrigger>
+        <PopoverContent className="w-full py-2 px-1 flex flex-col items-start">
+          <EditButton onClick={()=>setOpenDialog(true)}/>
+        </PopoverContent>
+      </Popover>
+      <EditMemberDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        memberId={memberId}
+        memberRole={memberRole}
+      />
+    </>
   );
 };
 
