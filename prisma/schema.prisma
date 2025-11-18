@@ -17,7 +17,7 @@ model User {
   password            String?
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
-  wasOnline           DateTime?
+  wasOnline           DateTime? 
   nickname            String?
   accounts            Account[]
   auditLogs           AuditLog[]

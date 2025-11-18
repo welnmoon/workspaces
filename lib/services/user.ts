@@ -68,4 +68,15 @@ export class UserService {
       },
     });
   }
+
+  static async updateUserWasOnline(userId: string, date: Date) {
+    return await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        wasOnline: date,
+      },
+    });
+  }
 }
