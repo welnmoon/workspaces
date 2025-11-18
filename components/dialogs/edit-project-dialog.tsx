@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Heading } from '@/components/ui/heading';
 import { useState } from 'react';
 
 type EditProjectDialogProps = {

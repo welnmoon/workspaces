@@ -108,6 +108,7 @@ const WorkspacePage = async ({
       </div>
       <Divider />
       <WorkspaceTabs
+      user={user}
         members={memberships}
         projectSectionProps={projectSectionProps}
       />
