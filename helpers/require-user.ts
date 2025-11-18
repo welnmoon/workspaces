@@ -1,5 +1,6 @@
 import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
+import { markUserOnline } from './mark-user-online';
 
 export type SessionUser = {
   id: string;
@@ -22,5 +23,7 @@ export async function requireUser(): Promise<SessionUser> {
     // server actions / route handlers поймают и вернут 401 по месту
     throw new UnauthorizedError();
   }
+  markUserOnline(session.user.id).catch((err) => console.error(err));
+
   return session.user as SessionUser;
 }

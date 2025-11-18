@@ -53,7 +53,7 @@ const WMembersSection = ({
                 <TableCell>{member.user.email}</TableCell>
                 <TableCell>
                   {member.user.wasOnline
-                    ? member.user.wasOnline.toISOString()
+                    ? member.user.wasOnline.toLocaleString() 
                     : '-'}
                 </TableCell>
                 <TableCell className="">{member.role}</TableCell>
