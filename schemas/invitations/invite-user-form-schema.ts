@@ -12,8 +12,8 @@ const expiresInHoursSchema = z
   }, 'Укажите срок действия в часах (1–720)');
 
 export const inviteUserFormSchema = z.object({
-  email: z.string().trim().email('Введите корректный email'),
-  role: z.nativeEnum(Role, { errorMap: () => ({ message: 'Выберите роль' }) }),
+  email: z.email('Введите корректный email'),
+  role: z.enum(Role, { error: () => ({ message: 'Выберите роль' }) }),
   expiresInHours: expiresInHoursSchema,
 });
 

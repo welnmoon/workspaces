@@ -21,8 +21,6 @@ import { FormProvider, useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import FormInput from '../form-input';
 
-const roleOptions = [Role.MEMBER, Role.ADMIN];
-
 type InviteUserFormProps = {
   workspaceId: number;
   onSuccess?: () => void;
@@ -103,7 +101,7 @@ const InviteUserForm = ({ workspaceId, onSuccess }: InviteUserFormProps) => {
                   <SelectValue placeholder="Выберите роль" />
                 </SelectTrigger>
                 <SelectContent>
-                  {roleOptions.map((role) => (
+                  {Object.values(Role).map((role) => (
                     <SelectItem key={role} value={role}>
                       {role}
                     </SelectItem>
