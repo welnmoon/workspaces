@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Edit } from 'lucide-react';
 
-const EditProjectButton = ({
+const EditButton = ({
   className,
   children,
   ...props
@@ -23,4 +23,4 @@ const EditProjectButton = ({
   </Button>
 );
 
-export default EditProjectButton;
+export default EditButton;
