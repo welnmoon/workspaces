@@ -8,11 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { SessionUser } from '@/helpers/require-user';
 
 const WMembersSection = ({
+  user,
   members,
 }: {
   members: MembershipSelectUserDTO[];
+  user: SessionUser;
 }) => {
   return (
     <section>
@@ -28,7 +31,10 @@ const WMembersSection = ({
         </TableHeader>
         <TableBody>
           {members.map((member) => (
-            <TableRow key={member.id}>
+            <TableRow
+              className={`${user.id === member.userId && 'bg-primary-50'}`}
+              key={member.id}
+            >
               <TableCell className="font-medium">
                 {member.user.firstName} {member.user.lastName}
               </TableCell>
