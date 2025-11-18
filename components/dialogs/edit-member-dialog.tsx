@@ -8,24 +8,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import EditButton from '../buttons/edit-project-btn';
 import EditMemberForm from '../forms/member/edit-member-form';
-import { Role } from '@prisma/client';
 import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
 
 const EditMemberDialog = ({
   memberRole,
+  memberId,
+  open,
+  setOpen,
 }: {
   memberRole: RoleWithoutOwnerDTO;
+  memberId: number;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [open, setOpen] = useState(false);
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <EditButton />
-      </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="space-y-2 text-left">
           <DialogTitle className="text-left text-xl font-semibold">
@@ -36,7 +36,11 @@ const EditMemberDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <EditMemberForm memberRole={memberRole} />
+        <EditMemberForm
+          setOpen={setOpen}
+          memberId={memberId}
+          memberRole={memberRole}
+        />
       </DialogContent>
     </Dialog>
   );

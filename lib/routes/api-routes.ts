@@ -30,4 +30,7 @@ export const apiRoutes = {
   getReceivedInvitations: (userId: string) => `/api/user/${userId}/invitations`,
   createInvitation: (workspaceId: number) =>
     `/api/w/${workspaceId}/invitations`,
+
+  // member
+  editMember: (memberId: number) => `/api/members/${memberId}/edit`,
 };

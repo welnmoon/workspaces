@@ -59,7 +59,10 @@ const WMembersSection = ({
                 <TableCell className="">{member.role}</TableCell>
                 <TableCell className="text-right">
                   {member.role !== Role.OWNER && (
-                    <EditMemberPopover memberRole={memberRole} />
+                    <EditMemberPopover
+                      memberRole={memberRole}
+                      memberId={member.id}
+                    />
                   )}
                 </TableCell>
               </TableRow>

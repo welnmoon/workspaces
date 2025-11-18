@@ -1,5 +1,7 @@
 import { MembershipStatus } from '@prisma/client';
 import prisma from '../prisma';
+import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
+import { AppError } from '../errors';
 
 export class MembershipService {
   static async getUserRoleInWorkspace(userId: string, workspaceId: number) {
@@ -28,5 +30,50 @@ export class MembershipService {
         status: MembershipStatus.ACTIVE,
       },
     });
+  }
+
+  static async editMemberRole(
+    memberId: number,
+    role: RoleWithoutOwnerDTO,
+    currentUserId: string
+  ) {
+    const member = await prisma.membership.findUnique({
+      where: {
+        id: memberId,
+      },
+    });
+
+    if (!member) {
+      throw new AppError(404, 'MEMBER_NOT_FOUND', 'Member not found');
+    }
+
+    const workspace = await prisma.workspace.findUnique({
+      where: {
+        id: member.workspaceId,
+      },
+    });
+
+    if (!workspace) {
+      throw new AppError(404, 'WORKSPACE_NOT_FOUND', 'Workspace not found');
+    }
+
+    if (workspace.ownerId !== currentUserId) {
+      throw new AppError(
+        403,
+        'FORBIDDEN',
+        'You do not have permission to edit member roles in this workspace'
+      );
+    }
+
+    const updatedMember = await prisma.membership.update({
+      where: {
+        id: memberId,
+      },
+      data: {
+        role,
+      },
+    });
+
+    return updatedMember;
   }
 }
