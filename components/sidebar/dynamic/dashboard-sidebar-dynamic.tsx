@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import ProjectSelect from '@/components/ui/select/project-select';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
-import { fetchProjects } from '@/lib/fetch-fns/fetch-projects';
+import { fetchProjects } from '@/hooks/project/use-projects';
 import { usePathname } from 'next/navigation';
 import TaskSelect from '@/components/ui/select/task-select';
 import { TaskListDTO } from '@/types/prisma/DTO/tasks';
