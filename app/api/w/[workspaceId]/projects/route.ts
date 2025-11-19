@@ -57,7 +57,7 @@ export async function GET(
 
     await requireWorkspaceMember({
       workspaceId: workspaceIdNumber,
-      allowed: ['OWNER', 'ADMIN'] as Role[],
+      allowed: ['OWNER', 'ADMIN', 'MEMBER'] as Role[],
     });
 
     const projects = await ProjectService.getProjects(workspaceIdNumber);
