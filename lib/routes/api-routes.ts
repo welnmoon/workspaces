@@ -33,4 +33,5 @@ export const apiRoutes = {
 
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,
+  deleteMember: (memberId: number) => `/api/members/${memberId}/delete`,
 };
