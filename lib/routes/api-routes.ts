@@ -5,19 +5,19 @@ export const apiRoutes = {
   createProject: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
   someProject: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}`,
-  createTask: (workspaceId: number, projectId: number) =>
-    `/api/w/${workspaceId}/projects/${projectId}/tasks`,
+  getProjects: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
+
   createWorkspace: () => `/api/w`,
   updateWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
-
   getWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
   getWorkspaces: () => `/api/w`,
-  getProjects: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
 
   // Tasks
   getTasks: (workspaceId: string, projectId: string) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
   updateTaskStatus: (taskId: number) => `/api/task/${taskId}/update-status`,
+  createTask: (workspaceId: number, projectId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/tasks`,
 
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
@@ -33,4 +33,5 @@ export const apiRoutes = {
 
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,
+  deleteMember: (memberId: number) => `/api/members/${memberId}/delete`,
 };

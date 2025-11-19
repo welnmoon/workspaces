@@ -2,6 +2,7 @@ import { MembershipStatus } from '@prisma/client';
 import prisma from '../prisma';
 import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
 import { AppError } from '../errors';
+import { WorkspaceService } from './workspace';
 
 export class MembershipService {
   static async getUserRoleInWorkspace(userId: string, workspaceId: number) {
@@ -75,5 +76,40 @@ export class MembershipService {
     });
 
     return updatedMember;
+  }
+
+  static async deleteMember(memberId: number, currentUserId: string) {
+    const member = await prisma.membership.findUnique({
+      where: {
+        id: memberId,
+      },
+    });
+
+    if (!member) {
+      throw new AppError(404, 'MEMBER_NOT_FOUND', 'Member not found');
+    }
+
+    const workspace = await WorkspaceService.getWorkspaceById(
+      member.workspaceId
+    );
+    if (!workspace) {
+      throw new AppError(404, 'WORKSPACE_NOT_FOUND', 'Workspace not found');
+    }
+
+    if (workspace.ownerId !== currentUserId) {
+      throw new AppError(
+        403,
+        'FORBIDDEN',
+        'You do not have permission to delete members in this workspace'
+      );
+    }
+
+    const deleted = await prisma.membership.delete({
+      where: {
+        id: memberId,
+      },
+    });
+
+    return deleted;
   }
 }
