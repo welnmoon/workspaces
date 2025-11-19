@@ -13,7 +13,7 @@ export const apiRoutes = {
   getWorkspaces: () => `/api/w`,
 
   // Tasks
-  getTasks: (workspaceId: string, projectId: string) =>
+  getTasks: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
   updateTaskStatus: (taskId: number) => `/api/task/${taskId}/update-status`,
   createTask: (workspaceId: number, projectId: number) =>
