@@ -1,24 +1,14 @@
 'use client';
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarRail,
-} from '@/components/ui/sidebar';
+import { Sidebar, SidebarRail } from '@/components/ui/sidebar';
 
 import WorkspaceSelect from '@/components/ui/select/workspace-select';
 import { useEffect, useState } from 'react';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import ProjectSelect from '@/components/ui/select/project-select';
-import { ProjectListDTO } from '@/types/prisma/DTO/projects';
 import { usePathname } from 'next/navigation';
 import TaskSelect from '@/components/ui/select/task-select';
-import { TaskListDTO } from '@/types/prisma/DTO/tasks';
-import { fetchTasks } from '@/lib/fetch-fns/fetch-tasks';
-import toast from 'react-hot-toast';
+
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import { useProjects } from '@/hooks/project/use-projects';
 import { useTasks } from '@/hooks/tasks/use-tasks';
