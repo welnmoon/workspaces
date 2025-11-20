@@ -1,3 +1,4 @@
+import { checkResponse } from '@/helpers/check-response';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -11,6 +12,8 @@ export const useCreateProject = (workspaceId: number) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+
+      await checkResponse(res);
 
       return await res.json();
     },

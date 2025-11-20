@@ -53,14 +53,14 @@ const CreateProjectForm = ({
     mutate(values, {
       onSuccess: () => {
         form.reset();
-        toast.success('Project created successfully');
+        toast.success('Проект успешно создан');
         router.refresh();
         setOpenModal(false);
       },
       onError: (error: any) => {
         const message =
           (error && (error.message || error.error)) ||
-          'Failed to create project';
+          'Не удалось создать проект';
         toast.error(message);
       },
     });
