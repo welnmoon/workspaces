@@ -54,7 +54,7 @@ const CreateProjectForm = ({
       onSuccess: () => {
         form.reset();
         toast.success('Проект успешно создан');
-        router.refresh();
+
         setOpenModal(false);
       },
       onError: (error: any) => {

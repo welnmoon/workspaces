@@ -3,10 +3,14 @@ import { ProjectListDTO } from '@/types/prisma/DTO/projects';
 import { AppError } from '../../lib/errors';
 import { useQuery } from '@tanstack/react-query';
 
-export const useProjects = (workspaceId: number | null) => {
+export const useProjects = (
+  workspaceId: number | null,
+  initialData: ProjectListDTO[]
+) => {
   return useQuery({
     queryKey: ['projects', workspaceId], // workspaceId - добавляем что бы при изменении workspace запрос обновлялся
     enabled: workspaceId !== null,
+    initialData: initialData,
     queryFn: async () => {
       const res = await fetch(apiRoutes.getProjects(workspaceId!), {
         method: 'GET',

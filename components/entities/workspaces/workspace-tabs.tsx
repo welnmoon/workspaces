@@ -25,7 +25,12 @@ const WorkspaceTabs = ({
         <TabsTrigger value="members">Участники</TabsTrigger>
       </TabsList>
       <TabsContent value="projects">
-        <WProjectsSection {...projectSectionProps} />
+        <WProjectsSection
+          projects={projectSectionProps.projects}
+          userRole={projectSectionProps.userRole}
+          workspace={projectSectionProps.workspace}
+          workspaceId={projectSectionProps.workspaceId}
+        />
       </TabsContent>
       <TabsContent value="members">
         <WMembersSection
