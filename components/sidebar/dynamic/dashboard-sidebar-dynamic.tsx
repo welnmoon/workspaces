@@ -14,13 +14,14 @@ import { useEffect, useState } from 'react';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import ProjectSelect from '@/components/ui/select/project-select';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
-import { fetchProjects } from '@/hooks/project/use-projects';
 import { usePathname } from 'next/navigation';
 import TaskSelect from '@/components/ui/select/task-select';
 import { TaskListDTO } from '@/types/prisma/DTO/tasks';
 import { fetchTasks } from '@/lib/fetch-fns/fetch-tasks';
 import toast from 'react-hot-toast';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
+import { useProjects } from '@/hooks/project/use-projects';
+import { useTasks } from '@/hooks/tasks/use-tasks';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarDynamic = ({
@@ -37,51 +38,67 @@ const DashboardSidebarDynamic = ({
   );
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
+  const {
+    data: projects = [],
+    isLoading: pLoading,
+    isError: pError,
+    error: pErrorObj,
+  } = useProjects(Number(selectedWorkspaceId));
+  
+  const {
+    data: tasks = [],
+    isLoading: taskLoading,
+    isError: tError,
+    error: tErrorObj,
+  } = useTasks(
+    selectedProjectId ? Number(selectedProjectId) : null,
+    selectedWorkspaceId ? Number(selectedWorkspaceId) : null
+  );
   // Data --------------------------------
-  const [projects, setProjects] = useState<ProjectListDTO[]>([]);
-  const [tasks, setTasks] = useState<TaskListDTO[]>([]);
+  // const [projects, setProjects] = useState<ProjectListDTO[]>([]);
+  // const [tasks, setTasks] = useState<TaskListDTO[]>([]);
 
-  // Loading --------------------------------
-  const [pLoading, setPLoading] = useState(false);
-  const [taskLoading, setTaskLoading] = useState(false);
+  // // Loading --------------------------------
+  // const [pLoading, setPLoading] = useState(false);
+  // const [taskLoading, setTaskLoading] = useState(false);
 
   // Fetch projects
-  useEffect(() => {
-    if (!selectedWorkspaceId) {
-      setProjects([]);
-      return;
-    }
+  // useEffect(() => {
+  //   if (!selectedWorkspaceId) {
+  //     setProjects([]);
+  //     return;
+  //   }
 
-    setPLoading(true);
+  //   setPLoading(true);
 
-    fetchProjects(Number(selectedWorkspaceId))
-      .then(setProjects)
-      .catch(() => {})
-      .finally(() => setPLoading(false));
-  }, [selectedWorkspaceId]);
+  //   fetchProjects(Number(selectedWorkspaceId))
+  //     .then(setProjects)
+  //     .catch(() => {})
+  //     .finally(() => setPLoading(false));
+  // }, [selectedWorkspaceId]);
 
   // Fetch tasks
-  useEffect(() => {
-    if (!selectedProjectId) {
-      setTasks([]);
-      setSelectedTaskId(null); // Сбрасываем выбранный проект
-      return;
-    }
+  // useEffect(() => {
+  //   if (!selectedProjectId) {
+  //     setTasks([]);
+  //     setSelectedTaskId(null); // Сбрасываем выбранный проект
+  //     return;
+  //   }
 
-    if (selectedWorkspaceId) {
-      setTaskLoading(true);
-      setSelectedTaskId(null);
-      fetchTasks({
-        workspaceId: selectedWorkspaceId,
-        projectId: selectedProjectId,
-      })
-        .then(setTasks)
-        .catch(() => {
-          toast.error('Не удалось загрузить задачи');
-        })
-        .finally(() => setTaskLoading(false));
-    }
-  }, [selectedProjectId, selectedWorkspaceId]);
+  //   if (selectedWorkspaceId) {
+  //     setTaskLoading(true);
+  //     setSelectedTaskId(null);
+  //     fetchTasks({
+  //       workspaceId: selectedWorkspaceId,
+  //       projectId: selectedProjectId,
+  //     })
+  //       .then(setTasks)
+  //       .catch(() => {
+  //         toast.error('Не удалось загрузить задачи');
+  //       })
+  //       .finally(() => setTaskLoading(false));
+  //   }
+  // }, [selectedProjectId, selectedWorkspaceId]);
 
   // Routing --------------------------------
   const pathname = usePathname();
@@ -102,8 +119,8 @@ const DashboardSidebarDynamic = ({
     setSelectedWorkspaceId(value);
     setSelectedProjectId(null);
     setSelectedTaskId(null);
-    setProjects([]);
-    setTasks([]);
+    // setProjects([]);
+    // setTasks([]);
   };
 
   const handleProjectChange = (value: string) => {
