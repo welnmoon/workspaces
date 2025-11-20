@@ -14,6 +14,7 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import ProjectCardBadge from './project-card-badge';
 import { useProject } from '@/hooks/project/use-project';
 import EditProjectPopover from './edit-project-popover';
+import EmptyState from '@/components/empty-state';
 
 const ProjectCard = ({
   title,
@@ -44,9 +45,10 @@ const ProjectCard = ({
   const tasksDoneCount = stats?.tasksDoneCount ?? 0;
   const tasksBlockedCount = stats?.tasksBlockedCount ?? 0;
   const tasksOverdueCount = stats?.tasksOverdueCount ?? 0;
+
   return (
-    <Card>
-      <CardHeader>
+    <Card className="flex flex-col">
+      <CardHeader className="h-fit">
         <CardTitle>
           <div className="flex items-start justify-between gap-2">
             <Heading className="text-bold" level={2}>
@@ -72,48 +74,58 @@ const ProjectCard = ({
         </CardDescription>
       </CardHeader>
 
-      <CardFooter className="block bg-zinc-50 px-4 py-2 ">
+      <CardFooter className="block bg-zinc-50 px-4 py-2 flex-1">
         <Heading level={6} className="text-zinc-400 mb-2">
           Задачи
         </Heading>
         <div className=" flex flex-wrap gap-1 ">
-          <div className="flex flex-wrap gap-1">
-            <ProjectCardBadge
-              variant="default"
-              text="Всего"
-              value={tasksCount}
+          {tasksCount === 0 && (
+            <EmptyState
+              title="Нет задач"
+              subtitle="Задач нет — самое время начать"
+              icon=""
+              className="w-full py-2"
             />
+          )}
+          {tasksCount > 0 && (
+            <>
+              <ProjectCardBadge
+                variant="default"
+                text="Всего"
+                value={tasksCount}
+              />
 
-            <ProjectCardBadge
-              variant="success"
-              text="Выполненные"
-              value={tasksDoneCount}
-            />
+              <ProjectCardBadge
+                variant="success"
+                text="Выполненные"
+                value={tasksDoneCount}
+              />
 
-            <ProjectCardBadge
-              variant="primary"
-              text="В работе"
-              value={tasksInProgressCount}
-            />
+              <ProjectCardBadge
+                variant="primary"
+                text="В работе"
+                value={tasksInProgressCount}
+              />
 
-            <ProjectCardBadge
-              variant="info"
-              text="Новые"
-              value={tasksToDoCount}
-            />
+              <ProjectCardBadge
+                variant="info"
+                text="Новые"
+                value={tasksToDoCount}
+              />
 
-            <ProjectCardBadge
-              variant="destructive"
-              text="Просроченные"
-              value={tasksOverdueCount}
-            />
+              <ProjectCardBadge
+                variant="destructive"
+                text="Просроченные"
+                value={tasksOverdueCount}
+              />
 
-            <ProjectCardBadge
-              variant="warning"
-              text="Заблокированные"
-              value={tasksBlockedCount}
-            />
-          </div>
+              <ProjectCardBadge
+                variant="warning"
+                text="Заблокированные"
+                value={tasksBlockedCount}
+              />
+            </>
+          )}
         </div>
       </CardFooter>
     </Card>
