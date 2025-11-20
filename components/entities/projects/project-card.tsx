@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardDescription,
@@ -13,7 +15,7 @@ import ProjectCardBadge from './project-card-badge';
 import { useProject } from '@/hooks/project/use-project';
 import EditProjectPopover from './edit-project-popover';
 
-const ProjectCard = async ({
+const ProjectCard = ({
   title,
   description,
   projectId,
@@ -34,15 +36,14 @@ const ProjectCard = async ({
   // tasksToDoCount: number;
   // tasksOverdue: number;
 }) => {
-  const projectStats = await useProject(projectId);
-  const {
-    tasksBlockedCount,
-    tasksOverdueCount,
-    tasksDoneCount,
-    tasksInProgressCount,
-    tasksCount,
-    tasksToDoCount,
-  } = projectStats.stats;
+  const { data: stats, isLoading } = useProject(projectId);
+
+  const tasksCount = stats?.tasksCount ?? 0;
+  const tasksToDoCount = stats?.tasksToDoCount ?? 0;
+  const tasksInProgressCount = stats?.tasksInProgressCount ?? 0;
+  const tasksDoneCount = stats?.tasksDoneCount ?? 0;
+  const tasksBlockedCount = stats?.tasksBlockedCount ?? 0;
+  const tasksOverdueCount = stats?.tasksOverdueCount ?? 0;
   return (
     <Card>
       <CardHeader>
