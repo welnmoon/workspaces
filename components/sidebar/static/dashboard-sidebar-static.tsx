@@ -11,6 +11,7 @@ import { fetchTasks } from '@/lib/fetch-fns/fetch-tasks';
 import toast from 'react-hot-toast';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import { useTasks } from '@/hooks/tasks/use-tasks';
+import { useWorkspaces } from '@/hooks/workspace/use-workspaces';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarStatic = ({
@@ -49,6 +50,13 @@ const DashboardSidebarStatic = ({
     isError: tError,
     error: tErrorObj,
   } = useTasks(selectedProjectId, selectedWorkspaceId);
+
+  // const {
+  //   data: workspaces = [],
+  //   isLoading: wLoading,
+  //   isError: wError,
+  //   error: wErrorObj,
+  // } = useWorkspaces();
 
   // Fetch projects
   // useEffect(() => {
@@ -154,7 +162,7 @@ const DashboardSidebarStatic = ({
             tasks={tasks}
             workspaceId={String(selectedWorkspaceId)}
             value={String(selectedTaskId)}
-            loading={taskLoading}
+            loading={tLoading}
           />
         )}
       </div>
