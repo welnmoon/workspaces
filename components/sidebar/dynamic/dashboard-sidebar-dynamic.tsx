@@ -30,13 +30,13 @@ const DashboardSidebarDynamic = ({
   workspaces: WorkspaceListDTO[];
 }) => {
   // Selected --------------------------------
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | null>(
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(
     null
   );
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null
   );
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
   const {
     data: projects = [],
@@ -44,10 +44,10 @@ const DashboardSidebarDynamic = ({
     isError: pError,
     error: pErrorObj,
   } = useProjects(Number(selectedWorkspaceId));
-  
+
   const {
     data: tasks = [],
-    isLoading: taskLoading,
+    isLoading: tLoading,
     isError: tError,
     error: tErrorObj,
   } = useTasks(
@@ -106,8 +106,13 @@ const DashboardSidebarDynamic = ({
     const workspaceMatch = pathname.match(/\/w\/([^/]+)/);
     const projectMatch = pathname.match(/\/projects\/([^/]+)/);
 
-    const workspaceIdFromPath = workspaceMatch?.[1] ?? null;
-    const projectIdFromPath = projectMatch?.[1] ?? null;
+    const workspaceIdFromPath = workspaceMatch?.[1]
+      ? Number(workspaceMatch[1])
+      : null;
+
+    const projectIdFromPath = projectMatch?.[1]
+      ? Number(projectMatch[1])
+      : null;
 
     // Всегда синхронизируем стейт
     setSelectedWorkspaceId(workspaceIdFromPath);
@@ -116,7 +121,7 @@ const DashboardSidebarDynamic = ({
 
   // Handlers --------------------------------
   const handleWorkspaceChange = (value: string) => {
-    setSelectedWorkspaceId(value);
+    setSelectedWorkspaceId(Number(value));
     setSelectedProjectId(null);
     setSelectedTaskId(null);
     // setProjects([]);
@@ -124,7 +129,7 @@ const DashboardSidebarDynamic = ({
   };
 
   const handleProjectChange = (value: string) => {
-    setSelectedProjectId(value);
+    setSelectedProjectId(Number(value));
     setSelectedTaskId(null);
   };
 
@@ -143,7 +148,9 @@ const DashboardSidebarDynamic = ({
               label="Workspace"
               workspaces={workspaces}
               onChange={handleWorkspaceChange}
-              value={selectedWorkspaceId}
+              value={
+                selectedWorkspaceId !== null ? String(selectedWorkspaceId) : ''
+              }
               placeholder="Workspace"
             />
 
@@ -151,24 +158,26 @@ const DashboardSidebarDynamic = ({
               <ProjectSelect
                 label="Project"
                 onChange={handleProjectChange}
-                value={selectedProjectId}
+                value={
+                  selectedProjectId !== null ? String(selectedProjectId) : ''
+                }
                 projects={projects}
                 loading={pLoading}
                 placeholder={'Проект'}
-                workspaceId={selectedWorkspaceId}
+                workspaceId={String(selectedWorkspaceId)}
               />
             )}
 
             {selectedWorkspaceId && selectedProjectId && (
               <TaskSelect
                 label="Task"
-                onChange={setSelectedTaskId}
+                onChange={(value) => setSelectedTaskId(Number(value))}
                 placeholder="Задача"
-                projectId={selectedProjectId}
+                projectId={String(selectedProjectId)}
                 tasks={tasks}
-                workspaceId={selectedWorkspaceId}
-                value={selectedTaskId}
-                loading={taskLoading}
+                workspaceId={selectedTaskId ? String(selectedWorkspaceId) : ''}
+                value={String(selectedTaskId)}
+                loading={tLoading}
               />
             )}
           </div>

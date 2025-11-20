@@ -102,8 +102,13 @@ const DashboardSidebarStatic = ({
     const workspaceMatch = pathname.match(/\/w\/([^/]+)/);
     const projectMatch = pathname.match(/\/projects\/([^/]+)/);
 
-    const workspaceIdFromPath = Number(workspaceMatch?.[1]) ?? null;
-    const projectIdFromPath = Number(projectMatch?.[1]) ?? null;
+    const workspaceIdFromPath = workspaceMatch?.[1]
+      ? Number(workspaceMatch[1])
+      : null;
+
+    const projectIdFromPath = projectMatch?.[1]
+      ? Number(projectMatch[1])
+      : null;
 
     // Всегда синхронизируем стейт
     setSelectedWorkspaceId(workspaceIdFromPath);
@@ -137,7 +142,9 @@ const DashboardSidebarStatic = ({
           label="Workspace"
           workspaces={workspaces}
           onChange={handleWorkspaceChange}
-          value={String(selectedWorkspaceId)}
+          value={
+            selectedWorkspaceId !== null ? String(selectedWorkspaceId) : ''
+          }
           placeholder="Workspace"
         />
 
@@ -145,7 +152,7 @@ const DashboardSidebarStatic = ({
           <ProjectSelect
             label="Project"
             onChange={handleProjectChange}
-            value={String(selectedProjectId)}
+            value={selectedProjectId !== null ? String(selectedProjectId) : ''}
             projects={projects}
             loading={pLoading}
             placeholder={'Проект'}
@@ -160,7 +167,7 @@ const DashboardSidebarStatic = ({
             placeholder="Задача"
             projectId={String(selectedProjectId)}
             tasks={tasks}
-            workspaceId={String(selectedWorkspaceId)}
+            workspaceId={selectedTaskId ? String(selectedWorkspaceId) : ''}
             value={String(selectedTaskId)}
             loading={tLoading}
           />
