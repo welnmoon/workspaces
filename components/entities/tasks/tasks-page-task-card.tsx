@@ -6,13 +6,14 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { STATUS_COLUMNS } from '@/const/tasks-status';
 import { TaskStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import getFullName from '@/helpers/profile.ts/get-full-name';
 import { ru } from 'date-fns/locale';
+import { TASK_PRIORITY_LABELS } from '@/const/priority';
 
 export const TasksPageTaskCard = ({ task }: { task: TaskWithAssigneeDTO }) => {
   const statusStripeClass = cn(
@@ -28,6 +29,17 @@ export const TasksPageTaskCard = ({ task }: { task: TaskWithAssigneeDTO }) => {
 
   const formatDate = (d?: Date | string | null) =>
     d ? format(new Date(d), 'dd MMM yyyy', { locale: ru }) : '—';
+
+  const priorityBadgeClass = cn(
+    'px-2 py-0.5 text-xs font-medium border rounded-full',
+    task.priority === 'URGENT'
+      ? 'bg-red-100 text-red-700 border-red-200'
+      : task.priority === 'HIGH'
+        ? 'bg-orange-100 text-orange-700 border-orange-200'
+        : task.priority === 'MEDIUM'
+          ? 'bg-amber-100 text-amber-700 border-amber-200'
+          : 'bg-slate-100 text-slate-700 border-slate-200'
+  );
 
   return (
     <div className="relative">
@@ -46,22 +58,24 @@ export const TasksPageTaskCard = ({ task }: { task: TaskWithAssigneeDTO }) => {
           )}
         </CardHeader>
 
-        <CardContent className="flex gap-2 p-0 h-fit">
-          {task.status && (
-            <Badge variant="outline" className="w-fit h-fit">
-              {STATUS_COLUMNS.find((s) => s.id === task.status)?.title ??
-                task.status}
-            </Badge>
-          )}
+        <CardContent className="flex flex-wrap gap-2 p-0 h-fit">
+          <div className="flex items-center gap-2">
+            {task.status && (
+              <Badge variant="outline" className="w-fit h-fit">
+                {STATUS_COLUMNS.find((s) => s.id === task.status)?.title ??
+                  task.status}
+              </Badge>
+            )}
+          </div>
 
           <div className="text-sm flex-1 text-muted-foreground ">
             <strong>Исполнитель:</strong>{' '}
-            {(task.assignee ?
-              getFullName({
-                firstName: task.assignee?.firstName,
-                lastName: task.assignee?.lastName,
-              }) :
-              'Не назначен')}
+            {task.assignee
+              ? getFullName({
+                  firstName: task.assignee?.firstName,
+                  lastName: task.assignee?.lastName,
+                })
+              : 'Не назначен'}
           </div>
 
           <div className="flex flex-col text-sm text-muted-foreground gap-1">

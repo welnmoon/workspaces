@@ -11,6 +11,8 @@ import { Heading } from '@/components/ui/heading';
 import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { Breadcrumbs } from '@/components/bread-crumbs';
+import { Badge } from '@/components/ui/badge';
+import { TASK_PRIORITY_LABELS } from '@/const/priority';
 
 const TaskComponent = ({
   task,
@@ -60,6 +62,7 @@ const TaskComponent = ({
       : task.status === 'IN_PROGRESS'
         ? 'В работе'
         : 'К выполнению';
+  const priorityLabel = TASK_PRIORITY_LABELS[task.priority];
 
   return (
     <main className="space-y-4">
@@ -180,6 +183,26 @@ const TaskComponent = ({
                   </span>
                 }
               />
+              <Desc
+                label="Приоритет"
+                text={
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      'px-2 py-0.5 text-xs font-medium',
+                      task.priority === 'URGENT'
+                        ? 'bg-red-50 text-red-700 border-red-200'
+                        : task.priority === 'HIGH'
+                          ? 'bg-orange-50 text-orange-700 border-orange-200'
+                          : task.priority === 'MEDIUM'
+                            ? 'bg-amber-50 text-amber-700 border-amber-200'
+                            : 'bg-slate-50 text-slate-600 border-slate-200'
+                    )}
+                  >
+                    {priorityLabel}
+                  </Badge>
+                }
+              />
 
               <Desc label="Исполнитель" text={<span>{assigneeName}</span>} />
               <Desc label="Email" text={<span>{assignee?.email}</span>} />
@@ -221,7 +244,7 @@ const TaskComponent = ({
               />
 
               {/* Если добавишь поле приоритета — сюда его легко вставить */}
-              {/* <Desc label="Приоритет" text={<span>Средний</span>} /> */}
+              <Desc label="Приоритет" text={<span>{task.priority}</span>} />
 
               <Desc
                 label="Workspace"

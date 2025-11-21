@@ -1,31 +1,46 @@
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 import { Controller } from 'react-hook-form';
 
 interface DueDateFieldProps {
   control: any;
   name: string;
+
   label?: string;
+  required?: string;
+  className?: string;
 }
 
 export function DueDateField({
   control,
   name,
   label = 'Срок задачи',
+  required,
+  className,
 }: DueDateFieldProps) {
   return (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium">{label}</label>
-          <input
-            type="date"
-            value={field.value ?? ''}
-            onChange={(e) => field.onChange(e.target.value)}
-            className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-      )}
-    />
+    <>
+      <Label>
+        {label && (
+          <Label className={cn('text-md font-medium mb-1', className)}>
+            {label} {required && <span className="text-red-500">*</span>}
+          </Label>
+        )}
+      </Label>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <div className="flex flex-col gap-1">
+            <input
+              type="date"
+              value={field.value ?? ''}
+              onChange={(e) => field.onChange(e.target.value)}
+              className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring focus:ring-blue-500"
+            />
+          </div>
+        )}
+      />
+    </>
   );
 }

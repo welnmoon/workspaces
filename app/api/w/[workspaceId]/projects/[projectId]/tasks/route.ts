@@ -21,12 +21,14 @@ export async function POST(
       allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],
     });
 
-    const { title, description, dueDate, assigneeId } = await req.json();
+    const { title, description, dueDate, assigneeId, priority } =
+      await req.json();
     const data = createTaskFormSchema.safeParse({
       title,
       description,
       dueDate,
       assigneeId,
+      priority,
     });
     if (!data.success)
       return badRequest('Invalid task data', data.error.format());
@@ -37,6 +39,7 @@ export async function POST(
       description: data.data.description,
       dueDate: data.data.dueDate,
       assigneeId: data.data.assigneeId,
+      priority: data.data.priority,
     });
     return created(task);
   } catch (e) {
