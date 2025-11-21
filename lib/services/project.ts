@@ -19,6 +19,17 @@ export class ProjectService {
       },
     });
   }
+
+  static async getProjectName(projectId: number) {
+    return prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+      select: {
+        name: true,
+      },
+    });
+  }
   static async createProject(raw: unknown): Promise<ProjectListDTO> {
     const data = workspaceIdExistSchema.parse(raw);
 
@@ -34,6 +45,15 @@ export class ProjectService {
   static async getProjectById(projectId: number) {
     return prisma.project.findUnique({
       where: { id: projectId },
+    });
+  }
+
+  static async getProjectByIdWithWorkspace(projectId: number) {
+    return prisma.project.findUnique({
+      where: { id: projectId },
+      include: {
+        workspace: true,
+      },
     });
   }
 

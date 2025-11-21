@@ -13,6 +13,8 @@ import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
 import { UserDTO } from '@/types/prisma/DTO/user';
 import { Badge } from '@/components/ui/badge';
+import { TaskPriorityDTO } from '@/types/prisma/DTO/priority';
+import { TASK_PRIORITY_LABELS } from '@/const/priority';
 
 interface TaskCardProps {
   title: string;
@@ -24,6 +26,7 @@ interface TaskCardProps {
   taskId: number;
   role: string | undefined;
   assignee?: UserDTO | null;
+  priority: TaskPriorityDTO;
 }
 
 export default function TaskCard({
@@ -36,6 +39,7 @@ export default function TaskCard({
   taskId,
   role,
   assignee,
+  priority,
 }: TaskCardProps) {
   const dueDateFormatted = dueDate
     ? new Date(dueDate).toLocaleDateString(undefined, {
@@ -50,9 +54,9 @@ export default function TaskCard({
     ? new Date().getDate() - new Date(dueDate).getDate()
     : 0;
 
-  const isSevenDaysLater = dueDate
-    ? new Date(dueDate) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    : false;
+  // const isSevenDaysLater = dueDate
+  //   ? new Date(dueDate) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  //   : false;
 
   const statusStripeClass = cn(
     'absolute inset-y-0 left-0 w-1 rounded-l-md',
@@ -75,6 +79,15 @@ export default function TaskCard({
   const assigneeInitials =
     (assignee?.firstName?.[0] ?? '') + (assignee?.lastName?.[0] ?? '');
 
+  const priorityColors: Record<TaskPriorityDTO, string> = {
+    URGENT: 'bg-red-100 text-red-700 border-red-200',
+    HIGH: 'bg-orange-100 text-orange-700 border-orange-200',
+    MEDIUM: 'bg-amber-100 text-amber-700 border-amber-200',
+    LOW: 'bg-slate-100 text-slate-600 border-slate-200',
+  };
+
+  const priorityLabel = TASK_PRIORITY_LABELS[priority];
+
   return (
     <Card
       role={role}
@@ -84,23 +97,32 @@ export default function TaskCard({
         'transition-all duration-150 hover:-translate-y-[1px] hover:border-primary/40 hover:shadow-md'
       )}
     >
-      {/* цветная полоска слева, как у Jira */}
       <span className={statusStripeClass} />
 
       <CardHeader className="flex flex-col gap-1 p-0">
         <div className="flex items-center justify-between gap-2">
-          {/* ID задачи в стиле issue key */}
           <span className="text-[11px] font-medium text-muted-foreground">
             ID: {taskId}
           </span>
 
           {/* статус-лоцента, компактная как в Jira */}
-          <Badge
-            variant="outline"
-            className="border-none bg-muted px-2 py-0.5 text-[11px] leading-none"
-          >
-            <span className={statusTextClass}>{status}</span>
-          </Badge>
+          <div className="flex flex-col gap-2">
+            <Badge
+              variant="outline"
+              className="border-none bg-muted px-2 py-0.5 text-[11px] leading-none"
+            >
+              <span className={statusTextClass}>{status}</span>
+            </Badge>
+            <Badge
+              variant="outline"
+              className={cn(
+                'w-fit border px-2 py-0.5 text-[11px]',
+                priorityColors[priority]
+              )}
+            >
+              {priorityLabel}
+            </Badge>
+          </div>
         </div>
 
         <CardTitle className="mt-0.5">
@@ -146,7 +168,6 @@ export default function TaskCard({
           )}
         </div>
 
-        {/* Исполнитель в виде кружка с инициалами, как маленький аватар */}
         <div className="flex items-center gap-2">
           {assignee && (
             <div className="flex items-center gap-1.5">

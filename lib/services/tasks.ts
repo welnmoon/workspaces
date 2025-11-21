@@ -1,12 +1,21 @@
-import { TaskStatus } from '@prisma/client';
+import { TaskPriority, TaskStatus } from '@prisma/client';
 import prisma from '../prisma';
 import { AppError } from '../errors';
+import { TaskPriorityDTO } from '@/types/prisma/DTO/priority';
 
 export class TaskService {
   static async getAll(projectId: number) {
     return await prisma.task.findMany({
       where: {
         projectId,
+      },
+    });
+  }
+
+  static async getTaskById(taskId: number) {
+    return await prisma.task.findUnique({
+      where: {
+        id: taskId,
       },
     });
   }
@@ -125,22 +134,26 @@ export class TaskService {
     description,
     dueDate,
     assigneeId,
+    priority,
   }: {
     projectId: number;
     title: string;
     description: string | undefined;
     dueDate: string;
     assigneeId: string | undefined;
+    priority: TaskPriority;
   }) {
-    if (!description) description = 'No description';
-    await prisma.task.create({
+    const task = await prisma.task.create({
       data: {
-        title: title,
-        description: description,
+        title,
+        description: description || 'Без описания',
         dueDate: dueDate ? new Date(dueDate) : undefined,
         projectId: Number(projectId),
         assigneeId,
+        priority: priority || TaskPriority.LOW,
       },
     });
+
+    return task;
   }
 }

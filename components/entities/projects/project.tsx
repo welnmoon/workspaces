@@ -249,6 +249,7 @@ const ProjectComponent = ({
                                     title={t.title}
                                     taskId={t.id}
                                     assignee={t.assignee}
+                                    priority={t.priority}
                                   />
                                 </div>
                               )}

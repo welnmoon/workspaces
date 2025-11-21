@@ -12,9 +12,9 @@ import toast from 'react-hot-toast';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { DueDateField } from './due-date-field';
 import { useRouter } from 'next/navigation';
-import { UserDTO } from '@/types/prisma/DTO/user';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import SelectAssignee from './select-assignee';
+import SelectPriority from './select-priority';
 
 const CreateTaskForm = ({
   projectId,
@@ -35,6 +35,7 @@ const CreateTaskForm = ({
       description: '',
       dueDate: new Date().toISOString().slice(0, 10),
       assigneeId: undefined,
+      priority: 'LOW',
     },
   });
 
@@ -48,6 +49,7 @@ const CreateTaskForm = ({
           description: values.description,
           dueDate: values.dueDate,
           assigneeId: values.assigneeId,
+          priority: values.priority,
         }),
       });
 
@@ -72,24 +74,26 @@ const CreateTaskForm = ({
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onFormSubmit)}>
-        <fieldset className="mb-4">
+        <fieldset className="mb-4 space-y-2">
           <legend className="sr-only">Вы создаете задачу</legend>
           <FormInput
             name="title"
-            label="Task title"
-            placeholder="Task title"
+            label="Название задачи"
+            placeholder="Например, подготовить презентацию"
             required
           />
           <FormInput
             name="description"
-            label="Description"
-            placeholder="Description"
+            label="Описание"
+            placeholder="Уточните детали"
           />
           <SelectAssignee
             control={form.control}
             name="assigneeId"
             members={members}
           />
+          <SelectPriority required control={form.control} name="priority" />
+
           <DueDateField control={form.control} name="dueDate" />
         </fieldset>
         <SubmitBtn
