@@ -10,6 +10,14 @@ export class TaskService {
       },
     });
   }
+
+  static async getTaskById(taskId: number) {
+    return await prisma.task.findUnique({
+      where: {
+        id: taskId,
+      },
+    });
+  }
   static async getAllWithAssignees(projectId: number) {
     return await prisma.task.findMany({
       where: {

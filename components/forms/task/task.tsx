@@ -28,13 +28,14 @@ const TaskComponent = ({
   assignee: User | null;
 }) => {
   const router = useRouter();
+
   const dueDateFormatted = task.dueDate
     ? new Date(task.dueDate).toLocaleDateString('ru', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       })
-    : 'Не указан';
+    : 'Не указана';
 
   const createdAtFormatted = new Date(task.createdAt).toLocaleDateString('ru', {
     year: 'numeric',
@@ -50,115 +51,205 @@ const TaskComponent = ({
       )
     : null;
 
+  const assigneeName =
+    `${assignee?.firstName} ${assignee?.lastName}` || 'Не назначено';
+
+  const statusLabel =
+    task.status === 'DONE'
+      ? 'Выполнено'
+      : task.status === 'IN_PROGRESS'
+        ? 'В работе'
+        : 'К выполнению';
+
   return (
-    <main className="space-y-6">
-      <Heading level={3}>
-        <Breadcrumbs
-          items={[
-            {
-              label: `Workspace`,
-              href: clientRoutes.workspacesPage(),
-            },
-            {
-              label: `${workspaceName}`,
-              href: clientRoutes.workspacePage(workspaceId),
-            },
-            {
-              label: `Project`,
-              href: clientRoutes.projectsPage(workspaceId),
-            },
-            {
-              label: `${projectName}`,
-              href: clientRoutes.projectPage(projectId, workspaceId),
-            },
-            {
-              label: `Task`,
-              href: clientRoutes.tasksPage(projectId, workspaceId),
-            },
-            {
-              label: `${task.title}`,
-              href: clientRoutes.tasksPage(projectId, workspaceId),
-            },
-          ]}
-        />
-      </Heading>
-      <div className="flex items-center justify-between">
+    <main className="space-y-4">
+      {/* Верх: хлебные крошки + кнопка назад */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1">
+          <Breadcrumbs
+            items={[
+              {
+                label: 'Workspaces',
+                href: clientRoutes.workspacesPage(),
+              },
+              {
+                label: workspaceName,
+                href: clientRoutes.workspacePage(workspaceId),
+              },
+              {
+                label: 'Projects',
+                href: clientRoutes.projectsPage(workspaceId),
+              },
+              {
+                label: projectName,
+                href: clientRoutes.projectPage(projectId, workspaceId),
+              },
+              {
+                label: `Task #${task.id}`,
+                href: clientRoutes.taskPage(task.id, projectId, workspaceId),
+              },
+            ]}
+          />
+        </div>
         <GoBackBtn router={router} />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">{task.title}</h1>
-              <p className="text-sm text-muted-foreground">
-                Задача #{task.id} • Проект: {projectName}
-              </p>
-            </div>
-            <div className="text-right">
-              <span
-                className={cn('px-3 py-1 rounded-full text-sm font-medium', {
-                  'bg-green-100 text-green-700': task.status === 'DONE',
-                  'bg-blue-100 text-blue-700': task.status === 'IN_PROGRESS',
-                  'bg-gray-100 text-gray-700': task.status === 'TODO',
-                })}
-              >
-                {task.status === 'DONE' && 'Выполнено'}
-                {task.status === 'IN_PROGRESS' && 'В работе'}
-                {task.status === 'TODO' && 'К выполнению'}
-              </span>
-            </div>
-          </CardTitle>
-        </CardHeader>
+      {/* Заголовок задачи (как в Jira сверху) */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="space-y-1">
+          <Heading level={2}>{task.title}</Heading>
+          <p className="text-sm text-muted-foreground">
+            Задача #{task.id} • Проект{' '}
+            <Link
+              href={clientRoutes.projectPage(projectId, workspaceId)}
+              className="underline underline-offset-2 hover:text-primary"
+            >
+              {projectName}
+            </Link>
+          </p>
+        </div>
+        <span
+          className={cn('px-3 py-1 rounded-full text-sm font-medium border', {
+            'bg-green-50 text-green-700 border-green-200':
+              task.status === 'DONE',
+            'bg-blue-50 text-blue-700 border-blue-200':
+              task.status === 'IN_PROGRESS',
+            'bg-gray-50 text-gray-700 border-gray-200': task.status === 'TODO',
+          })}
+        >
+          {statusLabel}
+        </span>
+      </div>
 
-        <CardContent className="space-y-6">
-          {task.description && (
-            <div className="space-y-2">
-              <h2 className="text-lg font-semibold">Описание</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">
-                {task.description}
-              </p>
-            </div>
-          )}
+      {/* Основной Jira-лайк layout: слева контент, справа детали */}
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+        {/* Левая колонка */}
+        <div className="flex-1 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Описание</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {task.description ? (
+                <p className="text-sm text-gray-800 whitespace-pre-wrap">
+                  {task.description}
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Описание пока не добавлено.
+                </p>
+              )}
+            </CardContent>
+          </Card>
 
-          <div className="grid grid-cols-2 gap-6">
-            <Desc
-              text={
-                ''
-                // <span className={cn({ 'text-red-600': expired })}>
-                //   {dueDateFormatted}
-                //   {deadline !== null && deadline < 0 && (
-                //     <span className="block text-sm text-red-600">
-                //       Просрочено на {Math.abs(deadline)} дн.
-                //     </span>
-                //   )}
-                //   {deadline !== null && deadline > 0 && (
-                //     <span className="block text-sm text-gray-600">
-                //       Осталось {deadline} дн.
-                //     </span>
-                //   )}
-                // </span>
-              }
-            />
-            <span>
-              {createdAtFormatted} • ${assignee?.firstName || 'Не назначено'}
-            </span>
-            <span>{assignee?.firstName || 'Не назначено'}</span>
-            {/* <span
-                  className={cn({
-                    'text-red-600': task.priority === 'HIGH',
-                    'text-yellow-600': task.priority === 'MEDIUM',
-                    'text-blue-600': task.priority === 'LOW',
-                  })}
-                >
-                  {task.priority === 'HIGH' && 'Высокий'}
-                  {task.priority === 'MEDIUM' && 'Средний'}
-                  {task.priority === 'LOW' && 'Низкий'}
-                </span> // TODO: priority field
-            */}
-          </div>
-        </CardContent>
-      </Card>
+          {/* Заглушка под "Активность" / комментарии как в Jira */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Активность</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              Здесь позже можно вывести комментарии, историю изменений и т.п.
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Правая колонка — детали задачи (как панель справа в Jira) */}
+        <aside className="w-full lg:w-80 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Детали</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <Desc
+                label="Статус"
+                text={
+                  <span
+                    className={cn(
+                      'px-2 py-0.5 rounded-full text-xs font-medium border',
+                      {
+                        'bg-green-50 text-green-700 border-green-200':
+                          task.status === 'DONE',
+                        'bg-blue-50 text-blue-700 border-blue-200':
+                          task.status === 'IN_PROGRESS',
+                        'bg-gray-50 text-gray-700 border-gray-200':
+                          task.status === 'TODO',
+                      }
+                    )}
+                  >
+                    {statusLabel}
+                  </span>
+                }
+              />
+
+              <Desc label="Исполнитель" text={<span>{assigneeName}</span>} />
+              <Desc label="Email" text={<span>{assignee?.email}</span>} />
+
+              <Desc label="Создана" text={<span>{createdAtFormatted}</span>} />
+
+              <Desc
+                label="Срок"
+                text={
+                  <span
+                    className={cn({
+                      'text-red-600': expired,
+                      'text-gray-800': !expired && task.dueDate,
+                      'text-muted-foreground': !task.dueDate,
+                    })}
+                  >
+                    {dueDateFormatted}
+                    {deadline !== null && (
+                      <>
+                        {deadline < 0 && (
+                          <span className="block text-xs text-red-600">
+                            Просрочено на {Math.abs(deadline)} дн.
+                          </span>
+                        )}
+                        {deadline > 0 && (
+                          <span className="block text-xs text-gray-600">
+                            Осталось {deadline} дн.
+                          </span>
+                        )}
+                        {deadline === 0 && (
+                          <span className="block text-xs text-amber-600">
+                            Срок сегодня
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </span>
+                }
+              />
+
+              {/* Если добавишь поле приоритета — сюда его легко вставить */}
+              {/* <Desc label="Приоритет" text={<span>Средний</span>} /> */}
+
+              <Desc
+                label="Workspace"
+                text={
+                  <Link
+                    href={clientRoutes.workspacePage(workspaceId)}
+                    className="underline underline-offset-2 hover:text-primary"
+                  >
+                    {workspaceName}
+                  </Link>
+                }
+              />
+
+              <Desc
+                label="Проект"
+                text={
+                  <Link
+                    href={clientRoutes.projectPage(projectId, workspaceId)}
+                    className="underline underline-offset-2 hover:text-primary"
+                  >
+                    {projectName}
+                  </Link>
+                }
+              />
+            </CardContent>
+          </Card>
+        </aside>
+      </div>
     </main>
   );
 };
