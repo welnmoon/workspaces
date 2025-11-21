@@ -10,6 +10,8 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import WorkspacePopover from '@/components/entities/workspaces/workspace-popover';
 import WorkspaceTabs from '@/components/entities/workspaces/workspace-tabs';
 import { WProjectsSectionProps } from '@/components/entities/workspaces/w-projects-section';
+import { isMember } from '@/helpers/is-member';
+import EmptyState from '@/components/empty-state';
 
 const WorkspacePage = async ({
   params,
@@ -17,6 +19,15 @@ const WorkspacePage = async ({
   params: Promise<{ workspaceId: string }>;
 }) => {
   const user = await requireUser();
+  const memberCheck = await isMember(
+    Number((await params).workspaceId),
+    user.id
+  );
+  if(memberCheck.isMember === false) {
+    return <>
+    <EmptyState title='Вы не участник этого пространства' subtitle='Отправьте заявку на вступление.'/>
+    <span>В разработке...</span></>
+  }
   const { workspaceId } = await params;
   const workspaceIdNumber = Number(workspaceId);
 

@@ -1,10 +1,11 @@
 // components/ui/empty-state.tsx
 
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 interface EmptyStateProps {
   title: string;
-  subtitle?: string;
+  subtitle?: string | React.ReactElement;
   icon?: string | React.ReactNode;
   className?: string;
 }
