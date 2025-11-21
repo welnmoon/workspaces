@@ -1,26 +1,17 @@
 'use client';
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarRail,
-} from '@/components/ui/sidebar';
+import { Sidebar, SidebarRail } from '@/components/ui/sidebar';
 
 import WorkspaceSelect from '@/components/ui/select/workspace-select';
 import { useEffect, useState } from 'react';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import ProjectSelect from '@/components/ui/select/project-select';
-import { ProjectListDTO } from '@/types/prisma/DTO/projects';
-import { fetchProjects } from '@/lib/fetch-fns/fetch-projects';
 import { usePathname } from 'next/navigation';
 import TaskSelect from '@/components/ui/select/task-select';
-import { TaskListDTO } from '@/types/prisma/DTO/tasks';
-import { fetchTasks } from '@/lib/fetch-fns/fetch-tasks';
-import toast from 'react-hot-toast';
+
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
+import { useProjects } from '@/hooks/project/use-projects';
+import { useTasks } from '@/hooks/tasks/use-tasks';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarDynamic = ({
@@ -29,59 +20,75 @@ const DashboardSidebarDynamic = ({
   workspaces: WorkspaceListDTO[];
 }) => {
   // Selected --------------------------------
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | null>(
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(
     null
   );
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null
   );
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
+  const {
+    data: projects = [],
+    isLoading: pLoading,
+    isError: pError,
+    error: pErrorObj,
+  } = useProjects(Number(selectedWorkspaceId));
+
+  const {
+    data: tasks = [],
+    isLoading: tLoading,
+    isError: tError,
+    error: tErrorObj,
+  } = useTasks(
+    selectedProjectId ? Number(selectedProjectId) : null,
+    selectedWorkspaceId ? Number(selectedWorkspaceId) : null
+  );
   // Data --------------------------------
-  const [projects, setProjects] = useState<ProjectListDTO[]>([]);
-  const [tasks, setTasks] = useState<TaskListDTO[]>([]);
+  // const [projects, setProjects] = useState<ProjectListDTO[]>([]);
+  // const [tasks, setTasks] = useState<TaskListDTO[]>([]);
 
-  // Loading --------------------------------
-  const [pLoading, setPLoading] = useState(false);
-  const [taskLoading, setTaskLoading] = useState(false);
+  // // Loading --------------------------------
+  // const [pLoading, setPLoading] = useState(false);
+  // const [taskLoading, setTaskLoading] = useState(false);
 
   // Fetch projects
-  useEffect(() => {
-    if (!selectedWorkspaceId) {
-      setProjects([]);
-      return;
-    }
+  // useEffect(() => {
+  //   if (!selectedWorkspaceId) {
+  //     setProjects([]);
+  //     return;
+  //   }
 
-    setPLoading(true);
+  //   setPLoading(true);
 
-    fetchProjects(Number(selectedWorkspaceId))
-      .then(setProjects)
-      .catch(() => {})
-      .finally(() => setPLoading(false));
-  }, [selectedWorkspaceId]);
+  //   fetchProjects(Number(selectedWorkspaceId))
+  //     .then(setProjects)
+  //     .catch(() => {})
+  //     .finally(() => setPLoading(false));
+  // }, [selectedWorkspaceId]);
 
   // Fetch tasks
-  useEffect(() => {
-    if (!selectedProjectId) {
-      setTasks([]);
-      setSelectedTaskId(null); // Сбрасываем выбранный проект
-      return;
-    }
+  // useEffect(() => {
+  //   if (!selectedProjectId) {
+  //     setTasks([]);
+  //     setSelectedTaskId(null); // Сбрасываем выбранный проект
+  //     return;
+  //   }
 
-    if (selectedWorkspaceId) {
-      setTaskLoading(true);
-      setSelectedTaskId(null);
-      fetchTasks({
-        workspaceId: selectedWorkspaceId,
-        projectId: selectedProjectId,
-      })
-        .then(setTasks)
-        .catch(() => {
-          toast.error('Не удалось загрузить задачи');
-        })
-        .finally(() => setTaskLoading(false));
-    }
-  }, [selectedProjectId, selectedWorkspaceId]);
+  //   if (selectedWorkspaceId) {
+  //     setTaskLoading(true);
+  //     setSelectedTaskId(null);
+  //     fetchTasks({
+  //       workspaceId: selectedWorkspaceId,
+  //       projectId: selectedProjectId,
+  //     })
+  //       .then(setTasks)
+  //       .catch(() => {
+  //         toast.error('Не удалось загрузить задачи');
+  //       })
+  //       .finally(() => setTaskLoading(false));
+  //   }
+  // }, [selectedProjectId, selectedWorkspaceId]);
 
   // Routing --------------------------------
   const pathname = usePathname();
@@ -89,8 +96,13 @@ const DashboardSidebarDynamic = ({
     const workspaceMatch = pathname.match(/\/w\/([^/]+)/);
     const projectMatch = pathname.match(/\/projects\/([^/]+)/);
 
-    const workspaceIdFromPath = workspaceMatch?.[1] ?? null;
-    const projectIdFromPath = projectMatch?.[1] ?? null;
+    const workspaceIdFromPath = workspaceMatch?.[1]
+      ? Number(workspaceMatch[1])
+      : null;
+
+    const projectIdFromPath = projectMatch?.[1]
+      ? Number(projectMatch[1])
+      : null;
 
     // Всегда синхронизируем стейт
     setSelectedWorkspaceId(workspaceIdFromPath);
@@ -99,15 +111,15 @@ const DashboardSidebarDynamic = ({
 
   // Handlers --------------------------------
   const handleWorkspaceChange = (value: string) => {
-    setSelectedWorkspaceId(value);
+    setSelectedWorkspaceId(Number(value));
     setSelectedProjectId(null);
     setSelectedTaskId(null);
-    setProjects([]);
-    setTasks([]);
+    // setProjects([]);
+    // setTasks([]);
   };
 
   const handleProjectChange = (value: string) => {
-    setSelectedProjectId(value);
+    setSelectedProjectId(Number(value));
     setSelectedTaskId(null);
   };
 
@@ -126,7 +138,9 @@ const DashboardSidebarDynamic = ({
               label="Workspace"
               workspaces={workspaces}
               onChange={handleWorkspaceChange}
-              value={selectedWorkspaceId}
+              value={
+                selectedWorkspaceId !== null ? String(selectedWorkspaceId) : ''
+              }
               placeholder="Workspace"
             />
 
@@ -134,24 +148,26 @@ const DashboardSidebarDynamic = ({
               <ProjectSelect
                 label="Project"
                 onChange={handleProjectChange}
-                value={selectedProjectId}
+                value={
+                  selectedProjectId !== null ? String(selectedProjectId) : ''
+                }
                 projects={projects}
                 loading={pLoading}
                 placeholder={'Проект'}
-                workspaceId={selectedWorkspaceId}
+                workspaceId={String(selectedWorkspaceId)}
               />
             )}
 
             {selectedWorkspaceId && selectedProjectId && (
               <TaskSelect
                 label="Task"
-                onChange={setSelectedTaskId}
+                onChange={(value) => setSelectedTaskId(Number(value))}
                 placeholder="Задача"
-                projectId={selectedProjectId}
+                projectId={String(selectedProjectId)}
                 tasks={tasks}
-                workspaceId={selectedWorkspaceId}
-                value={selectedTaskId}
-                loading={taskLoading}
+                workspaceId={selectedTaskId ? String(selectedWorkspaceId) : ''}
+                value={String(selectedTaskId)}
+                loading={tLoading}
               />
             )}
           </div>

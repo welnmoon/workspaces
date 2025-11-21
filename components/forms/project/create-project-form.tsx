@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
+import { useCreateProject } from '@/hooks/project/use-create-project';
 
 const CreateProjectForm = ({
   workspaceId,
@@ -20,6 +21,7 @@ const CreateProjectForm = ({
   workspaceId: number;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { mutate, isPending, error } = useCreateProject(workspaceId);
   const router = useRouter();
   const form = useForm<CreateProjectFormValues>({
     resolver: zodResolver(createProjectFormSchema),
@@ -30,24 +32,38 @@ const CreateProjectForm = ({
   });
 
   const onFormSubmit = async (values: CreateProjectFormValues) => {
-    const res = await fetch(apiRoutes.createProject(workspaceId), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
+    // const res = await fetch(apiRoutes.createProject(workspaceId), {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(values),
+    // });
+    // if (res.ok) {
+    //   form.reset();
+    //   toast.success('Project created successfully');
+    //   router.refresh();
+    //   setOpenModal(false);
+    // } else {
+    //   const data = await res.json().catch(() => undefined);
+    //   const message =
+    //     (data && (data.message || data.error)) ||
+    //     res.statusText ||
+    //     'Failed to create project';
+    //   toast.error(message);
+    // }
+    mutate(values, {
+      onSuccess: () => {
+        form.reset();
+        toast.success('Проект успешно создан');
+
+        setOpenModal(false);
+      },
+      onError: (error: any) => {
+        const message =
+          (error && (error.message || error.error)) ||
+          'Не удалось создать проект';
+        toast.error(message);
+      },
     });
-    if (res.ok) {
-      form.reset();
-      toast.success('Project created successfully');
-      router.refresh();
-      setOpenModal(false);
-    } else {
-      const data = await res.json().catch(() => undefined);
-      const message =
-        (data && (data.message || data.error)) ||
-        res.statusText ||
-        'Failed to create project';
-      toast.error(message);
-    }
   };
 
   return (
@@ -68,7 +84,7 @@ const CreateProjectForm = ({
               placeholder="Description"
             />
           </div>
-          <SubmitBtn text="Создать" isLoading={form.formState.isSubmitting} />
+          <SubmitBtn text="Создать" isLoading={isPending} />
         </fieldset>
       </form>
     </FormProvider>

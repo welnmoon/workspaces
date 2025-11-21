@@ -1,4 +1,3 @@
-import { register } from 'module';
 import { ProviderId } from '../providers';
 
 export const apiRoutes = {
@@ -6,6 +5,8 @@ export const apiRoutes = {
   someProject: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}`,
   getProjects: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
+  getProjectTasksStats: (projectId: number) =>
+    `/api/project/${projectId}/stats`,
 
   createWorkspace: () => `/api/w`,
   updateWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
@@ -13,7 +14,7 @@ export const apiRoutes = {
   getWorkspaces: () => `/api/w`,
 
   // Tasks
-  getTasks: (workspaceId: string, projectId: string) =>
+  getTasks: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
   updateTaskStatus: (taskId: number) => `/api/task/${taskId}/update-status`,
   createTask: (workspaceId: number, projectId: number) =>

@@ -47,11 +47,6 @@ const WorkspacePage = async ({
     workspaceId: workspace.id,
     workspace,
     projects,
-    tasksTotal,
-    tasksDone,
-    tasksInProgress,
-    tasksToDoCount,
-    tasksOverdue,
   };
 
   return (
@@ -108,7 +103,7 @@ const WorkspacePage = async ({
       </div>
       <Divider />
       <WorkspaceTabs
-      user={user}
+        user={user}
         members={memberships}
         projectSectionProps={projectSectionProps}
       />
