@@ -10,9 +10,9 @@ import { NextRequest } from 'next/server';
 // Create a new project in the workspace
 export async function POST(
   req: NextRequest,
-  context: { params: Promise<{ workspaceId: string }> }
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
-  const { workspaceId } = await context.params;
+  const workspaceId = await (await params).workspaceId;
   const body: unknown = await req.json().catch(() => {});
   const res = createProjectFormSchema.safeParse(body);
   if (!res.success) return badRequest(res.error.message);
@@ -50,10 +50,10 @@ export async function POST(
 
 export async function GET(
   _req: NextRequest,
-  context: { params: { workspaceId: string } }
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
-    const workspaceIdNumber = Number(context.params.workspaceId);
+    const workspaceIdNumber = Number((await params).workspaceId);
 
     await requireWorkspaceMember({
       workspaceId: workspaceIdNumber,

@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useProjects = (
   workspaceId: number | null,
-  initialData: ProjectListDTO[]
+  initialData?: ProjectListDTO[]
 ) => {
   return useQuery({
     queryKey: ['projects', workspaceId], // workspaceId - добавляем что бы при изменении workspace запрос обновлялся
@@ -26,7 +26,7 @@ export const useProjects = (
       }
 
       const data = await res.json();
-      return data.data as ProjectListDTO[];
+      return (data.data || []) as ProjectListDTO[];
     },
   });
 };

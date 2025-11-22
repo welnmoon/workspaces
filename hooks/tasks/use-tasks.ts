@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 export const useTasks = (
   projectId: number | null,
   workspaceId: number | null,
-  tasks: TaskFullDTO[]
+  tasks?: TaskFullDTO[]
 ) => {
   return useQuery({
     queryKey: ['tasks', projectId, workspaceId],
