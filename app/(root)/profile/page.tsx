@@ -1,4 +1,3 @@
-import UnAuth from '@/components/profile/un-auth';
 import { requireUser } from '@/helpers/require-user';
 import ProfileComponent from '@/components/profile/profile';
 import { UserService } from '@/lib/services/user';

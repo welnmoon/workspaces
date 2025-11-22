@@ -1,6 +1,5 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { badRequest, created, ok, serverError } from '@/lib/http';
-import prisma from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
 import { TaskService } from '@/lib/services/tasks';
 import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
@@ -44,7 +43,7 @@ export async function POST(
     return created(task);
   } catch (e) {
     return NextResponse.json(
-      { error: 'Failed to create task' },
+      { error: 'Failed to create task', e },
       { status: 500 }
     );
   }

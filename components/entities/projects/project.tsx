@@ -27,8 +27,8 @@ import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
 import DoneTasksFilter from './done-tasks-filter';
-import LinkButton from '@/components/buttons/link-btn';
 import Link from 'next/link';
+import { useTasks } from '@/hooks/tasks/use-tasks';
 
 export type StatusFilter = TaskStatus | 'ALL';
 const counts = [10, 25, 50];
@@ -62,23 +62,9 @@ const ProjectComponent = ({
     setBoardTasks(tasks);
   }, [tasks]);
 
-  if (!project) return null;
-
-  const hasDateFilter = Boolean(dateRange?.from || dateRange?.to);
-  const hasStatusFilter = status !== 'ALL';
-  const hasAnyFilter = hasStatusFilter || hasDateFilter;
-
-  // Functions
-  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks);
-
   const filteredTasks = useMemo(() => {
     return filterTasks(boardTasks, status, dateRange);
   }, [boardTasks, status, dateRange]);
-
-  const resetFilters = () => {
-    setStatus('ALL');
-    setDateRange(undefined);
-  };
 
   const tasksByStatus = useMemo(() => {
     return tasksFilterByStatus({ tasks: filteredTasks });
@@ -89,6 +75,20 @@ const ProjectComponent = ({
     //   "BLOCKED": [...],
     // }
   }, [filteredTasks]);
+
+  if (!project) return null;
+
+  const hasDateFilter = Boolean(dateRange?.from || dateRange?.to);
+  const hasStatusFilter = status !== 'ALL';
+  const hasAnyFilter = hasStatusFilter || hasDateFilter;
+
+  // Functions
+  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks);
+
+  const resetFilters = () => {
+    setStatus('ALL');
+    setDateRange(undefined);
+  };
 
   return (
     <article>

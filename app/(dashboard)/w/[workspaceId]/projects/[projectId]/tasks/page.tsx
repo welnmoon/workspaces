@@ -1,8 +1,5 @@
 import TasksPageComponent from '@/components/entities/tasks/tasks-page';
-import { TasksPageTaskCard } from '@/components/entities/tasks/tasks-page-task-card';
 import ErrorComponent from '@/components/error';
-import FilterCalendar from '@/components/filters/filter-calendar';
-import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
 import { clientRoutes } from '@/lib/routes/client-routes';
@@ -13,12 +10,12 @@ import { redirect } from 'next/navigation';
 const TasksPage = async ({
   params,
 }: {
-  params: { workspaceId: string; projectId: string };
+  params: Promise<{ workspaceId: string; projectId: string }>;
 }) => {
   try {
     await requireUser();
-    const projectId = parseInt(params.projectId);
-    const workspaceId = parseInt(params.workspaceId);
+    const projectId = parseInt((await params).projectId);
+    const workspaceId = parseInt((await params).workspaceId);
     if (Number.isNaN(projectId) || Number.isNaN(workspaceId)) {
       redirect(clientRoutes.workspacesPage());
     }

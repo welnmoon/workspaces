@@ -4,30 +4,45 @@ import { Breadcrumbs } from '@/components/bread-crumbs';
 import ProjectCard from '@/components/entities/projects/project-card';
 import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
-import { useWorkspace } from '@/hooks/workspace/use-workspace';
+import { getWorkspaceStats } from '@/lib/services/get-workspace-stats';
 import { MembershipService } from '@/lib/services/membership';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { cardContainer } from '@/styles/styles';
 import { Role } from '@prisma/client';
+import { isMember } from '@/helpers/is-member';
+import EmptyState from '@/components/empty-state';
 
 const ProjectsPage = async ({
   params,
 }: {
-  params: { workspaceId: string };
+  params: Promise<{ workspaceId: string }>;
 }) => {
   const { id } = await requireUser();
-  const workspaceIdNumber = Number(params.workspaceId);
+  const { workspaceId } = await params;
+  const memberCheck = await isMember(Number(workspaceId), id);
+  if (memberCheck.isMember === false) {
+    return (
+      <>
+        <EmptyState
+          title="Вы не участник этого пространства"
+          subtitle="Отправьте заявку на вступление."
+        />
+        <span>В разработке...</span>
+      </>
+    );
+  }
+  const workspaceIdNumber = Number(workspaceId);
 
   if (Number.isNaN(workspaceIdNumber)) {
     return <div>Invalid workspace</div>;
   }
 
-  const [workspace, userRole, projects, workspaceStats] = await Promise.all([
+  const [workspace, userRole, projects] = await Promise.all([
     WorkspaceService.getWorkspaceById(workspaceIdNumber),
     MembershipService.getUserRoleInWorkspace(id, workspaceIdNumber),
     WorkspaceService.getWorkspaceProjects(workspaceIdNumber),
-    useWorkspace(workspaceIdNumber),
+    // getWorkspaceStats(workspaceIdNumber),
   ]);
 
   if (!workspace) {
@@ -58,7 +73,7 @@ const ProjectsPage = async ({
       <div className="flex justify-between items-center">
         <Heading level={2}>Projects</Heading>
         {(userRole === Role.ADMIN || userRole === Role.OWNER) && (
-          <CreateProjectDialog workspaceId={Number(params.workspaceId)} />
+          <CreateProjectDialog workspaceId={Number(workspaceId)} />
         )}
       </div>
 

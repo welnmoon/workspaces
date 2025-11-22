@@ -11,7 +11,6 @@ import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/ui/button';
 import { LinkIcon } from 'lucide-react';
 import { AccountFullDTO } from '@/types/prisma/DTO/account';
-import { disconnect } from '@/lib/fetch-fns/oauth/disconnect';
 import toast from 'react-hot-toast';
 import { useDeleteUsersAccount } from '@/hooks/oauth/use-delete-users-account';
 import { Spinner } from '@/components/ui/spinner';
@@ -41,7 +40,9 @@ const OAuthEditDialog = ({
           toast.success('Аккаунт успешно отвязан');
         },
       });
-    } catch (e) {}
+    } catch (e) {
+      toast.error(`Не удалось отвязать аккаунт: ${e}`);
+    }
   };
   return (
     <Dialog open={open} onOpenChange={setEditOAuth}>

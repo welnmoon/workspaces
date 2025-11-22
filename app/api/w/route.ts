@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     });
 
     return created(workspace, clientRoutes.workspacePage(workspace.id));
-  } catch (e: any) {
+  } catch (e) {
     if (
       e instanceof Prisma.PrismaClientKnownRequestError &&
       e.code === 'P2002'

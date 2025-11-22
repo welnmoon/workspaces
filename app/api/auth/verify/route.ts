@@ -2,7 +2,7 @@ import { AppError } from '@/lib/errors';
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { fail, ok } from '@/lib/http';
+import { fail } from '@/lib/http';
 import { SignJWT } from 'jose';
 const SECRET = new TextEncoder().encode(process.env.NEXTAUTH_SECRET!);
 

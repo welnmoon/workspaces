@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import SelectAssignee from './select-assignee';
 import SelectPriority from './select-priority';
+import { useCreateTask } from '@/hooks/tasks/use-create-task';
 
 const CreateTaskForm = ({
   projectId,
@@ -38,38 +39,25 @@ const CreateTaskForm = ({
       priority: 'LOW',
     },
   });
+  const { mutate, isPending, isSuccess, isError, error } = useCreateTask(
+    workspaceId,
+    projectId
+  );
 
-  const onFormSubmit = async (values: CreateTaskFormValues) => {
-    try {
-      const res = await fetch(apiRoutes.createTask(workspaceId, projectId), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: values.title,
-          description: values.description,
-          dueDate: values.dueDate,
-          assigneeId: values.assigneeId,
-          priority: values.priority,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => {});
-        toast.error(
-          data.error || res.statusText || 'Не удалось создать задачу'
-        );
-        return;
-      }
-      onSuccess?.();
-      form.reset();
-      toast.success('Задача успешно создана');
-      router.refresh();
-    } catch (e) {
-      const message = e instanceof Error ? e.message : 'Неизвестная ошибка';
-      toast.error(message);
-      console.log(e);
-    }
+  const onFormSubmit = (values: CreateTaskFormValues) => {
+    mutate(values, {
+      onSuccess: () => {
+        toast.success('Задача успешно создана');
+        onSuccess?.();
+        form.reset();
+        router.refresh();
+      },
+      onError: () => {
+        toast.error('Не удалось создать задачу');
+      },
+    });
   };
+
 
   return (
     <FormProvider {...form}>
@@ -96,10 +84,7 @@ const CreateTaskForm = ({
 
           <DueDateField control={form.control} name="dueDate" />
         </fieldset>
-        <SubmitBtn
-          text="Создать задачу"
-          isLoading={form.formState.isSubmitting}
-        />
+        <SubmitBtn text="Создать задачу" isLoading={isPending} />
       </form>
     </FormProvider>
   );

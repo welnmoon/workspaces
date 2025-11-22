@@ -3,13 +3,14 @@ import { AppError } from '@/lib/errors';
 import { InvitationService } from '@/lib/services/invitation';
 import { NextRequest, NextResponse } from 'next/server';
 
-type Params = { params: Promise<{ id: string }> };
-
 // Accept by ID
-export async function POST(req: NextRequest, context: Params) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await requireUser();
-    const invId = (await context.params).id;
+    const invId = (await params).id;
     const invIdNumber = Number(invId);
 
     if (Number.isNaN(invIdNumber))

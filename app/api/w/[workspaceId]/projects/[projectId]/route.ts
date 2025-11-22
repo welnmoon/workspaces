@@ -46,7 +46,7 @@ export async function PATCH(req: NextRequest, context: Params) {
     );
     return ok(updated);
   } catch (e) {
-    return serverError('Failed to update project');
+    return serverError('Failed to update project', e);
   }
 }
 

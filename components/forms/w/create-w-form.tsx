@@ -5,7 +5,7 @@ import FormInput from '../form-input';
 
 import { CreateWorkspaceFormValues } from '@/schemas/workspace/create-workspace-form-schema';
 
-const CreateWorkspaceForm = ({}: {}) => {
+const CreateWorkspaceForm = () => {
   const form = useFormContext<CreateWorkspaceFormValues>();
 
   return (

@@ -3,16 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import {
-  badRequest,
-  conflict,
-  ok,
-  serverError,
-  unprocessable,
-} from '@/lib/http';
+import { badRequest, conflict, serverError, unprocessable } from '@/lib/http';
 import { resend } from '@/lib/email/resend-client';
 import { registerSchema } from '@/components/forms/register/register-schema';
 import crypto from 'crypto';
+import { Prisma } from '@prisma/client';
 
 // sign up - это регистрация
 
@@ -77,10 +72,11 @@ export async function POST(req: NextRequest) {
           data: { identifier: email, token: tokenHash, expires: expiresAt },
         });
       });
-    } catch (err: any) {
-      // перехват уникального индекса
-      if (err.code === 'P2002') {
-        return conflict('User already exists', 'USER_ALREADY_EXISTS');
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === 'P2002') {
+          return conflict('User already exists', 'USER_ALREADY_EXISTS');
+        }
       }
       throw err;
     }

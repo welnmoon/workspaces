@@ -3,16 +3,30 @@ import ProjectComponent from '@/components/entities/projects/project';
 import { requireUser } from '@/helpers/require-user';
 import prisma from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
-import { use } from 'react';
 import { WorkspaceService } from '@/lib/services/workspace';
+import { isMember } from '@/helpers/is-member';
+import EmptyState from '@/components/empty-state';
 
 const ProjectPage = async ({
   params,
 }: {
-  params: { workspaceId: string; projectId: string };
+  params: Promise<{ workspaceId: string; projectId: string }>;
 }) => {
   const { id } = await requireUser();
   const { workspaceId, projectId } = await params;
+  const { isMember: userIsMember } = await isMember(Number(workspaceId), id);
+
+  if (!userIsMember) {
+    return (
+      <>
+        <EmptyState
+          title="Вы не участник этого пространства"
+          subtitle="Отправьте заявку на вступление."
+        />
+        <span>В разработке...</span>
+      </>
+    );
+  }
   const project = await prisma.project.findUnique({
     where: { id: Number(projectId) },
   });

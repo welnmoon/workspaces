@@ -7,12 +7,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  TASK_PRIORITY_ARRAY,
-  TASK_PRIORITY_LABELS,
-} from '@/const/priority';
+import { TASK_PRIORITY_ARRAY, TASK_PRIORITY_LABELS } from '@/const/priority';
 import { cn } from '@/lib/utils';
-import { Controller } from 'react-hook-form';
+import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
+import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 
 const PRIORITY_BADGE_STYLES: Record<string, string> = {
   URGENT: 'bg-red-100 text-red-700 border-red-200',
@@ -22,8 +20,8 @@ const PRIORITY_BADGE_STYLES: Record<string, string> = {
 };
 
 type SelectPriorityProps = {
-  control: any;
-  name: string;
+  control: Control<CreateTaskFormValues>;
+  name: 'priority';
   className?: string;
   label?: string;
   required?: boolean;
@@ -33,7 +31,7 @@ const SelectPriority = ({
   control,
   name,
   className,
-  label = 'Приоритет задачи',
+  label = 'Приоритет',
   required,
 }: SelectPriorityProps) => {
   return (

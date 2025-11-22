@@ -6,6 +6,7 @@ import { ProjectListDTO } from '@/types/prisma/DTO/projects';
 import prisma from '../prisma';
 import { TaskFilters } from '@/types/service/task-filters';
 import { TaskStats } from '@/types/service/task-stats';
+import { Prisma, TaskStatus } from '@prisma/client';
 
 export class ProjectService {
   //-------------------------------------//
@@ -87,18 +88,18 @@ export class ProjectService {
   }
 
   static async getProjectTasks(projectId: number, filters?: TaskFilters) {
-    const where: any = {
+    const where: Prisma.TaskWhereInput = {
       projectId: projectId,
     };
 
-    if (filters?.status) where.status = filters.status;
-    if (filters?.done) where.done = filters.done;
-    if (filters?.todo) where.todo = filters.todo;
-    if (filters?.inProgress) where.inProgress = filters.inProgress;
-    if (filters?.overdue) where.overdue = filters.overdue;
-    if (filters?.fromDate) where.dueDate = { gte: filters.fromDate };
-    if (filters?.toDate) where.dueDate = { lte: filters.toDate };
-    if (filters?.assigneeId) where.assigneeId = filters.assigneeId;
+    // if (filters?.status) where.status = filters.status;
+    // if (filters?.done) where.done = filters.done;
+    // if (filters?.todo) where.todo = filters.todo;
+    // if (filters?.inProgress) where.inProgress = filters.inProgress;
+    // if (filters?.overdue) where.overdue = filters.overdue;
+    // if (filters?.fromDate) where.dueDate = { gte: filters.fromDate };
+    // if (filters?.toDate) where.dueDate = { lte: filters.toDate };
+    // if (filters?.assigneeId) where.assigneeId = filters.assigneeId;
 
     return prisma.task.findMany({
       where,
@@ -112,18 +113,22 @@ export class ProjectService {
     projectId: number,
     filters?: TaskFilters
   ) {
-    const where: any = {
-      projectId: projectId,
-    };
+    const where: Prisma.TaskWhereInput = { projectId };
 
-    if (filters?.status) where.status = filters.status;
-    if (filters?.done) where.done = filters.done;
-    if (filters?.todo) where.todo = filters.todo;
-    if (filters?.inProgress) where.inProgress = filters.inProgress;
-    if (filters?.overdue) where.overdue = filters.overdue;
-    if (filters?.fromDate) where.dueDate = { gte: filters.fromDate };
-    if (filters?.toDate) where.dueDate = { lte: filters.toDate };
-    if (filters?.assigneeId) where.assigneeId = filters.assigneeId;
+    // if (filters?.status) where.status = filters.status;
+    // if (filters?.assigneeId) where.assigneeId = filters.assigneeId;
+
+    // if (filters?.done) where.status = TaskStatus.DONE;
+    // if (filters?.todo) where.status = TaskStatus.TODO;
+    // if (filters?.inProgress) where.status = TaskStatus.IN_PROGRESS;
+    // if (filters?.overdue) {
+    //   where.dueDate = { lt: new Date() };
+    // } else if (filters?.fromDate || filters?.toDate) {
+    //   where.dueDate = {
+    //     ...(filters.fromDate ? { gte: filters.fromDate } : {}),
+    //     ...(filters.toDate ? { lte: filters.toDate } : {}),
+    //   };
+    // }
 
     return prisma.task.findMany({
       where,

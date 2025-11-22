@@ -5,10 +5,10 @@ import { NextRequest } from 'next/server';
 
 export async function GET(
   _req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = (await context.params).id;
+    const id = (await params).id;
     await requireUser();
     const user = await UserService.getUserProfile(id);
     return ok(user);
@@ -20,11 +20,14 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireUser();
-    const updated = await UserService.updateUser(params.id, await req.json());
+    const updated = await UserService.updateUser(
+      (await params).id,
+      await req.json()
+    );
     return ok(updated);
   } catch (e) {
     console.error(e);

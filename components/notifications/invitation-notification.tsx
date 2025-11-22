@@ -81,16 +81,19 @@ export function InvitationNotification({
           </Badge>
         </div>
         {invitation.status === 'PENDING' && (
-          <div>
+          <div className="space-x-2 ">
             <Button
               onClick={() => handleAccept()}
               variant="outline"
-              className="text-[11px]"
+              className="text-[11px] px-2 py-0"
               disabled={isPending}
             >
               {isPending ? <Loader className="animate-spin" /> : 'Принять'}
             </Button>
-            <Button variant="destructive" className="text-[11px]">
+            <Button
+              variant="destructive"
+              className="text-[11px] text-white px-2 py-1"
+            >
               Отклонить
             </Button>
           </div>
