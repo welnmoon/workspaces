@@ -7,11 +7,12 @@ import { Heading } from '@/components/ui/heading';
 import { Role } from '@prisma/client';
 import { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 import { useProjects } from '@/hooks/project/use-projects';
+import { WorkspaceDTO } from '@/types/prisma/DTO/workspaces';
 
 export type WProjectsSectionProps = {
   userRole: Role;
   workspaceId: number;
-  workspace: any;
+  workspace: WorkspaceDTO;
   projects: ProjectFullDTO[];
 };
 
