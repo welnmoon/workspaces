@@ -32,10 +32,9 @@ const WProjectsSection = ({
     <section>
       <div className="flex justify-between">
         <Heading>Projects</Heading>
-        {userRole === Role.ADMIN ||
-          (userRole === Role.OWNER && (
-            <CreateProjectDialog workspaceId={workspaceId} />
-          ))}
+        {(userRole === Role.ADMIN || userRole === Role.OWNER) && (
+          <CreateProjectDialog workspaceId={workspaceId} />
+        )}
       </div>
       <section className={cardContainer}>
         {optimisticProjects?.map((p) => (
