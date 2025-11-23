@@ -219,6 +219,7 @@ enum MembershipStatus {
 enum Tariff {
   FREE
   PRO
+  BUSINESS
 }
 
 enum AuditActions {
