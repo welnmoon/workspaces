@@ -1,7 +1,7 @@
 import { sendInviteEmail } from '@/components/mails/invitations/send-invitation';
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { generateToken } from '@/helpers/generate-token';
-import prisma from '@/lib/prisma';
+import { prisma } from '../prisma';
 import { AuditLogService } from '@/lib/services/audit-log';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { MembershipStatus, Prisma, Role } from '@prisma/client';

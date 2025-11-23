@@ -3,7 +3,7 @@ import {
   CreateProjectFormValues,
 } from '@/schemas/projects/create-project-form-schemas';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
-import prisma from '../prisma';
+import { prisma } from '../prisma';
 import { TaskFilters } from '@/types/service/task-filters';
 import { TaskStats } from '@/types/service/task-stats';
 import { Prisma, TaskStatus } from '@prisma/client';

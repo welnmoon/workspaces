@@ -1,7 +1,6 @@
 import { TaskPriority, TaskStatus } from '@prisma/client';
-import prisma from '../prisma';
+import { prisma } from '../prisma';
 import { AppError } from '../errors';
-import { TaskPriorityDTO } from '@/types/prisma/DTO/priority';
 
 export class TaskService {
   static async getAll(projectId: number) {

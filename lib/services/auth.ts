@@ -1,5 +1,5 @@
 import { PasswordChangeSchemaDTO } from '@/schemas/auth/passwrod-change-schema';
-import prisma from '../prisma';
+import { prisma } from '../prisma';
 import bcrypt from 'bcrypt';
 import { AppError } from '../errors';
 import { UserService } from './user';

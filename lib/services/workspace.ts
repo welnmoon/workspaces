@@ -1,9 +1,8 @@
 import {
   WorkspaceListDTO,
-  WorkspaceCreateDTO,
   WorkspaceSelectDTO,
 } from '@/types/prisma/DTO/workspaces';
-import prisma from '@/lib/prisma';
+import { prisma } from '../prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
 import { Workspace } from '@prisma/client';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';

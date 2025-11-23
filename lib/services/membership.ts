@@ -1,8 +1,8 @@
 import { MembershipStatus } from '@prisma/client';
-import prisma from '../prisma';
 import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
 import { AppError } from '../errors';
 import { WorkspaceService } from './workspace';
+import { prisma } from '../prisma';
 
 export class MembershipService {
   static async getUserRoleInWorkspace(userId: string, workspaceId: number) {

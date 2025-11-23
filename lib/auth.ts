@@ -5,7 +5,6 @@ import Google from 'next-auth/providers/google';
 import Github from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
-import prisma from '@/lib/prisma';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
 // ← ЭТО ВСЁ, ЧТО НУЖНО ДЛЯ V4 (никаких NextAuthConfig!)
@@ -13,6 +12,7 @@ import type { NextAuthOptions } from 'next-auth';
 import customPrismaAdapter from './custom-prisma-adapter';
 
 import type { DefaultSession } from 'next-auth';
+import { prisma } from './prisma';
 
 // Правильно — используем DefaultSession, а НЕ Session
 declare module 'next-auth' {
