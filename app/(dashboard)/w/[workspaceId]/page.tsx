@@ -84,9 +84,7 @@ const WorkspacePage = async ({
         )}
       </div>
 
-      <Suspense
-        fallback={<div className="h-6 w-full bg-gray-200 animate-pulse"></div>}
-      >
+
         <div className="flex gap-4  text-sm text-muted-foreground items-center">
           <span>
             Участников: <b>{membersCount}</b>
@@ -117,7 +115,7 @@ const WorkspacePage = async ({
             Ваша роль: <span className="font-medium">{userRole}</span>
           </div>
         </div>
-      </Suspense>
+    
       <Divider />
       <WorkspaceTabs
         user={user}

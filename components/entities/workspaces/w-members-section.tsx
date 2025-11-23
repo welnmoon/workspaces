@@ -23,6 +23,7 @@ const WMembersSection = ({
   user: SessionUser;
   membersAndRoles: { userId: string; role: RoleWithoutOwnerDTO }[];
 }) => {
+  const isMember = membersAndRoles.some((um) => um.role !== Role.MEMBER);
   return (
     <section>
       <Table>
@@ -33,7 +34,7 @@ const WMembersSection = ({
             <TableHead>Email</TableHead>
             <TableHead>Был в сети</TableHead>
             <TableHead className="">Роль</TableHead>
-            <TableHead className="text-right"></TableHead>
+            {!isMember && <TableHead className="text-right"></TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -53,18 +54,20 @@ const WMembersSection = ({
                 <TableCell>{member.user.email}</TableCell>
                 <TableCell>
                   {member.user.wasOnline
-                    ? member.user.wasOnline.toLocaleString() 
+                    ? member.user.wasOnline.toLocaleString()
                     : '-'}
                 </TableCell>
                 <TableCell className="">{member.role}</TableCell>
-                <TableCell className="text-right">
-                  {member.role !== Role.OWNER && (
-                    <EditMemberPopover
-                      memberRole={memberRole}
-                      memberId={member.id}
-                    />
-                  )}
-                </TableCell>
+                {!isMember && (
+                  <TableCell className="text-right">
+                    {member.role !== Role.OWNER && (
+                      <EditMemberPopover
+                        memberRole={memberRole}
+                        memberId={member.id}
+                      />
+                    )}
+                  </TableCell>
+                )}
               </TableRow>
             );
           })}
