@@ -8,6 +8,7 @@ import { resend } from '@/lib/email/resend-client';
 import { registerSchema } from '@/components/forms/register/register-schema';
 import crypto from 'crypto';
 import { Prisma } from '@prisma/client';
+import { UserService } from '@/lib/services/user';
 
 // sign up - это регистрация
 
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findUnique({ where: { email } });
 
     // 4) Если верифицирован — 409
+
     if (user?.emailVerified) {
       return conflict('User already exists', 'USER_ALREADY_EXISTS');
     }
@@ -88,6 +90,11 @@ export async function POST(req: NextRequest) {
       subject: 'Подтверждение регистрации',
       html: `<p>Привет, ${firstName} ${lastName}! Пожалуйста, подтвердите свой email: <a href="${verifyLink}">Подтвердить</a></p>`,
     });
+
+    // Пока resend платный и не позволяет отправлять на почты с других доменов
+    // Поэтому временно для пет проекта сразу будем верифицировать
+    // TODO delete this
+    await UserService.verifyUser(email);
 
     return NextResponse.json(
       {

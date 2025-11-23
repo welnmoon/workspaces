@@ -40,6 +40,15 @@ export class UserService {
     });
   }
 
+  static async createUser(email: string, password: string) {
+    return await prisma.user.create({
+      data: {
+        email,
+        password,
+      },
+    });
+  }
+
   static async updateUser(userId: string, data: unknown) {
     const res = profileSchema.parse(data);
     return await prisma.user.update({
@@ -76,6 +85,17 @@ export class UserService {
       },
       data: {
         wasOnline: date,
+      },
+    });
+  }
+
+  static async verifyUser(email: string) {
+    return await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        emailVerified: new Date(),
       },
     });
   }
