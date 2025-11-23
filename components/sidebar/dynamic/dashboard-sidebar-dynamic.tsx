@@ -33,7 +33,9 @@ const DashboardSidebarDynamic = ({
     isLoading: pLoading,
     isError: pError,
     error: pErrorObj,
-  } = useProjects(Number(selectedWorkspaceId));
+  } = useProjects(
+    selectedWorkspaceId ? Number(selectedWorkspaceId) : undefined
+  );
 
   const {
     data: tasks = [],
@@ -41,8 +43,8 @@ const DashboardSidebarDynamic = ({
     isError: tError,
     error: tErrorObj,
   } = useTasks(
-    selectedProjectId ? Number(selectedProjectId) : null,
-    selectedWorkspaceId ? Number(selectedWorkspaceId) : null
+    selectedProjectId ? Number(selectedProjectId) : undefined,
+    selectedWorkspaceId ? Number(selectedWorkspaceId) : undefined
   );
   // Data --------------------------------
   // const [projects, setProjects] = useState<ProjectListDTO[]>([]);

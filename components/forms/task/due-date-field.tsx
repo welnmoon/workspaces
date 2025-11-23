@@ -1,10 +1,11 @@
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { Controller } from 'react-hook-form';
+import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
+import { Control, Controller } from 'react-hook-form';
 
 interface DueDateFieldProps {
-  control: any;
-  name: string;
+  control: Control<CreateTaskFormValues>;
+  name: 'dueDate';
 
   label?: string;
   required?: string;

@@ -47,7 +47,7 @@ const InvitationsPopover = ({
           <Bell className="h-5 w-5" />
           {hasInvitations && (
             <span className="absolute -top-1 -right-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-none text-white">
-              {invitations.length}
+              {notReadInvitations.length}
             </span>
           )}
         </Button>

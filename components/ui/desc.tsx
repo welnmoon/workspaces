@@ -5,7 +5,7 @@ const Description = ({
 }: {
   text: string | React.ReactNode;
   label?: string;
-  className: string;
+  className?: string;
 }) => {
   return (
     <div className={className}>

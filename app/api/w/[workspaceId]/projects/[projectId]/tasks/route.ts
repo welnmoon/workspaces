@@ -1,6 +1,5 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { badRequest, created, ok, serverError } from '@/lib/http';
-import prisma from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
 import { TaskService } from '@/lib/services/tasks';
 import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
@@ -11,10 +10,10 @@ import { NextRequest, NextResponse } from 'next/server';
 // Create a new task in the project
 export async function POST(
   req: NextRequest,
-  context: { params: Promise<{ workspaceId: string; projectId: string }> }
+  { params }: { params: Promise<{ workspaceId: string; projectId: string }> }
 ) {
   try {
-    const { workspaceId, projectId } = await context.params;
+    const { workspaceId, projectId } = await params;
 
     await requireWorkspaceMember({
       workspaceId: Number(workspaceId),
@@ -44,7 +43,7 @@ export async function POST(
     return created(task);
   } catch (e) {
     return NextResponse.json(
-      { error: 'Failed to create task' },
+      { error: 'Failed to create task', e },
       { status: 500 }
     );
   }
@@ -52,10 +51,10 @@ export async function POST(
 
 export async function GET(
   _req: NextRequest,
-  context: { params: { workspaceId: string; projectId: string } }
+  { params }: { params: Promise<{ workspaceId: string; projectId: string }> }
 ) {
   try {
-    const { workspaceId, projectId } = context.params;
+    const { workspaceId, projectId } = await params;
     await requireWorkspaceMember({
       workspaceId: Number(workspaceId),
       allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],

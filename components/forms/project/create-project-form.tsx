@@ -13,6 +13,7 @@ import { apiRoutes } from '@/lib/routes/api-routes';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
 import { useCreateProject } from '@/hooks/project/use-create-project';
+import { AppError } from '@/lib/errors';
 
 const CreateProjectForm = ({
   workspaceId,
@@ -57,10 +58,15 @@ const CreateProjectForm = ({
 
         setOpenModal(false);
       },
-      onError: (error: any) => {
-        const message =
-          (error && (error.message || error.error)) ||
-          'Не удалось создать проект';
+      onError: (error: unknown) => {
+        let message = 'Не удалось создать проект';
+
+        if (error instanceof AppError) {
+          message = error.message;
+        } else if (typeof error === 'object' && error !== null) {
+          const err = error as { message: string; error?: string };
+          message = err.message ?? err.error ?? message;
+        }
         toast.error(message);
       },
     });

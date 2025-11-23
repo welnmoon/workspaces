@@ -6,10 +6,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import { Dispatch, SetStateAction, useState } from 'react';
-import EditButton from '../buttons/edit-project-btn';
+import { Dispatch, SetStateAction } from 'react';
 import EditMemberForm from '../forms/member/edit-member-form';
 import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
 

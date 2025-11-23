@@ -39,59 +39,17 @@ const DashboardSidebarStatic = ({
     isLoading: pLoading,
     isError: pError,
     error: pErrorObj,
-  } = useProjects(selectedWorkspaceId);
+  } = useProjects(selectedWorkspaceId || undefined);
 
   const {
     data: tasks = [],
     isLoading: tLoading,
     isError: tError,
     error: tErrorObj,
-  } = useTasks(selectedProjectId, selectedWorkspaceId);
-
-  // const {
-  //   data: workspaces = [],
-  //   isLoading: wLoading,
-  //   isError: wError,
-  //   error: wErrorObj,
-  // } = useWorkspaces();
-
-  // Fetch projects
-  // useEffect(() => {
-  //   if (!selectedWorkspaceId) {
-  //     setProjects([]);
-  //     return;
-  //   }
-
-  //   setPLoading(true);
-
-  //   fetchProjects(Number(selectedWorkspaceId))
-  //     .then(setProjects)
-  //     .catch(() => {})
-  //     .finally(() => setPLoading(false));
-  // }, [selectedWorkspaceId]);
-
-  // Fetch tasks
-  // useEffect(() => {
-  //   if (!selectedProjectId) {
-  //     // setTasks([]);
-  //     setSelectedTaskId(null); // Сбрасываем выбранный проект
-  //     return;
-  //   }
-
-  //   if (selectedWorkspaceId) {
-  //     // setTaskLoading(true);
-  //     setSelectedTaskId(null);
-  //     fetchTasks({
-  //       workspaceId: selectedWorkspaceId,
-  //       projectId: selectedProjectId,
-  //     })
-  //       .then(setTasks)
-  //       .catch(() => {
-  //         toast.error('Не удалось загрузить задачи');
-  //       })
-  //       .finally(() => setTaskLoading(false));
-  //   }
-  // }, [selectedProjectId, selectedWorkspaceId]);
+  } = useTasks(
+    selectedProjectId || undefined,
+    selectedWorkspaceId || undefined
+  );
 
   // Routing --------------------------------
   const pathname = usePathname();

@@ -7,11 +7,12 @@ import { Heading } from '@/components/ui/heading';
 import { Role } from '@prisma/client';
 import { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 import { useProjects } from '@/hooks/project/use-projects';
+import { WorkspaceDTO } from '@/types/prisma/DTO/workspaces';
 
 export type WProjectsSectionProps = {
   userRole: Role;
   workspaceId: number;
-  workspace: any;
+  workspace: WorkspaceDTO;
   projects: ProjectFullDTO[];
 };
 
@@ -31,13 +32,12 @@ const WProjectsSection = ({
     <section>
       <div className="flex justify-between">
         <Heading>Projects</Heading>
-        {userRole === Role.ADMIN ||
-          (userRole === Role.OWNER && (
-            <CreateProjectDialog workspaceId={workspaceId} />
-          ))}
+        {(userRole === Role.ADMIN || userRole === Role.OWNER) && (
+          <CreateProjectDialog workspaceId={workspaceId} />
+        )}
       </div>
       <section className={cardContainer}>
-        {optimisticProjects.map((p) => (
+        {optimisticProjects?.map((p) => (
           <ProjectCard
             title={p.name}
             description={p.description || ''}
@@ -46,7 +46,7 @@ const WProjectsSection = ({
             key={p.id}
           />
         ))}
-        {optimisticProjects.length === 0 && (
+        {optimisticProjects?.length === 0 && (
           <div className="w-full py-8 text-center text-muted-foreground">
             No projects found
           </div>

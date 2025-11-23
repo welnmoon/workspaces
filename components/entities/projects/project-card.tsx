@@ -78,58 +78,82 @@ const ProjectCard = ({
         <Heading level={6} className="text-zinc-400 mb-2">
           Задачи
         </Heading>
-        <div className=" flex flex-wrap gap-1 ">
-          {tasksCount === 0 && (
-            <EmptyState
-              title="Нет задач"
-              subtitle="Задач нет — самое время начать"
-              icon=""
-              className="w-full py-2"
-            />
-          )}
-          {tasksCount > 0 && (
-            <>
-              <ProjectCardBadge
-                variant="default"
-                text="Всего"
-                value={tasksCount}
+        {isLoading && <StatsSkeleton />}
+        {!isLoading && (
+          <div className=" flex flex-wrap gap-1 ">
+            {tasksCount === 0 && (
+              <EmptyState
+                title="Нет задач"
+                subtitle="Задач нет — самое время начать"
+                icon=""
+                className="w-full py-2"
               />
+            )}
+            {tasksCount > 0 && (
+              <>
+                <ProjectCardBadge
+                  variant="default"
+                  text="Всего"
+                  value={tasksCount}
+                />
 
-              <ProjectCardBadge
-                variant="success"
-                text="Выполненные"
-                value={tasksDoneCount}
-              />
+                <ProjectCardBadge
+                  variant="success"
+                  text="Выполненные"
+                  value={tasksDoneCount}
+                />
 
-              <ProjectCardBadge
-                variant="primary"
-                text="В работе"
-                value={tasksInProgressCount}
-              />
+                <ProjectCardBadge
+                  variant="primary"
+                  text="В работе"
+                  value={tasksInProgressCount}
+                />
 
-              <ProjectCardBadge
-                variant="info"
-                text="Новые"
-                value={tasksToDoCount}
-              />
+                <ProjectCardBadge
+                  variant="info"
+                  text="Новые"
+                  value={tasksToDoCount}
+                />
 
-              <ProjectCardBadge
-                variant="destructive"
-                text="Просроченные"
-                value={tasksOverdueCount}
-              />
+                <ProjectCardBadge
+                  variant="destructive"
+                  text="Просроченные"
+                  value={tasksOverdueCount}
+                />
 
-              <ProjectCardBadge
-                variant="warning"
-                text="Заблокированные"
-                value={tasksBlockedCount}
-              />
-            </>
-          )}
-        </div>
+                <ProjectCardBadge
+                  variant="warning"
+                  text="Заблокированные"
+                  value={tasksBlockedCount}
+                />
+              </>
+            )}
+          </div>
+        )}
       </CardFooter>
     </Card>
   );
 };
 
 export default ProjectCard;
+
+function StatsSkeleton() {
+  return (
+    <div className="space-y-1">
+      <div className="flex flex-wrap gap-2 animate-pulse">
+        {/* Всего */}
+        <div className="h-3 w-16 bg-zinc-200 rounded-md" />
+        {/* Выполненные */}
+        <div className="h-3 w-24 bg-zinc-200 rounded-md" />
+        {/* В работе */}
+        <div className="h-3 w-20 bg-zinc-200 rounded-md" />
+        {/* Новые */}
+        <div className="h-3 w-20 bg-zinc-200 rounded-md" />
+        {/* Просроченные */}
+        <div className="h-3 w-28 bg-zinc-200 rounded-md" />
+        {/* Заблокированные */}
+        <div className="h-3 w-32 bg-zinc-200 rounded-md" />
+      </div>
+    </div>
+  );
+}

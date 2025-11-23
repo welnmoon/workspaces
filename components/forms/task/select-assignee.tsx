@@ -8,8 +8,9 @@ import {
 } from '@/components/ui/select';
 import getFullName from '@/helpers/profile.ts/get-full-name';
 import { cn } from '@/lib/utils';
+import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
-import { Controller } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 
 const SelectAssignee = ({
   members,
@@ -20,8 +21,8 @@ const SelectAssignee = ({
   className,
 }: {
   members: MembershipSelectUserDTO[];
-  control: any;
-  name: string;
+  control: Control<CreateTaskFormValues>;
+  name: 'assigneeId';
   label?: string;
   required?: boolean;
   className?: string;

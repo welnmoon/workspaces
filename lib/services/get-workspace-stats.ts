@@ -3,7 +3,7 @@ import { TaskService } from '@/lib/services/tasks';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { TaskStatus } from '@prisma/client';
 
-export const useWorkspace = async (workspaceId: number) => {
+export const getWorkspaceStats = async (workspaceId: number) => {
   const [
     projectsCount,
     membersCount,

@@ -82,7 +82,7 @@ const LoginForm = () => {
           <Divider />
           <div className="grid grid-cols-4 gap-1">
             {PROVIDERS.map((p) => (
-              <LoginOauthButton provider={p.id} />
+              <LoginOauthButton key={p.id} provider={p.id} />
             ))}
           </div>
           <div>

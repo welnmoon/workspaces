@@ -19,3 +19,5 @@ export type WorkspaceWithoutDatesDTO = Omit<
   Workspace,
   'createdAt' | 'updatedAt'
 >;
+
+export type WorkspaceDTO = Workspace;

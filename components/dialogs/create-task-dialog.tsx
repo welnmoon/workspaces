@@ -11,8 +11,6 @@ import {
 import MainBtn from '../buttons/main-btn';
 import CreateTaskForm from '../forms/task/create-task-form';
 import { useState } from 'react';
-import { Heading } from '@/components/ui/heading';
-import { UserDTO } from '@/types/prisma/DTO/user';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 const CreateTaskDialog = ({

@@ -98,7 +98,7 @@ const ProfileComponent = ({ userId }: Props) => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Никнейм</span>
-                <Badge variant="secondary">{profile.nickname ?? 'user'}</Badge>
+                <Badge variant="outline">{profile.nickname ?? 'user'}</Badge>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">ID</span>
@@ -197,7 +197,7 @@ const ProfileComponent = ({ userId }: Props) => {
                             {m.workspace.name}
                           </BaseLink>
                         </span>
-                        <Badge variant="secondary" className="capitalize">
+                        <Badge variant="outline" className="capitalize">
                           {m.role ?? 'member'}
                         </Badge>
                       </div>
