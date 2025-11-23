@@ -1,28 +1,52 @@
-import NextAuth, { AuthOptions } from 'next-auth';
+// src/pages/api/auth/[...nextauth].ts  (или app/api/auth/[...nextauth]/route.ts)
+
+import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import Github from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma';
-import customPrismaAdapter from './custom-prisma-adapter';
-import { clientRoutes } from './routes/client-routes';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
-export const authOptions: AuthOptions = {
-  // adapter: PrismaAdapter(prisma),
-  adapter: customPrismaAdapter, // устраняем конфликт между prisma и next-auth создав кастомный адаптер
-  session: { strategy: 'jwt' },
+// ← ЭТО ВСЁ, ЧТО НУЖНО ДЛЯ V4 (никаких NextAuthConfig!)
+import type { NextAuthOptions } from 'next-auth';
+import customPrismaAdapter from './custom-prisma-adapter';
+
+import type { DefaultSession } from 'next-auth';
+
+// Правильно — используем DefaultSession, а НЕ Session
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+    } & DefaultSession['user']; // ← DefaultSession, а не Session!
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    userExists?: boolean;
+  }
+}
+// ======================================================================
+
+export const authOptions: NextAuthOptions = {
+  adapter: customPrismaAdapter,
+  session: {
+    strategy: 'jwt',
+  },
   pages: {
-    error: clientRoutes.authErrorPage(),
     signIn: clientRoutes.authLoginPage(),
+    error: clientRoutes.authErrorPage(),
   },
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     Github({
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
     Credentials({
       name: 'Email & Password',
@@ -31,24 +55,16 @@ export const authOptions: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password)
-          throw new Error('CREDENTIALS_REQUIRED');
+        if (!credentials?.email || !credentials?.password) return null;
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
-        if (!user) {
-          throw new Error('NO_USER');
-        }
 
-        if (!user.password) throw new Error('OAUTH_ONLY');
-        if (!user.emailVerified) throw new Error('EMAIL_NOT_VERIFIED');
+        if (!user?.password || !user.emailVerified) return null;
 
         const ok = await bcrypt.compare(credentials.password, user.password);
-
-        if (!ok) {
-          throw new Error('WRONG_PASSWORD');
-        }
+        if (!ok) return null;
 
         return {
           id: String(user.id),
@@ -62,28 +78,38 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
+    // ← ОДИН ЕДИНСТВЕННЫЙ jwt callback
     async jwt({ token, user }) {
-      if (user?.id) token.id = user.id;
-      if (token.id) {
-        const existing = await prisma.user.findUnique({
-          where: { id: String(token.id) },
+      // user есть только при первом логине
+      if (user) {
+        token.id = user.id;
+      }
+
+      // Проверяем, существует ли пользователь (делаем только раз за сессию)
+      if (token.id && token.userExists === undefined) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
           select: { id: true },
         });
-        (token as any).userExists = !!existing;
+        token.userExists = !!dbUser;
       }
+
       return token;
     },
-    async session({ session, token }) {
-      if ((token as any).userExists === false) return null;
-      if (session.user && token.id) session.user.id = token.id;
-      return session;
-    },
 
-    async signIn({ user, account, profile }) {
-      return true;
+    async session({ session, token }) {
+      // Если пользователь удалён из БД — логаут
+      if (token.userExists === false) {
+        return null as any; // в v4 можно так, TS поймёт
+      }
+
+      if (token.id) {
+        session.user.id = token.id as string;
+      }
+
+      return session;
     },
   },
 };
-const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export default NextAuth(authOptions);
