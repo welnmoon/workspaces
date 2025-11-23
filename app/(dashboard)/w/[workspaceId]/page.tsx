@@ -75,7 +75,7 @@ const WorkspacePage = async ({
       />
       <div className="flex justify-between">
         <Heading>Workspace {workspace?.name}</Heading>
-        {role === Role.OWNER || role === Role.ADMIN && (
+        {(role === Role.OWNER || role === Role.ADMIN) && (
           <WorkspacePopover
             workspaceId={workspaceIdNumber}
             workspaceName={workspace.name}
