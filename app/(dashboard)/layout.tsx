@@ -11,38 +11,29 @@ import { requireUser } from '@/helpers/require-user';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
-import InvitationsPopover, {
-} from '@/components/notifications/invitations-popover';
+import InvitationsPopover from '@/components/notifications/invitations-popover';
 import { Badge } from '@/components/ui/badge';
 import DashboardSidebarDynamic from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
+import { UserService } from '@/lib/services/user';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await requireUser();
+  const user = await requireUser().catch(() => null);
+  if (!user) {
+    redirect(clientRoutes.authLoginPage());
+  }
 
-  const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(
-    user.id
-  );
-  // const invitations = await InvitationService.getReceivedInvitations(user.id);
-  // const invitationNotifications: InvitationNotificationData[] = invitations.map(
-  //   (inv) => ({
-  //     id: inv.id,
-  //     workspaceId: inv.workspaceId,
-  //     workspaceName: inv.workspace?.name ?? null,
-  //     invitedRole: inv.invitedRole,
-  //     status: inv.status,
-  //     createdAt: inv.createdAt.toISOString(),
-  //     inviterName:
-  //       inv.inviter?.firstName || inv.inviter?.lastName
-  //         ? [inv.inviter?.firstName, inv.inviter?.lastName]
-  //             .filter(Boolean)
-  //             .join(' ')
-  //         : (inv.inviter?.email ?? null),
-  //   })
-  // );
+  const isExists = await UserService.getUserById(user.id);
+  if (!isExists) {
+    redirect(clientRoutes.authLoginPage());
+  }
+
+  const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(user.id);
+
   return (
     <SidebarProvider defaultOpen={false} className="flex min-h-screen">
       {/* Статичный только на lg+ */}

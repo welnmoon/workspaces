@@ -18,7 +18,8 @@ export default withAuth(
     const url = req.nextUrl;
     const path = url.pathname;
     const isAuthPage = AUTH_PAGES.includes(path);
-    const isLoggedIn = !!req.nextauth.token;
+    const isLoggedIn =
+      !!req.nextauth.token && (req.nextauth.token as any).userExists !== false;
 
     if (path === '/verify/success') {
       const token = req.cookies.get('verify_ticket')?.value;
@@ -41,10 +42,11 @@ export default withAuth(
     }
 
     // 1) Авторизован — не показываем /login /register /not-auth
-    if (isLoggedIn && isAuthPage) {
-      url.pathname = '/profile'; // куда отправлять авторизованных с auth-страниц
-      return NextResponse.redirect(url);
-    }
+    // Отключено, чтобы не было циклов редиректов при удалённых/некорректных сессиях
+    // if (isLoggedIn && isAuthPage) {
+    //   url.pathname = '/profile'; // куда отправлять авторизованных с auth-страниц
+    //   return NextResponse.redirect(url);
+    // }
 
     // 2) Иначе просто пропускаем
     return NextResponse.next();
@@ -63,7 +65,7 @@ export default withAuth(
 
         // На приватные разделы — только с токеном
         if (PRIVATE_PREFIXES.some((prefix) => path.startsWith(prefix))) {
-          return !!token; // есть токен -> пускаем
+          return !!token && (token as any).userExists !== false; // есть токен и пользователь существует -> пускаем
         }
 
         return true;

@@ -11,6 +11,8 @@ import AuthFormLayout from '../oauth-form-layout';
 import BaseLink from '@/components/base-link';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { useState } from 'react';
+import { clientRoutes } from '@/lib/routes/client-routes';
+import { signIn } from 'next-auth/react';
 
 const RegisterForm = () => {
   const form = useForm<RegisterSchema>({
@@ -54,6 +56,8 @@ const RegisterForm = () => {
     toast.success(
       'Мы отправили вам ссылку на почту, чтобы подтвердить аккаунт'
     );
+    // signIn('credentials', { email, password });
+    router.push(clientRoutes.authLoginPage());
   };
 
   return (
@@ -99,9 +103,10 @@ const RegisterForm = () => {
           </form>
           {sended && (
             <p className="bg-success/10 rounded-2xl text-success px-4 py-2">
-              Мы отправили вам ссылку на почту {submittedEmail}
-              <span className="font-medium underline "></span>, чтобы
-              подтвердить аккаунт. Пожалуйста перейдите по ссылке в письме.
+              Мы отправили вам ссылку на почту
+              <span className="font-medium underline ">{submittedEmail}</span>,
+              но Resend не позволяет отправлять в тест моде, поэтому
+              верифицируем вас сразу. Это исправится в будущем.
             </p>
           )}
         </FormProvider>
