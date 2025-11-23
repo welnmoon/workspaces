@@ -3,8 +3,8 @@ import { TaskFullDTO, TaskListDTO } from '@/types/prisma/DTO/tasks';
 import { useQuery } from '@tanstack/react-query';
 
 export const useTasks = (
-  projectId: number | null,
-  workspaceId: number | null,
+  projectId: number | undefined,
+  workspaceId: number | undefined,
   tasks?: TaskFullDTO[]
 ) => {
   return useQuery({

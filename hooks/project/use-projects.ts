@@ -4,12 +4,12 @@ import { AppError } from '../../lib/errors';
 import { useQuery } from '@tanstack/react-query';
 
 export const useProjects = (
-  workspaceId: number | null,
+  workspaceId: number | undefined,
   initialData?: ProjectListDTO[]
 ) => {
   return useQuery({
     queryKey: ['projects', workspaceId], // workspaceId - добавляем что бы при изменении workspace запрос обновлялся
-    enabled: workspaceId !== null,
+    enabled: workspaceId !== undefined,
     initialData: initialData,
     queryFn: async () => {
       const res = await fetch(apiRoutes.getProjects(workspaceId!), {
