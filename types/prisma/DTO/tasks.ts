@@ -1,7 +1,6 @@
 // ...existing code...
 import type { Prisma, Task, TaskPriority, TaskStatus } from '@prisma/client';
 
-
 export type TaskCreateDTO = {
   title: string;
   description?: string | null;
@@ -32,3 +31,5 @@ export type TaskWithAssigneeDTO = Prisma.TaskGetPayload<{
     assignee: true;
   };
 }>;
+
+export type TaskPriorityDTO = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
