@@ -36,13 +36,15 @@ export async function POST(
     );
   } catch (err: unknown) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      if (err.code === 'P2002') {
+      const e = err as Prisma.PrismaClientKnownRequestError;
+
+      if (e.code === 'P2002') {
         return conflict(
           'Project with this name already exists in this workspace'
         );
       }
     }
-    console.error(err);
+
     return serverError('Failed to create project');
   }
 }
