@@ -1,21 +1,30 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { payWithCloudPayments, tariffs } from '@/lib/payments/cloudpayments';
+import Description from '@/components/ui/desc';
+import { Heading } from '@/components/ui/heading';
+import { tariffs } from '@/const/tariffs';
+import { payWithCloudPayments } from '@/lib/payments/cloudpayments';
 import { clientRoutes } from '@/lib/routes/client-routes';
+import { cn } from '@/lib/utils';
 import { TariffDTO } from '@/types/prisma/DTO/payment';
+import { Check } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 
 export default function PricingPage() {
   const email = useSession().data?.user.email;
+  const searchParams = useSearchParams();
+  const wId = Number(searchParams.get('workspaceId'));
+  const wName = searchParams.get('workspaceName');
 
   const tariffKeys = Object.keys(tariffs) as TariffDTO[];
 
   return (
     <section className="py-16">
       <div className="container mx-auto max-w-6xl px-4">
-        <h2 className="text-3xl font-bold text-center mb-10">Выберите тариф</h2>
-
+        <Heading level={1}>Выберите тариф</Heading>
+        <Description text={`Простанрство: ${wName}, id: ${wId}`} />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {tariffKeys.map((key) => {
             const t = tariffs[key];
@@ -50,7 +59,7 @@ export default function PricingPage() {
 
                 <Button
                   onClick={() =>
-                    payWithCloudPayments(key, email, {
+                    payWithCloudPayments(key, email, wId, {
                       onComplete(success) {
                         if (success) {
                           window.location.href = clientRoutes.workspacesPage();
@@ -58,9 +67,20 @@ export default function PricingPage() {
                       },
                     })
                   }
-                  className="mt-auto w-full text-center bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 transition"
+                  disabled={t.amount === 0}
+                  className={cn(
+                    'mt-auto w-full text-center text-white rounded-lg py-2 transition',
+                    t.name === 'Free' && 'bg-zinc-700',
+                    t.name !== 'Free' && 'bg-zinc-900 hover:bg-zinc/800'
+                  )}
                 >
-                  Выбрать
+                  {t.name === 'Free' ? (
+                    <>
+                      Выбрано <Check />
+                    </>
+                  ) : (
+                    'Выбрать'
+                  )}
                 </Button>
               </div>
             );
