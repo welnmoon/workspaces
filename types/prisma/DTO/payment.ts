@@ -9,4 +9,6 @@ export interface TariffConfig {
   invoiceId: string;
   name: string;
   features: string[];
+  color: string;
+  textColor: string;
 }

@@ -17,7 +17,7 @@ const BuyTariffButton = ({
         className={'w-full flex items-center justify-start gap-2 text-left'}
       >
         <IndentIncrease className="w-5 h-5" />
-        <span>Поднять тариф</span>
+        <span>Обновить план</span>
       </Button>
     </Link>
   );

@@ -62,7 +62,8 @@ export default function PricingPage() {
                     payWithCloudPayments(key, email, wId, {
                       onComplete(success) {
                         if (success) {
-                          window.location.href = clientRoutes.workspacesPage();
+                          window.location.href =
+                            clientRoutes.workspacePage(wId);
                         }
                       },
                     })

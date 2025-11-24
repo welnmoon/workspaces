@@ -6,7 +6,7 @@ import {
   serverError,
   unprocessable,
 } from '@/lib/http';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
 import { Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';

@@ -13,6 +13,8 @@ export const tariffs: Record<TariffDTO, TariffConfig> = {
       'Базовые задачи без приоритетов и сроков',
       'История активности недоступна',
     ],
+    color: '#13c2c2',
+    textColor: '#fff',
   },
   PRO: {
     amount: 2990,
@@ -26,6 +28,8 @@ export const tariffs: Record<TariffDTO, TariffConfig> = {
       'Приглашения/роли (ADMIN, MEMBER)',
       'Экспорт и история активности за 6 месяцев',
     ],
+    color: '#fbbf24',
+    textColor: '#000',
   },
   BUSINESS: {
     amount: 9990,
@@ -39,5 +43,7 @@ export const tariffs: Record<TariffDTO, TariffConfig> = {
       'Приоритетная поддержка и SLA',
       'Брендирование: логотипы, цвета, домен',
     ],
+    color: '#ff4d4f',
+    textColor: '#fff',
   },
 };

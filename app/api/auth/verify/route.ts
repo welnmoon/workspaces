@@ -1,5 +1,5 @@
 import { AppError } from '@/lib/errors';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { fail } from '@/lib/http';

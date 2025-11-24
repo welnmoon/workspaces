@@ -29,7 +29,10 @@ export const payWithCloudPayments = (
       amount: config.amount,
       currency: config.currency,
       invoiceId: config.invoiceId,
-      workspaceId,
+      data: {
+        workspaceId,
+        tariff,
+      },
       accountId: email,
       skin: 'mini', // mini / classic / modern
     },
