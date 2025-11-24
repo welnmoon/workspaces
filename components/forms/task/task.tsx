@@ -12,7 +12,7 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 import { Badge } from '@/components/ui/badge';
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
-import { TaskFullDTO } from '@/types/prisma/DTO/tasks';
+import { TaskFullDTO, TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 import { UserDTO } from '@/types/prisma/DTO/user';
 
 const TaskComponent = ({
@@ -63,7 +63,9 @@ const TaskComponent = ({
       : task.status === 'IN_PROGRESS'
         ? 'В работе'
         : 'К выполнению';
-  const priorityLabel = TASK_PRIORITY_LABELS[task.priority];
+
+  const priority = task.priority as TaskPriorityDTO;
+  const priorityLabel = TASK_PRIORITY_LABELS[priority];
 
   return (
     <main className="space-y-4">

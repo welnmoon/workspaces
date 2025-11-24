@@ -12,8 +12,8 @@ import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
 import type { UserDTO } from '@/types/prisma/DTO/user';
 import { Badge } from '@/components/ui/badge';
-import type { TaskPriorityDTO } from '@/types/prisma/DTO/priority';
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
+import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 
 interface TaskCardProps {
   title: string;
