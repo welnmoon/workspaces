@@ -1,4 +1,3 @@
-import type { PrismaClient as PrismaClientType } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
@@ -18,7 +17,9 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 // Тип для клиента внутри интерактивных транзакций ($transaction callback)
+type PrismaClientInstance = InstanceType<typeof PrismaClient>;
+
 export type TxClient = Omit<
-  PrismaClientType,
+  PrismaClientInstance,
   '$connect' | '$disconnect' | '$on' | '$transaction' | '$extends'
 >;
