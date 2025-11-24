@@ -11,7 +11,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Decimal } from '@prisma/client/runtime/client';
 import { PaymentDTO } from '@/types/prisma/DTO/payment';
 
 type PaymentsSectionProps = {
@@ -64,7 +63,7 @@ export default function PaymentsSection({
         <TableHeader>
           <TableRow>
             <TableHead>Дата</TableHead>
-            {/* <TableHead>Кто оплатил</TableHead> */}
+          
             <TableHead>Тариф</TableHead>
             <TableHead>Сумма</TableHead>
             <TableHead>Статус</TableHead>
@@ -75,6 +74,8 @@ export default function PaymentsSection({
           {payments.map((payment) => {
             // const StatusIcon = statusConfig[payment.status].icon;
             const isCurrentUser = payment.userId === currentUserId;
+            const tariff = payment.tariff as keyof typeof tariffConfig;
+            const status = payment.status as keyof typeof statusConfig;
 
             return (
               <TableRow
@@ -92,31 +93,12 @@ export default function PaymentsSection({
                       })}
                 </TableCell>
 
-                {/* Кто оплатил */}
-                {/* <TableCell>
-                  {payment.user ? (
-                    <div className="flex flex-col">
-                      <span className="font-medium">
-                        {payment.user.firstName} {payment.user.lastName}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {payment.user.email}
-                      </span>
-                      {isCurrentUser && (
-                        <Badge variant="primary" className="w-fit mt-1 text-xs">
-                          Вы
-                        </Badge>
-                      )}
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground">—</span>
-                  )}
-                </TableCell> */}
+ 
 
                 {/* Тариф */}
                 <TableCell>
-                  <Badge className={tariffConfig[payment.tariff].color}>
-                    {tariffConfig[payment.tariff].name}
+                  <Badge className={tariffConfig[tariff].color}>
+                    {tariffConfig[tariff].name}
                   </Badge>
                 </TableCell>
 
@@ -132,8 +114,8 @@ export default function PaymentsSection({
                     {/* <StatusIcon
                       className={`w-4 h-4 ${statusConfig[payment.status].color}`}
                     /> */}
-                    <span className={statusConfig[payment.status].color}>
-                      {statusConfig[payment.status].label}
+                    <span className={statusConfig[status].color}>
+                      {statusConfig[status].label}
                     </span>
                   </div>
                   {payment.reason && (

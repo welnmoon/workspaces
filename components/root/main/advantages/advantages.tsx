@@ -28,7 +28,7 @@ const Advantages = () => {
           , а не как разрозненные чаты и таблицы
         </RootHeading>
 
-        <div className="md:grid md:grid-cols-5 gap-3 w-full lg:w-3/4 mx-auto mt-8">
+        <div className="space-y-2 md:space-y-0 md:grid md:grid-cols-5 gap-3 w-full lg:w-3/4 mx-auto mt-8">
           <WorkspaceHub className="col-span-5 rounded-md overflow-hidden bg-[#F4F8FF] border border-blue-300/40" />
 
           <ProjectControl className="col-span-3 rounded-md overflow-hidden bg-[#F8FFE8] border border-lime-300/40" />
