@@ -63,7 +63,7 @@ const WorkspacePage = async ({
     workspace,
     projects,
   };
-  const wTariff = tariffs[workspace.tariff];
+  const wTariff = tariffs[workspace.tariff as keyof typeof tariffs];
   return (
     <main className="flex flex-col gap-4 ">
       <Breadcrumbs
