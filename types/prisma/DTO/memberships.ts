@@ -1,4 +1,4 @@
-import { Membership, Prisma } from '@prisma/client';
+import type { Membership, Prisma } from '@prisma/client';
 
 export type MembershipFullDTO = Membership;
 

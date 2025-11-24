@@ -1,7 +1,6 @@
-import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
-import { Role } from '@prisma/client';
+import { RoleWithoutOwnerDTO, RolesEnum } from '@/types/prisma/DTO/role';
 
 export const RolesWithoutOwner: RoleWithoutOwnerDTO[] = [
-  Role.ADMIN,
-  Role.MEMBER,
+  RolesEnum.ADMIN,
+  RolesEnum.MEMBER,
 ];

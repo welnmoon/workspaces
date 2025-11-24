@@ -4,9 +4,9 @@ import CreateProjectDialog from '@/components/dialogs/create-project-dialog';
 import ProjectCard from '@/components/entities/projects/project-card';
 import { cardContainer } from '@/styles/styles';
 import { Heading } from '@/components/ui/heading';
-import { ProjectFullDTO } from '@/types/prisma/DTO/projects';
+import type { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 import { useProjects } from '@/hooks/project/use-projects';
-import { WorkspaceDTO } from '@/types/prisma/DTO/workspaces';
+import type { WorkspaceDTO } from '@/types/prisma/DTO/workspaces';
 import { FullRoleDTO, RolesEnum } from '@/types/prisma/DTO/role';
 
 export type WProjectsSectionProps = {

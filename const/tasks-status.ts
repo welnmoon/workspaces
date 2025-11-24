@@ -1,15 +1,10 @@
-import { TaskStatus } from '@prisma/client';
+export const TASK_STATUSES = ['TODO', 'IN_PROGRESS', 'DONE', 'BLOCKED'] as const;
 
-export const STATUS_COLUMNS: { id: TaskStatus; title: string }[] = [
-  { id: TaskStatus.TODO, title: 'TODO' },
-  { id: TaskStatus.IN_PROGRESS, title: 'В работе' },
-  { id: TaskStatus.DONE, title: 'Готово' },
-  { id: TaskStatus.BLOCKED, title: 'Заблокировано' },
+export type TaskStatusDTO = (typeof TASK_STATUSES)[number];
+
+export const STATUS_COLUMNS: { id: TaskStatusDTO; title: string }[] = [
+  { id: 'TODO', title: 'TODO' },
+  { id: 'IN_PROGRESS', title: 'В работе' },
+  { id: 'DONE', title: 'Готово' },
+  { id: 'BLOCKED', title: 'Заблокировано' },
 ];
-
-export const TASK_STATUSES = [
-  'TODO',
-  'IN_PROGRESS',
-  'DONE',
-  'BLOCKED',
-] as const;

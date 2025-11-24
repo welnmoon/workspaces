@@ -1,6 +1,6 @@
 'use client';
 
-import { Project, TaskStatus } from '@prisma/client';
+import type { Project } from '@prisma/client';
 import { Heading } from '../../ui/heading';
 import Divider from '../../divider';
 import Description from '../../ui/desc';
@@ -17,20 +17,20 @@ import { MessageInfo } from '../../message';
 import { DateRange } from 'react-day-picker';
 import FilterCalendar from '../../filters/filter-calendar';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { STATUS_COLUMNS } from '@/const/tasks-status';
+import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
 import { filterTasks } from '@/helpers/task/filter-tasks';
 import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
 import ProjectTasksAllStats from './project-tasks-stats';
 import { cn } from '@/lib/utils';
-import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
-import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
 import DoneTasksFilter from './done-tasks-filter';
 import Link from 'next/link';
 import { useTasks } from '@/hooks/tasks/use-tasks';
 
-export type StatusFilter = TaskStatus | 'ALL';
+export type StatusFilter = TaskStatusDTO | 'ALL';
 const counts = [10, 25, 50];
 
 const ProjectComponent = ({
@@ -140,7 +140,7 @@ const ProjectComponent = ({
         <ProjectTasksFilterByStatusSelect
           className="flex-1"
           status={status}
-          setStatus={(s) => setStatus((s as TaskStatus) ?? 'ALL')}
+          setStatus={(s) => setStatus((s as TaskStatusDTO) ?? 'ALL')}
         />
 
         <FilterCalendar dateRange={dateRange} onSelectHandler={setDateRange} />

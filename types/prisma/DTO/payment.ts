@@ -1,4 +1,4 @@
-import { Tariff } from '@prisma/client';
+import type { Tariff } from '@prisma/client';
 
 export type TariffDTO = Tariff;
 

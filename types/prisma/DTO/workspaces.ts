@@ -1,4 +1,4 @@
-import { Workspace } from '@prisma/client';
+import type { Workspace } from '@prisma/client';
 
 export type WorkspaceCreateDTO = Pick<Workspace, 'name' | 'description'>;
 

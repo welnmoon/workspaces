@@ -2,7 +2,7 @@
 
 import { Heading } from '@/components/ui/heading';
 import { TasksPageTaskCard } from './tasks-page-task-card';
-import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import FilterCalendar from '@/components/filters/filter-calendar';
 import { DateRange } from 'react-day-picker';
 import { useMemo, useState } from 'react';

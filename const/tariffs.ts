@@ -1,4 +1,4 @@
-import { TariffConfig, TariffDTO } from '@/types/prisma/DTO/payment';
+import type { TariffConfig, TariffDTO } from '@/types/prisma/DTO/payment';
 
 export const tariffs: Record<TariffDTO, TariffConfig> = {
   FREE: {

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
 import Desc from '@/components/ui/desc';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Task, User } from '@prisma/client';
+import type { Task, User } from '@prisma/client';
 import GoBackBtn from '@/components/buttons/go-back-btn';
 import { useRouter } from 'next/navigation';
 import { Heading } from '@/components/ui/heading';

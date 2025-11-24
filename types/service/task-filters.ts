@@ -1,4 +1,4 @@
-import { TaskStatus } from '@prisma/client';
+import type { TaskStatus } from '@prisma/client';
 
 export type TaskFilters = {
   status?: TaskStatus;

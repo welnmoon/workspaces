@@ -1,6 +1,6 @@
 // User DTO
 
-import { Prisma, User } from '@prisma/client';
+import type { Prisma, User } from '@prisma/client';
 
 export type UserDTO = User;
 

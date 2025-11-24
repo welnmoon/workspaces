@@ -1,4 +1,4 @@
-import { TaskPriorityDTO } from './../types/prisma/DTO/priority';
+import type { TaskPriorityDTO } from './../types/prisma/DTO/priority';
 
 export const TASK_PRIORITY_LABELS: Record<TaskPriorityDTO, string> = {
   HIGH: 'Высокий',

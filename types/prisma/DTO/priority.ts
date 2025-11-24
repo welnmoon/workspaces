@@ -1,2 +1,2 @@
-import { TaskPriority } from '@prisma/client';
+import type { TaskPriority } from '@prisma/client';
 export type TaskPriorityDTO = TaskPriority;
