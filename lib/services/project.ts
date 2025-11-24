@@ -231,7 +231,7 @@ export class ProjectService {
       }),
     ]);
 
-    const statusCounts = {
+    const statusCounts: Record<TaskStatus, number> = {
       TODO: 0,
       IN_PROGRESS: 0,
       DONE: 0,
@@ -239,7 +239,7 @@ export class ProjectService {
     };
 
     for (const item of grouped) {
-      statusCounts[item.status] = item._count;
+      statusCounts[item.status as TaskStatus] = item._count;
     }
 
     return {
