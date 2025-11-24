@@ -1,4 +1,4 @@
-import type { Tariff } from '@prisma/client';
+import type { Payment, Tariff } from '@prisma/client';
 
 export type TariffDTO = Tariff;
 
@@ -12,3 +12,5 @@ export interface TariffConfig {
   color: string;
   textColor: string;
 }
+
+export type PaymentDTO = Payment;

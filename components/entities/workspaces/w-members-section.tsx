@@ -9,7 +9,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { SessionUser } from '@/helpers/require-user';
-import { Delete, DeleteIcon, Edit, Menu } from 'lucide-react';
 import EditMemberPopover from './edit-member-popover';
 import { RoleWithoutOwnerDTO, RolesEnum } from '@/types/prisma/DTO/role';
 

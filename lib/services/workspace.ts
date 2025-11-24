@@ -116,4 +116,12 @@ export class WorkspaceService {
       },
     });
   }
+
+  static async getPayments(workspaceId: number) {
+    return prisma.payment.findMany({
+      where: {
+        workspaceId,
+      },
+    });
+  }
 }

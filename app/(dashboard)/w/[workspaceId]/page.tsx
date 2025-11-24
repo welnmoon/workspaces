@@ -35,13 +35,15 @@ const WorkspacePage = async ({
       </>
     );
   }
-  const [userRole, workspace, projects, memberships, role] = await Promise.all([
-    MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
-    WorkspaceService.getWorkspaceById(workspaceIdNumber),
-    WorkspaceService.getWorkspaceProjects(workspaceIdNumber),
-    WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
-    MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
-  ]);
+  const [userRole, workspace, projects, memberships, role, payments] =
+    await Promise.all([
+      MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
+      WorkspaceService.getWorkspaceById(workspaceIdNumber),
+      WorkspaceService.getWorkspaceProjects(workspaceIdNumber),
+      WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
+      MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
+      WorkspaceService.getPayments(workspaceIdNumber),
+    ]);
 
   if (!workspace) {
     return <EmptyState title="Пространство не найдено" />;
@@ -128,6 +130,7 @@ const WorkspacePage = async ({
 
       <Divider />
       <WorkspaceTabs
+      payments={payments}
         user={user}
         members={memberships}
         projectSectionProps={projectSectionProps}
