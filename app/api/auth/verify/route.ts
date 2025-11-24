@@ -39,13 +39,15 @@ export async function GET(req: NextRequest) {
     const email = verificationToken.identifier;
 
     await prisma.$transaction(async (tx) => {
-      await tx.verificationToken.deleteMany({
+      const client = tx as typeof prisma;
+
+      await client.verificationToken.deleteMany({
         where: {
           token: tokenHash,
         },
       });
 
-      await tx.user.update({
+      await client.user.update({
         where: {
           email,
         },

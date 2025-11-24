@@ -87,12 +87,14 @@ export class AuthService {
     const hasPassword = user.password !== null && user.password !== '';
 
     await prisma.$transaction(async (tx) => {
-      await tx.$executeRawUnsafe(
+      const client = tx as typeof prisma;
+
+      await client.$executeRawUnsafe(
         `SELECT 1 FROM "User" WHERE id = $1 FOR UPDATE`,
         id
       );
 
-      const totalAccounts = await tx.account.count({
+      const totalAccounts = await client.account.count({
         where: { userId: id },
       });
 
@@ -103,7 +105,7 @@ export class AuthService {
           'Нельзя удалить последний аккаунт без пароля'
         );
 
-      await tx.account.delete({
+      await client.account.delete({
         where: {
           userId_provider: {
             userId: id,

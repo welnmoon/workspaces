@@ -141,7 +141,9 @@ export class InvitationService {
       throw new AppError(403, 'INVITATION_EXPIRED', 'Приглашение истекло');
 
     const result = await prisma.$transaction(async (tx) => {
-      const membership = await tx.membership.create({
+      const client = tx as typeof prisma;
+
+      const membership = await client.membership.create({
         data: {
           userId,
           workspaceId: invitation.workspaceId,
@@ -150,7 +152,7 @@ export class InvitationService {
         },
       });
 
-      await tx.invitation.update({
+      await client.invitation.update({
         where: {
           id: invId,
         },

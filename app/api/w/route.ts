@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
 
     // в одной транзации создаем воркспейс и добавляем в него владельца
     const workspace = await prisma.$transaction(async (tx) => {
-      const w = await tx.workspace.create({
+      const client = tx as typeof prisma;
+
+      const w = await client.workspace.create({
         data: {
           name: res.data.name,
           description: res.data.description,
@@ -28,7 +30,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      await tx.membership.create({
+      await client.membership.create({
         data: {
           userId,
           workspaceId: w.id,

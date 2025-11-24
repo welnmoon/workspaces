@@ -57,21 +57,23 @@ export async function POST(req: NextRequest) {
 
     try {
       await prisma.$transaction(async (tx) => {
+        const client = tx as typeof prisma;
+
         if (!user) {
-          await tx.user.create({
+          await client.user.create({
             data: { email, firstName, lastName, password: hashedPassword },
           });
         } else {
-          await tx.user.update({
+          await client.user.update({
             where: { email },
             data: { firstName, lastName, password: hashedPassword },
           });
         }
 
-        await tx.verificationToken.deleteMany({
+        await client.verificationToken.deleteMany({
           where: { identifier: email },
         });
-        await tx.verificationToken.create({
+        await client.verificationToken.create({
           data: { identifier: email, token: tokenHash, expires: expiresAt },
         });
       });
