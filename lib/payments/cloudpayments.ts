@@ -24,7 +24,6 @@ export const payWithCloudPayments = (
 
   const config = tariffs[tariff];
 
-  // Безопасная проверка виджета
   if (!window.cp?.CloudPayments) {
     toast.error('Платёжный виджет не загружен');
     options?.onComplete?.(false);
