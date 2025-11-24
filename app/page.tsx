@@ -1,6 +1,7 @@
 'use client';
 
 import { AuthButtons } from '@/components/root/buttons/auth-btns';
+import Footer from '@/components/root/footer';
 import Advantages from '@/components/root/main/advantages/advantages';
 import HeroSection from '@/components/root/main/hero/hero';
 import CompaniesMarquee from '@/components/root/main/marquee/companies-marquee';
@@ -47,6 +48,7 @@ export default function Home() {
 
       {/*Advantages*/}
       <Advantages />
+      <Footer />
     </main>
   );
 }
