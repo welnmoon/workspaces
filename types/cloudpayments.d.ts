@@ -1,12 +1,31 @@
 declare global {
   interface Window {
     cp?: {
-      CloudPayments: new (options?: {
-        language?: string;
-      }) => CloudPaymentsWidget;
+      CloudPayments: new (options?: { language?: string }) => {
+        pay: (
+          type: 'charge' | 'auth',
+          params: {
+            publicId: string;
+            description: string;
+            amount: number;
+            currency: string;
+            invoiceId?: string;
+            accountId?: string;
+            skin?: 'mini' | 'classic' | 'modern';
+            autoClose?: boolean;
+            data?: Record<string, any>;
+          },
+          callbacks?: {
+            onSuccess?: () => void;
+            onFail?: (reason?: string) => void;
+          }
+        ) => void;
+      };
     };
   }
 }
+
+export {};
 
 export interface CloudPaymentsData {
   [key: string]: string | number | boolean | object | undefined;

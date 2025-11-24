@@ -53,7 +53,7 @@ export const payWithCloudPayments = (
         options?.onSuccess?.();
         options?.onComplete?.(true);
       },
-      onFail: (error: Error) => {
+      onFail: (error: string | undefined) => {
         console.error('CloudPayments error:', error);
         toast.error('Оплата не удалась или была отменена');
         options?.onFail?.();
