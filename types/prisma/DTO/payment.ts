@@ -1,6 +1,6 @@
-import type { Payment, Tariff } from '@prisma/client';
+import type { Payment } from '@prisma/client';
 
-export type TariffDTO = Tariff;
+export type TariffDTO = 'FREE' | 'PRO' | 'BUSINESS';
 
 export interface TariffConfig {
   amount: number;
