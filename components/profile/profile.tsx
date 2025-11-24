@@ -130,7 +130,7 @@ const ProfileComponent = ({ userId }: Props) => {
             <CardContent>
               {profile.accounts.length > 0 ? (
                 <ul className="divide-y divide-border rounded-md border">
-                  {profile.accounts.map((acc) => (
+                  {profile.accounts.map((acc: AccountFullDTO) => (
                     <li
                       key={acc.id}
                       className="flex items-center justify-between gap-4 p-4"
