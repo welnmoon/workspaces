@@ -1,7 +1,7 @@
 import { sendInviteEmail } from '@/components/mails/invitations/send-invitation';
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { generateToken } from '@/helpers/generate-token';
-import { prisma } from '../prisma';
+import { prisma, TxClient } from '../prisma';
 import { AuditLogService } from '@/lib/services/audit-log';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { MembershipStatus, Prisma, Role } from '@prisma/client';
@@ -140,7 +140,7 @@ export class InvitationService {
     if (invitation.expiresAt < new Date())
       throw new AppError(403, 'INVITATION_EXPIRED', 'Приглашение истекло');
 
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: TxClient) => {
       const membership = await tx.membership.create({
         data: {
           userId,

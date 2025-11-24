@@ -1,5 +1,5 @@
 import { PasswordChangeSchemaDTO } from '@/schemas/auth/passwrod-change-schema';
-import { prisma } from '../prisma';
+import { prisma, TxClient } from '../prisma';
 import bcrypt from 'bcrypt';
 import { AppError } from '../errors';
 import { UserService } from './user';
@@ -86,7 +86,7 @@ export class AuthService {
 
     const hasPassword = user.password !== null && user.password !== '';
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: TxClient) => {
       await tx.$executeRawUnsafe(
         `SELECT 1 FROM "User" WHERE id = $1 FOR UPDATE`,
         id
@@ -103,7 +103,7 @@ export class AuthService {
           'Нельзя удалить последний аккаунт без пароля'
         );
 
-      await prisma.account.delete({
+      await tx.account.delete({
         where: {
           userId_provider: {
             userId: id,

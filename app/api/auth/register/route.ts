@@ -5,10 +5,10 @@ import { badRequest, conflict, serverError, unprocessable } from '@/lib/http';
 import { resend } from '@/lib/email/resend-client';
 import { registerSchema } from '@/components/forms/register/register-schema';
 import crypto from 'crypto';
-import { Prisma, type PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { UserService } from '@/lib/services/user';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { prisma, TxClient } from '@/lib/prisma';
 
 // sign up - это регистрация
 
@@ -56,24 +56,22 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-      await prisma.$transaction(async (tx) => {
-        const client = tx as typeof prisma;
-
+      await prisma.$transaction(async (tx: TxClient) => {
         if (!user) {
-          await client.user.create({
+          await tx.user.create({
             data: { email, firstName, lastName, password: hashedPassword },
           });
         } else {
-          await client.user.update({
+          await tx.user.update({
             where: { email },
             data: { firstName, lastName, password: hashedPassword },
           });
         }
 
-        await client.verificationToken.deleteMany({
+        await tx.verificationToken.deleteMany({
           where: { identifier: email },
         });
-        await client.verificationToken.create({
+        await tx.verificationToken.create({
           data: { identifier: email, token: tokenHash, expires: expiresAt },
         });
       });
