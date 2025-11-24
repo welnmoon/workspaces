@@ -1,6 +1,6 @@
 import type { TariffConfig, TariffDTO } from '@/types/prisma/DTO/payment';
 
-export const tariffs: Record<TariffDTO, TariffConfig> = {
+export const tariffs: Record<string, TariffConfig> = {
   FREE: {
     amount: 0,
     currency: 'KZT',
