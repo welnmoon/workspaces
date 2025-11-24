@@ -28,6 +28,7 @@ import PasswordEditDialog from '../dialogs/profile/password-edit-dialog';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import OAuthEditDialog from '../dialogs/profile/oauth-edit-dialog';
+import { AccountFullDTO } from '@/types/prisma/DTO/account';
 
 type Props = {
   userId: string;
@@ -53,7 +54,9 @@ const ProfileComponent = ({ userId }: Props) => {
 
   const hasPassword = !!(profile.password && profile.password !== '');
   const countOfAccounts = profile.accounts.length;
-  const accountProviders = profile.accounts.map((a) => a.provider);
+  const accountProviders = profile.accounts.map(
+    (a: AccountFullDTO) => a.provider
+  );
 
   return (
     <main className="">
