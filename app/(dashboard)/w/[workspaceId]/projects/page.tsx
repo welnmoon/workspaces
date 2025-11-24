@@ -4,7 +4,6 @@ import { Breadcrumbs } from '@/components/bread-crumbs';
 import ProjectCard from '@/components/entities/projects/project-card';
 import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
-import { getWorkspaceStats } from '@/lib/services/get-workspace-stats';
 import { MembershipService } from '@/lib/services/membership';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { clientRoutes } from '@/lib/routes/client-routes';
@@ -12,6 +11,7 @@ import { cardContainer } from '@/styles/styles';
 import { Role } from '@prisma/client';
 import { isMember } from '@/helpers/is-member';
 import EmptyState from '@/components/empty-state';
+import { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 
 const ProjectsPage = async ({
   params,
@@ -80,7 +80,7 @@ const ProjectsPage = async ({
       <Divider />
 
       <section className={cardContainer}>
-        {projects.map((project) => (
+        {projects.map((project: ProjectFullDTO) => (
           <ProjectCard
             key={project.id}
             title={project.name}
