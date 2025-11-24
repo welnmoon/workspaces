@@ -79,10 +79,13 @@ export async function POST(req: NextRequest) {
       });
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        if (err.code === 'P2002') {
+        const e = err as Prisma.PrismaClientKnownRequestError;
+
+        if (e.code === 'P2002') {
           return conflict('User already exists', 'USER_ALREADY_EXISTS');
         }
       }
+
       throw err;
     }
 
