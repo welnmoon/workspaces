@@ -1,8 +1,10 @@
+// lib/payments/cloudpayments.ts
 'use client';
 
 import toast from 'react-hot-toast';
-import { TariffDTO } from '../../types/prisma/DTO/payment';
+import { TariffDTO } from '@/types/prisma/DTO/payment';
 import { tariffs } from '@/const/tariffs';
+import { CloudPaymentsData } from '@/types/cloudpayments';
 
 export const payWithCloudPayments = (
   tariff: TariffDTO,
@@ -16,25 +18,35 @@ export const payWithCloudPayments = (
 ) => {
   if (!email) {
     toast.error('Вы не авторизованы');
+    options?.onComplete?.(false);
+    return;
   }
+
   const config = tariffs[tariff];
 
-  const cp = window as unknown as { cp: { CloudPayments: any } };
-  const widget = new cp.cp.CloudPayments();
+  // Безопасная проверка виджета
+  if (!window.cp?.CloudPayments) {
+    toast.error('Платёжный виджет не загружен');
+    options?.onComplete?.(false);
+    return;
+  }
+
+  const widget = new window.cp.CloudPayments({ language: 'ru-RU' });
+
   widget.pay(
     'charge',
     {
-      publicId: 'test_api_00000000000000000000002',
+      publicId: 'test_api_00000000000000000000002', // потом замени на pk_...
       description: config.description,
       amount: config.amount,
       currency: config.currency,
-      invoiceId: config.invoiceId,
+      invoiceId: `${config.invoiceId}-${workspaceId}-${Date.now()}`, // уникальный!
+      accountId: email,
+      skin: 'mini',
       data: {
         workspaceId,
         tariff,
-      },
-      accountId: email,
-      skin: 'mini', // mini / classic / modern
+      } satisfies CloudPaymentsData, // полная типизация!
     },
     {
       onSuccess: () => {
@@ -42,7 +54,8 @@ export const payWithCloudPayments = (
         options?.onSuccess?.();
         options?.onComplete?.(true);
       },
-      onFail: () => {
+      onFail: (error: any) => {
+        console.error('CloudPayments error:', error);
         toast.error('Оплата не удалась или была отменена');
         options?.onFail?.();
         options?.onComplete?.(false);
