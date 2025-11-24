@@ -7,3 +7,9 @@ export type MembershipSelectUserDTO = Prisma.MembershipGetPayload<{
     user: true;
   };
 }>;
+
+export type MembershipWithWorkspaceDTO = Prisma.MembershipGetPayload<{
+  include: {
+    workspace: true;
+  };
+}>;

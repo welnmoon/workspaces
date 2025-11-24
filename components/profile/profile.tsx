@@ -29,6 +29,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import OAuthEditDialog from '../dialogs/profile/oauth-edit-dialog';
 import { AccountFullDTO } from '@/types/prisma/DTO/account';
+import { MembershipWithWorkspaceDTO } from '@/types/prisma/DTO/memberships';
 
 type Props = {
   userId: string;
@@ -190,7 +191,7 @@ const ProfileComponent = ({ userId }: Props) => {
             <CardContent>
               {profile.memberships.length > 0 ? (
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {profile.memberships.map((m) => (
+                  {profile.memberships.map((m: MembershipWithWorkspaceDTO) => (
                     <div key={m.id} className="rounded-lg border p-3">
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-medium truncate">
