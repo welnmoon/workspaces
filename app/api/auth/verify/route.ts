@@ -1,5 +1,5 @@
 import { AppError } from '@/lib/errors';
-import { prisma, TxClient } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { fail } from '@/lib/http';
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
 
     const email = verificationToken.identifier;
 
-    await prisma.$transaction(async (tx: TxClient) => {
+    await prisma.$transaction(async (tx) => {
       await tx.verificationToken.deleteMany({
         where: {
           token: tokenHash,

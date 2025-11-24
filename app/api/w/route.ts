@@ -1,6 +1,6 @@
 import { requireUser } from '@/helpers/require-user';
 import { conflict, created, serverError, unprocessable } from '@/lib/http';
-import { prisma, TxClient } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
 import { WorkspaceService } from '@/lib/services/workspace';
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       return unprocessable(res.error.message, res.error.flatten());
 
     // в одной транзации создаем воркспейс и добавляем в него владельца
-    const workspace = await prisma.$transaction(async (tx: TxClient) => {
+    const workspace = await prisma.$transaction(async (tx) => {
       const w = await tx.workspace.create({
         data: {
           name: res.data.name,
