@@ -5,7 +5,7 @@ import { badRequest, conflict, serverError, unprocessable } from '@/lib/http';
 import { resend } from '@/lib/email/resend-client';
 import { registerSchema } from '@/components/forms/register/register-schema';
 import crypto from 'crypto';
-import { Prisma } from '@prisma/client';
+import { Prisma, type PrismaClient } from '@prisma/client';
 import { UserService } from '@/lib/services/user';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-      await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      await prisma.$transaction(async (tx) => {
         if (!user) {
           await tx.user.create({
             data: { email, firstName, lastName, password: hashedPassword },
