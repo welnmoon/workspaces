@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { WorkspaceService } from '@/lib/services/workspace';
-import { TariffDTO } from '@/types/prisma/DTO/payment';
+import { Tariff } from '@prisma/client';
 
 const SECRET = process.env.CLOUD_PAYMENTS_SECRET;
 
 export async function POST(req: NextRequest) {
   if (!SECRET) {
     console.error('payment webhook: missing CLOUD_PAYMENTS_SECRET');
-    return NextResponse.json({ error: 'server misconfigured' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'server misconfigured' },
+      { status: 500 }
+    );
   }
 
   const body = await req.text();
@@ -34,18 +37,31 @@ export async function POST(req: NextRequest) {
 
   const status = data.status ?? data.Status;
   if (status === 'Completed') {
-    // Кастомные данные, которые отправили из виджета, приходят в jsonData/Data
     const wId = Number(data.jsonData?.workspaceId ?? data.Data?.workspaceId);
-    const tariff = data.jsonData?.tariff ?? data.Data?.tariff;
+    const tariffRaw = data.jsonData?.tariff ?? data.Data?.tariff;
+    const tariffStr =
+      typeof tariffRaw === 'string' ? tariffRaw : String(tariffRaw);
 
-    console.log('payment webhook', wId, tariff);
-
-    if (!wId || !tariff) {
+    if (!wId || !tariffStr) {
       console.warn('payment webhook: missing workspaceId or tariff', data);
       return NextResponse.json({ error: 'missing data' }, { status: 400 });
     }
 
-    await WorkspaceService.updateWorkspaceTariff(wId, tariff as TariffDTO);
+    // runtime-список допустимых тарифов из Prisma enum
+    const allowedTariffs = Object.values(Tariff) as string[];
+
+    if (!allowedTariffs.includes(tariffStr)) {
+      console.warn(
+        'payment webhook: invalid tariff value',
+        tariffStr,
+        'allowed:',
+        allowedTariffs
+      );
+      return NextResponse.json({ error: 'invalid tariff' }, { status: 400 });
+    }
+
+    // безопасно приводим к типу Tariff
+    await WorkspaceService.updateWorkspaceTariff(wId, tariffStr as Tariff);
   }
 
   return new Response('OK', { status: 200 });
