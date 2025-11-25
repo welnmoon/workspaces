@@ -28,6 +28,8 @@ const TeamCollaboration = ({ className }: { className?: string }) => {
           className="w-full pointer-events-none"
           src="/images/advantages/TeamCollaboration.svg"
           alt="TeamCollaboration"
+          width={100}
+          height={150}
         />
       </figure>
     </article>
