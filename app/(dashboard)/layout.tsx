@@ -32,7 +32,9 @@ export default async function DashboardLayout({
     redirect(clientRoutes.authLoginPage());
   }
 
-  const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(user.id);
+  const workspaces: WorkspaceListDTO[] = await WorkspaceService.getList(
+    user.id
+  );
 
   return (
     <SidebarProvider defaultOpen={false} className="flex min-h-screen">
@@ -47,7 +49,7 @@ export default async function DashboardLayout({
       </div>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="sticky top-0 z-30 px-4 py-3 border-b bg-background/80 backdrop-blur">
+        <div className="sticky top-0 z-30 px-4 py-3 border-b bg-background/80 backdrop-blur overflow-y-hidden">
           <div className="flex items-center justify-between">
             {/* <SidebarTrigger className="ml-0 lg:hidden z-40" /> */}
             <div className="flex items-center gap-2">
@@ -83,8 +85,10 @@ export default async function DashboardLayout({
           </div>
         </div>
 
-        <div className="flex-1 p-4">
-          <div className="max-w-6xl mx-auto w-full">{children}</div>
+        <div className="flex-1 p-4 ">
+          <div className="max-w-6xl mx-auto w-full ">
+            {children}
+          </div>
         </div>
       </div>
     </SidebarProvider>

@@ -129,7 +129,7 @@ const WorkspacePage = async ({
 
       <Divider />
       <WorkspaceTabs
-      payments={payments}
+        payments={payments}
         user={user}
         members={memberships}
         projectSectionProps={projectSectionProps}

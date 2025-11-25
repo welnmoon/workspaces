@@ -59,6 +59,10 @@ const ProjectComponent = ({
   );
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
+  let remainTasksCount: number;
+  useEffect(() => {
+    remainTasksCount = allTaskStats.tasksDoneCount - Number(doneTasksCount);
+  }, [doneTasksCount]);
 
   useEffect(() => {
     setBoardTasks(tasks);
@@ -240,7 +244,7 @@ const ProjectComponent = ({
                             >
                               {(dragProvided) => (
                                 <div
-                                  className="mb-2 min-w-[280px]"
+                                  className="mb-2 min-w-[250px]"
                                   ref={dragProvided.innerRef}
                                   {...dragProvided.dragHandleProps}
                                   {...dragProvided.draggableProps}
@@ -267,16 +271,24 @@ const ProjectComponent = ({
                           ))}
 
                           {column.id === 'DONE' && (
-                            <Button className="text-primary-500" variant="link">
-                              <Link
-                                href={clientRoutes.tasksPage(
-                                  workspaceId,
-                                  project.id
-                                )}
-                              >
-                                Все задачи →
-                              </Link>
-                            </Button>
+                            <div className="flex flex-col gap-2 text-center">
+                              <span className="text-zinc-600 italic text-xs">
+                                {remainTasksCount > 0
+                                  ? `Еще ${remainTasksCount} законченных задач`
+                                  : `Больше нет законченных задач`}
+                              </span>
+                              <Button variant="link">
+                                <Link
+                                  className="text-primary-500"
+                                  href={clientRoutes.tasksPage(
+                                    workspaceId,
+                                    project.id
+                                  )}
+                                >
+                                  Все задачи →
+                                </Link>
+                              </Button>
+                            </div>
                           )}
 
                           {provided.placeholder}
