@@ -9,7 +9,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from '../form-input';
 import SubmitBtn from '../../buttons/submit-btn';
 import toast from 'react-hot-toast';
-import { apiRoutes } from '@/lib/routes/api-routes';
 import { DueDateField } from './due-date-field';
 import { useRouter } from 'next/navigation';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
@@ -39,7 +38,9 @@ const CreateTaskForm = ({
       priority: 'LOW',
     },
   });
-  const { mutate, isPending, isSuccess, isError, error } = useCreateTask(
+  const { mutate, isPending, 
+    // isSuccess, isError, error 
+  } = useCreateTask(
     workspaceId,
     projectId
   );

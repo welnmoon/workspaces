@@ -4,7 +4,7 @@ import { generateToken } from '@/helpers/generate-token';
 import { prisma } from '../prisma';
 import { AuditLogService } from '@/lib/services/audit-log';
 import { WorkspaceService } from '@/lib/services/workspace';
-import { MembershipStatus, Prisma, Role } from '@prisma/client';
+import { MembershipStatus, Role } from '@prisma/client';
 import { addHours } from 'date-fns';
 import { AppError } from '../errors';
 
@@ -12,8 +12,6 @@ type CreateInvitationResult =
   | { kind: 'created'; id: number }
   | { kind: 'already_pending'; id: number }
   | { kind: 'already_member' };
-
-
 
 export class InvitationService {
   //-------------------------------------//

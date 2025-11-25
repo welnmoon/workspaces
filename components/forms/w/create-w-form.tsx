@@ -1,12 +1,9 @@
 'use client';
 
-import { useFormContext } from 'react-hook-form';
 import FormInput from '../form-input';
 
-import { CreateWorkspaceFormValues } from '@/schemas/workspace/create-workspace-form-schema';
-
 const CreateWorkspaceForm = () => {
-  const form = useFormContext<CreateWorkspaceFormValues>();
+  // const form = useFormContext<CreateWorkspaceFormValues>();
 
   return (
     <fieldset className="flex flex-col gap-1 w-full">

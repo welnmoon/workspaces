@@ -19,7 +19,7 @@ export default withAuth(
     const path = url.pathname;
     const isAuthPage = AUTH_PAGES.includes(path);
     const isLoggedIn =
-      !!req.nextauth.token && (req.nextauth.token as any).userExists !== false;
+      !!req.nextauth.token && req.nextauth.token.userExists !== false;
 
     if (path === '/verify/success') {
       const token = req.cookies.get('verify_ticket')?.value;
@@ -65,7 +65,7 @@ export default withAuth(
 
         // На приватные разделы — только с токеном
         if (PRIVATE_PREFIXES.some((prefix) => path.startsWith(prefix))) {
-          return !!token && (token as any).userExists !== false; // есть токен и пользователь существует -> пускаем
+          return !!token && token.userExists !== false; // есть токен и пользователь существует -> пускаем
         }
 
         return true;

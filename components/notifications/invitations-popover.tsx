@@ -26,9 +26,9 @@ const InvitationsPopover = ({
 }) => {
   const {
     data: invitations,
-    isLoading,
-    isError,
-    error,
+    // isLoading,
+    // isError,
+    // error,
   } = useInvitations(userId);
   const notReadInvitations = invitations.filter(
     (inv) => inv.status !== 'ACCEPTED'

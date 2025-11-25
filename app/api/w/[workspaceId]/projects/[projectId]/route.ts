@@ -2,7 +2,7 @@ import { requireWorkspaceMember } from '@/guards/workspace';
 import { badRequest, noContent, notFound, ok, serverError } from '@/lib/http';
 import { ProjectService } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
 type Params = {
@@ -70,6 +70,9 @@ export async function DELETE(_req: NextRequest, context: Params) {
     await ProjectService.deleteProject(ids.projectIdNumber);
     return noContent();
   } catch (e) {
-    return serverError('Failed to delete project');
+    if (e instanceof Error) return badRequest(e.message);
+    if (e instanceof Prisma.PrismaClientKnownRequestError)
+      return badRequest(e.message, e.code);
+    return serverError('Failed to delete project', e);
   }
 }

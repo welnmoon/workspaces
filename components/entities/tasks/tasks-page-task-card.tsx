@@ -28,16 +28,16 @@ export const TasksPageTaskCard = ({ task }: { task: TaskWithAssigneeDTO }) => {
   const formatDate = (d?: Date | string | null) =>
     d ? format(new Date(d), 'dd MMM yyyy', { locale: ru }) : '—';
 
-  const priorityBadgeClass = cn(
-    'px-2 py-0.5 text-xs font-medium border rounded-full',
-    task.priority === 'URGENT'
-      ? 'bg-red-100 text-red-700 border-red-200'
-      : task.priority === 'HIGH'
-        ? 'bg-orange-100 text-orange-700 border-orange-200'
-        : task.priority === 'MEDIUM'
-          ? 'bg-amber-100 text-amber-700 border-amber-200'
-          : 'bg-slate-100 text-slate-700 border-slate-200'
-  );
+  // const priorityBadgeClass = cn(
+  //   'px-2 py-0.5 text-xs font-medium border rounded-full',
+  //   task.priority === 'URGENT'
+  //     ? 'bg-red-100 text-red-700 border-red-200'
+  //     : task.priority === 'HIGH'
+  //       ? 'bg-orange-100 text-orange-700 border-orange-200'
+  //       : task.priority === 'MEDIUM'
+  //         ? 'bg-amber-100 text-amber-700 border-amber-200'
+  //         : 'bg-slate-100 text-slate-700 border-slate-200'
+  // );
 
   return (
     <div className="relative">

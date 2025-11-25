@@ -9,8 +9,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from '../form-input';
 import SubmitBtn from '../../buttons/submit-btn';
 import toast from 'react-hot-toast';
-import { apiRoutes } from '@/lib/routes/api-routes';
-import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
 import { useCreateProject } from '@/hooks/project/use-create-project';
 import { AppError } from '@/lib/errors';
@@ -22,8 +20,7 @@ const CreateProjectForm = ({
   workspaceId: number;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { mutate, isPending, error } = useCreateProject(workspaceId);
-  const router = useRouter();
+  const { mutate, isPending } = useCreateProject(workspaceId);
   const form = useForm<CreateProjectFormValues>({
     resolver: zodResolver(createProjectFormSchema),
     defaultValues: {

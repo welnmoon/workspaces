@@ -1,6 +1,5 @@
 'use client';
 import DeleteMemberButton from '@/components/buttons/delete-member-btn';
-import DeleteButton from '@/components/buttons/delete-project-btn';
 import EditButton from '@/components/buttons/edit-project-btn';
 import EditMemberDialog from '@/components/dialogs/edit-member-dialog';
 import {

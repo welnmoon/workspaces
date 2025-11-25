@@ -12,9 +12,8 @@ import {
   CardDescription,
   CardFooter,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Link as LinkIcon } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import BaseLink from '@/components/base-link';

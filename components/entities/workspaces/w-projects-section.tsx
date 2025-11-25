@@ -24,9 +24,7 @@ const WProjectsSection = ({
 }: WProjectsSectionProps) => {
   const {
     data: optimisticProjects,
-    isLoading,
-    isError,
-    error,
+
   } = useProjects(workspaceId, projects);
   return (
     <section>

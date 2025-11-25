@@ -31,8 +31,8 @@ const DashboardSidebarDynamic = ({
   const {
     data: projects = [],
     isLoading: pLoading,
-    isError: pError,
-    error: pErrorObj,
+    // isError: pError,
+    // error: pErrorObj,
   } = useProjects(
     selectedWorkspaceId ? Number(selectedWorkspaceId) : undefined
   );
@@ -40,8 +40,8 @@ const DashboardSidebarDynamic = ({
   const {
     data: tasks = [],
     isLoading: tLoading,
-    isError: tError,
-    error: tErrorObj,
+    // isError: tError,
+    // error: tErrorObj,
   } = useTasks(
     selectedProjectId ? Number(selectedProjectId) : undefined,
     selectedWorkspaceId ? Number(selectedWorkspaceId) : undefined

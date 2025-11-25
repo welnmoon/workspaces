@@ -1,39 +1,45 @@
+// types/cloudpayments.d.ts
+
 declare global {
   interface Window {
     cp?: {
-      CloudPayments: new (options?: { language?: string }) => {
-        pay: (
-          type: 'charge' | 'auth',
-          params: {
-            publicId: string;
-            description: string;
-            amount: number;
-            currency: string;
-            invoiceId?: string;
-            accountId?: string;
-            skin?: 'mini' | 'classic' | 'modern';
-            autoClose?: boolean;
-            data?: Record<string, any>;
-          },
-          callbacks?: {
-            onSuccess?: () => void;
-            onFail?: (reason?: string) => void;
-          }
-        ) => void;
-      };
+      CloudPayments: new (
+        options?: CloudPaymentsWidgetOptions
+      ) => CloudPaymentsWidget;
     };
   }
 }
 
 export {};
 
-export interface CloudPaymentsData {
-  [key: string]: string | number | boolean | object | undefined;
-  workspaceId?: number;
-  tariff?: string;
-  // можешь добавить свои поля
+export type CloudPaymentsAction = 'charge' | 'auth';
+export type CloudPaymentsSkin = 'mini' | 'classic' | 'modern';
+
+export interface CloudPaymentsWidgetOptions {
+  language?: string;
 }
 
+/**
+ * Данные, которые ты прокидываешь в data.
+ * Можно расширять, если понадобятся ещё поля.
+ */
+export interface CloudPaymentsData {
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | null
+    | CloudPaymentsData
+    | CloudPaymentsData[]
+    | undefined;
+
+  workspaceId?: number;
+  tariff?: string;
+}
+
+/**
+ * Опции платёжной формы CloudPayments
+ */
 export interface CloudPaymentsOptions {
   publicId: string;
   description: string;
@@ -42,19 +48,36 @@ export interface CloudPaymentsOptions {
   invoiceId?: string;
   accountId?: string;
   email?: string;
-  skin?: 'mini' | 'classic' | 'modern';
+  skin?: CloudPaymentsSkin;
+  autoClose?: boolean;
   data?: CloudPaymentsData;
-  // другие поля из доков: https://developers.cloudpayments.ru/#parametry-platezhnoy-formy
+  // при желании можно добавить остальные поля из доки
 }
 
+/**
+ * То, что CloudPayments отдаёт в onSuccess.
+ * Мы точно знаем, что там есть options, остальное — как unknown.
+ */
+export interface CloudPaymentsSuccessPayload {
+  options: CloudPaymentsOptions;
+  [key: string]: unknown;
+}
+
+/**
+ * Коллбеки виджета.
+ * Вместо any — либо конкретный payload, либо unknown.
+ */
 export interface CloudPaymentsCallbacks {
-  onSuccess?: (options: any) => void;
-  onFail?: (error: any) => void;
+  onSuccess?: (payload: CloudPaymentsSuccessPayload) => void;
+  onFail?: (reason?: string) => void;
 }
 
+/**
+ * Интерфейс самого виджета.
+ */
 export interface CloudPaymentsWidget {
   pay: (
-    action: 'charge' | 'auth',
+    action: CloudPaymentsAction,
     options: CloudPaymentsOptions,
     callbacks?: CloudPaymentsCallbacks
   ) => void;

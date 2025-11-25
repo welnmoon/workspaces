@@ -1,7 +1,6 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import {
   badRequest,
-  notFound,
   ok,
   serverError,
   unprocessable,

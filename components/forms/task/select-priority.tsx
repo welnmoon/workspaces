@@ -10,7 +10,7 @@ import {
 import { TASK_PRIORITY_ARRAY, TASK_PRIORITY_LABELS } from '@/const/priority';
 import { cn } from '@/lib/utils';
 import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
-import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 
 const PRIORITY_BADGE_STYLES: Record<string, string> = {
   URGENT: 'bg-red-100 text-red-700 border-red-200',
