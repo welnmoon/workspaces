@@ -28,7 +28,7 @@ import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
 import DoneTasksFilter from './done-tasks-filter';
 import Link from 'next/link';
-import { useTasks } from '@/hooks/tasks/use-tasks';
+import useMediaQuery from '@/hooks/use-media-query';
 
 export type StatusFilter = TaskStatusDTO | 'ALL';
 const counts = [10, 25, 50];
@@ -57,6 +57,8 @@ const ProjectComponent = ({
   const [doneTasksCount, setDoneTasksCount] = useState<string>(
     String(counts[0])
   );
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
 
   useEffect(() => {
     setBoardTasks(tasks);
@@ -162,7 +164,7 @@ const ProjectComponent = ({
         />
       )}
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex mt-4 overflow-x-auto relative">
+        <div className="mt-4 relative w-full">
           {filteredTasks.length === 0 && (
             <div>
               <EmptyState
@@ -180,48 +182,56 @@ const ProjectComponent = ({
           )}
 
           {filteredTasks.length > 0 && (
-            <div className={cn('flex min-h-dvh select-none w-full')}>
-              {STATUS_COLUMNS.map((column) => (
-                <Droppable droppableId={column.id} key={column.id}>
-                  {(provided) => {
-                    const columnTasks = tasksByStatus[column.id] ?? [];
+            <div className="md:flex min-h-dvh select-none w-full">
+              {STATUS_COLUMNS.map((column) => {
+                const columnTasks = tasksByStatus[column.id] ?? [];
 
-                    const visibleTasks =
-                      column.id === 'DONE'
-                        ? columnTasks.slice(0, Number(doneTasksCount))
-                        : columnTasks;
-                    return (
-                      <section
-                        ref={provided.innerRef}
-                        className={cn(
-                          'min-w-[280px] max-w-xs flex-1 px-2 py-2',
-                          column.id === 'BLOCKED' && 'bg-red-50',
-                          column.id === 'DONE' && 'bg-green-50',
-                          column.id === 'IN_PROGRESS' && 'bg-yellow-50',
-                          column.id === 'TODO' && 'bg-blue-50'
-                        )}
-                        {...provided.droppableProps}
-                      >
-                        <Heading
-                          level={3}
-                          className={cn(
-                            'mb-2 flex justify-between items-center',
-                            column.id === 'BLOCKED' && 'text-red-600',
-                            column.id === 'DONE' && 'text-green-600',
-                            column.id === 'IN_PROGRESS' && 'text-yellow-600',
-                            column.id === 'TODO' && 'text-blue-600'
-                          )}
+                const visibleTasks =
+                  column.id === 'DONE'
+                    ? columnTasks.slice(0, Number(doneTasksCount))
+                    : columnTasks;
+
+                return (
+                  <section
+                    key={column.id}
+                    className={cn(
+                      'w-full min-h-[280px] md:min-w-1/4 md:max-w-xs flex-1 px-2 py-2',
+                      column.id === 'BLOCKED' && 'bg-red-50',
+                      column.id === 'DONE' && 'bg-green-50',
+                      column.id === 'IN_PROGRESS' && 'bg-yellow-50',
+                      column.id === 'TODO' && 'bg-blue-50'
+                    )}
+                  >
+                    <Heading
+                      level={3}
+                      className={cn(
+                        'mb-2 flex justify-between items-center',
+                        column.id === 'BLOCKED' && 'text-red-600',
+                        column.id === 'DONE' && 'text-green-600',
+                        column.id === 'IN_PROGRESS' && 'text-yellow-600',
+                        column.id === 'TODO' && 'text-blue-600'
+                      )}
+                    >
+                      {column.title}{' '}
+                      {column.id === 'DONE' && (
+                        <DoneTasksFilter
+                          setDoneTasksCount={setDoneTasksCount}
+                          doneTasksCount={doneTasksCount}
+                          counts={counts}
+                        />
+                      )}
+                    </Heading>
+
+                    <Droppable
+                      droppableId={column.id}
+                      direction={droppableDirection}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          className="flex flex-row overflow-x-auto gap-2 w-full md:flex-col md:overflow-x-visible min-h-[120px]"
                         >
-                          {column.title}{' '}
-                          {column.id === 'DONE' && (
-                            <DoneTasksFilter
-                              setDoneTasksCount={setDoneTasksCount}
-                              doneTasksCount={doneTasksCount}
-                              counts={counts}
-                            />
-                          )}
-                        </Heading>
-                        <div>
                           {visibleTasks.map((t, index) => (
                             <Draggable
                               key={t.id}
@@ -230,7 +240,7 @@ const ProjectComponent = ({
                             >
                               {(dragProvided) => (
                                 <div
-                                  className="mb-2"
+                                  className="mb-2 min-w-[280px]"
                                   ref={dragProvided.innerRef}
                                   {...dragProvided.dragHandleProps}
                                   {...dragProvided.draggableProps}
@@ -255,11 +265,9 @@ const ProjectComponent = ({
                               )}
                             </Draggable>
                           ))}
+
                           {column.id === 'DONE' && (
-                            <Button
-                              className="text-primary-500"
-                              variant={'link'}
-                            >
+                            <Button className="text-primary-500" variant="link">
                               <Link
                                 href={clientRoutes.tasksPage(
                                   workspaceId,
@@ -270,14 +278,14 @@ const ProjectComponent = ({
                               </Link>
                             </Button>
                           )}
-                        </div>
 
-                        {provided.placeholder}
-                      </section>
-                    );
-                  }}
-                </Droppable>
-              ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </section>
+                );
+              })}
             </div>
           )}
         </div>
