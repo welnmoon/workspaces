@@ -1,10 +1,10 @@
 import { DropResult } from '@hello-pangea/dnd';
-import { Task, TaskStatus } from '@prisma/client';
 import { Dispatch, SetStateAction } from 'react';
 import { reorder } from './reorder';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import toast from 'react-hot-toast';
-import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import { TaskStatusDTO } from '@/const/tasks-status';
 
 export function createTasksBoardOnDragEnd(
   setBoardTasks: Dispatch<SetStateAction<TaskWithAssigneeDTO[]>>
@@ -24,8 +24,8 @@ export function createTasksBoardOnDragEnd(
     }
 
     const taskId = Number(draggableId);
-    const sourceStatus = source.droppableId as TaskStatus;
-    const destStatus = destination.droppableId as TaskStatus;
+    const sourceStatus = source.droppableId as TaskStatusDTO;
+    const destStatus = destination.droppableId as TaskStatusDTO;
 
     // Для отката
     let prevSnapshot: TaskWithAssigneeDTO[] = [];
@@ -37,10 +37,10 @@ export function createTasksBoardOnDragEnd(
       const taskId = Number(draggableId);
 
       // Статус, из которого тащим (например, "TODO")
-      const sourceStatus = source.droppableId as TaskStatus;
+      const sourceStatus = source.droppableId as TaskStatusDTO;
 
       // Статус, в который бросаем (например, "IN_PROGRESS")
-      const destStatus = destination.droppableId as TaskStatus;
+      const destStatus = destination.droppableId as TaskStatusDTO;
 
       // Находим саму задачу в массиве
       const movingTask = prev.find((t) => t.id === taskId);

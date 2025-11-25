@@ -15,11 +15,11 @@ import {
   InviteUserFormValues,
 } from '@/schemas/invitations/invite-user-form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Role } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { FormProvider, useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import FormInput from '../form-input';
+import { ROLE_VALUES, RolesEnum } from '@/types/prisma/DTO/role';
 
 type InviteUserFormProps = {
   workspaceId: number;
@@ -32,7 +32,7 @@ const InviteUserForm = ({ workspaceId, onSuccess }: InviteUserFormProps) => {
     resolver: zodResolver(inviteUserFormSchema),
     defaultValues: {
       email: '',
-      role: Role.MEMBER,
+      role: RolesEnum.MEMBER,
       expiresInHours: '',
     },
   });
@@ -95,13 +95,13 @@ const InviteUserForm = ({ workspaceId, onSuccess }: InviteUserFormProps) => {
             render={({ field }) => (
               <Select
                 value={field.value}
-                onValueChange={(value) => field.onChange(value as Role)}
+                onValueChange={(value) => field.onChange(value as InviteUserFormValues['role'])}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Выберите роль" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.values(Role).map((role) => (
+                  {ROLE_VALUES.map((role) => (
                     <SelectItem key={role} value={role}>
                       {role}
                     </SelectItem>

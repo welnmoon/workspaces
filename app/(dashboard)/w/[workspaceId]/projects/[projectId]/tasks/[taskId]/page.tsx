@@ -1,6 +1,6 @@
 import TaskComponent from '@/components/forms/task/task';
 import NotFound from '@/components/not-found';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
 import { TaskService } from '@/lib/services/tasks';
 

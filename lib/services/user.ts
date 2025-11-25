@@ -1,6 +1,6 @@
 import { profileSchema } from '@/schemas/profile/profile';
-import prisma from '../prisma';
 import { UserProfileDTO } from '@/types/prisma/DTO/user';
+import { prisma } from '../prisma';
 
 export class UserService {
   static async getUserById(userId: string) {

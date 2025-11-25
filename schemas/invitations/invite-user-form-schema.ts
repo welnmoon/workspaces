@@ -1,5 +1,5 @@
-import { Role } from '@prisma/client';
 import z from 'zod';
+import { ROLE_VALUES } from '@/types/prisma/DTO/role';
 
 const expiresInHoursSchema = z
   .string()
@@ -13,7 +13,7 @@ const expiresInHoursSchema = z
 
 export const inviteUserFormSchema = z.object({
   email: z.email('Введите корректный email'),
-  role: z.enum(Role, { error: () => ({ message: 'Выберите роль' }) }),
+  role: z.enum(ROLE_VALUES, { error: () => ({ message: 'Выберите роль' }) }),
   expiresInHours: expiresInHoursSchema,
 });
 

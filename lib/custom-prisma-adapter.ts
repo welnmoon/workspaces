@@ -1,8 +1,7 @@
 import type { Adapter, AdapterUser } from 'next-auth/adapters';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import type { User as PrismaUser } from '@prisma/client';
-
-import prisma from '@/lib/prisma';
+import { prisma } from './prisma';
 
 const baseAdapter = PrismaAdapter(prisma);
 

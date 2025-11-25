@@ -1,6 +1,6 @@
 import { requireUser } from '@/helpers/require-user';
 import { conflict, created, serverError, unprocessable } from '@/lib/http';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
 import { WorkspaceService } from '@/lib/services/workspace';
@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
 
     // в одной транзации создаем воркспейс и добавляем в него владельца
     const workspace = await prisma.$transaction(async (tx) => {
-      const w = await tx.workspace.create({
+      const client = tx as typeof prisma;
+
+      const w = await client.workspace.create({
         data: {
           name: res.data.name,
           description: res.data.description,
@@ -28,7 +30,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      await tx.membership.create({
+      await client.membership.create({
         data: {
           userId,
           workspaceId: w.id,

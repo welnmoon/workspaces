@@ -13,6 +13,8 @@ import { WProjectsSectionProps } from '@/components/entities/workspaces/w-projec
 import { isMember } from '@/helpers/is-member';
 import EmptyState from '@/components/empty-state';
 import { Suspense } from 'react';
+import { tariffs } from '@/const/tariffs';
+import { cn } from '@/lib/utils';
 
 const WorkspacePage = async ({
   params,
@@ -33,13 +35,15 @@ const WorkspacePage = async ({
       </>
     );
   }
-  const [userRole, workspace, projects, memberships, role] = await Promise.all([
-    MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
-    WorkspaceService.getWorkspaceById(workspaceIdNumber),
-    WorkspaceService.getWorkspaceProjects(workspaceIdNumber),
-    WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
-    MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
-  ]);
+  const [userRole, workspace, projects, memberships, role, payments] =
+    await Promise.all([
+      MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
+      WorkspaceService.getWorkspaceById(workspaceIdNumber),
+      WorkspaceService.getWorkspaceProjects(workspaceIdNumber),
+      WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
+      MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
+      WorkspaceService.getPayments(workspaceIdNumber),
+    ]);
 
   if (!workspace) {
     return <EmptyState title="Пространство не найдено" />;
@@ -61,7 +65,7 @@ const WorkspacePage = async ({
     workspace,
     projects,
   };
-
+  const wTariff = tariffs[workspace.tariff as keyof typeof tariffs];
   return (
     <main className="flex flex-col gap-4 ">
       <Breadcrumbs
@@ -84,40 +88,49 @@ const WorkspacePage = async ({
         )}
       </div>
 
-
-        <div className="flex gap-4  text-sm text-muted-foreground items-center">
+      <div className="flex gap-4  text-sm text-muted-foreground items-center">
+        <span>
+          Участников: <b>{membersCount}</b>
+        </span>
+        <span>
+          Проектов: <b>{projectsCount}</b>
+        </span>
+        <div className="bg-zinc-100 px-2 py-1 rounded-md flex gap-3">
+          <span className="text-zinc-400 ">Задачи</span>
           <span>
-            Участников: <b>{membersCount}</b>
+            Всего: <b>{tasksTotal}</b>
           </span>
           <span>
-            Проектов: <b>{projectsCount}</b>
+            В работе: <b>{tasksInProgress}</b>
           </span>
-          <div className="bg-zinc-100 px-2 py-1 rounded-md flex gap-3">
-            <span className="text-zinc-400 ">Задачи</span>
-            <span>
-              Всего: <b>{tasksTotal}</b>
-            </span>
-            <span>
-              В работе: <b>{tasksInProgress}</b>
-            </span>
-            <span>
-              Выполненные: <b className="text-green-500">{tasksDone}</b>
-            </span>
-            <span>
-              Новые: <b className="text-blue-500">{tasksToDoCount}</b>
-            </span>
-            <span>
-              Просроченные: <b className="text-red-500">{tasksOverdue}</b>
-            </span>
-          </div>
-
-          <div className="bg-primary-100 rounded-md px-2 py-1">
-            Ваша роль: <span className="font-medium">{userRole}</span>
-          </div>
+          <span>
+            Выполненные: <b className="text-green-500">{tasksDone}</b>
+          </span>
+          <span>
+            Новые: <b className="text-blue-500">{tasksToDoCount}</b>
+          </span>
+          <span>
+            Просроченные: <b className="text-red-500">{tasksOverdue}</b>
+          </span>
         </div>
-    
+
+        <div className="bg-primary-100 rounded-md px-2 py-1">
+          Ваша роль: <span className="font-medium">{userRole}</span>
+        </div>
+        <div
+          className={cn(' rounded-md px-2 py-1')}
+          style={{
+            backgroundColor: wTariff.color,
+            color: wTariff.textColor,
+          }}
+        >
+          План: <span className="font-medium">{wTariff.name}</span>
+        </div>
+      </div>
+
       <Divider />
       <WorkspaceTabs
+      payments={payments}
         user={user}
         members={memberships}
         projectSectionProps={projectSectionProps}

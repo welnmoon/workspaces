@@ -13,4 +13,11 @@ export const clientRoutes = {
   authRegisterPage: () => `/register`,
   authLoginPage: () => `/login`,
   profilePage: () => `/profile`,
+
+  // pricing
+  pricingPage: (
+    workspaceId: number,
+    workspaceName: string
+  ) => `/pricing?workspaceId=${workspaceId}&workspaceName=${workspaceName}
+  `,
 };

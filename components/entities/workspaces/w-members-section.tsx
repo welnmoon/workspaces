@@ -1,4 +1,4 @@
-import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import {
   Table,
   TableBody,
@@ -8,11 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { SessionUser } from '@/helpers/require-user';
-import { Delete, DeleteIcon, Edit, Menu } from 'lucide-react';
+import type { SessionUser } from '@/helpers/require-user';
 import EditMemberPopover from './edit-member-popover';
-import { Role } from '@prisma/client';
-import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
+import { RoleWithoutOwnerDTO, RolesEnum } from '@/types/prisma/DTO/role';
 
 const WMembersSection = ({
   user,
@@ -23,7 +21,7 @@ const WMembersSection = ({
   user: SessionUser;
   membersAndRoles: { userId: string; role: RoleWithoutOwnerDTO }[];
 }) => {
-  const isMember = membersAndRoles.some((um) => um.role !== Role.MEMBER);
+  const isMember = membersAndRoles.some((um) => um.role !== RolesEnum.MEMBER);
   return (
     <section>
       <Table>
@@ -60,7 +58,7 @@ const WMembersSection = ({
                 <TableCell className="">{member.role}</TableCell>
                 {!isMember && (
                   <TableCell className="text-right">
-                    {member.role !== Role.OWNER && (
+                    {member.role !== RolesEnum.OWNER && (
                       <EditMemberPopover
                         memberRole={memberRole}
                         memberId={member.id}

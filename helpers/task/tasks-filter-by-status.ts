@@ -1,5 +1,5 @@
 import { STATUS_COLUMNS } from '@/const/tasks-status';
-import { TaskFullDTO, TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 
 export const tasksFilterByStatus = ({
   tasks,

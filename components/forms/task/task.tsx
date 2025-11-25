@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
 import Desc from '@/components/ui/desc';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Task, User } from '@prisma/client';
 import GoBackBtn from '@/components/buttons/go-back-btn';
 import { useRouter } from 'next/navigation';
 import { Heading } from '@/components/ui/heading';
@@ -13,6 +12,8 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 import { Badge } from '@/components/ui/badge';
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
+import { TaskFullDTO, TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
+import { UserDTO } from '@/types/prisma/DTO/user';
 
 const TaskComponent = ({
   task,
@@ -22,12 +23,12 @@ const TaskComponent = ({
   workspaceName,
   assignee,
 }: {
-  task: Task;
+  task: TaskFullDTO;
   projectName: string;
   projectId: number;
   workspaceId: number;
   workspaceName: string;
-  assignee: User | null;
+  assignee: UserDTO | null;
 }) => {
   const router = useRouter();
 
@@ -62,7 +63,9 @@ const TaskComponent = ({
       : task.status === 'IN_PROGRESS'
         ? 'В работе'
         : 'К выполнению';
-  const priorityLabel = TASK_PRIORITY_LABELS[task.priority];
+
+  const priority = task.priority as TaskPriorityDTO;
+  const priorityLabel = TASK_PRIORITY_LABELS[priority];
 
   return (
     <main className="space-y-4">

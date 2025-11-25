@@ -56,6 +56,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${satoshi.variable} ${manrope.variable}`}>
         <RootProviders session={session}>{children}</RootProviders>{' '}
+        <script
+          src="https://widget.cloudpayments.ru/bundles/cloudpayments"
+          async
+        />
       </body>
     </html>
   );

@@ -1,4 +1,3 @@
-import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import { getServerSession } from 'next-auth';
@@ -9,6 +8,7 @@ import crypto from 'crypto';
 import { Prisma } from '@prisma/client';
 import { UserService } from '@/lib/services/user';
 import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
 // sign up - это регистрация
 
@@ -57,29 +57,35 @@ export async function POST(req: NextRequest) {
 
     try {
       await prisma.$transaction(async (tx) => {
+        const client = tx as typeof prisma;
+
         if (!user) {
-          await tx.user.create({
+          await client.user.create({
             data: { email, firstName, lastName, password: hashedPassword },
           });
         } else {
-          await tx.user.update({
+          await client.user.update({
             where: { email },
             data: { firstName, lastName, password: hashedPassword },
           });
         }
 
-        // чистим старые токены и пишем новый
-        await tx.verificationToken.deleteMany({ where: { identifier: email } });
-        await tx.verificationToken.create({
+        await client.verificationToken.deleteMany({
+          where: { identifier: email },
+        });
+        await client.verificationToken.create({
           data: { identifier: email, token: tokenHash, expires: expiresAt },
         });
       });
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        if (err.code === 'P2002') {
+        const e = err as Prisma.PrismaClientKnownRequestError;
+
+        if (e.code === 'P2002') {
           return conflict('User already exists', 'USER_ALREADY_EXISTS');
         }
       }
+
       throw err;
     }
 

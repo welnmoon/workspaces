@@ -1,8 +1,8 @@
-import { Role } from '@prisma/client';
 import z from 'zod';
+import { ROLE_EDITABLE_VALUES } from '@/types/prisma/DTO/role';
 
 export const editMemberFormSchema = z.object({
-  role: z.enum([Role.ADMIN, Role.MEMBER], {
+  role: z.enum(ROLE_EDITABLE_VALUES, {
     error: 'Role is required',
   }),
 });

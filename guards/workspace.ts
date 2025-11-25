@@ -1,5 +1,5 @@
 import { requireUser } from '@/helpers/require-user';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { Role } from '@prisma/client';
 
 // Метод для проверки, является ли пользователь участником рабочего пространства

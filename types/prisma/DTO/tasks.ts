@@ -1,25 +1,6 @@
 // ...existing code...
 import type { Prisma, Task, TaskPriority, TaskStatus } from '@prisma/client';
 
-/**
- * DTOs для Task
- *
- * Примечание:
- * - TaskCreateDTO задан явно — поля создания обычно отличаются по обязательности от полной модели.
- * - TaskSelect/List/Full — через Pick привязаны к модели Prisma, чтобы гарантировать соответствие полей.
- * - TaskUpdateDTO — Partial<Pick<...>> для частичного обновления.
- * - TaskWithoutDatesDTO — Omit для удаления служебных полей.
- */
-
-/**
- * DTOs для Task
- *
- * Примечание:
- * - TaskCreateDTO задан явно, так как поля создания отличаются от полной модели
- * - Используем Omit для исключения служебных полей
- * - TaskUpdateDTO использует Partial для опциональности всех полей
- */
-
 export type TaskCreateDTO = {
   title: string;
   description?: string | null;
@@ -50,3 +31,5 @@ export type TaskWithAssigneeDTO = Prisma.TaskGetPayload<{
     assignee: true;
   };
 }>;
+
+export type TaskPriorityDTO = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';

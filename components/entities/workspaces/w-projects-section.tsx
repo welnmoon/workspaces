@@ -4,13 +4,13 @@ import CreateProjectDialog from '@/components/dialogs/create-project-dialog';
 import ProjectCard from '@/components/entities/projects/project-card';
 import { cardContainer } from '@/styles/styles';
 import { Heading } from '@/components/ui/heading';
-import { Role } from '@prisma/client';
-import { ProjectFullDTO } from '@/types/prisma/DTO/projects';
+import type { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 import { useProjects } from '@/hooks/project/use-projects';
-import { WorkspaceDTO } from '@/types/prisma/DTO/workspaces';
+import type { WorkspaceDTO } from '@/types/prisma/DTO/workspaces';
+import { FullRoleDTO, RolesEnum } from '@/types/prisma/DTO/role';
 
 export type WProjectsSectionProps = {
-  userRole: Role;
+  userRole: FullRoleDTO;
   workspaceId: number;
   workspace: WorkspaceDTO;
   projects: ProjectFullDTO[];
@@ -32,7 +32,7 @@ const WProjectsSection = ({
     <section>
       <div className="flex justify-between">
         <Heading>Projects</Heading>
-        {(userRole === Role.ADMIN || userRole === Role.OWNER) && (
+        {(userRole === RolesEnum.ADMIN || userRole === RolesEnum.OWNER) && (
           <CreateProjectDialog workspaceId={workspaceId} />
         )}
       </div>

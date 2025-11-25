@@ -1,11 +1,10 @@
 import {
   WorkspaceListDTO,
-  WorkspaceCreateDTO,
   WorkspaceSelectDTO,
 } from '@/types/prisma/DTO/workspaces';
-import prisma from '@/lib/prisma';
+import { prisma } from '../prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
-import { Workspace } from '@prisma/client';
+import { Tariff, Workspace } from '@prisma/client';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 export class WorkspaceService {
@@ -103,6 +102,25 @@ export class WorkspaceService {
       },
       include: {
         user: true,
+      },
+    });
+  }
+
+  static async updateWorkspaceTariff(workspaceId: number, tariff: Tariff) {
+    return prisma.workspace.update({
+      where: {
+        id: Number(workspaceId),
+      },
+      data: {
+        tariff,
+      },
+    });
+  }
+
+  static async getPayments(workspaceId: number) {
+    return prisma.payment.findMany({
+      where: {
+        workspaceId,
       },
     });
   }

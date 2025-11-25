@@ -6,23 +6,21 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { STATUS_COLUMNS } from '@/const/tasks-status';
-import { TaskStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import getFullName from '@/helpers/profile.ts/get-full-name';
 import { ru } from 'date-fns/locale';
-import { TASK_PRIORITY_LABELS } from '@/const/priority';
 
 export const TasksPageTaskCard = ({ task }: { task: TaskWithAssigneeDTO }) => {
   const statusStripeClass = cn(
     'absolute inset-y-0 left-0 w-1 rounded-l-md',
-    task.status === TaskStatus.DONE
+    task.status === 'DONE'
       ? 'bg-emerald-500'
-      : task.status === TaskStatus.IN_PROGRESS
+      : task.status === 'IN_PROGRESS'
         ? 'bg-blue-500'
-        : task.status === TaskStatus.BLOCKED
+        : task.status === 'BLOCKED'
           ? 'bg-red-500'
           : 'bg-slate-300'
   );
@@ -87,7 +85,7 @@ export const TasksPageTaskCard = ({ task }: { task: TaskWithAssigneeDTO }) => {
               <strong>Дедлайн:</strong> {formatDate(task.dueDate)}
             </div>
 
-            {task.status === TaskStatus.DONE && (
+            {task.status === 'DONE' && (
               <div className="text-emerald-600">
                 <strong>Завершено:</strong> {formatDate(task.updatedAt)}
               </div>

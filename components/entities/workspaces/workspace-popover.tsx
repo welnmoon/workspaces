@@ -6,6 +6,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { IoMenu } from 'react-icons/io5';
+import BuyTariffButton from '@/components/buttons/tariff-buy';
 
 type WorkspacePopoverProps = {
   workspaceId: number;
@@ -30,6 +31,7 @@ const WorkspacePopover = ({
           name={workspaceName}
           description={workspaceDescription}
         />
+        <BuyTariffButton workspaceName={workspaceName} workspaceId={workspaceId} />
       </PopoverContent>
     </Popover>
   );

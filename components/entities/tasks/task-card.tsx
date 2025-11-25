@@ -8,13 +8,12 @@ import {
 import { Heading } from '../../ui/heading';
 import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
-import { TaskStatus } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
-import { UserDTO } from '@/types/prisma/DTO/user';
+import type { UserDTO } from '@/types/prisma/DTO/user';
 import { Badge } from '@/components/ui/badge';
-import { TaskPriorityDTO } from '@/types/prisma/DTO/priority';
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
+import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 
 interface TaskCardProps {
   title: string;
@@ -60,18 +59,18 @@ export default function TaskCard({
 
   const statusStripeClass = cn(
     'absolute inset-y-0 left-0 w-1 rounded-l-md',
-    status === TaskStatus.DONE
+    status === 'DONE'
       ? 'bg-emerald-500'
-      : status === TaskStatus.IN_PROGRESS
+      : status === 'IN_PROGRESS'
         ? 'bg-blue-500'
         : 'bg-slate-300'
   );
 
   const statusTextClass = cn(
     'text-[11px] font-medium uppercase tracking-wide',
-    status === TaskStatus.DONE
+    status === 'DONE'
       ? 'text-emerald-600'
-      : status === TaskStatus.IN_PROGRESS
+      : status === 'IN_PROGRESS'
         ? 'text-blue-600'
         : 'text-slate-500'
   );

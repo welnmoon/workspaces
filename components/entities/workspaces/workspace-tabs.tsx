@@ -1,18 +1,22 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import WProjectsSection, { WProjectsSectionProps } from './w-projects-section';
-import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import WMembersSection from './w-members-section';
-import { SessionUser } from '@/helpers/require-user';
-import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
+import type { SessionUser } from '@/helpers/require-user';
+import type { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
+import { PaymentDTO } from '@/types/prisma/DTO/payment';
+import PaymentsSection from './payments-section';
 
 const WorkspaceTabs = ({
   user,
   projectSectionProps,
   members,
+  payments,
 }: {
   projectSectionProps: WProjectsSectionProps;
   members: MembershipSelectUserDTO[];
   user: SessionUser;
+  payments: PaymentDTO[];
 }) => {
   const membersAndRoles = members.map((member) => ({
     userId: member.userId,
@@ -23,6 +27,7 @@ const WorkspaceTabs = ({
       <TabsList>
         <TabsTrigger value="projects">Проекты</TabsTrigger>
         <TabsTrigger value="members">Участники</TabsTrigger>
+        <TabsTrigger value="payments">Оплаты</TabsTrigger>
       </TabsList>
       <TabsContent value="projects">
         <WProjectsSection
@@ -38,6 +43,9 @@ const WorkspaceTabs = ({
           user={user}
           members={members}
         />
+      </TabsContent>
+      <TabsContent value="payments">
+        <PaymentsSection payments={payments} currentUserId={user.id} />
       </TabsContent>
     </Tabs>
   );

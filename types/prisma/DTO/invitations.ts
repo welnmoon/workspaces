@@ -1,4 +1,4 @@
-import { Invitation, Prisma } from '@prisma/client';
+import type { Invitation, Prisma } from '@prisma/client';
 
 export type InvitationDTO = Invitation;
 

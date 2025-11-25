@@ -3,7 +3,7 @@ import {
   CreateProjectFormValues,
 } from '@/schemas/projects/create-project-form-schemas';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
-import prisma from '../prisma';
+import { prisma } from '../prisma';
 import { TaskFilters } from '@/types/service/task-filters';
 import { TaskStats } from '@/types/service/task-stats';
 import { Prisma, TaskStatus } from '@prisma/client';
@@ -186,7 +186,7 @@ export class ProjectService {
       }),
     ]);
 
-    const statusCounts = {
+    const statusCounts: Record<TaskStatus, number> = {
       TODO: 0,
       IN_PROGRESS: 0,
       DONE: 0,
@@ -194,7 +194,7 @@ export class ProjectService {
     };
 
     for (const item of grouped) {
-      statusCounts[item.status] = item._count;
+      statusCounts[item.status as TaskStatus] = item._count;
     }
 
     return {
@@ -231,7 +231,7 @@ export class ProjectService {
       }),
     ]);
 
-    const statusCounts = {
+    const statusCounts: Record<TaskStatus, number> = {
       TODO: 0,
       IN_PROGRESS: 0,
       DONE: 0,
@@ -239,7 +239,7 @@ export class ProjectService {
     };
 
     for (const item of grouped) {
-      statusCounts[item.status] = item._count;
+      statusCounts[item.status as TaskStatus] = item._count;
     }
 
     return {

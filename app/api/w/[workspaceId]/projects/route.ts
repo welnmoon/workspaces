@@ -34,14 +34,15 @@ export async function POST(
       project,
       clientRoutes.projectPage(workspaceIdNumber, project.id)
     );
-  } catch (e) {
-    if (
-      e instanceof Prisma.PrismaClientKnownRequestError &&
-      e.code === 'P2002'
-    ) {
-      return conflict(
-        'Project with this name already exists in this workspace'
-      );
+  } catch (err: unknown) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const e = err as Prisma.PrismaClientKnownRequestError;
+
+      if (e.code === 'P2002') {
+        return conflict(
+          'Project with this name already exists in this workspace'
+        );
+      }
     }
 
     return serverError('Failed to create project');
