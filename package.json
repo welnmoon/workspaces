@@ -8,7 +8,9 @@
     "prebuild": "prisma generate",
     "build": "npx prisma migrate deploy && next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
     "format": "prettier --write .",
     "prepare": "husky"
   },

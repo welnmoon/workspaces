@@ -12,7 +12,6 @@ import WorkspaceTabs from '@/components/entities/workspaces/workspace-tabs';
 import { WProjectsSectionProps } from '@/components/entities/workspaces/w-projects-section';
 import { isMember } from '@/helpers/is-member';
 import EmptyState from '@/components/empty-state';
-import { Suspense } from 'react';
 import { tariffs } from '@/const/tariffs';
 import { cn } from '@/lib/utils';
 

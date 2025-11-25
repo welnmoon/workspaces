@@ -2,6 +2,7 @@ import { FeatureBadge } from '@/components/ui/feature-badge';
 import { Heading } from '@/components/ui/heading';
 import { cn } from '@/lib/utils';
 import { Users2 } from 'lucide-react';
+import Image from 'next/image';
 
 const TeamCollaboration = ({ className }: { className?: string }) => {
   return (
@@ -23,7 +24,7 @@ const TeamCollaboration = ({ className }: { className?: string }) => {
         </p>
       </div>
       <figure className="hidden sm:block">
-        <img
+        <Image
           className="w-full pointer-events-none"
           src="/images/advantages/TeamCollaboration.svg"
           alt="TeamCollaboration"

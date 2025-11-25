@@ -4,7 +4,6 @@ import {
 } from '@/schemas/projects/create-project-form-schemas';
 import { ProjectListDTO } from '@/types/prisma/DTO/projects';
 import { prisma } from '../prisma';
-import { TaskFilters } from '@/types/service/task-filters';
 import { TaskStats } from '@/types/service/task-stats';
 import { Prisma, TaskStatus } from '@prisma/client';
 
@@ -87,7 +86,10 @@ export class ProjectService {
     return !!project;
   }
 
-  static async getProjectTasks(projectId: number, filters?: TaskFilters) {
+  static async getProjectTasks(
+    projectId: number
+    // filters?: TaskFilters
+  ) {
     const where: Prisma.TaskWhereInput = {
       projectId: projectId,
     };
@@ -110,8 +112,8 @@ export class ProjectService {
   }
 
   static async getProjectTasksWithAssignee(
-    projectId: number,
-    filters?: TaskFilters
+    projectId: number
+    // filters?: TaskFilters
   ) {
     const where: Prisma.TaskWhereInput = { projectId };
 

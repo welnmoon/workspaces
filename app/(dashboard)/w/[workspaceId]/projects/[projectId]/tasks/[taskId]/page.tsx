@@ -9,7 +9,7 @@ const TaskPage = async ({
 }: {
   params: Promise<{ workspaceId: string; projectId: string; taskId: string }>;
 }) => {
-  const taskId = Number((await params).taskId);
+  // const taskId = Number((await params).taskId);
   const projectId = Number((await params).projectId);
   const workspaceId = Number((await params).workspaceId);
   const task = await TaskService.getTaskById(Number((await params).taskId));

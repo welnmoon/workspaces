@@ -6,9 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { clientRoutes } from '@/lib/routes/client-routes';
 import { Label } from '@radix-ui/react-label';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 type EntitySelectProps<T> = {

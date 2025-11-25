@@ -2,6 +2,7 @@ import { FeatureBadge } from '@/components/ui/feature-badge';
 import { Heading } from '@/components/ui/heading';
 import { cn } from '@/lib/utils';
 import { PanelsTopLeft } from 'lucide-react';
+import Image from 'next/image';
 
 const WorkspaceHub = ({
   className,
@@ -43,10 +44,12 @@ const WorkspaceHub = ({
       lg:static lg:flex lg:items-end lg:w-1/2
     "
       >
-        <img
+        <Image
           className="w-full pointer-events-none lg:h-full md:w-full"
           src="/images/advantages/WorkspaceHub.svg"
           alt="WorkspaceHub"
+          width={100}
+          height={150}
         />
       </figure>
     </article>

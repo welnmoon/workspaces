@@ -8,7 +8,6 @@ import { usePathname } from 'next/navigation';
 import TaskSelect from '@/components/ui/select/task-select';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import { useTasks } from '@/hooks/tasks/use-tasks';
-import { useWorkspaces } from '@/hooks/workspace/use-workspaces';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarStatic = ({
@@ -37,15 +36,15 @@ const DashboardSidebarStatic = ({
   const {
     data: projects = [],
     isLoading: pLoading,
-    isError: pError,
-    error: pErrorObj,
+    // isError: pError,
+    // error: pErrorObj,
   } = useProjects(selectedWorkspaceId || undefined);
 
   const {
     data: tasks = [],
     isLoading: tLoading,
-    isError: tError,
-    error: tErrorObj,
+    // isError: tError,
+    // error: tErrorObj,
   } = useTasks(
     selectedProjectId || undefined,
     selectedWorkspaceId || undefined

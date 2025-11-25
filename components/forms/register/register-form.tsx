@@ -12,7 +12,6 @@ import BaseLink from '@/components/base-link';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { useState } from 'react';
 import { clientRoutes } from '@/lib/routes/client-routes';
-import { signIn } from 'next-auth/react';
 
 const RegisterForm = () => {
   const form = useForm<RegisterSchema>({

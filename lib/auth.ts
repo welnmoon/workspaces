@@ -100,7 +100,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       // Если пользователь удалён из БД — логаут
       if (token.userExists === false) {
-        session.expires === '1970-01-01T00:00:00.000Z';
+        session.expires = '1970-01-01T00:00:00.000Z';
         return session;
       }
 

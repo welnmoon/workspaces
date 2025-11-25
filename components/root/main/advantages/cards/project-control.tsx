@@ -2,6 +2,7 @@ import { FeatureBadge } from '@/components/ui/feature-badge';
 import { Heading } from '@/components/ui/heading';
 import { cn } from '@/lib/utils';
 import { KanbanSquare } from 'lucide-react';
+import Image from 'next/image';
 
 const ProjectControl = ({
   className,
@@ -33,10 +34,12 @@ const ProjectControl = ({
         </p>
       </div>
       <figure className="hidden sm:block ">
-        <img
+        <Image
           className="w-full pointer-events-none"
           src="/images/advantages/ProjectControl.svg"
           alt="AnalyticsAudit"
+          width={100}
+          height={150}
         />
       </figure>
     </article>

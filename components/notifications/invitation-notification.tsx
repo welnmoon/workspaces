@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge';
 import { Loader, Users } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
-  InvitationDTO,
   ReceivedInvitationDTO,
 } from '@/types/prisma/DTO/invitations';
 import { useAcceptInvitation } from '@/hooks/notifications/invitations/use-accept-inviation';
@@ -34,7 +33,7 @@ export function InvitationNotification({
   invitation: ReceivedInvitationDTO;
 }) {
   const router = useRouter();
-  const { mutate, isPending, isSuccess } = useAcceptInvitation(userId);
+  const { mutate, isPending } = useAcceptInvitation(userId);
   const workspaceLabel =
     invitation.workspace.name ?? `Workspace #${invitation.workspaceId}`;
 
@@ -59,7 +58,9 @@ export function InvitationNotification({
           },
         }
       );
-    } catch (e) {}
+    } finally {
+      router.refresh();
+    }
   };
 
   return (

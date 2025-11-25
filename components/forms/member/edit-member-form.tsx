@@ -49,7 +49,7 @@ const EditMemberForm = ({
       });
 
       if (!res.ok) {
-        const data = await res.json().catch(() => null);
+        // const data = await res.json().catch(() => null);
         toast.error('Не удалось обновить роль участника');
         return;
       }
@@ -58,7 +58,8 @@ const EditMemberForm = ({
       router.refresh();
       setOpen(false);
     } catch (e) {
-      toast.error('Произошла ошибка при обновлении роли участника');
+      if (e instanceof Error) toast.error(e.message);
+      toast.error('Не удалось обновить роль участника', e);
     }
   };
   return (
