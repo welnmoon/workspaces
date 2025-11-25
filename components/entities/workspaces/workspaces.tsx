@@ -3,6 +3,7 @@ import { cardContainer } from '@/styles/styles';
 import WorkspaceCard from './workspace-card';
 import CreateWorkspaceDialog from '../../dialogs/create-w-dialog';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
+import EmptyState from '@/components/empty-state';
 const WorkspacesComponent = ({
   workspaces,
   userId,
@@ -17,11 +18,19 @@ const WorkspacesComponent = ({
         <CreateWorkspaceDialog />
       </div>
 
-      <section className={cardContainer}>
-        {workspaces.map((workspace) => (
-          <WorkspaceCard userId={userId} key={workspace.id} workspace={workspace} />
-        ))}
-      </section>
+      {workspaces.length > 0 && (
+        <section className={cardContainer}>
+          {workspaces.map((workspace) => (
+            <WorkspaceCard
+              userId={userId}
+              key={workspace.id}
+              workspace={workspace}
+            />
+          ))}
+        </section>
+      )}
+
+      {workspaces.length === 0 && <EmptyState title='Нет пространств' subtitle='Давай начнем'/>}
     </main>
   );
 };
