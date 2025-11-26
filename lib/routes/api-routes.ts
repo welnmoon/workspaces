@@ -12,6 +12,8 @@ export const apiRoutes = {
   updateWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
   getWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
   getWorkspaces: () => `/api/w`,
+  changeWorkspaceName: (workspaceId: number) =>
+    `/api/w/${workspaceId}/change-name`,
 
   // Tasks
   getTasks: (workspaceId: number, projectId: number) =>

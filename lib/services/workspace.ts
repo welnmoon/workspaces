@@ -125,6 +125,17 @@ export class WorkspaceService {
     });
   }
 
+  static async updateName(workspaceId: number, name: string) {
+    return prisma.workspace.update({
+      where: {
+        id: Number(workspaceId),
+      },
+      data: {
+        name,
+      },
+    });
+  }
+
   static async getPayments(workspaceId: number) {
     return prisma.payment.findMany({
       where: {

@@ -1,6 +1,6 @@
 import { Heading } from '../../ui/heading';
 import { cardContainer } from '@/styles/styles';
-import WorkspaceCard from './workspace-card';
+import WorkspaceCard from './w-card/workspace-card';
 import CreateWorkspaceDialog from '../../dialogs/create-w-dialog';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import EmptyState from '@/components/empty-state';
@@ -30,7 +30,9 @@ const WorkspacesComponent = ({
         </section>
       )}
 
-      {workspaces.length === 0 && <EmptyState title='Нет пространств' subtitle='Давай начнем'/>}
+      {workspaces.length === 0 && (
+        <EmptyState title="Нет пространств" subtitle="Давай начнем" />
+      )}
     </main>
   );
 };
