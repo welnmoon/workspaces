@@ -72,6 +72,14 @@ export class WorkspaceService {
     });
   }
 
+  static async delete(workspaceId: number) {
+    return prisma.workspace.delete({
+      where: {
+        id: workspaceId,
+      },
+    });
+  }
+
   static async getWorkspaceById(
     workspaceId: number
   ): Promise<Workspace | null> {
