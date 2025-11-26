@@ -12,6 +12,8 @@ import {
   InvitationNotification,
 } from './invitation-notification';
 import { useInvitations } from '@/hooks/notifications/invitations/use-invitations';
+import { useNotifications } from '@/hooks/notifications/use-notifications';
+import Notification from './notification';
 
 // type InvitationsPopoverProps = {
 //   invitations: InvitationNotificationData[];
@@ -30,10 +32,13 @@ const InvitationsPopover = ({
     // isError,
     // error,
   } = useInvitations(userId);
+
+  const { data: notifications } = useNotifications(userId);
   const notReadInvitations = invitations.filter(
     (inv) => inv.status !== 'ACCEPTED'
   );
   const hasInvitations = notReadInvitations.length > 0;
+  const hasNotifications = notifications.length > 0;
 
   return (
     <Popover>
@@ -55,9 +60,9 @@ const InvitationsPopover = ({
       <PopoverContent className="w-80 p-0" align="end">
         <div className="border-b px-4 py-3">
           <p className="text-sm font-semibold">Уведомления</p>
-          <p className="text-xs text-muted-foreground">
+          {/* <p className="text-xs text-muted-foreground">
             Приглашения в рабочие пространства
-          </p>
+          </p> */}
         </div>
         {hasInvitations ? (
           <ul className="max-h-80 divide-y overflow-y-auto">
@@ -72,6 +77,28 @@ const InvitationsPopover = ({
         ) : (
           <div className="px-4 py-6 text-sm text-muted-foreground">
             Новых приглашений нет
+          </div>
+        )}
+        {hasNotifications ? (
+          <ul className="max-h-80 divide-y overflow-y-auto">
+            {notifications.map((notification) => (
+              <Notification
+                createdAt={notification.createdAt}
+                isRead={notification.isRead}
+                key={notification.id}
+                type={notification.type}
+                title={notification.title}
+                message={notification.message}
+                workspaceId={notification.workspaceId}
+                updatedAt={notification.updatedAt}
+                userId={userId}
+                id={notification.id}
+              />
+            ))}
+          </ul>
+        ) : (
+          <div className="px-4 py-6 text-sm text-muted-foreground">
+            Новых уведомлении нет
           </div>
         )}
       </PopoverContent>

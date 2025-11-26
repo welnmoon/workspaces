@@ -38,6 +38,9 @@ export const apiRoutes = {
   createInvitation: (workspaceId: number) =>
     `/api/w/${workspaceId}/invitations`,
 
+  // Notifications
+  getNotifications: (userId: string) => `/api/user/${userId}/notifications`,
+
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,
   deleteMember: (memberId: number) => `/api/members/${memberId}/delete`,
