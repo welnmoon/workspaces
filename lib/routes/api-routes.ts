@@ -14,6 +14,10 @@ export const apiRoutes = {
   getWorkspaces: () => `/api/w`,
   changeWorkspaceName: (workspaceId: number) =>
     `/api/w/${workspaceId}/change-name`,
+  deleteWorkspace: (workspaceId: number) => `/api/w/${workspaceId}/delete`,
+
+  getWorkspaceMemberRole: (workspaceId: number) =>
+    `/api/w/${workspaceId}/members/role`,
 
   // Tasks
   getTasks: (workspaceId: number, projectId: number) =>

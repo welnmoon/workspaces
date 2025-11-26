@@ -25,6 +25,7 @@ export const useWorkspaceChangeName = (workspaceId: number) => {
       const text = await res.text();
       return text ? JSON.parse(text) : null;
     },
+
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['workspace', workspaceId] });
       qc.invalidateQueries({ queryKey: ['workspaces'] });

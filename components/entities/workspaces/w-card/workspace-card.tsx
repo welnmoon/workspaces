@@ -1,18 +1,20 @@
-import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
-import { MembershipService } from '@/lib/services/membership';
-import WorkspaceCardClient from './w-card-client';
+'use client';
 
-const WorkspaceCard = async ({
+import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
+import WorkspaceCardClient from './w-card-client';
+import { useWorkspaceMemberRole } from '@/hooks/workspace/use-workspace-member-role';
+import { FullRoleDTO } from '@/types/prisma/DTO/role';
+
+const WorkspaceCard = ({
   workspace,
   userId,
 }: {
   workspace: WorkspaceListDTO;
   userId: string;
 }) => {
-  const role = await MembershipService.getUserRoleInWorkspace(
-    userId,
-    workspace.id
-  );
+  const { data: role } = useWorkspaceMemberRole(workspace.id) as {
+    data: FullRoleDTO | null;
+  };
 
   const avatarUrl = workspace.avatarUrl || '/images/workspace-default.png';
 

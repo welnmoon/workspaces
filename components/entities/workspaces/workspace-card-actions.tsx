@@ -18,6 +18,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { FullRoleDTO } from '@/types/prisma/DTO/role';
+import { useWorkspaceDelete } from '@/hooks/workspace/use-workspace-delete';
+import toast from 'react-hot-toast';
+import { Spinner } from '@/components/ui/spinner';
 
 type Props = {
   workspaceId: number;
@@ -43,6 +46,24 @@ const WorkspaceCardActions = ({
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openNotifyDialog, setOpenNotifyDialog] = useState(false);
+  const {
+    mutate,
+    isPending: isDeletePending,
+    isError,
+    error,
+  } = useWorkspaceDelete();
+
+  const onDelete = () => {
+    mutate(workspaceId, {
+      onSuccess: () => {
+        toast.success('Рабочее пространство успешно удалено');
+      },
+      onError: () => {
+        toast.error('Не удалось удалить рабочее пространство');
+        console.error(error);
+      },
+    });
+  };
 
   const closeDialogs = () => {
     setOpenEditDialog(false);
@@ -140,8 +161,8 @@ const WorkspaceCardActions = ({
           <DialogHeader>
             <DialogTitle>Удалить рабочее пространство</DialogTitle>
             <DialogDescription>
-              Действие пока не реализовано. Здесь будет подтверждение удаления «
-              {workspaceLabel}».
+              Вы уверены, что хотите удалить рабочее пространство «
+              {workspaceLabel}»?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -151,8 +172,14 @@ const WorkspaceCardActions = ({
             >
               Отмена
             </Button>
-            <Button variant="destructive" onClick={closeDialogs}>
-              Удалить (пока без логики)
+            <Button
+              variant="destructive"
+              onClick={() => {
+                onDelete();
+              }}
+              disabled={isDeletePending}
+            >
+              {isDeletePending ? <Spinner /> : 'Удалить'}
             </Button>
           </DialogFooter>
         </DialogContent>
