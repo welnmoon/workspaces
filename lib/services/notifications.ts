@@ -19,4 +19,12 @@ export class NotificationService {
       },
     });
   }
+
+  static async deleteNotification(notificationId: number) {
+    return await prisma.notification.delete({
+      where: {
+        id: notificationId,
+      },
+    });
+  }
 }

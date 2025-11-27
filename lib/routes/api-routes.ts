@@ -42,6 +42,8 @@ export const apiRoutes = {
   getNotifications: (userId: string) => `/api/user/${userId}/notifications`,
   markReadNotification: (userId: string, notificationId: number) =>
     `/api/user/${userId}/notifications/${notificationId}/read`,
+  deleteNotification: (userId: string, notificationId: number) =>
+    `/api/user/${userId}/notifications/${notificationId}/delete`,
 
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,

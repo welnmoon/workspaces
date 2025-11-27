@@ -1,4 +1,5 @@
 import { formatTime } from '@/helpers/format-time';
+import { useDeleteNotification } from '@/hooks/notifications/use-delete-notification';
 import { useMarkReadNotification } from '@/hooks/notifications/use-mark-read-notification';
 import { cn } from '@/lib/utils';
 import { NotificationTypes } from '@/types/prisma/DTO/notification';
@@ -27,11 +28,16 @@ const Notification = ({
   userId,
   id,
 }: Props) => {
-  const { mutate } = useMarkReadNotification(userId);
+  const { mutate: onReadMutate } = useMarkReadNotification(userId);
+  const { mutate: onDeleteMutate } = useDeleteNotification(userId);
 
   const onRead = () => {
     console.log('ON READ', id, title);
-    mutate(id);
+    onReadMutate(id);
+  };
+
+  const onDelete = () => {
+    onDeleteMutate(id);
   };
   return (
     <div
@@ -69,7 +75,10 @@ const Notification = ({
           </button>
         )}
 
-        <button className="flex items-center gap-1 text-red-600 hover:text-red-800">
+        <button
+          onClick={() => onDelete()}
+          className="flex items-center gap-1 text-red-600 hover:text-red-800"
+        >
           <Trash2 size={14} /> Удалить
         </button>
       </div>

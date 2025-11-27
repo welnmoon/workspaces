@@ -37,11 +37,6 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
   const hasNotifications = notifications.length > 0;
   const isLoading = isLoadingInvitations || isLoadingNotifications;
 
-  // если вообще нечего показывать — не рендерим иконку
-  if (!isLoading && unreadTotal === 0) {
-    return null;
-  }
-
   return (
     <Popover>
       <PopoverTrigger asChild>
