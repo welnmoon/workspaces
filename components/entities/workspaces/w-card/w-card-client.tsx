@@ -8,7 +8,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import WorkspaceCardActions from './workspace-card-actions';
-import toast from 'react-hot-toast';
 import { FullRoleDTO } from '@/types/prisma/DTO/role';
 
 type Props = {

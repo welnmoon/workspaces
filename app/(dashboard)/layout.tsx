@@ -11,7 +11,7 @@ import { requireUser } from '@/helpers/require-user';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
-import InvitationsPopover from '@/components/notifications/invitations-popover';
+import InvitationsPopover from '@/components/notifications/notifications-popover';
 import { Badge } from '@/components/ui/badge';
 import DashboardSidebarDynamic from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
 import { UserService } from '@/lib/services/user';
