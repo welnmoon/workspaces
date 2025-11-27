@@ -45,7 +45,6 @@ export default function WorkspaceCardClient({
           <WorkspaceCardActions
             workspaceId={workspace.id}
             workspaceName={name}
-            role={role}
             onNameChange={(newName) => setName(newName)}
           />
         </div>
