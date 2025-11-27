@@ -6,26 +6,25 @@ import WorkspaceCard from './w-card/workspace-card';
 import CreateWorkspaceDialog from '../../dialogs/create-w-dialog';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import EmptyState from '@/components/empty-state';
-import { useWorkspaces } from '@/hooks/workspace/use-workspaces';
 const WorkspacesComponent = ({
   workspaces,
-
+  userId,
 }: {
   workspaces: WorkspaceListDTO[];
   userId: string;
 }) => {
-  const { data: workspaceData } = useWorkspaces(workspaces);
   return (
-    <main>
-      <div className="flex justify-between min-w-full">
+    <main className="space-y-6 mt-6">
+      <div className="flex justify-between min-w-full items-center">
         <Heading>Workspaces</Heading>
         <CreateWorkspaceDialog />
       </div>
 
       {workspaces.length > 0 && (
         <section className={cardContainer}>
-          {workspaceData.map((workspace) => (
+          {workspaces.map((workspace) => (
             <WorkspaceCard
+              userId={userId}
               key={workspace.id}
               workspace={workspace}
             />
@@ -33,7 +32,7 @@ const WorkspacesComponent = ({
         </section>
       )}
 
-      {workspaceData.length === 0 && (
+      {workspaces.length === 0 && (
         <EmptyState title="Нет пространств" subtitle="Давай начнем" />
       )}
     </main>
