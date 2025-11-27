@@ -1,4 +1,3 @@
-// components/entities/workspaces/workspace-card-actions.tsx
 'use client';
 
 import { useState } from 'react';
@@ -18,25 +17,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { FullRoleDTO } from '@/types/prisma/DTO/role';
 import { useWorkspaceDelete } from '@/hooks/workspace/use-workspace-delete';
 import { useWorkspaceChangeName } from '@/hooks/workspace/use-workspace-change-name';
 import toast from 'react-hot-toast';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
-import Description from '@/components/ui/desc';
 
 type Props = {
   workspaceId: number;
   workspaceName: string;
-  role: FullRoleDTO | null;
   onNameChange: (name: string) => void;
 };
 
 const WorkspaceCardActions = ({
   workspaceId,
   workspaceName,
-  role,
+
   onNameChange,
 }: Props) => {
   const workspaceLabel = `${workspaceName} (#${workspaceId})`;

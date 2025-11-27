@@ -5,8 +5,6 @@ import { ReceivedInvitationDTO } from '@/types/prisma/DTO/invitations';
 import { useAcceptInvitation } from '@/hooks/notifications/invitations/use-accept-inviation';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction } from 'react';
-import { NotificationFullDTO } from '@/types/prisma/DTO/notification';
 
 export type InvitationNotificationData = {
   id: number;

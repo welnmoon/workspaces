@@ -14,7 +14,6 @@ import {
 import { useInvitations } from '@/hooks/notifications/invitations/use-invitations';
 import { useNotifications } from '@/hooks/notifications/use-notifications';
 import Notification from './notification';
-import { useState } from 'react';
 
 // type InvitationsPopoverProps = {
 //   invitations: InvitationNotificationData[];

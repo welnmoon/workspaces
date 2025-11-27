@@ -19,7 +19,6 @@ type Props = {
 };
 
 const Notification = ({
-  type,
   title,
   message,
   workspaceId,

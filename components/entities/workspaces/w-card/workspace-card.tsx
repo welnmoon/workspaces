@@ -5,13 +5,7 @@ import WorkspaceCardClient from './w-card-client';
 import { useWorkspaceMemberRole } from '@/hooks/workspace/use-workspace-member-role';
 import { FullRoleDTO } from '@/types/prisma/DTO/role';
 
-const WorkspaceCard = ({
-  workspace,
-  userId,
-}: {
-  workspace: WorkspaceListDTO;
-  userId: string;
-}) => {
+const WorkspaceCard = ({ workspace }: { workspace: WorkspaceListDTO }) => {
   const { data: role } = useWorkspaceMemberRole(workspace.id) as {
     data: FullRoleDTO | null;
   };

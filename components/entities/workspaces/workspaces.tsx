@@ -9,12 +9,12 @@ import EmptyState from '@/components/empty-state';
 import { useWorkspaces } from '@/hooks/workspace/use-workspaces';
 const WorkspacesComponent = ({
   workspaces,
-  userId,
+
 }: {
   workspaces: WorkspaceListDTO[];
   userId: string;
 }) => {
-  const { data: workspaceData, isLoading, isError } = useWorkspaces(workspaces);
+  const { data: workspaceData } = useWorkspaces(workspaces);
   return (
     <main>
       <div className="flex justify-between min-w-full">
@@ -26,7 +26,6 @@ const WorkspacesComponent = ({
         <section className={cardContainer}>
           {workspaceData.map((workspace) => (
             <WorkspaceCard
-              userId={userId}
               key={workspace.id}
               workspace={workspace}
             />

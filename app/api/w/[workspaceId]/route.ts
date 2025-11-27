@@ -1,9 +1,6 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { requireUser } from '@/helpers/require-user';
-import { AppError } from '@/lib/errors';
 import {
   badRequest,
-  noContent,
   ok,
   serverError,
   unprocessable,
@@ -11,12 +8,11 @@ import {
 import { prisma } from '@/lib/prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
 import {
-  MembershipStatus,
-  NotificationType,
+
   Prisma,
   Role,
 } from '@prisma/client';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 type Params = { params: Promise<{ workspaceId: string }> };
 

@@ -6,18 +6,18 @@ import { NextRequest } from 'next/server';
 // current member role
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ workspaceId: string; id: string }> }
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
     const { id: userId } = await requireUser();
-    const { workspaceId, id } = await params;
+    const { workspaceId } = await params;
     const role = await MembershipService.getUserRoleInWorkspace(
       userId,
       Number(workspaceId)
     );
 
     return ok(role);
-  } catch (e) {
+  } catch {
     return serverError('Failed to get member');
   }
 }
