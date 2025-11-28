@@ -140,6 +140,7 @@ model Notification {
   workspace   Workspace?        @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
 
   isRead      Boolean           @default(false)
+  isHidden    Boolean           @default(false)
   metadata    Json?             // сюда можно класть workspaceName, старый тариф и т.п.
 
   createdAt   DateTime          @default(now())
