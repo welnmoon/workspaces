@@ -91,9 +91,9 @@ const LoginForm = () => {
             </form>
           </FormProvider>
 
-          <Divider />
+          <DividerWithText text='Или продолжите с'/>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {PROVIDERS.map((p) => (
               <LoginOauthButton key={p.id} provider={p.id} />
             ))}
