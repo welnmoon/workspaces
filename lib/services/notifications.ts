@@ -20,10 +20,13 @@ export class NotificationService {
     });
   }
 
-  static async deleteNotification(notificationId: number) {
-    return await prisma.notification.delete({
+  static async hiddenNotification(notificationId: number) {
+    return await prisma.notification.update({
       where: {
         id: notificationId,
+      },
+      data: {
+        isHidden: true,
       },
     });
   }

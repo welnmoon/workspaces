@@ -27,7 +27,7 @@ const WorkspaceAvatars = ({ className }: { className?: string }) => {
   };
   return (
     <div className={cn(`flex-1 min-h-0 h-full`, className)}>
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2 overflow-y-auto h-full">
+      <div className="flex flex-wrap gap-2 overflow-y-auto h-full">
         {workspaceAvatarImages.map((a) => {
           const isActive = selected === a.url;
           return (

@@ -12,7 +12,7 @@ export async function DELETE(
     await requireUser();
     const notificationId = Number((await params).notificationId);
 
-    await NotificationService.deleteNotification(notificationId);
+    await NotificationService.hiddenNotification(notificationId);
 
     return noContent();
   } catch (e) {
@@ -26,6 +26,6 @@ export async function DELETE(
         );
       }
     }
-    return serverError('Failed to delete notification', e);
+    return serverError('Failed to hidden notification', e);
   }
 }

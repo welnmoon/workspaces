@@ -87,20 +87,22 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
 
               {hasNotifications && (
                 <ul>
-                  {notifications.map((notification) => (
-                    <Notification
-                      key={notification.id}
-                      id={notification.id}
-                      createdAt={notification.createdAt}
-                      updatedAt={notification.updatedAt}
-                      isRead={notification.isRead}
-                      type={notification.type}
-                      title={notification.title}
-                      message={notification.message}
-                      workspaceId={notification.workspaceId}
-                      userId={userId}
-                    />
-                  ))}
+                  {notifications
+                    .filter((n) => !n.isHidden)
+                    .map((notification) => (
+                      <Notification
+                        key={notification.id}
+                        id={notification.id}
+                        createdAt={notification.createdAt}
+                        updatedAt={notification.updatedAt}
+                        isRead={notification.isRead}
+                        type={notification.type}
+                        title={notification.title}
+                        message={notification.message}
+                        workspaceId={notification.workspaceId}
+                        userId={userId}
+                      />
+                    ))}
                 </ul>
               )}
 

@@ -24,7 +24,6 @@ const WorkspacesComponent = ({
         <section className={cardContainer}>
           {workspaces.map((workspace) => (
             <WorkspaceCard
-              userId={userId}
               key={workspace.id}
               workspace={workspace}
             />

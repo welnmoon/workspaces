@@ -3,12 +3,12 @@ import { apiRoutes } from '@/lib/routes/api-routes';
 import { NotificationFullDTO } from '@/types/prisma/DTO/notification';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const useDeleteNotification = (userId: string) => {
+export const useHiddenNotification = (userId: string) => {
   const qr = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: number) => {
-      const res = await fetch(apiRoutes.deleteNotification(userId, id), {
+      const res = await fetch(apiRoutes.hiddenNotification(userId, id), {
         method: 'DELETE',
       });
 
