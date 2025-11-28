@@ -1,23 +1,18 @@
 'use client';
 
+import { LinkArrow } from '@/components/buttons/link-arrow';
+import { InvitationNotification } from '@/components/entities/notifications/invitation-notification';
+import { Notification } from '@/components/entities/notifications/notification';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Bell } from 'lucide-react';
-import {
-  InvitationNotificationData,
-  InvitationNotification,
-} from './invitation-notification';
 import { useInvitations } from '@/hooks/notifications/invitations/use-invitations';
 import { useNotifications } from '@/hooks/notifications/use-notifications';
-import Notification from './notification';
-
-// type InvitationsPopoverProps = {
-//   invitations: InvitationNotificationData[];
-// };
+import { clientRoutes } from '@/lib/routes/client-routes';
+import { Bell } from 'lucide-react';
 
 const NotificationsPopover = ({ userId }: { userId: string }) => {
   const { data: invitations = [], isLoading: isLoadingInvitations } =
@@ -26,14 +21,18 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
   const { data: notifications = [], isLoading: isLoadingNotifications } =
     useNotifications(userId);
 
+  const visibleNotifications = notifications.filter(
+    (n) => n.isHidden === false
+  );
+
   const unreadInvitations = invitations.filter(
     (inv) => inv.status !== 'ACCEPTED'
   );
-  const unreadNotifications = notifications.filter((n) => !n.isRead);
+  const unreadNotifications = visibleNotifications.filter((n) => !n.isRead);
   const unreadTotal = unreadInvitations.length + unreadNotifications.length;
 
   const hasInvitations = invitations.length > 0;
-  const hasNotifications = notifications.length > 0;
+  const hasNotifications = visibleNotifications.length > 0;
   const isLoading = isLoadingInvitations || isLoadingNotifications;
 
   return (
@@ -59,8 +58,11 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
         className="w-80 p-0 h-[50vh] flex flex-col" // <- половина экрана, флекс-колонка
       >
         {/* фиксированный заголовок */}
-        <div className="border-b px-4 py-3 shrink-0">
+        <div className="border-b px-4 py-3 shrink-0 flex justify-between">
           <p className="text-sm font-semibold">Уведомления</p>
+          <LinkArrow href={clientRoutes.notificationsPage()}>
+            Смотреть все
+          </LinkArrow>
         </div>
 
         {/* скролящийся контент */}
@@ -87,22 +89,21 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
 
               {hasNotifications && (
                 <ul>
-                  {notifications
-                    .filter((n) => !n.isHidden)
-                    .map((notification) => (
-                      <Notification
-                        key={notification.id}
-                        id={notification.id}
-                        createdAt={notification.createdAt}
-                        updatedAt={notification.updatedAt}
-                        isRead={notification.isRead}
-                        type={notification.type}
-                        title={notification.title}
-                        message={notification.message}
-                        workspaceId={notification.workspaceId}
-                        userId={userId}
-                      />
-                    ))}
+                  {visibleNotifications.map((notification) => (
+                    <Notification
+                      key={notification.id}
+                      id={notification.id}
+                      createdAt={notification.createdAt}
+                      updatedAt={notification.updatedAt}
+                      isRead={notification.isRead}
+                      isHidden={notification.isHidden}
+                      type={notification.type}
+                      title={notification.title}
+                      message={notification.message}
+                      workspaceId={notification.workspaceId}
+                      userId={userId}
+                    />
+                  ))}
                 </ul>
               )}
 
@@ -119,5 +120,4 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
   );
 };
 
-export type { InvitationNotificationData };
 export default NotificationsPopover;

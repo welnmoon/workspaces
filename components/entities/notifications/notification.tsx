@@ -14,15 +14,17 @@ type Props = {
   message: string;
   workspaceId: number | null;
   isRead: boolean;
+  isHidden: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
 
-const Notification = ({
+export const Notification = ({
   title,
   message,
   workspaceId,
   isRead,
+  isHidden,
   createdAt,
   userId,
   id,
@@ -84,5 +86,3 @@ const Notification = ({
     </div>
   );
 };
-
-export default Notification;
