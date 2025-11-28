@@ -75,18 +75,6 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
 
           {!isLoading && (
             <>
-              {hasInvitations && (
-                <ul>
-                  {invitations.map((invitation) => (
-                    <InvitationNotification
-                      invitation={invitation}
-                      userId={userId}
-                      key={invitation.id}
-                    />
-                  ))}
-                </ul>
-              )}
-
               {hasNotifications && (
                 <ul>
                   {visibleNotifications.map((notification) => (
@@ -102,6 +90,18 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
                       message={notification.message}
                       workspaceId={notification.workspaceId}
                       userId={userId}
+                    />
+                  ))}
+                </ul>
+              )}
+
+              {hasInvitations && (
+                <ul>
+                  {invitations.map((invitation) => (
+                    <InvitationNotification
+                      invitation={invitation}
+                      userId={userId}
+                      key={invitation.id}
                     />
                   ))}
                 </ul>
