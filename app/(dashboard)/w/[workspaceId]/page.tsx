@@ -80,6 +80,7 @@ const WorkspacePage = async ({
         <Heading>Workspace {workspace?.name}</Heading>
         {(role === Role.OWNER || role === Role.ADMIN) && (
           <WorkspacePopover
+          tasksDone={tasksDone}
             workspaceId={workspaceIdNumber}
             workspaceName={workspace.name}
             workspaceDescription={workspace.description}
