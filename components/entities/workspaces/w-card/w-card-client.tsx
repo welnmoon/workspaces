@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import WorkspaceCardActions from './workspace-card-actions';
-import { FullRoleDTO } from '@/types/prisma/DTO/role';
+import { FullRoleDTO, ROLE_VALUES, RolesEnum } from '@/types/prisma/DTO/role';
 
 type Props = {
   avatarUrl: string;
@@ -42,11 +42,13 @@ export default function WorkspaceCardClient({
             </Heading>
           </CardTitle>
 
-          <WorkspaceCardActions
-            workspaceId={workspace.id}
-            workspaceName={name}
-            onNameChange={(newName) => setName(newName)}
-          />
+          {role !== RolesEnum.MEMBER && (
+            <WorkspaceCardActions
+              workspaceId={workspace.id}
+              workspaceName={name}
+              onNameChange={(newName) => setName(newName)}
+            />
+          )}
         </div>
       </CardHeader>
 
