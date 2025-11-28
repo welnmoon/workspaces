@@ -13,6 +13,7 @@ import customPrismaAdapter from './custom-prisma-adapter';
 
 import type { DefaultSession } from 'next-auth';
 import { prisma } from './prisma';
+import { AppError } from './errors';
 
 // Правильно — используем DefaultSession, а НЕ Session
 declare module 'next-auth' {
@@ -55,16 +56,17 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password) throw new AppError(400, 'INVALID_CREDENTIALS', 'Неверные данные');
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
-        if (!user?.password || !user.emailVerified) return null;
+        if (!user?.password || !user.emailVerified) throw new AppError(400, 'USER_NOT_FOUND', 'Пользователь не найден');
 
         const ok = await bcrypt.compare(credentials.password, user.password);
-        if (!ok) return null;
+        if (!ok)
+          throw new AppError(400, 'INCORRECT_PASSWORD', 'Неверный пароль');
 
         return {
           id: String(user.id),
