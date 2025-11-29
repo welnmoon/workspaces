@@ -64,10 +64,6 @@ const ProjectComponent = ({
   );
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
-  let remainTasksCount: number;
-  useEffect(() => {
-    remainTasksCount = allTaskStats.tasksDoneCount - Number(doneTasksCount);
-  }, [doneTasksCount]);
 
   useEffect(() => {
     setBoardTasks(optimisticTasks || []);
@@ -86,6 +82,13 @@ const ProjectComponent = ({
     //   "BLOCKED": [...],
     // }
   }, [filteredTasks]);
+
+  const remainTasksCount = useMemo(() => {
+    const totalDone = allTaskStats?.tasksDoneCount ?? 0;
+    const shown = Number(doneTasksCount);
+    const remain = totalDone - shown;
+    return remain > 0 ? remain : 0;
+  }, [allTaskStats, doneTasksCount]);
 
   if (!project) return null;
 
@@ -174,143 +177,6 @@ const ProjectComponent = ({
           }
         />
       )}
-<<<<<<< Updated upstream
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="mt-4 relative w-full">
-          {filteredTasks.length === 0 && (
-            <div>
-              <EmptyState
-                icon={
-                  <img
-                    src="/images/tasks-page-banner.png"
-                    alt="Иллюстрация проекта"
-                    className="mt-6 w-1/2 mx-auto h-auto object-contain"
-                  />
-                }
-                title="Ну что, начинаем?"
-                subtitle="Добавьте первую задачу — и ваш проект засияет."
-              />
-            </div>
-          )}
-
-          {filteredTasks.length > 0 && (
-            <div className="md:flex min-h-dvh select-none w-full">
-              {STATUS_COLUMNS.map((column) => {
-                const columnTasks = tasksByStatus[column.id] ?? [];
-
-                const visibleTasks =
-                  column.id === 'DONE'
-                    ? columnTasks.slice(0, Number(doneTasksCount))
-                    : columnTasks;
-
-                return (
-                  <section
-                    key={column.id}
-                    className={cn(
-                      'w-full min-h-[280px] md:min-w-1/4 md:max-w-xs flex-1 px-2 py-2',
-                      column.id === 'BLOCKED' && 'bg-red-50',
-                      column.id === 'DONE' && 'bg-green-50',
-                      column.id === 'IN_PROGRESS' && 'bg-yellow-50',
-                      column.id === 'TODO' && 'bg-blue-50'
-                    )}
-                  >
-                    <Heading
-                      level={3}
-                      className={cn(
-                        'mb-2 flex justify-between items-center',
-                        column.id === 'BLOCKED' && 'text-red-600',
-                        column.id === 'DONE' && 'text-green-600',
-                        column.id === 'IN_PROGRESS' && 'text-yellow-600',
-                        column.id === 'TODO' && 'text-blue-600'
-                      )}
-                    >
-                      {column.title}{' '}
-                      {column.id === 'DONE' && (
-                        <DoneTasksFilter
-                          setDoneTasksCount={setDoneTasksCount}
-                          doneTasksCount={doneTasksCount}
-                          counts={counts}
-                        />
-                      )}
-                    </Heading>
-
-                    <Droppable
-                      droppableId={column.id}
-                      direction={droppableDirection}
-                    >
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                          className="flex flex-row overflow-x-auto gap-2 w-full md:flex-col md:overflow-x-visible min-h-[120px]"
-                        >
-                          {visibleTasks.map((t, index) => (
-                            <Draggable
-                              key={t.id}
-                              draggableId={String(t.id)}
-                              index={index}
-                            >
-                              {(dragProvided) => (
-                                <div
-                                  className="mb-2 min-w-[250px]"
-                                  ref={dragProvided.innerRef}
-                                  {...dragProvided.dragHandleProps}
-                                  {...dragProvided.draggableProps}
-                                >
-                                  <TaskCard
-                                    role="listitem"
-                                    description={t.description || ''}
-                                    dueDate={
-                                      t.dueDate
-                                        ? new Date(t.dueDate).toISOString()
-                                        : ''
-                                    }
-                                    projectId={t.projectId}
-                                    workspaceId={Number(workspaceId)}
-                                    status={t.status}
-                                    title={t.title}
-                                    taskId={t.id}
-                                    assignee={t.assignee}
-                                    priority={t.priority}
-                                  />
-                                </div>
-                              )}
-                            </Draggable>
-                          ))}
-
-                          {column.id === 'DONE' && (
-                            <div className="flex flex-col gap-2 text-center">
-                              <span className="text-zinc-600 italic text-xs">
-                                {remainTasksCount > 0
-                                  ? `Еще ${remainTasksCount} законченных задач`
-                                  : `Больше нет законченных задач`}
-                              </span>
-                              <Button variant="link">
-                                <Link
-                                  className="text-primary-500"
-                                  href={clientRoutes.tasksPage(
-                                    workspaceId,
-                                    project.id
-                                  )}
-                                >
-                                  Все задачи →
-                                </Link>
-                              </Button>
-                            </div>
-                          )}
-
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  </section>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </DragDropContext>
-=======
 
       <ProjectTasksBoard
         filteredTasks={filteredTasks}
@@ -324,7 +190,6 @@ const ProjectComponent = ({
         counts={counts}
         remainTasksCount={remainTasksCount}
       />
->>>>>>> Stashed changes
     </article>
   );
 };
