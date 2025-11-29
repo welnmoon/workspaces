@@ -20,4 +20,6 @@ export const clientRoutes = {
     workspaceName: string
   ) => `/pricing?workspaceId=${workspaceId}&workspaceName=${workspaceName}
   `,
+
+  notificationsPage: () => `/profile/notifications`,
 };

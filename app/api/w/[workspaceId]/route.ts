@@ -7,7 +7,11 @@ import {
 } from '@/lib/http';
 import { prisma } from '@/lib/prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
-import { Prisma, Role } from '@prisma/client';
+import {
+
+  Prisma,
+  Role,
+} from '@prisma/client';
 import { NextRequest } from 'next/server';
 
 type Params = { params: Promise<{ workspaceId: string }> };
@@ -55,3 +59,5 @@ export async function PATCH(req: NextRequest, context: Params) {
     return serverError('Не удалось обновить рабочее пространство');
   }
 }
+
+

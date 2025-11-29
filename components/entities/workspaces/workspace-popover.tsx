@@ -13,10 +13,12 @@ type WorkspacePopoverProps = {
   workspaceId: number;
   workspaceName: string;
   workspaceDescription?: string | null;
+  tasksDone: number;
 };
 
 const WorkspacePopover = ({
   workspaceId,
+  tasksDone,
   workspaceName,
   workspaceDescription,
 }: WorkspacePopoverProps) => {
@@ -36,7 +38,7 @@ const WorkspacePopover = ({
           workspaceName={workspaceName}
           workspaceId={workspaceId}
         />
-        <DownloadReportButton />
+        <DownloadReportButton tasksDone={tasksDone} />
       </PopoverContent>
     </Popover>
   );

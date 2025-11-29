@@ -2,6 +2,7 @@ import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 import { markUserOnline } from './mark-user-online';
 import { UserService } from '@/lib/services/user';
+import { AppError } from '@/lib/errors';
 
 export type SessionUser = {
   id: string;
@@ -10,24 +11,16 @@ export type SessionUser = {
   image?: string | null;
 };
 
-export class UnauthorizedError extends Error {
-  status = 401;
-  constructor(message = 'Unauthorized') {
-    super(message);
-    this.name = 'UnauthorizedError';
-  }
-}
-
 export async function requireUser(): Promise<SessionUser> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
-    throw new UnauthorizedError();
+    throw new AppError(401, 'UNAUTHORIZED', 'Unauthorized');
   }
 
-   const dbUser = await UserService.getUserById(session.user.id);
-   if (!dbUser) {
-     throw new UnauthorizedError('User not found');
-   }
+  const dbUser = await UserService.getUserById(session.user.id);
+  if (!dbUser) {
+    throw new AppError(401, 'UNAUTHORIZED', 'Unauthorized');
+  }
 
   markUserOnline(session.user.id).catch((err) => console.error(err));
 

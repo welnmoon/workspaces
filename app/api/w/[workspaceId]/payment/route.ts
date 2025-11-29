@@ -1,4 +1,5 @@
-import { requireUser, UnauthorizedError } from '@/helpers/require-user';
+import { requireUser } from '@/helpers/require-user';
+import { AppError } from '@/lib/errors';
 import {
   badRequest,
   forbidden,
@@ -40,7 +41,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     await WorkspaceService.updateWorkspaceTariff(workspaceId, parsed.data.name);
     return noContent();
   } catch (e) {
-    if (e instanceof UnauthorizedError) return unauthorized('Вы не авторизованы');
+    if (e instanceof AppError) return unauthorized('Вы не авторизованы');
     console.error('payment update error', e);
     return serverError('Не удалось обновить тариф');
   }

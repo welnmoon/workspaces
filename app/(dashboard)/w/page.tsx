@@ -1,7 +1,8 @@
 import UnauthorizedClient from '@/components/un-auth-client';
 import WorkspacesComponent from '@/components/entities/workspaces/workspaces';
-import { requireUser, UnauthorizedError } from '@/helpers/require-user';
+import { requireUser } from '@/helpers/require-user';
 import { WorkspaceService } from '@/lib/services/workspace';
+import { AppError } from '@/lib/errors';
 
 const WorkspacesPage = async () => {
   try {
@@ -10,7 +11,7 @@ const WorkspacesPage = async () => {
 
     return <WorkspacesComponent userId={user.id} workspaces={workspaces} />;
   } catch (e) {
-    if (e instanceof UnauthorizedError) {
+    if (e instanceof AppError) {
       return <UnauthorizedClient />;
     }
   }

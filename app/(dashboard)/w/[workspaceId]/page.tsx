@@ -1,7 +1,7 @@
 import Divider from '@/components/divider';
 import { Heading } from '@/components/ui/heading';
 import { requireUser } from '@/helpers/require-user';
-import { getWorkspaceStats } from '@/lib/services/get-workspace-stats';
+import { getWorkspaceStats } from '@/lib/services/func/get-workspace-stats';
 import { MembershipService } from '@/lib/services/membership';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { Role } from '@prisma/client';
@@ -80,6 +80,7 @@ const WorkspacePage = async ({
         <Heading>Workspace {workspace?.name}</Heading>
         {(role === Role.OWNER || role === Role.ADMIN) && (
           <WorkspacePopover
+          tasksDone={tasksDone}
             workspaceId={workspaceIdNumber}
             workspaceName={workspace.name}
             workspaceDescription={workspace.description}
