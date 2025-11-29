@@ -4,7 +4,6 @@ import type { Project } from '@prisma/client';
 import { Heading } from '../../ui/heading';
 import Divider from '../../divider';
 import Description from '../../ui/desc';
-import TaskCard from '../tasks/task-card';
 import CreateTaskDialog from '../../dialogs/create-task-dialog';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { Breadcrumbs } from '../../bread-crumbs';
@@ -16,19 +15,18 @@ import EmptyState from '../../empty-state';
 import { MessageInfo } from '../../message';
 import { DateRange } from 'react-day-picker';
 import FilterCalendar from '../../filters/filter-calendar';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
+import { TaskStatusDTO } from '@/const/tasks-status';
 import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
 import { filterTasks } from '@/helpers/task/filter-tasks';
 import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
 import ProjectTasksAllStats from './project-tasks-stats';
-import { cn } from '@/lib/utils';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
-import DoneTasksFilter from './done-tasks-filter';
-import Link from 'next/link';
 import useMediaQuery from '@/hooks/use-media-query';
+import { useTasksWithAssignee } from '@/hooks/tasks/use-tasks-with-assignee';
+import ProjectTasksBoard from './project-tasks-board';
+import { useQueryClient } from '@tanstack/react-query';
 
 export type StatusFilter = TaskStatusDTO | 'ALL';
 const counts = [10, 25, 50];
@@ -57,6 +55,13 @@ const ProjectComponent = ({
   const [doneTasksCount, setDoneTasksCount] = useState<string>(
     String(counts[0])
   );
+  const qc = useQueryClient();
+  const queryKey = ['tasks', project.id, workspaceId];
+  const { data: optimisticTasks } = useTasksWithAssignee(
+    project.id,
+    workspaceId,
+    tasks
+  );
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
   let remainTasksCount: number;
@@ -65,8 +70,8 @@ const ProjectComponent = ({
   }, [doneTasksCount]);
 
   useEffect(() => {
-    setBoardTasks(tasks);
-  }, [tasks]);
+    setBoardTasks(optimisticTasks || []);
+  }, [optimisticTasks]);
 
   const filteredTasks = useMemo(() => {
     return filterTasks(boardTasks, status, dateRange);
@@ -89,7 +94,9 @@ const ProjectComponent = ({
   const hasAnyFilter = hasStatusFilter || hasDateFilter;
 
   // Functions
-  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks);
+  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, (tasks) =>
+    qc.setQueryData(queryKey, tasks)
+  );
 
   const resetFilters = () => {
     setStatus('ALL');
@@ -167,6 +174,7 @@ const ProjectComponent = ({
           }
         />
       )}
+<<<<<<< Updated upstream
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="mt-4 relative w-full">
           {filteredTasks.length === 0 && (
@@ -302,6 +310,21 @@ const ProjectComponent = ({
           )}
         </div>
       </DragDropContext>
+=======
+
+      <ProjectTasksBoard
+        filteredTasks={filteredTasks}
+        tasksByStatus={tasksByStatus}
+        droppableDirection={droppableDirection}
+        onDragEnd={onDragEnd}
+        workspaceId={workspaceId}
+        projectId={project.id}
+        doneTasksCount={doneTasksCount}
+        setDoneTasksCount={setDoneTasksCount}
+        counts={counts}
+        remainTasksCount={remainTasksCount}
+      />
+>>>>>>> Stashed changes
     </article>
   );
 };

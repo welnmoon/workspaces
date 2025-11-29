@@ -16,9 +16,12 @@ export const apiRoutes = {
   // Tasks
   getTasks: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
+  getTasksWithAssignee: (workspaceId: number, projectId: number) => `/api/w/${workspaceId}/projects/${projectId}/tasks/with-assignee`,
   updateTaskStatus: (taskId: number) => `/api/task/${taskId}/update-status`,
   createTask: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
+  changePriority: (workspaceId: number, projectId: number, taskId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/change-priority`,
 
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
