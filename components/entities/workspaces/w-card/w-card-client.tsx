@@ -14,12 +14,14 @@ type Props = {
   avatarUrl: string;
   workspace: { id: number; name: string };
   role: FullRoleDTO | null;
+  userId: string
 };
 
 export default function WorkspaceCardClient({
   avatarUrl,
   workspace,
   role,
+  userId
 }: Props) {
   const [name, setName] = useState(workspace.name);
 
@@ -44,6 +46,7 @@ export default function WorkspaceCardClient({
 
           {role !== RolesEnum.MEMBER && (
             <WorkspaceCardActions
+            userId={userId}
               workspaceId={workspace.id}
               workspaceName={name}
               onNameChange={(newName) => setName(newName)}
