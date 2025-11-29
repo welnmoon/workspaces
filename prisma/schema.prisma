@@ -294,6 +294,7 @@ enum NotificationType {
   TASK_ASSIGNED
   TASK_STATUS_CHANGED
   PAYMENT_COMPLETED
+  WORKSPACE_NOTIFICATION
 }
 
 enum MembershipStatus {

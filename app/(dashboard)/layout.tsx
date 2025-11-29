@@ -86,7 +86,7 @@ export default async function DashboardLayout({
         </div>
 
         <div className="flex-1 p-4 ">
-          <div className="max-w-6xl mx-auto w-full ">{children}</div>
+          <div className="w-full ">{children}</div>
         </div>
       </div>
     </SidebarProvider>

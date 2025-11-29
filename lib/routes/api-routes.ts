@@ -48,6 +48,8 @@ export const apiRoutes = {
     `/api/user/${userId}/notifications/${notificationId}/read`,
   hiddenNotification: (userId: string, notificationId: number) =>
     `/api/user/${userId}/notifications/${notificationId}/hidden`,
+  sendNotificationsToWMembers: (workspaceId: number) =>
+    `/api/w/${workspaceId}/members/notifications`,
 
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,

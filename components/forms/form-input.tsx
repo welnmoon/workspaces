@@ -17,6 +17,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   isPassword?: boolean;
   className?: string;
   disabled?: boolean;
+  isTextarea?: boolean;
 }
 
 const FormInput = ({
@@ -28,6 +29,7 @@ const FormInput = ({
   className,
   disabled,
   isPassword,
+  isTextarea = false,
   ...rest
 }: Props) => {
   const {
@@ -48,7 +50,7 @@ const FormInput = ({
     setValue(name, '', { shouldValidate: true });
   };
 
-  const isTextarea = name === 'description';
+  const isText = name === 'description';
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -59,7 +61,7 @@ const FormInput = ({
       )}
 
       <div className="relative">
-        {isTextarea ? (
+        {isText || isTextarea ? (
           <textarea
             {...register(name)}
             placeholder={placeholder}

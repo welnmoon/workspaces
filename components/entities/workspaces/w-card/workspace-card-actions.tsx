@@ -22,17 +22,21 @@ import { useWorkspaceChangeName } from '@/hooks/workspace/use-workspace-change-n
 import toast from 'react-hot-toast';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
+import { useSendNotificationToWMembers } from '@/hooks/notifications/use-send-notif-to-w-members';
+import SendWMembersNotificationForm from '@/components/forms/notifications/send-w-members-notification-form';
+import { SendNotificationToWMembersSchema } from '@/schemas/notification/send-notification-to-w-members-schema';
 
 type Props = {
   workspaceId: number;
   workspaceName: string;
   onNameChange: (name: string) => void;
+  userId: string;
 };
 
 const WorkspaceCardActions = ({
   workspaceId,
   workspaceName,
-
+  userId,
   onNameChange,
 }: Props) => {
   const workspaceLabel = `${workspaceName} (#${workspaceId})`;
@@ -86,6 +90,24 @@ const WorkspaceCardActions = ({
     setOpenNotifyDialog(false);
   };
 
+  const {
+    mutate: sendNotificationToWMembersMutate,
+    isPending: isSendNotifPending,
+  } = useSendNotificationToWMembers(userId, workspaceId);
+
+  const onSend = (values: SendNotificationToWMembersSchema) => {
+    sendNotificationToWMembersMutate(values, {
+      onSuccess: () => {
+        toast.success('Уведомление успешно отправлено');
+        closeDialogs();
+      },
+      onError: () => {
+        toast.error('Не удалось отправить уведомление');
+        console.error(error);
+      },
+    });
+  };
+
   return (
     <>
       <Popover open={openPopover} onOpenChange={setOpenPopover}>
@@ -135,25 +157,21 @@ const WorkspaceCardActions = ({
         </PopoverContent>
       </Popover>
 
-      {/* Notify dialog (пока заглушка) */}
       <Dialog open={openNotifyDialog} onOpenChange={setOpenNotifyDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Уведомить участников</DialogTitle>
             <DialogDescription>
-              Здесь появится форма отправки уведомления всем участникам рабочего
-              пространства «{workspaceLabel}».
+              Вы можете отправить уведомление всем участникам рабочего
+              пространства.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setOpenNotifyDialog(false)}
-            >
-              Отмена
-            </Button>
-            <Button onClick={closeDialogs}>Отправить (пока без логики)</Button>
-          </DialogFooter>
+          <SendWMembersNotificationForm
+            onSubmit={onSend}
+            isSubmitting={isSendNotifPending}
+            setOpenNotifyDialog={setOpenNotifyDialog}
+          />
+          
         </DialogContent>
       </Dialog>
 
