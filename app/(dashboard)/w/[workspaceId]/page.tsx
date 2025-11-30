@@ -23,17 +23,7 @@ const WorkspacePage = async ({
   const user = await requireUser();
   const workspaceIdNumber = Number((await params).workspaceId);
   const memberCheck = await isMember(workspaceIdNumber, user.id);
-  if (memberCheck.isMember === false) {
-    return (
-      <>
-        <EmptyState
-          title="Вы не участник этого пространства"
-          subtitle="Отправьте заявку на вступление."
-        />
-        <span>В разработке...</span>
-      </>
-    );
-  }
+
   const [userRole, workspace, projects, memberships, role, payments] =
     await Promise.all([
       MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
@@ -46,6 +36,18 @@ const WorkspacePage = async ({
 
   if (!workspace) {
     return <EmptyState title="Пространство не найдено" />;
+  }
+
+  if (memberCheck.isMember === false) {
+    return (
+      <>
+        <EmptyState
+          title="Вы не участник этого пространства"
+          subtitle="Отправьте заявку на вступление."
+        />
+        <span>В разработке...</span>
+      </>
+    );
   }
 
   const {

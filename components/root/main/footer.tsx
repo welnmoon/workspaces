@@ -3,45 +3,9 @@ import Link from 'next/link';
 import RootContainer from '@/components/root/root-container';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import { FiGithub, FiLinkedin, FiTwitter } from 'react-icons/fi';
+import { navSections } from '@/const/root-navigation';
 
-const footerSections = [
-  {
-    title: 'Продукт',
-    links: [
-      { label: 'Дашборды', href: '#' },
-      { label: 'Управление задачами', href: '#' },
-      { label: 'Автоматизации', href: '#' },
-      { label: 'Интеграции', href: '#' },
-    ],
-  },
-  {
-    title: 'Ресурсы',
-    links: [
-      { label: 'Центр поддержки', href: '#' },
-      { label: 'API и вебхуки', href: '#' },
-      { label: 'Шаблоны команд', href: '#' },
-      { label: 'Блог о продуктивности', href: '#' },
-    ],
-  },
-  {
-    title: 'Компания',
-    links: [
-      { label: 'О нас', href: '#' },
-      { label: 'Безопасность', href: '#' },
-      { label: 'Контакты', href: '#' },
-      { label: 'Вакансии', href: '#' },
-    ],
-  },
-  {
-    title: 'Юридическое',
-    links: [
-      { label: 'Конфиденциальность', href: '#' },
-      { label: 'Условия использования', href: '#' },
-      { label: 'Обработка данных', href: '#' },
-      { label: 'Cookies', href: '#' },
-    ],
-  },
-];
+
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -81,7 +45,7 @@ const Footer = () => {
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {footerSections.map((section) => (
+            {navSections.map((section) => (
               <div key={section.title} className="flex flex-col gap-3">
                 <h3 className="text-sm font-semibold text-neutral-700 uppercase tracking-wide">
                   {section.title}

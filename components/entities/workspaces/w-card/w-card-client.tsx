@@ -11,7 +11,7 @@ import WorkspaceCardActions from './workspace-card-actions';
 import { FullRoleDTO, ROLE_VALUES, RolesEnum } from '@/types/prisma/DTO/role';
 
 type Props = {
-  avatarUrl: string;
+  avatarUrl: string | null;
   workspace: { id: number; name: string };
   role: FullRoleDTO | null;
   userId: string;
@@ -26,12 +26,37 @@ export default function WorkspaceCardClient({
   isRoleLoading,
 }: Props) {
   const [name, setName] = useState(workspace.name);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [roleLoaded, setRoleLoaded] = useState(false);
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="flex flex-1 flex-row items-start gap-3">
-        <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
-          <Image src={avatarUrl} alt="avatar" width={40} height={40} />
+        <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 relative">
+          {!imgLoaded && (
+            <div className="absolute inset-0 rounded-full bg-gray-200 animate-pulse" />
+          )}
+
+          {avatarUrl && (
+            <Image
+              src={avatarUrl}
+              alt="avatar"
+              width={40}
+              height={40}
+              className={imgLoaded ? 'opacity-100' : 'opacity-0'}
+              onLoadingComplete={() => setImgLoaded(true)}
+            />
+          )}
+          {!avatarUrl && (
+            <Image
+              src="/images/workspaces/avatar/default-avatar.png"
+              alt="avatar"
+              width={40}
+              height={40}
+              className={imgLoaded ? 'opacity-100' : 'opacity-0'}
+              onLoadingComplete={() => setImgLoaded(true)}
+            />
+          )}
         </div>
 
         <div className="flex-1 flex items-start gap-2 justify-between min-w-0">
@@ -58,8 +83,16 @@ export default function WorkspaceCardClient({
       </CardHeader>
 
       <CardFooter className="text-sm text-muted-foreground">
-        {isRoleLoading && <span className="animate-pulse bg-gray-300" />}
-        {!isRoleLoading && <span>Вы: {role}</span>}
+        {isRoleLoading ? (
+          // Скелетон роли
+          <span className="inline-block h-4 w-24 rounded bg-gray-200 animate-pulse" />
+        ) : role ? (
+          // Когда загрузилась роль
+          <span>Вы: {role}</span>
+        ) : (
+          // На всякий случай, если роли нет
+          <span>Роль не определена</span>
+        )}
       </CardFooter>
     </Card>
   );

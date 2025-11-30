@@ -14,12 +14,12 @@ const WorkspaceCard = ({
 }) => {
   const { data: role, isLoading } = useWorkspaceMemberRole(workspace.id);
 
-  const avatarUrl = workspace.avatarUrl || '/images/workspace-default.png';
+  const avatarUrl = workspace.avatarUrl;
 
   return (
     <WorkspaceCardClient
       userId={userId}
-      avatarUrl={avatarUrl}
+      avatarUrl={avatarUrl }
       workspace={workspace}
       role={role!}
       isRoleLoading={isLoading}
