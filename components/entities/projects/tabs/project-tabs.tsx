@@ -17,8 +17,9 @@ import { Button } from '@/components/ui/button';
 import TasksFilterPopover from '@/components/filters/tasks-filter-popover';
 import { Kanban, List } from 'lucide-react';
 import type { TaskStats } from '@/types/service/task-stats';
-import ProjectTasksStats from './project-tasks-stats';
+import ProjectTasksStats from '../project-tasks-stats';
 import { IoStatsChart } from 'react-icons/io5';
+import { useTaskStatusChange } from '@/hooks/tasks/use-task-status-change';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -48,6 +49,16 @@ const ProjectTabs = ({
 
   const queryClient = useQueryClient();
   const queryKey = ['tasks', projectId, workspaceId];
+  const syncCache = (updatedTasks: TaskWithAssigneeDTO[]) =>
+    queryClient.setQueryData(queryKey, updatedTasks);
+  const { changeStatus, isPending } = useTaskStatusChange({
+    setBoardTasks,
+    syncCache: (tasks) =>
+      queryClient.setQueryData(['tasks', projectId, workspaceId], tasks),
+  });
+
+  // в onDragEnd или где-то ещё:
+
   const { data: optimisticTasks } = useTasksWithAssignee(
     projectId,
     workspaceId,
@@ -79,9 +90,7 @@ const ProjectTabs = ({
   const hasStatusFilter = status !== 'ALL';
   const hasAnyFilter = hasStatusFilter || hasDateFilter;
 
-  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, (updatedTasks) =>
-    queryClient.setQueryData(queryKey, updatedTasks)
-  );
+  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, syncCache);
 
   const resetFilters = () => {
     setStatus('ALL');
@@ -177,6 +186,8 @@ const ProjectTabs = ({
           hasStatusFilter={hasStatusFilter}
           hasDateFilter={hasDateFilter}
           status={status}
+          onStatusChange={changeStatus}
+          isStatusPending={isPending}
         />
       </TabsContent>
 

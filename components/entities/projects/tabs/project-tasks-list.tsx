@@ -12,6 +12,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from '@/components/ui/select';
+import { cn } from '@/lib/utils';
+import getTaskStatusColor from '@/helpers/get-status-color';
+import { Badge } from '@/components/ui/badge';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -21,6 +30,11 @@ type ProjectTabsListProps = {
   hasStatusFilter: boolean;
   hasDateFilter: boolean;
   status: StatusFilter;
+  onStatusChange: (
+    taskId: number,
+    status: TaskStatusDTO
+  ) => void | Promise<void>;
+  isStatusPending?: boolean;
 };
 
 const ProjectTabsList = ({
@@ -29,6 +43,8 @@ const ProjectTabsList = ({
   hasStatusFilter,
   hasDateFilter,
   status,
+  onStatusChange,
+  isStatusPending,
 }: ProjectTabsListProps) => {
   return (
     <section className="space-y-3">
@@ -48,7 +64,7 @@ const ProjectTabsList = ({
         />
       )}
 
-      <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+      {listTasks.length > 0 && (
         <Table>
           <TableHeader className="bg-zinc-50">
             <TableRow className="text-left text-xs font-semibold text-muted-foreground">
@@ -62,7 +78,10 @@ const ProjectTabsList = ({
           <TableBody className="text-sm">
             {listTasks.map((t) => {
               const statusTitle =
-                STATUS_COLUMNS.find((s) => s.id === t.status)?.title ?? t.status;
+                STATUS_COLUMNS.find((s) => s.id === t.status)?.title ??
+                t.status;
+              const statusId = (STATUS_COLUMNS.find((s) => s.id === t.status)
+                ?.id ?? t.status) as TaskStatusDTO;
               const priorityLabel = TASK_PRIORITY_LABELS[t.priority];
               const due = t.dueDate && new Date(t.dueDate).toLocaleDateString();
 
@@ -76,8 +95,45 @@ const ProjectTabsList = ({
                   <TableCell className="px-4 py-3 font-medium text-foreground">
                     {t.title}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-muted-foreground">
-                    {statusTitle}
+                  <TableCell className={cn('px-4 py-3 text-muted-foreground')}>
+                    <Select
+                      value={statusId}
+                      disabled={isStatusPending}
+                      onValueChange={(value) =>
+                        onStatusChange(t.id, value as TaskStatusDTO)
+                      }
+                    >
+                      <SelectTrigger className="h-8 w-40 justify-between px-2">
+                        <Badge
+                          className={cn(
+                            getTaskStatusColor({ taskStatus: statusId }),
+                            'text-white font-medium'
+                          )}
+                        >
+                          {statusTitle}
+                        </Badge>
+                      </SelectTrigger>
+                      <SelectContent className="w-44">
+                        {STATUS_COLUMNS.map((statusOption) => (
+                          <SelectItem
+                            key={statusOption.id}
+                            value={statusOption.id}
+                            className="flex items-center gap-2"
+                          >
+                            <Badge
+                              className={cn(
+                                getTaskStatusColor({
+                                  taskStatus: statusOption.id,
+                                }),
+                                'text-white font-medium'
+                              )}
+                            >
+                              {statusOption.title}
+                            </Badge>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-muted-foreground">
                     {priorityLabel}
@@ -104,7 +160,7 @@ const ProjectTabsList = ({
             )}
           </TableBody>
         </Table>
-      </div>
+      )}
     </section>
   );
 };

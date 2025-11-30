@@ -1,10 +1,10 @@
 import { DropResult } from '@hello-pangea/dnd';
 import { Dispatch, SetStateAction } from 'react';
 import { reorder } from './reorder';
-import { apiRoutes } from '@/lib/routes/api-routes';
 import toast from 'react-hot-toast';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { TaskStatusDTO } from '@/const/tasks-status';
+import { updateTaskStatusRequest } from '@/hooks/tasks/use-task-status-change';
 
 export function createTasksBoardOnDragEnd(
   setBoardTasks: Dispatch<SetStateAction<TaskWithAssigneeDTO[]>>,
@@ -142,24 +142,11 @@ export function createTasksBoardOnDragEnd(
 
     (async () => {
       try {
-        const res = await fetch(apiRoutes.updateTaskStatus(taskId), {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ status: destStatus }),
-        });
-
-        if (!res.ok) {
-          toast.error('Не удалось обновить статус задачи', await res.json());
-          console.error('Failed to update task status', await res.json());
-          setBoardTasks(prevSnapshot);
-          if (syncCache) syncCache(prevSnapshot);
-          return;
-          // Добавить откат
-        }
+        await updateTaskStatusRequest(taskId, destStatus);
       } catch (e) {
-        toast.error('Не удалось обновить статус задачи');
+        toast.error(
+          e instanceof Error ? e.message : 'Не удалось обновить статус задачи'
+        );
         setBoardTasks(prevSnapshot);
         if (syncCache) syncCache(prevSnapshot);
         console.error('Failed to update task status', e);
