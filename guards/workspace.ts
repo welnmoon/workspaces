@@ -1,4 +1,5 @@
 import { requireUser } from '@/helpers/require-user';
+import { AppError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import { Role } from '@prisma/client';
 
@@ -26,11 +27,15 @@ export const requireWorkspaceMember = async ({
   });
 
   if (!membership) {
-    throw new Error('You are not a member of this workspace');
+    throw new AppError(
+      403,
+      'FORBIDDEN',
+      'You are not a member of this workspace'
+    );
   }
 
   if (allowed && !allowed.includes(membership.role)) {
-    throw new Error('You are not allowed to perform this action');
+    throw new AppError(403, 'FORBIDDEN', 'You are not allowed to do this');
   }
 
   return { user, role: membership.role as Role };

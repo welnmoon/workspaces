@@ -5,12 +5,20 @@ import { Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from '../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+  DialogFooter,
+} from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { cn } from '@/lib/utils';
 
-const DownloadReportButton = () => {
+const DownloadReportButton = ({ tasksDone }: { tasksDone: number }) => {
   const today = useMemo(() => new Date(), []);
   const defaultStart = useMemo(() => {
     const firstDay = new Date(today);
@@ -77,26 +85,32 @@ const DownloadReportButton = () => {
     } catch (error) {
       console.error(error);
       toast.error(
-        error instanceof Error
-          ? error.message
-          : 'Ошибка при скачивании отчёта'
+        error instanceof Error ? error.message : 'Ошибка при скачивании отчёта'
       );
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleDownloadButtonClick = () => {
+    if (tasksDone === 0) {
+      toast.error('Для отчета нужна хотябы одна завершенная задача');
+      return;
+    }
+
+    setOpen(true);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className="w-full flex items-center justify-start gap-2 text-left"
-        >
-          <Download className="w-5 h-5" />
-          <span>Скачать отчёт</span>
-        </Button>
-      </DialogTrigger>
+      <Button
+        onClick={() => handleDownloadButtonClick()}
+        variant="ghost"
+        className="w-full flex items-center justify-start gap-2 text-left"
+      >
+        <Download className="w-5 h-5" />
+        <span>Скачать отчёт</span>
+      </Button>
 
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-left space-y-2">

@@ -11,7 +11,7 @@ import { requireUser } from '@/helpers/require-user';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
-import InvitationsPopover from '@/components/notifications/invitations-popover';
+import InvitationsPopover from '@/components/entities/notifications/notifications-popover';
 import { Badge } from '@/components/ui/badge';
 import DashboardSidebarDynamic from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
 import { UserService } from '@/lib/services/user';
@@ -86,9 +86,7 @@ export default async function DashboardLayout({
         </div>
 
         <div className="flex-1 p-4 ">
-          <div className="max-w-6xl mx-auto w-full ">
-            {children}
-          </div>
+          <div className="w-full ">{children}</div>
         </div>
       </div>
     </SidebarProvider>

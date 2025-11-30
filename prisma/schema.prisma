@@ -26,6 +26,7 @@ model User {
   auditLogs           AuditLog[]
   invitationsReceived Invitation[] @relation("InvitationsReceived")
   invitationsSent     Invitation[] @relation("InvitationsSent")
+  notifications       Notification[]
   memberships         Membership[]
   sessions            Session[]
   tasksAssigned       Task[]
@@ -75,6 +76,7 @@ model Workspace {
   avatarUrl   String?      @db.VarChar(512)
   auditLogs   AuditLog[]
   invitations Invitation[]
+  notifications Notification[]
   memberships Membership[]
   projects    Project[]
   owner       User?        @relation("WorkspaceOwner", fields: [ownerId], references: [id])
@@ -123,6 +125,31 @@ model Invitation {
   @@index([expiresAt])
   @@index([invitedUserEmail])
 }
+
+model Notification {
+  id          Int               @id @default(autoincrement())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type        NotificationType
+  title       String
+  message     String
+
+  // опционально – связь с воркспейсом
+  workspaceId Int?
+  workspace   Workspace?        @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+
+  isRead      Boolean           @default(false)
+  isHidden    Boolean           @default(false)
+  metadata    Json?             // сюда можно класть workspaceName, старый тариф и т.п.
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([userId, isRead, createdAt])
+}
+
+
 
 model Account {
   id                 String   @id @default(cuid())
@@ -176,19 +203,17 @@ model Payment {
   workspaceId   Int
   workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
-  userId        String?   // кто оплатил (может быть null, если админ оплатил за команду)
+  userId        String?  
   user          User?     @relation(fields: [userId], references: [id])
 
-  // Что купили
   tariff        Tariff
-  amount        Decimal   @db.Decimal(12, 2) // 9990.00 KZT
-  currency      String    @default("KZT")    // KZT, RUB, USD...
+  amount        Decimal   @db.Decimal(12, 2) 
+  currency      String    @default("KZT")   
 
-  // От CloudPayments
-  cloudpaymentsId String?   // PaymentId из CloudPayments (TransactionId)
-  invoiceId       String?   // твой invoiceId (pro-monthly-123-170000000)
+  cloudpaymentsId String?  
+  invoiceId       String?   
   status          PaymentStatus
-  reason          String?   // если fail — причина
+  reason          String?   
 
   // Когда
   paidAt        DateTime? // когда статус стал Completed
@@ -260,6 +285,16 @@ enum InvitationStatus {
   ACCEPTED
   REVOKED
   EXPIRED
+}
+
+
+enum NotificationType {
+  WORKSPACE_DELETED
+  WORKSPACE_INVITE
+  TASK_ASSIGNED
+  TASK_STATUS_CHANGED
+  PAYMENT_COMPLETED
+  WORKSPACE_NOTIFICATION
 }
 
 enum MembershipStatus {

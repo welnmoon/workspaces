@@ -83,6 +83,7 @@ const ProjectComponent = ({
     // }
   }, [filteredTasks]);
 
+
   const remainTasksCount = useMemo(() => { // remain это количество задач, которые еще не выполнены
     const totalDone = allTaskStats?.tasksDoneCount ?? 0;
     const shown = Number(doneTasksCount);
@@ -190,6 +191,7 @@ const ProjectComponent = ({
         counts={counts}
         remainTasksCount={remainTasksCount}
       />
+
     </article>
   );
 };

@@ -12,6 +12,12 @@ export const apiRoutes = {
   updateWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
   getWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
   getWorkspaces: () => `/api/w`,
+  changeWorkspaceName: (workspaceId: number) =>
+    `/api/w/${workspaceId}/change-name`,
+  deleteWorkspace: (workspaceId: number) => `/api/w/${workspaceId}/delete`,
+
+  getWorkspaceMemberRole: (workspaceId: number) =>
+    `/api/w/${workspaceId}/members/role`,
 
   // Tasks
   getTasks: (workspaceId: number, projectId: number) =>
@@ -26,7 +32,11 @@ export const apiRoutes = {
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
   deleteUserAccount: (provider: ProviderId) => `/api/auth/accounts/${provider}`,
+
+  // auth
   register: () => `/api/auth/register`,
+  registerWithProvider: (providerId: ProviderId) =>
+    `/api/auth/register/${providerId}`,
 
   // Invitations
   acceptInvitationById: (workspaceId: number, invId: number) =>
@@ -34,6 +44,15 @@ export const apiRoutes = {
   getReceivedInvitations: (userId: string) => `/api/user/${userId}/invitations`,
   createInvitation: (workspaceId: number) =>
     `/api/w/${workspaceId}/invitations`,
+
+  // Notifications
+  getNotifications: (userId: string) => `/api/user/${userId}/notifications`,
+  markReadNotification: (userId: string, notificationId: number) =>
+    `/api/user/${userId}/notifications/${notificationId}/read`,
+  hiddenNotification: (userId: string, notificationId: number) =>
+    `/api/user/${userId}/notifications/${notificationId}/hidden`,
+  sendNotificationsToWMembers: (workspaceId: number) =>
+    `/api/w/${workspaceId}/members/notifications`,
 
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,
