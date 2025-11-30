@@ -10,31 +10,17 @@ const HeroSection = () => {
         "
         >
           {/* Нежный градиент по всему заголовку через тень */}
-          <span className="drop-shadow-[0_6px_24px_rgba(59,130,246,0.25)]">
-            Оптимизируйте свой{' '}
-          </span>
+          <span className="">Оптимизируйте свой </span>
 
           {/* Мягкий подсвет на ключевой фразе */}
           <span className="relative inline-block">
-            <span
+            <img
               aria-hidden
-              className="absolute inset-x-0 -inset-y-1 rounded-md
-                       bg-gradient-to-r from-blue-200/70 via-blue-100/50 to-transparent
-                       blur-[2px]"
+              alt="underline"
+              src="/root/underline.png"
+              className="absolute -bottom-5 -left-5 rotate-1 rounded-md animate-draw"
             />
-            <span className="relative">рабочий процесс</span>
-            <span
-              aria-hidden
-              className="
-              z-[-1]
-      absolute inset-0
-      bg-blue-200/70 via-blue-100/50 blur-[2px]
-      rounded-md
-      opacity-0
-      transition-all duration-300
-      group-hover:opacity-100
-    "
-            />
+            рабочий процесс
           </span>
 
           <span> с помощью мощных инструментов для </span>

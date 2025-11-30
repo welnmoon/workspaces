@@ -7,7 +7,8 @@ import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { TaskStatusDTO } from '@/const/tasks-status';
 
 export function createTasksBoardOnDragEnd(
-  setBoardTasks: Dispatch<SetStateAction<TaskWithAssigneeDTO[]>>
+  setBoardTasks: Dispatch<SetStateAction<TaskWithAssigneeDTO[]>>,
+  syncCache?: (tasks: TaskWithAssigneeDTO[]) => void
 ) {
   return (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -31,6 +32,8 @@ export function createTasksBoardOnDragEnd(
     let prevSnapshot: TaskWithAssigneeDTO[] = [];
 
     // Обновляем boardTasks — локальное состояние задач (оптимистично)
+    let nextTasks: TaskWithAssigneeDTO[] = [];
+
     setBoardTasks((prev) => {
       prevSnapshot = prev;
       // ID перетаскиваемой задачи
@@ -76,7 +79,8 @@ export function createTasksBoardOnDragEnd(
          * - все остальные задачи
          * - и переставленные задачи из этой колонки
          */
-        return [...others, ...reordered];
+        nextTasks = [...others, ...reordered];
+        return nextTasks;
       }
 
       // ─────────────────────────────────────────────
@@ -128,8 +132,13 @@ export function createTasksBoardOnDragEnd(
        * - обновлённая колонка «откуда»
        * - обновлённая колонка «куда»
        */
-      return [...others, ...fromList, ...toList];
+      nextTasks = [...others, ...fromList, ...toList];
+      return nextTasks;
     });
+
+    if (syncCache && nextTasks.length > 0) {
+      syncCache(nextTasks);
+    }
 
     (async () => {
       try {
@@ -145,12 +154,14 @@ export function createTasksBoardOnDragEnd(
           toast.error('Не удалось обновить статус задачи', await res.json());
           console.error('Failed to update task status', await res.json());
           setBoardTasks(prevSnapshot);
+          if (syncCache) syncCache(prevSnapshot);
           return;
           // Добавить откат
         }
       } catch (e) {
         toast.error('Не удалось обновить статус задачи');
         setBoardTasks(prevSnapshot);
+        if (syncCache) syncCache(prevSnapshot);
         console.error('Failed to update task status', e);
       }
     })();

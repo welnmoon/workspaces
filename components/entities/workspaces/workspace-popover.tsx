@@ -8,9 +8,11 @@ import {
 import { IoMenu } from 'react-icons/io5';
 import BuyTariffButton from '@/components/buttons/tariff-buy';
 import DownloadReportButton from '@/components/buttons/download-report-btn';
+import WorkspaceNotifyButton from './workspace-notify-button';
 
 type WorkspacePopoverProps = {
   workspaceId: number;
+  userId: string;
   workspaceName: string;
   workspaceDescription?: string | null;
   tasksDone: number;
@@ -18,6 +20,7 @@ type WorkspacePopoverProps = {
 
 const WorkspacePopover = ({
   workspaceId,
+  userId,
   tasksDone,
   workspaceName,
   workspaceDescription,
@@ -34,6 +37,7 @@ const WorkspacePopover = ({
           name={workspaceName}
           description={workspaceDescription}
         />
+        <WorkspaceNotifyButton workspaceId={workspaceId} userId={userId} />
         <BuyTariffButton
           workspaceName={workspaceName}
           workspaceId={workspaceId}

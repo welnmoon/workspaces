@@ -12,8 +12,10 @@ import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
 import type { UserDTO } from '@/types/prisma/DTO/user';
 import { Badge } from '@/components/ui/badge';
-import { TASK_PRIORITY_LABELS } from '@/const/priority';
+import { TASK_PRIORITY_ARRAY, TASK_PRIORITY_LABELS } from '@/const/priority';
 import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
+import { useChangePriority } from '@/hooks/tasks/use-change-priority';
+import { AlertTriangle, Flame, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface TaskCardProps {
   title: string;
@@ -53,10 +55,6 @@ export default function TaskCard({
     ? new Date().getDate() - new Date(dueDate).getDate()
     : 0;
 
-  // const isSevenDaysLater = dueDate
-  //   ? new Date(dueDate) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  //   : false;
-
   const statusStripeClass = cn(
     'absolute inset-y-0 left-0 w-1 rounded-l-md',
     status === 'DONE'
@@ -87,6 +85,18 @@ export default function TaskCard({
 
   const priorityLabel = TASK_PRIORITY_LABELS[priority];
 
+  const { mutate: onPriorityMutate } = useChangePriority(
+    workspaceId,
+    projectId,
+    taskId
+  );
+  const changeTaskPriority = () => {
+    const order: TaskPriorityDTO[] = TASK_PRIORITY_ARRAY;
+    const currentIndex = order.indexOf(priority);
+    const next = order[currentIndex + 1] ?? order[0];
+    onPriorityMutate(next);
+  };
+
   return (
     <Card
       role={role}
@@ -104,21 +114,29 @@ export default function TaskCard({
             ID: {taskId}
           </span>
 
-          {/* статус-лоцента, компактная как в Jira */}
-          <div className="flex flex-col gap-2">
+          {/* статус + приоритет */}
+          <div className="flex flex-col gap-2 w-24">
             <Badge
               variant="outline"
-              className="border-none bg-muted px-2 py-0.5 text-[11px] leading-none"
+              className="border-none flex justify-center w-full bg-muted px-2 py-0.5 text-[11px] leading-none"
             >
               <span className={statusTextClass}>{status}</span>
             </Badge>
+
             <Badge
+              onClick={changeTaskPriority}
               variant="outline"
               className={cn(
-                'w-fit border px-2 py-0.5 text-[11px]',
+                'flex items-center gap-1 justify-center border px-2 py-0.5 text-[11px]',
                 priorityColors[priority]
               )}
             >
+              {/* ИКОНКИ ПО ПРИОРИТЕТУ */}
+              {priority === 'URGENT' && <Flame size={12} />}
+              {priority === 'HIGH' && <AlertTriangle size={12} />}
+              {priority === 'MEDIUM' && <ArrowUp size={12} />}
+              {priority === 'LOW' && <ArrowDown size={12} />}
+
               {priorityLabel}
             </Badge>
           </div>

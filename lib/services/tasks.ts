@@ -1,4 +1,4 @@
-import { TaskPriority, TaskStatus } from '@prisma/client';
+import { Prisma, TaskPriority, TaskStatus } from '@prisma/client';
 import { prisma } from '../prisma';
 import { AppError } from '../errors';
 
@@ -154,5 +154,31 @@ export class TaskService {
     });
 
     return task;
+  }
+
+  static async changePriority(taskId: number, priority: TaskPriority) {
+    try {
+      const updated = await prisma.task.update({
+        where: {
+          id: taskId,
+        },
+        data: {
+          priority,
+        },
+      });
+
+      console.log('SERVICE', updated);
+
+      return updated;
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === 'P2025'
+      ) {
+        throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+      }
+
+      throw e;
+    }
   }
 }
