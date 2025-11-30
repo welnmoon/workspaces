@@ -13,11 +13,12 @@ const ProjectTasksStats = ({
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <div className="space-y-2 text-sm">
-        <Heading level={3}>Статистика</Heading>
+        {/* <Heading level={3}>Статистика</Heading>
         {allTaskStats && <ProjectTasksAllStats allTaskStats={allTaskStats} />}
         {memberTaskStats && (
           <ProjectMemberTasksAllStats memberTaskStats={memberTaskStats} />
-        )}
+        )} */}
+        ЭТО ЧТО ЗА КОМПОНЕНТ
       </div>
     </div>
   );
