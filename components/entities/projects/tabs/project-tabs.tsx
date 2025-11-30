@@ -17,6 +17,8 @@ import { Button } from '@/components/ui/button';
 import TasksFilterPopover from '@/components/filters/tasks-filter-popover';
 import { Kanban, List } from 'lucide-react';
 import type { TaskStats } from '@/types/service/task-stats';
+import ProjectTasksStats from './project-tasks-stats';
+import { IoStatsChart } from 'react-icons/io5';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -25,6 +27,7 @@ type ProjectTabsProps = {
   workspaceId: number;
   projectId: number;
   allTaskStats: TaskStats;
+  memberTaskStats: TaskStats;
 };
 
 const doneCounts = [10, 25, 50];
@@ -34,6 +37,7 @@ const ProjectTabs = ({
   workspaceId,
   projectId,
   allTaskStats,
+  memberTaskStats,
 }: ProjectTabsProps) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -84,41 +88,86 @@ const ProjectTabs = ({
     setDateRange(undefined);
   };
 
+  const [activeTab, setActiveTab] = useState<'list' | 'kanban' | 'stats'>(
+    'list'
+  );
+
   return (
-    <Tabs defaultValue="list" className="w-full">
-      <TabsList className="grid w-full max-w-md grid-cols-2">
-        <TabsTrigger value="list" className="flex items-center gap-2">
-          <List className="h-4 w-4" />
-          <span>Список</span>
-        </TabsTrigger>
-        <TabsTrigger value="kanban" className="flex items-center gap-2">
-          <Kanban className="h-4 w-4" />
-          <span>Канбан</span>
-        </TabsTrigger>
-      </TabsList>
+    <Tabs
+      value={activeTab}
+      onValueChange={(v) => setActiveTab(v as 'list' | 'kanban' | 'stats')}
+      className="w-full space-y-4"
+    >
+      <div className="flex flex-wrap items-center gap-3">
+        <TabsList className="inline-flex flex-wrap gap-1">
+          <TabsTrigger value="list" className="flex items-center gap-2">
+            <List className="h-4 w-4" />
+            <span>Список</span>
+          </TabsTrigger>
+          <TabsTrigger value="kanban" className="flex items-center gap-2">
+            <Kanban className="h-4 w-4" />
+            <span>Канбан</span>
+          </TabsTrigger>
+          <TabsTrigger value="stats" className="flex items-center gap-2">
+            <IoStatsChart className="h-4 w-4" />
+            <span>Статистика</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {activeTab === 'list' && (
+            <>
+              <TasksFilterPopover
+                status={status}
+                setStatus={(s) => setStatus((s as StatusFilter) ?? 'ALL')}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                resetFilters={resetFilters}
+                hasAnyFilter={hasAnyFilter}
+                statusFilter={true}
+              />
+              <Button
+                onClick={resetFilters}
+                variant="outline"
+                className="h-9 px-3 text-xs"
+              >
+                Сбросить
+              </Button>
+            </>
+          )}
+          {activeTab === 'kanban' && (
+            <>
+              <TasksFilterPopover
+                status={status}
+                setStatus={(s) => setStatus((s as StatusFilter) ?? 'ALL')}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                resetFilters={resetFilters}
+                hasAnyFilter={hasAnyFilter}
+                statusFilter={false}
+              />
+              <Button
+                onClick={resetFilters}
+                variant="outline"
+                className="h-9 px-3 text-xs"
+              >
+                Сбросить
+              </Button>
+            </>
+          )}
+          {activeTab === 'stats' && null}
+        </div>
+      </div>
 
       <TabsContent value="list" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap gap-2">
-            <TasksFilterPopover
-              status={status}
-              setStatus={(s) => setStatus((s as StatusFilter) ?? 'ALL')}
-              dateRange={dateRange}
-              setDateRange={setDateRange}
-              resetFilters={resetFilters}
-              hasAnyFilter={hasAnyFilter}
-            />
-            <Button
-              onClick={resetFilters}
-              variant="outline"
-              className="h-9 px-3 text-xs"
-            >
-              Сбросить
-            </Button>
-          </div>
           <div className="text-sm text-muted-foreground">
-            Всего задач:{' '}
-            <span className="font-medium">{listTasks.length}</span>
+            Всего задач: <span className="font-medium">{listTasks.length}</span>
+            {hasAnyFilter && (
+              <span className="ml-2 text-xs text-blue-500">
+                (Фильтр применён)
+              </span>
+            )}
           </div>
         </div>
 
@@ -131,7 +180,7 @@ const ProjectTabs = ({
         />
       </TabsContent>
 
-      <TabsContent value="kanban" className="mt-4">
+      <TabsContent value="kanban" className="mt-2">
         <ProjectTasksBoard
           filteredTasks={boardTasks}
           tasksByStatus={tasksByStatus}
@@ -143,6 +192,12 @@ const ProjectTabs = ({
           setDoneTasksCount={setDoneTasksCount}
           counts={doneCounts}
           remainTasksCount={remainTasksCount}
+        />
+      </TabsContent>
+      <TabsContent value="stats" className="mt-2">
+        <ProjectTasksStats
+          allTaskStats={allTaskStats}
+          memberTaskStats={memberTaskStats}
         />
       </TabsContent>
     </Tabs>

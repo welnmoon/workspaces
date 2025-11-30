@@ -74,26 +74,13 @@ const ProjectComponent = ({
 
       <Divider />
 
-      <div className="rounded-2xl border border-primary/10 bg-white/90 px-4 py-4 md:px-6 md:py-5 shadow-md ring-1 ring-primary/5 space-y-4">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="space-y-2 text-sm">
-            <Heading level={3}>Задачи</Heading>
-            {allTaskStats && (
-              <ProjectTasksAllStats allTaskStats={allTaskStats} />
-            )}
-            {memberTaskStats && (
-              <ProjectMemberTasksAllStats memberTaskStats={memberTaskStats} />
-            )}
-          </div>
-        </div>
-
-        <ProjectTabs
-          tasks={tasks}
-          workspaceId={workspaceId}
-          projectId={project.id}
-          allTaskStats={allTaskStats}
-        />
-      </div>
+      <ProjectTabs
+        tasks={tasks}
+        workspaceId={workspaceId}
+        projectId={project.id}
+        allTaskStats={allTaskStats}
+        memberTaskStats={memberTaskStats}
+      />
     </article>
   );
 };

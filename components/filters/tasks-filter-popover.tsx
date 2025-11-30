@@ -1,5 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { TaskStatusDTO } from '@/const/tasks-status';
 import { DateRange } from 'react-day-picker';
@@ -15,6 +19,7 @@ type TasksFilterPopoverProps = {
   resetFilters: () => void;
   hasAnyFilter: boolean;
   className?: string;
+  statusFilter?: boolean;
 };
 
 const TasksFilterPopover = ({
@@ -25,6 +30,7 @@ const TasksFilterPopover = ({
   resetFilters,
   hasAnyFilter,
   className,
+  statusFilter = true,
 }: TasksFilterPopoverProps) => {
   return (
     <Popover>
@@ -42,11 +48,19 @@ const TasksFilterPopover = ({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent align="end" className="w-[320px] sm:w-[420px] p-4 space-y-4">
+      <PopoverContent
+        align="end"
+        className="w-[320px] sm:w-[420px] p-4 space-y-4"
+      >
         <div className="flex items-center justify-between gap-3">
           <div className="text-sm font-semibold">Настройки фильтра</div>
           {hasAnyFilter && (
-            <Button variant="ghost" size="sm" className="h-8 px-2" onClick={resetFilters}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2"
+              onClick={resetFilters}
+            >
               <X className="h-4 w-4" />
               <span className="sr-only">Сбросить</span>
             </Button>
@@ -54,18 +68,24 @@ const TasksFilterPopover = ({
         </div>
 
         <div className="space-y-3">
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Статус задачи</p>
-            <ProjectTasksFilterByStatusSelect
-              className="w-full"
-              status={status}
-              setStatus={(s) => setStatus((s as TaskStatusDTO) ?? 'ALL')}
-            />
-          </div>
+          {statusFilter && (
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground">Статус задачи</p>
+              <ProjectTasksFilterByStatusSelect
+                className="w-full"
+                status={status}
+                setStatus={(s) => setStatus((s as TaskStatusDTO) ?? 'ALL')}
+              />
+            </div>
+          )}
 
           <div className="space-y-1">
             <p className="text-xs text-muted-foreground">Дата</p>
-            <FilterCalendar dateRange={dateRange} onSelectHandler={setDateRange} className="w-full" />
+            <FilterCalendar
+              dateRange={dateRange}
+              onSelectHandler={setDateRange}
+              className="w-full"
+            />
           </div>
         </div>
 
