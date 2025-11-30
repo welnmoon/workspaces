@@ -41,8 +41,10 @@ const CreateWorkspaceDialog = () => {
   const nameValue = form.watch('name');
   const firstStepEnded = nameValue.trim() !== '';
 
-  const goNext = () => {
-    const valid = form.trigger(['name', 'description']);
+  const goNext = async () => {
+    const valid = await form.trigger(['name', 'description'], {
+      shouldFocus: true,
+    });
     if (!valid) return;
     setStep(2);
   };
@@ -99,7 +101,11 @@ const CreateWorkspaceDialog = () => {
             {step === 1 && (
               <div className="flex flex-col gap-2 items-end w-full">
                 <CreateWorkspaceForm />
-                <Button disabled={!firstStepEnded} onClick={() => goNext()}>
+                <Button
+                  type="button"
+                  disabled={!firstStepEnded}
+                  onClick={() => goNext()}
+                >
                   Далее
                 </Button>
                 <div className="w-full flex justify-center">
