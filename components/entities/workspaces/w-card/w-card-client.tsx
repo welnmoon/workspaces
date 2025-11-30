@@ -14,20 +14,22 @@ type Props = {
   avatarUrl: string;
   workspace: { id: number; name: string };
   role: FullRoleDTO | null;
-  userId: string
+  userId: string;
+  isRoleLoading: boolean;
 };
 
 export default function WorkspaceCardClient({
   avatarUrl,
   workspace,
   role,
-  userId
+  userId,
+  isRoleLoading,
 }: Props) {
   const [name, setName] = useState(workspace.name);
 
   return (
     <Card className="flex flex-col">
-      <CardHeader className="flex flex-row items-start gap-3">
+      <CardHeader className="flex flex-1 flex-row items-start gap-3">
         <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
           <Image src={avatarUrl} alt="avatar" width={40} height={40} />
         </div>
@@ -36,7 +38,7 @@ export default function WorkspaceCardClient({
           <CardTitle className="min-w-0">
             <Heading className="font-bold leading-tight break-words" level={2}>
               <Link
-                className="underline-anim block line-clamp-2"
+                className="underline-anim w-full workspace-name-clamp"
                 href={clientRoutes.workspacePage(workspace.id)}
               >
                 {name}
@@ -46,7 +48,7 @@ export default function WorkspaceCardClient({
 
           {role !== RolesEnum.MEMBER && (
             <WorkspaceCardActions
-            userId={userId}
+              userId={userId}
               workspaceId={workspace.id}
               workspaceName={name}
               onNameChange={(newName) => setName(newName)}
@@ -56,7 +58,8 @@ export default function WorkspaceCardClient({
       </CardHeader>
 
       <CardFooter className="text-sm text-muted-foreground">
-        Ваша роль: {role}
+        {isRoleLoading && <span className="animate-pulse bg-gray-300" />}
+        {!isRoleLoading && <span>Вы: {role}</span>}
       </CardFooter>
     </Card>
   );

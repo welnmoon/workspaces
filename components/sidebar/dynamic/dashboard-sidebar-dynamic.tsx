@@ -12,6 +12,10 @@ import TaskSelect from '@/components/ui/select/task-select';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import { useProjects } from '@/hooks/project/use-projects';
 import { useTasks } from '@/hooks/tasks/use-tasks';
+import Link from 'next/link';
+import { Heading } from '@/components/ui/heading';
+import { NAV_LINKS } from '@/const/navigation';
+import { RenderNavigation } from '../sidebar-nav';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarDynamic = ({
@@ -129,42 +133,42 @@ const DashboardSidebarDynamic = ({
     <>
       <Sidebar>
         <aside
-          className="block w-80 md:w-75 lg:w-62 xl:w-64 bg-zinc-50 border-r h-screen px-4 py-4 mr-4
+          className="flex flex-col w-80 md:w-75 lg:w-62 xl:w-64 bg-zinc-50 border-r h-screen px-4 py-4 mr-4
     sticky top-0"
         >
           <div className="mb-6">
             <WorkspaceLogo />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-1 flex-col gap-2">
             <WorkspaceSelect
-              label="Workspace"
+              label="Рабочее пространство"
               workspaces={workspaces}
               onChange={handleWorkspaceChange}
               value={
                 selectedWorkspaceId !== null ? String(selectedWorkspaceId) : ''
               }
-              placeholder="Workspace"
+              placeholder="Выберите пространство"
             />
 
             {selectedWorkspaceId && (
               <ProjectSelect
-                label="Project"
+                label="Проект"
                 onChange={handleProjectChange}
                 value={
                   selectedProjectId !== null ? String(selectedProjectId) : ''
                 }
                 projects={projects}
                 loading={pLoading}
-                placeholder={'Проект'}
+                placeholder="Выберите проект"
                 workspaceId={String(selectedWorkspaceId)}
               />
             )}
 
             {selectedWorkspaceId && selectedProjectId && (
               <TaskSelect
-                label="Task"
+                label="Задача"
                 onChange={(value) => setSelectedTaskId(Number(value))}
-                placeholder="Задача"
+                placeholder="Выберите задачу"
                 projectId={String(selectedProjectId)}
                 tasks={tasks}
                 workspaceId={selectedTaskId ? String(selectedWorkspaceId) : ''}
@@ -172,6 +176,16 @@ const DashboardSidebarDynamic = ({
                 loading={tLoading}
               />
             )}
+          </div>
+
+          <div className="mt-auto">
+            <Heading
+              level={3}
+              className="font-semibold text-muted-foreground uppercase mb-2"
+            >
+              Навигация
+            </Heading>
+            <RenderNavigation />
           </div>
         </aside>
       </Sidebar>
