@@ -101,8 +101,8 @@ const WorkspaceCardActions = ({
         toast.success('Уведомление успешно отправлено');
         closeDialogs();
       },
-      onError: () => {
-        toast.error('Не удалось отправить уведомление');
+      onError: (e) => {
+        toast.error(e.message);
         console.error(error);
       },
     });
@@ -171,7 +171,6 @@ const WorkspaceCardActions = ({
             isSubmitting={isSendNotifPending}
             setOpenNotifyDialog={setOpenNotifyDialog}
           />
-          
         </DialogContent>
       </Dialog>
 

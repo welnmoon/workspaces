@@ -5,7 +5,7 @@ import { AppError } from '@/lib/errors';
 import { badRequest, ok, serverError, unprocessable } from '@/lib/http';
 import { NotificationService } from '@/lib/services/notifications';
 import { sendNotificationToWMembersSchema } from '@/schemas/notification/send-notification-to-w-members-schema';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
@@ -45,6 +45,9 @@ export async function POST(
         { code: e.code, message: e.message },
         { status: e.status ?? 400 }
       );
+    }
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json(e.message, { status: 400 });
     }
     if (e instanceof ZodError) return unprocessable(e.message, e.issues);
 
