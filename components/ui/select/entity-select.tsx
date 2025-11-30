@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@radix-ui/react-label';
 import { useRouter } from 'next/navigation';
+import { Spinner } from '../spinner';
 
 type EntitySelectProps<T> = {
   items: T[];
@@ -46,7 +47,9 @@ function EntitySelect<T>({
     value && items.some((i) => getId(i) === value) ? value : undefined;
   return (
     <>
-      <Label className="font-medium">{label}</Label>
+      <Label className="font-semibold text-xs text-muted-foreground uppercase">
+        {label}
+      </Label>
       <Select
         value={normalizedValue}
         onValueChange={(v) => {
@@ -63,7 +66,7 @@ function EntitySelect<T>({
         <SelectContent className="min-w-0 max-w-60">
           {loading && (
             <SelectItem value="__loading" disabled>
-              Загрузка…
+              <Spinner className="mx-auto" />
             </SelectItem>
           )}
 

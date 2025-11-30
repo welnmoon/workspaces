@@ -9,14 +9,7 @@ import CompaniesMarquee from '@/components/root/main/marquee/companies-marquee';
 import RootContainer from '@/components/root/root-container';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 
-// export type SessionUser =
-//   | {
-//       id: string;
-//       name?: string | null | undefined;
-//       email?: string | null | undefined;
-//       image?: string | null | undefined;
-//     }
-//   | undefined;
+
 
 export default function Home() {
   // const user = useSession().data?.user;

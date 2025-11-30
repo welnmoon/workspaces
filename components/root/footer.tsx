@@ -108,6 +108,8 @@ const Footer = () => {
                 Русский (RU)
               </span>
               <span className="h-4 w-px bg-neutral-300" aria-hidden="true" />
+              <span>Казахстан, Алматы</span>
+              <span className="h-4 w-px bg-neutral-300" aria-hidden="true" />
               <span>© {currentYear} Workspaces</span>
               <span className="h-4 w-px bg-neutral-300" aria-hidden="true" />
               <Link href="#" className="hover:text-neutral-900">
