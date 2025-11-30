@@ -1,35 +1,21 @@
 'use client';
 
 import type { Project } from '@prisma/client';
-import { Heading } from '../../ui/heading';
-import Divider from '../../divider';
-import Description from '../../ui/desc';
-import CreateTaskDialog from '../../dialogs/create-task-dialog';
-import { clientRoutes } from '@/lib/routes/client-routes';
-import { Breadcrumbs } from '../../bread-crumbs';
-import { TaskStats } from '@/types/service/task-stats';
-import ProjectTasksFilterByStatusSelect from '../../filters/project-tasks-filter-by-status-select';
-import { useEffect, useMemo, useState } from 'react';
-import { Button } from '../../ui/button';
-import EmptyState from '../../empty-state';
-import { MessageInfo } from '../../message';
-import { DateRange } from 'react-day-picker';
-import FilterCalendar from '../../filters/filter-calendar';
-import { TaskStatusDTO } from '@/const/tasks-status';
-import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
-import { filterTasks } from '@/helpers/task/filter-tasks';
-import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
-import ProjectTasksAllStats from './project-tasks-stats';
+import type { TaskStatusDTO } from '@/const/tasks-status';
+import type { TaskStats } from '@/types/service/task-stats';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import { clientRoutes } from '@/lib/routes/client-routes';
+import { Breadcrumbs } from '../../bread-crumbs';
+import Divider from '../../divider';
+import CreateTaskDialog from '../../dialogs/create-task-dialog';
+import Description from '../../ui/desc';
+import { Heading } from '../../ui/heading';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
-import useMediaQuery from '@/hooks/use-media-query';
-import { useTasksWithAssignee } from '@/hooks/tasks/use-tasks-with-assignee';
-import ProjectTasksBoard from './project-tasks-board';
-import { useQueryClient } from '@tanstack/react-query';
+import ProjectTabs from './tabs/project-tabs';
+import ProjectTasksAllStats from './project-tasks-stats';
 
 export type StatusFilter = TaskStatusDTO | 'ALL';
-const counts = [10, 25, 50];
 
 const ProjectComponent = ({
   project,
@@ -48,67 +34,10 @@ const ProjectComponent = ({
   memberTaskStats: TaskStats;
   members: MembershipSelectUserDTO[];
 }) => {
-  const [status, setStatus] = useState<StatusFilter>('ALL');
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
-  // Done tasks filter
-  const [doneTasksCount, setDoneTasksCount] = useState<string>(
-    String(counts[0])
-  );
-  const qc = useQueryClient();
-  const queryKey = ['tasks', project.id, workspaceId];
-  const { data: optimisticTasks } = useTasksWithAssignee(
-    project.id,
-    workspaceId,
-    tasks
-  );
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-  const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
-
-  useEffect(() => {
-    setBoardTasks(optimisticTasks || []);
-  }, [optimisticTasks]);
-
-  const filteredTasks = useMemo(() => {
-    return filterTasks(boardTasks, status, dateRange);
-  }, [boardTasks, status, dateRange]);
-
-  const tasksByStatus = useMemo(() => {
-    return tasksFilterByStatus({ tasks: filteredTasks });
-    // {
-    //   "TODO": [Task, Task, ...],
-    //   "IN_PROGRESS": [...],
-    //   "DONE": [...],
-    //   "BLOCKED": [...],
-    // }
-  }, [filteredTasks]);
-
-
-  const remainTasksCount = useMemo(() => { // remain это количество задач, которые еще не выполнены
-    const totalDone = allTaskStats?.tasksDoneCount ?? 0;
-    const shown = Number(doneTasksCount);
-    const remain = totalDone - shown;
-    return remain > 0 ? remain : 0;
-  }, [allTaskStats, doneTasksCount]);
-
   if (!project) return null;
 
-  const hasDateFilter = Boolean(dateRange?.from || dateRange?.to);
-  const hasStatusFilter = status !== 'ALL';
-  const hasAnyFilter = hasStatusFilter || hasDateFilter;
-
-  // Functions
-  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, (tasks) =>
-    qc.setQueryData(queryKey, tasks)
-  );
-
-  const resetFilters = () => {
-    setStatus('ALL');
-    setDateRange(undefined);
-  };
-
   return (
-    <article>
+    <article className="space-y-4">
       <Heading className="mb-2" level={3}>
         <Breadcrumbs
           items={[
@@ -132,11 +61,10 @@ const ProjectComponent = ({
         />
       </Heading>
 
-      <Description text={project.description || 'No description'} />
-      <Divider />
-
-      <div className="flex justify-between">
-        <Heading>Задачи</Heading>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex-1 min-w-0 text-sm text-muted-foreground">
+          <Description text={project.description || 'No description'} />
+        </div>
         <CreateTaskDialog
           members={members}
           projectId={project.id}
@@ -144,54 +72,28 @@ const ProjectComponent = ({
         />
       </div>
 
-      {allTaskStats && <ProjectTasksAllStats allTaskStats={allTaskStats} />}
-      {memberTaskStats && (
-        <ProjectMemberTasksAllStats memberTaskStats={memberTaskStats} />
-      )}
+      <Divider />
 
-      <div className="flex gap-2">
-        <Button onClick={resetFilters} variant="outline" className="w-fit">
-          Сброс
-        </Button>
+      <div className="rounded-2xl border border-primary/10 bg-white/90 px-4 py-4 md:px-6 md:py-5 shadow-md ring-1 ring-primary/5 space-y-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-2 text-sm">
+            <Heading level={3}>Задачи</Heading>
+            {allTaskStats && (
+              <ProjectTasksAllStats allTaskStats={allTaskStats} />
+            )}
+            {memberTaskStats && (
+              <ProjectMemberTasksAllStats memberTaskStats={memberTaskStats} />
+            )}
+          </div>
+        </div>
 
-        <ProjectTasksFilterByStatusSelect
-          className="flex-1"
-          status={status}
-          setStatus={(s) => setStatus((s as TaskStatusDTO) ?? 'ALL')}
+        <ProjectTabs
+          tasks={tasks}
+          workspaceId={workspaceId}
+          projectId={project.id}
+          allTaskStats={allTaskStats}
         />
-
-        <FilterCalendar dateRange={dateRange} onSelectHandler={setDateRange} />
       </div>
-
-      {hasAnyFilter && filteredTasks.length > 0 && (
-        <MessageInfo text={`Найдено ${filteredTasks.length} задач`} />
-      )}
-
-      {hasAnyFilter && filteredTasks.length === 0 && (
-        <EmptyState
-          title={
-            hasStatusFilter && hasDateFilter
-              ? `Нет задач со статусом ${status} в выбранном диапазоне`
-              : hasStatusFilter
-                ? `Нет задач со статусом ${status}`
-                : `Нет задач в выбранном диапазоне`
-          }
-        />
-      )}
-
-      <ProjectTasksBoard
-        filteredTasks={filteredTasks}
-        tasksByStatus={tasksByStatus}
-        droppableDirection={droppableDirection}
-        onDragEnd={onDragEnd}
-        workspaceId={workspaceId}
-        projectId={project.id}
-        doneTasksCount={doneTasksCount}
-        setDoneTasksCount={setDoneTasksCount}
-        counts={counts}
-        remainTasksCount={remainTasksCount}
-      />
-
     </article>
   );
 };

@@ -5,6 +5,8 @@ import { ReceivedInvitationDTO } from '@/types/prisma/DTO/invitations';
 import { useAcceptInvitation } from '@/hooks/notifications/invitations/use-accept-inviation';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
 export type InvitationNotificationData = {
   id: number;
@@ -41,6 +43,7 @@ export function InvitationNotification({
   }).format(new Date(invitation.createdAt));
 
   const statusLabel = statusMap[invitation.status] ?? invitation.status;
+  const workspaceHref = clientRoutes.workspacePage(invitation.workspaceId);
 
   const handleAccept = () => {
     try {
@@ -79,6 +82,14 @@ export function InvitationNotification({
             {statusLabel}
           </Badge>
         </div>
+        {invitation.status === 'ACCEPTED' && (
+          <Link
+            href={workspaceHref}
+            className="inline-flex text-[12px] font-medium text-primary-600 hover:text-primary-700 underline-anim"
+          >
+            Перейти в рабочее пространство
+          </Link>
+        )}
         {invitation.status === 'PENDING' && (
           <div className="space-x-2 ">
             <Button
