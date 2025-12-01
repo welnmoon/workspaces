@@ -142,6 +142,24 @@ export class TaskService {
     assigneeId: string | undefined;
     priority: TaskPriority;
   }) {
+    const existing = await prisma.task.findFirst({
+      where: {
+        projectId: Number(projectId),
+        title: {
+          equals: title,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    if (existing) {
+      throw new AppError(
+        409,
+        'TASK_ALREADY_EXISTS',
+        'Задача с таким названием уже есть в проекте'
+      );
+    }
+
     const task = await prisma.task.create({
       data: {
         title,
@@ -154,6 +172,19 @@ export class TaskService {
     });
 
     return task;
+  }
+
+  static async deleteTasksBulk(ids: number[], workspaceId: number) {
+    return await prisma.task.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+        project: {
+          workspaceId,
+        },
+      },
+    });
   }
 
   static async changePriority(taskId: number, priority: TaskPriority) {

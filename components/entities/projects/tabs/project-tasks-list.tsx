@@ -1,3 +1,4 @@
+'use client';
 import EmptyState from '@/components/empty-state';
 import { MessageInfo } from '@/components/message';
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
@@ -21,6 +22,13 @@ import {
 import { cn } from '@/lib/utils';
 import getTaskStatusColor from '@/helpers/get-status-color';
 import { Badge } from '@/components/ui/badge';
+import { FaRegSquare, FaRegCheckSquare } from 'react-icons/fa';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
+import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
+import { usePathname, useRouter } from 'next/navigation';
+import { clientRoutes } from '@/lib/routes/client-routes';
+import toast from 'react-hot-toast';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -35,6 +43,9 @@ type ProjectTabsListProps = {
     status: TaskStatusDTO
   ) => void | Promise<void>;
   isStatusPending?: boolean;
+  selectedIds: Set<number>;
+  setSelectedIds: Dispatch<SetStateAction<Set<number>>>;
+  isDeleteTasksPending: boolean;
 };
 
 const ProjectTabsList = ({
@@ -45,7 +56,20 @@ const ProjectTabsList = ({
   status,
   onStatusChange,
   isStatusPending,
+  selectedIds,
+  setSelectedIds,
+  isDeleteTasksPending,
 }: ProjectTabsListProps) => {
+  const toggle = (id: number) => {
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      copy.has(id) ? copy.delete(id) : copy.add(id);
+      return copy;
+    });
+  };
+
+  const isSelected = (id: number) => selectedIds.has(id);
+
   return (
     <section className="space-y-3">
       {hasAnyFilter && listTasks.length > 0 && (
@@ -68,6 +92,7 @@ const ProjectTabsList = ({
         <Table>
           <TableHeader className="bg-zinc-50">
             <TableRow className="text-left text-xs font-semibold text-muted-foreground">
+              <TableHead className="px-4 py-3"></TableHead>
               <TableHead className="px-4 py-3">Название</TableHead>
               <TableHead className="px-4 py-3">Статус</TableHead>
               <TableHead className="px-4 py-3">Приоритет</TableHead>
@@ -91,12 +116,29 @@ const ProjectTabsList = ({
                 : 'Не назначен';
 
               return (
-                <TableRow key={t.id} className="transition hover:bg-zinc-50">
+                <TableRow
+                  key={t.id}
+                  className={cn(
+                    'transition hover:bg-zinc-50',
+                    isSelected(t.id) && 'bg-neutral-50'
+                  )}
+                >
+                  <TableCell className={cn('font-medium w-10 text-foreground')}>
+                    {isSelected(t.id) ? (
+                      <FaRegCheckSquare
+                        size={20}
+                        onClick={() => toggle(t.id)}
+                      />
+                    ) : (
+                      <FaRegSquare size={20} onClick={() => toggle(t.id)} />
+                    )}
+                  </TableCell>
                   <TableCell className="px-4 py-3 font-medium text-foreground">
                     {t.title}
                   </TableCell>
                   <TableCell className={cn('px-4 py-3 text-muted-foreground')}>
                     <Select
+                      disabled={isDeleteTasksPending || isStatusPending}
                       value={statusId}
                       // disabled={isStatusPending}
                       onValueChange={(value) =>

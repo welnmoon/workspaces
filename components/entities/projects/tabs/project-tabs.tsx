@@ -15,11 +15,15 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
 import TasksFilterPopover from '@/components/filters/tasks-filter-popover';
-import { Kanban, List } from 'lucide-react';
+import { Kanban, List, Trash } from 'lucide-react';
 import type { TaskStats } from '@/types/service/task-stats';
 import ProjectTasksStats from '../project-tasks-stats';
 import { IoStatsChart } from 'react-icons/io5';
 import { useTaskStatusChange } from '@/hooks/tasks/use-task-status-change';
+import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
+import toast from 'react-hot-toast';
+import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -46,15 +50,30 @@ const ProjectTabs = ({
   const [doneTasksCount, setDoneTasksCount] = useState<string>(
     String(doneCounts[0])
   );
-
   const queryClient = useQueryClient();
   const queryKey = ['tasks', projectId, workspaceId];
+  // delete tasks
+  const [selectedIds, setSelectedIds] = useState(new Set<number>());
+  const { mutate: deleteTasks, isPending: isDeleteTasksPending } =
+    useDeleteTasksBulk(workspaceId, projectId);
+
+  const handleDeleteTasks = () => {
+    deleteTasks(selectedIds, {
+      onSuccess: () => {
+        toast.success('Задачи успешно удалены');
+        setSelectedIds(new Set());
+      },
+      onError: (e) => {
+        toast.error(e.message ?? 'Произошла ошибка при удалении задач');
+      },
+    });
+  };
+
   const syncCache = (updatedTasks: TaskWithAssigneeDTO[]) =>
     queryClient.setQueryData(queryKey, updatedTasks);
   const { changeStatus, isPending } = useTaskStatusChange({
     setBoardTasks,
-    syncCache: (tasks) =>
-      queryClient.setQueryData(['tasks', projectId, workspaceId], tasks),
+    queryKey,
   });
 
   // в onDragEnd или где-то ещё:
@@ -139,6 +158,7 @@ const ProjectTabs = ({
                 onClick={resetFilters}
                 variant="outline"
                 className="h-9 px-3 text-xs"
+                disabled={!hasAnyFilter}
               >
                 Сбросить
               </Button>
@@ -165,10 +185,30 @@ const ProjectTabs = ({
             </>
           )}
           {activeTab === 'stats' && null}
+          {selectedIds.size > 0 && (
+            <div className="relative">
+              <Button
+                disabled={isDeleteTasksPending}
+                className={cn(
+                  'text-red-500 bg-white hover:bg-red-50 w-30 text-left',
+                  isDeleteTasksPending && 'text-zinc-500 cursor-none'
+                )}
+                onClick={() => handleDeleteTasks()}
+              >
+                <Trash size={20} />
+
+                {isDeleteTasksPending ? (
+                  <Spinner className="animate-spin " />
+                ) : (
+                  'Удалить'
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
-      <TabsContent value="list" className="space-y-4">
+      <TabsContent  value="list" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-muted-foreground">
             Всего задач: <span className="font-medium">{listTasks.length}</span>
@@ -188,6 +228,9 @@ const ProjectTabs = ({
           status={status}
           onStatusChange={changeStatus}
           isStatusPending={isPending}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          isDeleteTasksPending={isDeleteTasksPending}
         />
       </TabsContent>
 
