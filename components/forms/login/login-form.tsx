@@ -11,12 +11,12 @@ import SubmitBtn from '@/components/buttons/submit-btn';
 import LoginOauthButton from '@/components/buttons/auth/login-oauth-btn';
 import { PROVIDERS } from '@/lib/providers';
 import BaseLink from '@/components/base-link';
-import Divider from '@/components/divider';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { loginSchema, LoginSchema } from './login-schema';
 import Image from 'next/image';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import DividerWithText from '@/components/divider-with-text';
+import { RootHeading } from '@/components/root/root-heading';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -57,57 +57,54 @@ const LoginForm = () => {
 
   return (
     <main className="min-h-screen flex bg-slate-50">
-      <section className="relative hidden lg:flex w-1/2 min-h-screen overflow-hidden">
-        <Image
-          src="/images/auth/login-bg.jpeg"
-          alt="Workflows preview"
-          fill
-          priority
-          sizes="(min-width: 1024px) 50vw, 0px"
-          className="object-cover blur-sm"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 via-indigo-800/70 to-slate-900/70" />
+      {/* Левая половина с картинкой */}
+      <section className="relative hidden lg:flex w-1/2 min-h-screen rounded-xl overflow-hidden">
+        <div className="absolute w-full inset-0 p-4 pr-0">
+          <div className="relative w-full h-full rounded-xl overflow-hidden">
+            <Image
+              src="/images/auth/login-astro.jpeg"
+              alt="Workflows preview"
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 0px"
+              className="object-cover"
+            />
 
-        <div className="flex flex-col justify-between">
-          <div className="relative z-10 flex flex-col gap-4 p-12 text-white max-w-xl">
-            <WorkspaceLogo className="text-white" />
-            <h1 className="text-3xl font-semibold leading-tight">
-              Управляйте задачами, проектами и командами в одном месте
-            </h1>
-            <p className="text-indigo-100">
-              Отслеживайте прогресс, распределяйте работу и получайте отчёты без
-              лишних действий. Все ваши рабочие пространства под рукой.
-            </p>
-            <ul className="space-y-2 text-indigo-100">
-              <li className="flex gap-2 items-start">
-                <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
-                Быстрый доступ к рабочим пространствам и проектам
-              </li>
-              <li className="flex gap-2 items-start">
-                <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
-                Гибкие фильтры и уведомления для команды
-              </li>
-              <li className="flex gap-2 items-start">
-                <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
-                PDF-отчёты и аналитика по задачам
-              </li>
-            </ul>
-          </div>
-          <div className="max-w-xl  z-10  pl-12 pr-12 pb-12 text-slate-100">
-            <p className="text-sm italic">
-              «Нет ничего бесполезнее, чем эффективно делать то, что вообще не
-              должно было быть сделано.»
-            </p>
-            <p className="mt-2 text-sm ">— Питер Друкер</p>
+            <div className="absolute w-full inset-0 bg-gradient-to-br from-indigo-900/40 via-indigo-800/30 to-slate-900/20 pointer-events-none" />
+
+            <div className="absolute inset-0 z-10 flex flex-col p-8 text-white">
+              {/* Лого сверху */}
+              <WorkspaceLogo className="text-white" />
+
+              {/* Контейнер для заголовка и цитаты */}
+              <div className="flex-1 flex flex-col justify-center items-center text-center">
+                <RootHeading
+                  level={3}
+                  className="font-semibold leading-tight w-2/3"
+                >
+                  Управляйте задачами, проектами и командами в одном месте
+                </RootHeading>
+              </div>
+
+              {/* Цитата снизу */}
+              <div className="text-slate-100 text-sm italic mt-auto">
+                <p>
+                  «Нет ничего бесполезнее, чем эффективно делать то, что вообще
+                  не должно было быть сделано.»
+                </p>
+                <p className="mt-1">— Питер Друкер</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* Правая половина с формой */}
       <section className="flex-1 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-md  p-8 space-y-6 ">
+        <div className="w-full max-w-md p-8 space-y-6">
           <div className="flex flex-col gap-2 text-center">
-            <h2 className="text-2xl font-semibold ">Добро пожаловать!</h2>
-            <p className="text-sm text-slate-500 text">
+            <h2 className="text-2xl font-semibold">Добро пожаловать!</h2>
+            <p className="text-sm text-slate-500">
               Войдите, чтобы продолжить работу.
             </p>
           </div>
@@ -143,7 +140,7 @@ const LoginForm = () => {
             </form>
           </FormProvider>
 
-          <DividerWithText text='Или продолжите с'/>
+          <DividerWithText text="Или продолжите с" />
 
           <div className="flex gap-2 flex-wrap">
             {PROVIDERS.map((p) => (
