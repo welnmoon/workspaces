@@ -6,6 +6,7 @@ import { ProjectListDTO } from '@/types/prisma/DTO/projects';
 import { prisma } from '../prisma';
 import { TaskStats } from '@/types/service/task-stats';
 import { Prisma, TaskStatus } from '@prisma/client';
+import { AppError } from '../errors';
 
 export class ProjectService {
   //-------------------------------------//
@@ -32,6 +33,22 @@ export class ProjectService {
   }
   static async createProject(raw: unknown): Promise<ProjectListDTO> {
     const data = workspaceIdExistSchema.parse(raw);
+
+    const exists = await prisma.project.findFirst({
+      where: {
+        workspaceId: data.workspaceId,
+        name: { equals: data.name, mode: 'insensitive' },
+      },
+      select: { id: true },
+    });
+
+    if (exists) {
+      throw new AppError(
+        409,
+        'PROJECT_ALREADY_EXISTS',
+        'Проект с таким названием уже есть в рабочем пространстве'
+      );
+    }
 
     return prisma.project.create({
       data: {

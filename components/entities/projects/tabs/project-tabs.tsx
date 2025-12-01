@@ -20,8 +20,8 @@ import type { TaskStats } from '@/types/service/task-stats';
 import ProjectTasksStats from '../project-tasks-stats';
 import { IoStatsChart } from 'react-icons/io5';
 import { useTaskStatusChange } from '@/hooks/tasks/use-task-status-change';
-import toast from 'react-hot-toast';
 import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
+import toast from 'react-hot-toast';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
@@ -50,6 +50,8 @@ const ProjectTabs = ({
   const [doneTasksCount, setDoneTasksCount] = useState<string>(
     String(doneCounts[0])
   );
+  const queryClient = useQueryClient();
+  const queryKey = ['tasks', projectId, workspaceId];
   // delete tasks
   const [selectedIds, setSelectedIds] = useState(new Set<number>());
   const { mutate: deleteTasks, isPending: isDeleteTasksPending } =
@@ -61,20 +63,17 @@ const ProjectTabs = ({
         toast.success('Задачи успешно удалены');
         setSelectedIds(new Set());
       },
-      onError: () => {
-        toast.error('Не удалось удалить задачи');
+      onError: (e) => {
+        toast.error(e.message ?? 'Произошла ошибка при удалении задач');
       },
     });
   };
 
-  const queryClient = useQueryClient();
-  const queryKey = ['tasks', projectId, workspaceId];
   const syncCache = (updatedTasks: TaskWithAssigneeDTO[]) =>
     queryClient.setQueryData(queryKey, updatedTasks);
   const { changeStatus, isPending } = useTaskStatusChange({
     setBoardTasks,
-    syncCache: (tasks) =>
-      queryClient.setQueryData(['tasks', projectId, workspaceId], tasks),
+    queryKey,
   });
 
   // в onDragEnd или где-то ещё:
@@ -209,7 +208,7 @@ const ProjectTabs = ({
         </div>
       </div>
 
-      <TabsContent value="list" className="space-y-4">
+      <TabsContent  value="list" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-muted-foreground">
             Всего задач: <span className="font-medium">{listTasks.length}</span>
@@ -231,6 +230,7 @@ const ProjectTabs = ({
           isStatusPending={isPending}
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
+          isDeleteTasksPending={isDeleteTasksPending}
         />
       </TabsContent>
 

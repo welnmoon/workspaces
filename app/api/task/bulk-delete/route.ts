@@ -10,8 +10,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function DELETE(req: NextRequest) {
   try {
     await requireUser();
-    const workspaceId = validateId((await req.json()).workspaceId);
-    const tasksIds: number[] = (await req.json()).deleteTasksIds;
+    console.log('req', req);
+    const body = await req.json();
+    console.log('body', body, 'workspaceId', body.workspaceId);
+    const workspaceId = validateId(body.workspaceId);
+    const tasksIds: number[] = body.deleteTasksIds;
     await requireWorkspaceMember({
       workspaceId,
       allowed: [Role.OWNER, Role.ADMIN],
@@ -26,6 +29,6 @@ export async function DELETE(req: NextRequest) {
     if (e instanceof Prisma.PrismaClientKnownRequestError)
       return NextResponse.json(e.message, { status: 422, statusText: e.code });
 
-    return serverError('Failed to delete tasks', e);
+    return serverError(`Failed to delete tasks: ${e}`);
   }
 }

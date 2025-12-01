@@ -5,7 +5,7 @@ export const createProjectFormSchema = z.object({
     .string()
     .trim()
     .min(1, 'Project name is required')
-    .max(100, 'Project name must be at most 100 characters'),
+    .max(30, 'Project name must be at most 30 characters'),
   description: z.string().trim().max(500).optional(),
 });
 

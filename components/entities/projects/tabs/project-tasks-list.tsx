@@ -45,6 +45,7 @@ type ProjectTabsListProps = {
   isStatusPending?: boolean;
   selectedIds: Set<number>;
   setSelectedIds: Dispatch<SetStateAction<Set<number>>>;
+  isDeleteTasksPending: boolean;
 };
 
 const ProjectTabsList = ({
@@ -57,6 +58,7 @@ const ProjectTabsList = ({
   isStatusPending,
   selectedIds,
   setSelectedIds,
+  isDeleteTasksPending,
 }: ProjectTabsListProps) => {
   const toggle = (id: number) => {
     setSelectedIds((prev) => {
@@ -136,6 +138,7 @@ const ProjectTabsList = ({
                   </TableCell>
                   <TableCell className={cn('px-4 py-3 text-muted-foreground')}>
                     <Select
+                      disabled={isDeleteTasksPending || isStatusPending}
                       value={statusId}
                       // disabled={isStatusPending}
                       onValueChange={(value) =>

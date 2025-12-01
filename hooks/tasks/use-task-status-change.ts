@@ -3,7 +3,8 @@ import { apiRoutes } from '@/lib/routes/api-routes';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { Dispatch, SetStateAction } from 'react';
 import toast from 'react-hot-toast';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { QueryKey } from '@tanstack/react-query';
 
 export const updateTaskStatusRequest = async (
   taskId: number,
@@ -22,8 +23,7 @@ export const updateTaskStatusRequest = async (
     try {
       const payload = await res.json();
       message = payload?.message || message;
-    } catch {
-    }
+    } catch {}
     throw new Error(message);
   }
 };
@@ -35,18 +35,26 @@ type ChangeStatusArgs = {
 
 type UseTaskStatusChangeOptions = {
   setBoardTasks: Dispatch<SetStateAction<TaskWithAssigneeDTO[]>>;
-  syncCache?: (tasks: TaskWithAssigneeDTO[]) => void;
+  queryKey: QueryKey;
 };
 
 export const useTaskStatusChange = ({
   setBoardTasks,
-  syncCache,
+  queryKey,
 }: UseTaskStatusChangeOptions) => {
+  const qc = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: ({ taskId, destStatus }: ChangeStatusArgs) =>
       updateTaskStatusRequest(taskId, destStatus),
 
     onMutate: async ({ taskId, destStatus }) => {
+      await qc.cancelQueries({ queryKey });
+
+      const prevCache =
+        (qc.getQueryData<TaskWithAssigneeDTO[]>(queryKey) as
+          | TaskWithAssigneeDTO[]
+          | undefined) ?? [];
       let prevSnapshot: TaskWithAssigneeDTO[] = [];
       let nextTasks: TaskWithAssigneeDTO[] = [];
 
@@ -58,11 +66,11 @@ export const useTaskStatusChange = ({
         return nextTasks;
       });
 
-      if (syncCache && nextTasks.length > 0) {
-        syncCache(nextTasks);
+      if (nextTasks.length > 0) {
+        qc.setQueryData(queryKey, nextTasks);
       }
 
-      return { prevSnapshot };
+      return { prevSnapshot, prevCache };
     },
 
     onError: (error, _vars, context) => {
@@ -75,8 +83,13 @@ export const useTaskStatusChange = ({
 
       if (context?.prevSnapshot) {
         setBoardTasks(context.prevSnapshot);
-        if (syncCache) syncCache(context.prevSnapshot);
       }
+      if (context?.prevCache) {
+        qc.setQueryData(queryKey, context.prevCache);
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey });
     },
   });
 

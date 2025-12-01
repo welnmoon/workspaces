@@ -5,6 +5,7 @@ import { ProjectService } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
 import { Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
+import { AppError } from '@/lib/errors';
 
 // POST /api/w/[workspaceId]/projects
 // Create a new project in the workspace
@@ -45,7 +46,11 @@ export async function POST(
       }
     }
 
-    return serverError('Failed to create project');
+    if (err instanceof AppError && err.code === 'PROJECT_ALREADY_EXISTS') {
+      return conflict(err.message, err.code);
+    }
+
+    return serverError('Failed to create project', err);
   }
 }
 

@@ -6,7 +6,7 @@ export const createTaskFormSchema = z.object({
     .string()
     .trim()
     .min(1, 'Название задачи обязательно')
-    .max(200, 'Название должно быть не длиннее 200 символов'),
+    .max(30, 'Название должно быть не длиннее 30 символов'),
   description: z.string().trim().max(1000).optional(),
   dueDate: z.string().min(1, 'Укажите срок выполнения'),
   assigneeId: z.string().optional(),

@@ -6,10 +6,15 @@ export const useDeleteTasksBulk = (workspaceId: number, projectId: number) => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (ids: Set<number>) => {
+      const idsArray = Array.from(ids);
       const res = await fetch(apiRoutes.deleteTasksBulk(), {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ deleteTasksIds: ids, workspaceId, projectId }),
+        body: JSON.stringify({
+          deleteTasksIds: idsArray,
+          workspaceId,
+          projectId,
+        }),
       });
 
       if (!res.ok) {
@@ -21,10 +26,10 @@ export const useDeleteTasksBulk = (workspaceId: number, projectId: number) => {
           message
         );
       }
-      return res;
+      return true;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['tasks'] }); // Возможно тут надо проект и воркспейс id
+      qc.invalidateQueries({ queryKey: ['tasks', projectId, workspaceId] });
     },
   });
 };
