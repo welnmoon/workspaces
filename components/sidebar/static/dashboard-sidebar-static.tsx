@@ -11,6 +11,7 @@ import { useTasks } from '@/hooks/tasks/use-tasks';
 import Link from 'next/link';
 import { NAV_LINKS } from '@/const/navigation';
 import { RenderNavigation } from '../sidebar-nav';
+import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarStatic = ({
@@ -56,16 +57,8 @@ const DashboardSidebarStatic = ({
   // Routing --------------------------------
   const pathname = usePathname();
   useEffect(() => {
-    const workspaceMatch = pathname.match(/\/w\/([^/]+)/);
-    const projectMatch = pathname.match(/\/projects\/([^/]+)/);
-
-    const workspaceIdFromPath = workspaceMatch?.[1]
-      ? Number(workspaceMatch[1])
-      : null;
-
-    const projectIdFromPath = projectMatch?.[1]
-      ? Number(projectMatch[1])
-      : null;
+    const { projectId: projectIdFromPath, workspaceId: workspaceIdFromPath } =
+      getIdsFromPathname(pathname);
 
     // Всегда синхронизируем стейт
     setSelectedWorkspaceId(workspaceIdFromPath);
@@ -135,7 +128,7 @@ const DashboardSidebarStatic = ({
         <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
           Навигация
         </h3>
-        <RenderNavigation/>
+        <RenderNavigation />
       </div>
     </aside>
   );

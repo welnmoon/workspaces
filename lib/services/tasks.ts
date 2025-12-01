@@ -156,6 +156,19 @@ export class TaskService {
     return task;
   }
 
+  static async deleteTasksBulk(ids: number[], workspaceId: number) {
+    return await prisma.task.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+        project: {
+          workspaceId,
+        },
+      },
+    });
+  }
+
   static async changePriority(taskId: number, priority: TaskPriority) {
     try {
       const updated = await prisma.task.update({
