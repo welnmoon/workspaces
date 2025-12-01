@@ -11,7 +11,7 @@ import { requireUser } from '@/helpers/require-user';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
-import InvitationsPopover from '@/components/entities/notifications/notifications-popover';
+import NotificationsPopover from '@/components/entities/notifications/notifications-popover';
 import { Badge } from '@/components/ui/badge';
 import DashboardSidebarDynamic from '@/components/sidebar/dynamic/dashboard-sidebar-dynamic';
 import { UserService } from '@/lib/services/user';
@@ -53,7 +53,7 @@ export default async function DashboardLayout({
           <div className="flex items-center justify-between">
             {/* <SidebarTrigger className="ml-0 lg:hidden z-40" /> */}
             <div className="flex items-center gap-2">
-              <InvitationsPopover
+              <NotificationsPopover
                 userId={user.id}
                 // invitations={invitationNotifications}
               />

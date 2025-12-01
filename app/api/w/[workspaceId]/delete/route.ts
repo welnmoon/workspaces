@@ -24,6 +24,17 @@ export async function DELETE(
 
   try {
     await prisma.$transaction(async (tx) => {
+      const workspace = await tx.workspace.findUnique({
+        where: { id: NumberWorkspaceId },
+        select: { id: true, name: true },
+      });
+
+      if (!workspace) {
+        throw new AppError(404, 'WORKSPACE_NOT_FOUND', 'Workspace not found');
+      }
+
+      const workspaceName = workspace.name || 'Без названия';
+
       const workspaceMembers = await tx.membership.findMany({
         where: {
           workspaceId: NumberWorkspaceId,
@@ -42,9 +53,10 @@ export async function DELETE(
             userId,
             type: NotificationType.WORKSPACE_DELETED,
             title: 'Рабочее пространство удалено',
-            message: 'Рабочее пространство было удалено владельцем.',
+            message: `Рабочее пространство «${workspaceName}» (ID: ${workspace.id}) было удалено владельцем.`,
             metadata: {
               workspaceId: NumberWorkspaceId,
+              workspaceName,
             },
           })),
         });

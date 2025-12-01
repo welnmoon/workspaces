@@ -20,12 +20,19 @@ export const useSendNotificationToWMembers = (
         }
       );
 
-      if (!res.ok)
-        throw new AppError(
-          500,
-          'SEND_NOTIFICATION_ERROR',
-          'Failed to send notification'
-        );
+      if (!res.ok) {
+        const isJson = res.headers
+          .get('content-type')
+          ?.includes('application/json');
+        const payload = isJson ? await res.json().catch(() => null) : null;
+        const message =
+          payload?.message ||
+          (isJson ? 'Не получилось отправить уведомление' : await res.text());
+        const code =
+          payload?.code || 'SEND_NOTIFICATION_TO_WORKSPACE_MEMBERS_ERROR';
+
+        throw new AppError(res.status || 500, code, message);
+      }
 
       return await res.json();
     },

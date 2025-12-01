@@ -1,34 +1,25 @@
 'use client';
 
-import { AuthButtons } from '@/components/root/buttons/auth-btns';
-import Footer from '@/components/root/footer';
+import Footer from '@/components/root/main/footer';
 import Advantages from '@/components/root/main/advantages/advantages';
+import { RootNavigationMenu } from '@/components/root/main/header';
 import HeroSection from '@/components/root/main/hero/hero';
 import CompaniesMarquee from '@/components/root/main/marquee/companies-marquee';
 
 import RootContainer from '@/components/root/root-container';
-import { WorkspaceLogo } from '@/components/ui/workspace-logo';
-
-
 
 export default function Home() {
-  // const user = useSession().data?.user;
   return (
     <main>
       <RootContainer>
-        <header className="flex justify-between">
-          <WorkspaceLogo />
-          <AuthButtons />
-        </header>
+        <RootNavigationMenu />
 
-        {/*Hero*/}
         <HeroSection />
       </RootContainer>
       <CompaniesMarquee />
 
       {/*Product Mockup*/}
       <section className="bg-gray-100 pt-8 relative mb-8">
-        {/*gradient from bottom to top*/}
         <div className="w-[60%] mx-auto">
           <div className="bg-gradient-to-t from-white absolute z-10 inset-0" />
           <img
@@ -39,7 +30,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/*Advantages*/}
       <Advantages />
       <Footer />
     </main>
