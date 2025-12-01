@@ -8,6 +8,7 @@ import type { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 import { useProjects } from '@/hooks/project/use-projects';
 import type { WorkspaceDTO } from '@/types/prisma/DTO/workspaces';
 import { FullRoleDTO, RolesEnum } from '@/types/prisma/DTO/role';
+import EmptyState from '@/components/empty-state';
 
 export type WProjectsSectionProps = {
   userRole: FullRoleDTO;
@@ -22,10 +23,7 @@ const WProjectsSection = ({
   workspace,
   projects,
 }: WProjectsSectionProps) => {
-  const {
-    data: optimisticProjects,
-
-  } = useProjects(workspaceId, projects);
+  const { data: optimisticProjects } = useProjects(workspaceId, projects);
   return (
     <section>
       <div className="flex justify-between">
