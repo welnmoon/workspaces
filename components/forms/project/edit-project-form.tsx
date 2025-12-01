@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useEditProject } from '@/hooks/project/use-edit-project';
 
 type EditProjectFormProps = {
   workspaceId: number;
@@ -28,7 +29,6 @@ const EditProjectForm = ({
   defaultValues,
   onSuccess,
 }: EditProjectFormProps) => {
-  const router = useRouter();
   const form = useForm<CreateProjectFormValues>({
     resolver: zodResolver(createProjectFormSchema),
     defaultValues: {
@@ -36,30 +36,21 @@ const EditProjectForm = ({
       description: defaultValues.description ?? '',
     },
   });
+  const { mutate: editProject, isPending: isEditPending } = useEditProject(
+    workspaceId,
+    projectId
+  );
 
   const onSubmit = async (values: CreateProjectFormValues) => {
-    try {
-      const res = await fetch(apiRoutes.someProject(workspaceId, projectId), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        throw new Error(
-          data?.message || 'Не удалось обновить информацию о проекте'
-        );
-      }
-
-      toast.success('Проект обновлён');
-      onSuccess?.();
-      router.refresh();
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Не удалось обновить проект'
-      );
-    }
+    editProject(values, {
+      onSuccess: () => {
+        toast.success('Проект обновлен');
+        onSuccess?.();
+      },
+      onError: () => {
+        toast.error('Не удалось обновить проект');
+      },
+    });
   };
 
   return (
@@ -77,7 +68,7 @@ const EditProjectForm = ({
           placeholder="Кратко опишите цели и задачи"
         />
         <div className="pt-2">
-          <SubmitBtn text="Сохранить" isLoading={form.formState.isSubmitting} />
+          <SubmitBtn text="Сохранить" isLoading={isEditPending} />
         </div>
       </form>
     </FormProvider>

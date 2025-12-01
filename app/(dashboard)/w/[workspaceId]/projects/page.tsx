@@ -96,9 +96,10 @@ const ProjectsPage = async ({
         ))}
 
         {projects.length === 0 && (
-          <div className="w-full py-8 text-center text-muted-foreground">
-            No projects found
-          </div>
+          <EmptyState
+            title="Проектов нет"
+            subtitle="Создайте первый проект, чтобы начать работу."
+          />
         )}
       </section>
     </main>

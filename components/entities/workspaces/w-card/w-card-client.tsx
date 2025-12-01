@@ -27,7 +27,6 @@ export default function WorkspaceCardClient({
 }: Props) {
   const [name, setName] = useState(workspace.name);
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [roleLoaded, setRoleLoaded] = useState(false);
 
   return (
     <Card className="flex flex-col">
