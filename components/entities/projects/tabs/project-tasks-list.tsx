@@ -98,7 +98,7 @@ const ProjectTabsList = ({
                   <TableCell className={cn('px-4 py-3 text-muted-foreground')}>
                     <Select
                       value={statusId}
-                      disabled={isStatusPending}
+                      // disabled={isStatusPending}
                       onValueChange={(value) =>
                         onStatusChange(t.id, value as TaskStatusDTO)
                       }

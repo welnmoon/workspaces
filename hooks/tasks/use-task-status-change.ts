@@ -23,7 +23,6 @@ export const updateTaskStatusRequest = async (
       const payload = await res.json();
       message = payload?.message || message;
     } catch {
-      // ignore parse errors, keep default message
     }
     throw new Error(message);
   }
@@ -47,7 +46,6 @@ export const useTaskStatusChange = ({
     mutationFn: ({ taskId, destStatus }: ChangeStatusArgs) =>
       updateTaskStatusRequest(taskId, destStatus),
 
-    // Оптимистичное обновление
     onMutate: async ({ taskId, destStatus }) => {
       let prevSnapshot: TaskWithAssigneeDTO[] = [];
       let nextTasks: TaskWithAssigneeDTO[] = [];
@@ -64,7 +62,6 @@ export const useTaskStatusChange = ({
         syncCache(nextTasks);
       }
 
-      // Передаём снапшот в контекст, чтобы потом откатиться при ошибке
       return { prevSnapshot };
     },
 
@@ -76,15 +73,11 @@ export const useTaskStatusChange = ({
 
       toast.error(message);
 
-      // Откат стейта
       if (context?.prevSnapshot) {
         setBoardTasks(context.prevSnapshot);
         if (syncCache) syncCache(context.prevSnapshot);
       }
     },
-
-    // По желанию можно invalidate'ить query здесь
-    // onSettled: () => { queryClient.invalidateQueries(['tasks', ...]); },
   });
 
   const changeStatus = (taskId: number, destStatus: TaskStatusDTO) => {
