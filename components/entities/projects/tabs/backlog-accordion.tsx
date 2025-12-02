@@ -26,6 +26,7 @@ import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import BacklogTaskActions from './backlog-task-actions';
+import { useMembers } from '@/hooks/members/use-members';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
@@ -37,6 +38,7 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
     useCreateTask(workspaceId!, projectId!);
+  const { data: members } = useMembers(workspaceId!, projectId!);
 
   const handleCreateTask = (payload: { title: string; description?: string }) =>
     onCreateTask(payload, {
@@ -128,7 +130,7 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
                               onChangePriority={() => {}}
                               onChangeAssignee={() => {}}
                               onDelete={() => {}}
-                              members={[]}
+                              members={members}
                             />
                           )}
                         </TableCell>

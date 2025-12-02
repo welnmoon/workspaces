@@ -59,4 +59,6 @@ export const apiRoutes = {
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,
   deleteMember: (memberId: number) => `/api/members/${memberId}/delete`,
+  getMembers: (workspaceId: number, projectId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/members`,
 };

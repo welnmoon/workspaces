@@ -3,6 +3,7 @@ import { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
 import { AppError } from '../errors';
 import { WorkspaceService } from './workspace';
 import { prisma } from '../prisma';
+import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 export class MembershipService {
   static async getUserRoleInWorkspace(userId: string, workspaceId: number) {
@@ -111,5 +112,19 @@ export class MembershipService {
     });
 
     return deleted;
+  }
+
+  static async getWorkspaceMembers(
+    workspaceId: number
+  ): Promise<MembershipSelectUserDTO[]> {
+    return prisma.membership.findMany({
+      where: {
+        workspaceId,
+        status: MembershipStatus.ACTIVE,
+      },
+      include: {
+        user: true,
+      },
+    });
   }
 }

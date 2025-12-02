@@ -21,7 +21,7 @@ type BacklogTaskActionsProps = {
   onChangeAssignee?: (id: number) => void;
   onDelete?: () => void;
 
-  members: MembershipSelectUserDTO[];
+  members: MembershipSelectUserDTO[] | undefined;
 };
 
 const BacklogTaskActions = ({
@@ -34,13 +34,14 @@ const BacklogTaskActions = ({
 
   members,
 }: BacklogTaskActionsProps) => {
+  const membersList = Array.isArray(members) ? members : [];
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
           size="icon"
-          className="h-4 w-4 hover:bg-zinc-100"
+          className="h-4 w-4 hover:bg-zinc-100 rounded-xs"
           disabled={disabled}
         >
           <Ellipsis className="h-4 w-4" />
@@ -58,33 +59,38 @@ const BacklogTaskActions = ({
           <DropdownMenuSubTrigger>Изменить исполнителя</DropdownMenuSubTrigger>
 
           <DropdownMenuSubContent className="w-60">
-            {members.length === 0 && (
-              <DropdownMenuItem disabled>
-                Нет доступных участников
-              </DropdownMenuItem>
-            )}
-
-            {members.map((member) => (
-              <DropdownMenuItem
-                key={member.id}
-                onClick={() => onChangeAssignee?.(member.id)}
-              >
-                {/* <div className="flex items-center gap-2"> */}
-                {/* <Avatar className="h-6 w-6">
+            {membersList !== undefined && (
+              <>
+                {membersList.length === 0 && (
+                  <DropdownMenuItem disabled>
+                    Нет доступных участников
+                  </DropdownMenuItem>
+                )}
+                {membersList.map((member) => (
+                  <DropdownMenuItem
+                    key={member.id}
+                    onClick={() => onChangeAssignee?.(member.id)}
+                  >
+                    {/* <div className="flex items-center gap-2"> */}
+                    {/* <Avatar className="h-6 w-6">
                     {member.user.ava && <AvatarImage src={member.avatarUrl} />}
                     <AvatarFallback>
                       {member.label.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar> */}
-                <span>
-                  {getFullName({
-                    firstName: member.user.firstName,
-                    lastName: member.user.lastName,
-                  })}
-                </span>
-                {/* </div> */}
-              </DropdownMenuItem>
-            ))}
+                    <span>
+                      {getFullName({
+                        firstName: member.user.firstName,
+                        lastName: member.user.lastName,
+                      })}
+                    </span>
+                    {/* </div> */}
+                  </DropdownMenuItem>
+                ))}
+              </>
+            )}
+
+            {membersList === undefined && <span>Ошибка</span>}
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuItem

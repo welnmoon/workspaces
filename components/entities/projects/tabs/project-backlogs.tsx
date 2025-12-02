@@ -2,6 +2,7 @@ import BacklogAccordion from './backlog-accordion';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 
 const ProjectBacklogs = ({ backlogs }: { backlogs: TaskWithAssigneeDTO[] }) => {
+  
   return (
     <section className="space-y-4">
       <BacklogAccordion
