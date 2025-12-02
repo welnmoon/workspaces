@@ -19,18 +19,20 @@ import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 import getTaskStatusColor from '@/helpers/get-status-color';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { cn } from '@/lib/utils';
-import CreateTaskForm from '@/components/forms/task/create-task-form';
 import { CreateTaskRowForm } from '@/components/forms/task/create-task-row-form';
 import { useCreateTask } from '@/hooks/tasks/use-create-task';
 import { usePathname } from 'next/navigation';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
+import BacklogTaskActions from './backlog-task-actions';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
 };
 
 const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
+  const [hoverId, setHoverId] = useState<number>();
   const pathname = usePathname();
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
@@ -74,7 +76,7 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
                     <TableHead className="px-4 py-3">Статус</TableHead>
                     <TableHead className="px-4 py-3">Приоритет</TableHead>
                     <TableHead className="px-4 py-3">Исполнитель</TableHead>
-                    <TableHead className="px-4 py-3">Дедлайн</TableHead>
+                    <TableHead className="px-4 py-3"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="text-sm">
@@ -83,8 +85,8 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
                       STATUS_COLUMNS.find((s) => s.id === t.status)?.title ??
                       t.status;
                     const priorityLabel = TASK_PRIORITY_LABELS[t.priority];
-                    const due =
-                      t.dueDate && new Date(t.dueDate).toLocaleDateString();
+                    // const due =
+                    //   t.dueDate && new Date(t.dueDate).toLocaleDateString();
                     const assigneeName = t.assignee
                       ? `${t.assignee.firstName || ''} ${t.assignee.lastName || ''}`.trim() ||
                         t.assignee.email
@@ -92,6 +94,7 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
 
                     return (
                       <TableRow
+                        onMouseEnter={() => setHoverId(t.id)}
                         key={t.id}
                         className="transition hover:bg-zinc-50"
                       >
@@ -117,7 +120,17 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
                           {assigneeName}
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
-                          {due || '—'}
+                          {hoverId === t.id && (
+                            <BacklogTaskActions
+                              disabled={isCreateTaskPending}
+                              onMove={() => {}}
+                              onChangeStatus={() => {}}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={() => {}}
+                              onDelete={() => {}}
+                              members={[]}
+                            />
+                          )}
                         </TableCell>
                       </TableRow>
                     );

@@ -30,7 +30,7 @@ export const CreateTaskRowForm = ({
     defaultValues: {
       title: '',
       description: '',
-      dueDate: new Date().toISOString().slice(0, 10),
+      dueDate: undefined,
       assigneeId: undefined,
       priority: 'LOW',
     },
