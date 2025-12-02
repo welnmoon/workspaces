@@ -35,7 +35,7 @@ export const useCreateTask = (workspaceId: number, projectId: number) => {
       return parsed;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['tasks'] });
+      qc.invalidateQueries({ queryKey: ['tasks', projectId, workspaceId] });
     },
   });
 };

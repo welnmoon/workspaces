@@ -1,3 +1,4 @@
+'use client';
 import {
   Accordion,
   AccordionContent,
@@ -18,12 +19,32 @@ import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 import getTaskStatusColor from '@/helpers/get-status-color';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { cn } from '@/lib/utils';
+import CreateTaskForm from '@/components/forms/task/create-task-form';
+import { CreateTaskRowForm } from '@/components/forms/task/create-task-row-form';
+import { useCreateTask } from '@/hooks/tasks/use-create-task';
+import { usePathname } from 'next/navigation';
+import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
+import toast from 'react-hot-toast';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
 };
 
 const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
+  const pathname = usePathname();
+  const { projectId, workspaceId } = getIdsFromPathname(pathname);
+  const { mutate: onCreateTask, isPending: isCreateTaskPending } =
+    useCreateTask(workspaceId!, projectId!);
+
+  const handleCreateTask = (payload: { title: string; description?: string }) =>
+    onCreateTask(payload, {
+      onSuccess: () => {
+        toast.success('Задача успешно создана');
+      },
+      onError: () => {
+        toast.error('Не удалось создать задачу');
+      },
+    });
   return (
     <Accordion
       type="single"
@@ -103,6 +124,10 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
                   })}
                 </TableBody>
               </Table>
+              <CreateTaskRowForm
+                onCreate={handleCreateTask}
+                isLoading={isCreateTaskPending}
+              />
             </div>
           )}
         </AccordionContent>

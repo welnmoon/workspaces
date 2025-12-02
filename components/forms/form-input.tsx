@@ -15,7 +15,8 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
   required?: boolean;
   isPassword?: boolean;
-  className?: string;
+  className?: string; // Input
+  containerClassName?: string; // Container
   disabled?: boolean;
   isTextarea?: boolean;
 }
@@ -26,6 +27,7 @@ const FormInput = ({
   required,
   placeholder,
   type = 'text',
+  containerClassName,
   className,
   disabled,
   isPassword,
@@ -53,7 +55,7 @@ const FormInput = ({
   const isText = name === 'description';
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={cn('flex flex-col gap-1.5', containerClassName)}>
       {label && (
         <Label className="text-sm font-medium text-slate-800">
           {label} {required && <span className="text-red-500">*</span>}

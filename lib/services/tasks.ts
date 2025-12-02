@@ -138,10 +138,14 @@ export class TaskService {
     projectId: number;
     title: string;
     description: string | undefined;
-    dueDate: string;
+    dueDate?: string;
     assigneeId: string | undefined;
     priority: TaskPriority;
   }) {
+    if (!dueDate || isNaN(new Date(dueDate).getTime())) {
+      throw new AppError(400, 'INVALID_DUE_DATE', 'Укажите корректный дедлайн');
+    }
+
     const existing = await prisma.task.findFirst({
       where: {
         projectId: Number(projectId),
@@ -168,7 +172,6 @@ export class TaskService {
         projectId: Number(projectId),
         assigneeId,
         priority: priority || TaskPriority.LOW,
-        
       },
     });
 

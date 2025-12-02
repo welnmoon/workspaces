@@ -38,12 +38,11 @@ const CreateTaskForm = ({
       priority: 'LOW',
     },
   });
-  const { mutate, isPending, 
-    // isSuccess, isError, error 
-  } = useCreateTask(
-    workspaceId,
-    projectId
-  );
+  const {
+    mutate,
+    isPending,
+    // isSuccess, isError, error
+  } = useCreateTask(workspaceId, projectId);
 
   const onFormSubmit = (values: CreateTaskFormValues) => {
     mutate(values, {
@@ -59,10 +58,17 @@ const CreateTaskForm = ({
     });
   };
 
-
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onFormSubmit)}>
+      <form
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            form.handleSubmit(onFormSubmit)();
+          }
+        }}
+        onSubmit={form.handleSubmit(onFormSubmit)}
+      >
         <fieldset className="mb-4 space-y-2">
           <legend className="sr-only">Вы создаете задачу</legend>
           <FormInput
