@@ -168,6 +168,7 @@ export class TaskService {
         projectId: Number(projectId),
         assigneeId,
         priority: priority || TaskPriority.LOW,
+        
       },
     });
 

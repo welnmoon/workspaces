@@ -14,10 +14,12 @@ import { Heading } from '../../ui/heading';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
 import ProjectTabs from './tabs/project-tabs';
 import ProjectTasksAllStats from './project-tasks-stats';
+import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 
 export type StatusFilter = TaskStatusDTO | 'ALL';
 
 const ProjectComponent = ({
+  sprints,
   project,
   workspaceId,
   tasks,
@@ -26,6 +28,7 @@ const ProjectComponent = ({
   memberTaskStats,
   members,
 }: {
+  sprints: SprintWithTasksWithAssigneesDTO[];
   project: Project;
   workspaceId: number;
   tasks: TaskWithAssigneeDTO[];
@@ -75,6 +78,7 @@ const ProjectComponent = ({
       <Divider />
 
       <ProjectTabs
+      sprints={sprints}
         tasks={tasks}
         workspaceId={workspaceId}
         projectId={project.id}

@@ -24,10 +24,13 @@ import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
 import toast from 'react-hot-toast';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
+import ProjectTabsBacklog from './project-tabs-backlog';
+import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
 type ProjectTabsProps = {
+  sprints: SprintWithTasksWithAssigneesDTO[];
   tasks: TaskWithAssigneeDTO[];
   workspaceId: number;
   projectId: number;
@@ -38,6 +41,7 @@ type ProjectTabsProps = {
 const doneCounts = [10, 25, 50];
 
 const ProjectTabs = ({
+  sprints,
   tasks,
   workspaceId,
   projectId,
@@ -46,16 +50,25 @@ const ProjectTabs = ({
 }: ProjectTabsProps) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
+
+  const queryClient = useQueryClient();
+  const queryKey = ['tasks', projectId, workspaceId];
+
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
+
+  //----------------------Tasks--------------------------//
+  const [allTasks, setAllTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
+  const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>([]);
   const [doneTasksCount, setDoneTasksCount] = useState<string>(
     String(doneCounts[0])
   );
-  const queryClient = useQueryClient();
-  const queryKey = ['tasks', projectId, workspaceId];
-  // delete tasks
+
+  //----------------------Delete Tasks--------------------------//
   const [selectedIds, setSelectedIds] = useState(new Set<number>());
+
   const { mutate: deleteTasks, isPending: isDeleteTasksPending } =
-    useDeleteTasksBulk(workspaceId, projectId);
+    useDeleteTasksBulk(workspaceId, projectId, setAllTasks, queryKey);
 
   const handleDeleteTasks = () => {
     deleteTasks(selectedIds, {
@@ -69,34 +82,55 @@ const ProjectTabs = ({
     });
   };
 
-  const syncCache = (updatedTasks: TaskWithAssigneeDTO[]) =>
+  const syncCache = (updatedTasks: TaskWithAssigneeDTO[]) => {
+    setAllTasks(updatedTasks);
     queryClient.setQueryData(queryKey, updatedTasks);
+  };
+
   const { changeStatus, isPending } = useTaskStatusChange({
-    setBoardTasks,
+    setBoardTasks: setAllTasks,
     queryKey,
   });
-
-  // в onDragEnd или где-то ещё:
 
   const { data: optimisticTasks } = useTasksWithAssignee(
     projectId,
     workspaceId,
     tasks
   );
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-  const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
 
+  //----------------------Filter Tasks--------------------------//
   useEffect(() => {
-    setBoardTasks(optimisticTasks || []);
+    if (optimisticTasks && Array.isArray(optimisticTasks)) {
+      setAllTasks(optimisticTasks);
+    }
   }, [optimisticTasks]);
 
+  const sprintTasks = useMemo(() => {
+    return allTasks.filter((t) => t.sprintId !== null);
+  }, [allTasks]);
+
+  const backlogTasks = useMemo(() => {
+    return allTasks.filter((t) => t.sprintId === null);
+  }, [allTasks]);
+
+  const filteredBacklogTasks = useMemo(() => {
+    return filterTasks(backlogTasks, status, dateRange);
+  }, [backlogTasks, status, dateRange]);
+
   const listTasks = useMemo(() => {
-    return filterTasks(boardTasks, status, dateRange);
-  }, [boardTasks, status, dateRange]);
+    return filterTasks(allTasks, status, dateRange);
+  }, [allTasks, status, dateRange]);
+
+  //----------------------Tasks Board - Kanban--------------------------//
+  useEffect(() => {
+    setBoardTasks(sprintTasks);
+  }, [sprintTasks]);
 
   const tasksByStatus = useMemo(() => {
     return tasksFilterByStatus({ tasks: boardTasks });
   }, [boardTasks]);
+  // обновляем кэш с помощью sync
+  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, syncCache);
 
   const remainTasksCount = useMemo(() => {
     const totalDone = allTaskStats?.tasksDoneCount ?? 0;
@@ -109,21 +143,21 @@ const ProjectTabs = ({
   const hasStatusFilter = status !== 'ALL';
   const hasAnyFilter = hasStatusFilter || hasDateFilter;
 
-  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, syncCache);
-
   const resetFilters = () => {
     setStatus('ALL');
     setDateRange(undefined);
   };
 
-  const [activeTab, setActiveTab] = useState<'list' | 'kanban' | 'stats'>(
-    'list'
-  );
+  const [activeTab, setActiveTab] = useState<
+    'list' | 'kanban' | 'stats' | 'backlog'
+  >('list');
 
   return (
     <Tabs
       value={activeTab}
-      onValueChange={(v) => setActiveTab(v as 'list' | 'kanban' | 'stats')}
+      onValueChange={(v) =>
+        setActiveTab(v as 'list' | 'kanban' | 'stats' | 'backlog')
+      }
       className="w-full space-y-4"
     >
       <div className="flex flex-wrap items-center gap-3">
@@ -135,6 +169,10 @@ const ProjectTabs = ({
           <TabsTrigger value="kanban" className="flex items-center gap-2">
             <Kanban className="h-4 w-4" />
             <span>Канбан</span>
+          </TabsTrigger>
+          <TabsTrigger value="backlog" className="flex items-center gap-2">
+            <IoStatsChart className="h-4 w-4" />
+            <span>Бэклог</span>
           </TabsTrigger>
           <TabsTrigger value="stats" className="flex items-center gap-2">
             <IoStatsChart className="h-4 w-4" />
@@ -208,7 +246,7 @@ const ProjectTabs = ({
         </div>
       </div>
 
-      <TabsContent  value="list" className="space-y-4">
+      <TabsContent value="list" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-muted-foreground">
             Всего задач: <span className="font-medium">{listTasks.length}</span>
@@ -221,6 +259,8 @@ const ProjectTabs = ({
         </div>
 
         <ProjectTabsList
+          sprints={sprints}
+          backlogTasks={backlogTasks}
           listTasks={listTasks}
           hasAnyFilter={hasAnyFilter}
           hasStatusFilter={hasStatusFilter}
@@ -252,6 +292,21 @@ const ProjectTabs = ({
         <ProjectTasksStats
           allTaskStats={allTaskStats}
           memberTaskStats={memberTaskStats}
+        />
+      </TabsContent>
+
+      <TabsContent value="backlog" className="mt-2">
+        <ProjectTabsBacklog
+          backlogTasks={backlogTasks}
+          hasAnyFilter={hasAnyFilter}
+          hasStatusFilter={hasStatusFilter}
+          hasDateFilter={hasDateFilter}
+          status={status}
+          onStatusChange={changeStatus}
+          isStatusPending={isPending}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          isDeleteTasksPending={isDeleteTasksPending}
         />
       </TabsContent>
     </Tabs>

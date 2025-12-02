@@ -24,16 +24,18 @@ import getTaskStatusColor from '@/helpers/get-status-color';
 import { Badge } from '@/components/ui/badge';
 import { FaRegSquare, FaRegCheckSquare } from 'react-icons/fa';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
-import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
-import { usePathname, useRouter } from 'next/navigation';
-import { clientRoutes } from '@/lib/routes/client-routes';
-import toast from 'react-hot-toast';
+
+import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
+import TasksSprintAccordion from './tasks-sprint-accordion';
+import ProjectSprints from './project-sprints';
+import ProjectBacklogs from './project-backlogs';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
 type ProjectTabsListProps = {
+  sprints: SprintWithTasksWithAssigneesDTO[];
   listTasks: TaskWithAssigneeDTO[];
+  backlogTasks: TaskWithAssigneeDTO[];
   hasAnyFilter: boolean;
   hasStatusFilter: boolean;
   hasDateFilter: boolean;
@@ -49,7 +51,9 @@ type ProjectTabsListProps = {
 };
 
 const ProjectTabsList = ({
+  sprints,
   listTasks,
+  backlogTasks,
   hasAnyFilter,
   hasStatusFilter,
   hasDateFilter,
@@ -75,8 +79,11 @@ const ProjectTabsList = ({
       {hasAnyFilter && listTasks.length > 0 && (
         <MessageInfo text={`Найдено ${listTasks.length} задач`} />
       )}
+      {sprints.length}
+      <ProjectSprints sprints={sprints} />
+      <ProjectBacklogs backlogs={backlogTasks} />
 
-      {hasAnyFilter && listTasks.length === 0 && (
+      {/* {hasAnyFilter && listTasks.length === 0 && (
         <EmptyState
           title={
             hasStatusFilter && hasDateFilter
@@ -86,123 +93,7 @@ const ProjectTabsList = ({
                 : `Нет задач в выбранном диапазоне`
           }
         />
-      )}
-
-      {listTasks.length > 0 && (
-        <Table>
-          <TableHeader className="bg-zinc-50">
-            <TableRow className="text-left text-xs font-semibold text-muted-foreground">
-              <TableHead className="px-4 py-3"></TableHead>
-              <TableHead className="px-4 py-3">Название</TableHead>
-              <TableHead className="px-4 py-3">Статус</TableHead>
-              <TableHead className="px-4 py-3">Приоритет</TableHead>
-              <TableHead className="px-4 py-3">Исполнитель</TableHead>
-              <TableHead className="px-4 py-3">Дедлайн</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="text-sm">
-            {listTasks.map((t) => {
-              const statusTitle =
-                STATUS_COLUMNS.find((s) => s.id === t.status)?.title ??
-                t.status;
-              const statusId = (STATUS_COLUMNS.find((s) => s.id === t.status)
-                ?.id ?? t.status) as TaskStatusDTO;
-              const priorityLabel = TASK_PRIORITY_LABELS[t.priority];
-              const due = t.dueDate && new Date(t.dueDate).toLocaleDateString();
-
-              const assigneeName = t.assignee
-                ? `${t.assignee.firstName || ''} ${t.assignee.lastName || ''}`.trim() ||
-                  t.assignee.email
-                : 'Не назначен';
-
-              return (
-                <TableRow
-                  key={t.id}
-                  className={cn(
-                    'transition hover:bg-zinc-50',
-                    isSelected(t.id) && 'bg-neutral-50'
-                  )}
-                >
-                  <TableCell className={cn('font-medium w-10 text-foreground')}>
-                    {isSelected(t.id) ? (
-                      <FaRegCheckSquare
-                        size={20}
-                        onClick={() => toggle(t.id)}
-                      />
-                    ) : (
-                      <FaRegSquare size={20} onClick={() => toggle(t.id)} />
-                    )}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 font-medium text-foreground">
-                    {t.title}
-                  </TableCell>
-                  <TableCell className={cn('px-4 py-3 text-muted-foreground')}>
-                    <Select
-                      disabled={isDeleteTasksPending || isStatusPending}
-                      value={statusId}
-                      // disabled={isStatusPending}
-                      onValueChange={(value) =>
-                        onStatusChange(t.id, value as TaskStatusDTO)
-                      }
-                    >
-                      <SelectTrigger className="h-8 w-40 justify-between px-2">
-                        <Badge
-                          className={cn(
-                            getTaskStatusColor({ taskStatus: statusId }),
-                            'text-white font-medium'
-                          )}
-                        >
-                          {statusTitle}
-                        </Badge>
-                      </SelectTrigger>
-                      <SelectContent className="w-44">
-                        {STATUS_COLUMNS.map((statusOption) => (
-                          <SelectItem
-                            key={statusOption.id}
-                            value={statusOption.id}
-                            className="flex items-center gap-2"
-                          >
-                            <Badge
-                              className={cn(
-                                getTaskStatusColor({
-                                  taskStatus: statusOption.id,
-                                }),
-                                'text-white font-medium'
-                              )}
-                            >
-                              {statusOption.title}
-                            </Badge>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-muted-foreground">
-                    {priorityLabel}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-muted-foreground">
-                    {assigneeName}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-muted-foreground">
-                    {due || '—'}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-
-            {listTasks.length === 0 && !hasAnyFilter && (
-              <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="px-4 py-6 text-center text-sm text-muted-foreground"
-                >
-                  Задач пока нет
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      )}
+      )} */}
     </section>
   );
 };

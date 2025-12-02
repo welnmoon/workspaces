@@ -50,13 +50,26 @@ export class ProjectService {
       );
     }
 
-    return prisma.project.create({
-      data: {
-        name: data.name,
-        workspaceId: data.workspaceId,
-        description: data.description,
-      },
+    const project = await prisma.$transaction(async (tx) => {
+      const project = await tx.project.create({
+        data: {
+          name: data.name,
+          workspaceId: data.workspaceId,
+          description: data.description,
+        },
+      });
+
+      await tx.sprint.create({
+        data: {
+          name: 'Спринт 1',
+          projectId: project.id,
+        },
+      });
+
+      return project;
     });
+
+    return project;
   }
 
   static async getProjectById(projectId: number) {
@@ -128,26 +141,8 @@ export class ProjectService {
     });
   }
 
-  static async getProjectTasksWithAssignee(
-    projectId: number
-    // filters?: TaskFilters
-  ) {
+  static async getProjectTasksWithAssignee(projectId: number) {
     const where: Prisma.TaskWhereInput = { projectId };
-
-    // if (filters?.status) where.status = filters.status;
-    // if (filters?.assigneeId) where.assigneeId = filters.assigneeId;
-
-    // if (filters?.done) where.status = TaskStatus.DONE;
-    // if (filters?.todo) where.status = TaskStatus.TODO;
-    // if (filters?.inProgress) where.status = TaskStatus.IN_PROGRESS;
-    // if (filters?.overdue) {
-    //   where.dueDate = { lt: new Date() };
-    // } else if (filters?.fromDate || filters?.toDate) {
-    //   where.dueDate = {
-    //     ...(filters.fromDate ? { gte: filters.fromDate } : {}),
-    //     ...(filters.toDate ? { lte: filters.toDate } : {}),
-    //   };
-    // }
 
     return prisma.task.findMany({
       where,

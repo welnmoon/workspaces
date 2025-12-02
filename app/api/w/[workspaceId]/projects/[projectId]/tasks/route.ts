@@ -40,6 +40,7 @@ export async function POST(
       dueDate: data.data.dueDate,
       assigneeId: data.data.assigneeId,
       priority: data.data.priority,
+      
     });
     return created(task);
   } catch (e) {

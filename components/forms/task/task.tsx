@@ -88,7 +88,7 @@ const TaskComponent = ({
               },
               {
                 label: projectName,
-                href: clientRoutes.projectPage(projectId, workspaceId),
+                href: clientRoutes.projectPage(workspaceId, projectId),
               },
               {
                 label: `Task #${task.id}`,
