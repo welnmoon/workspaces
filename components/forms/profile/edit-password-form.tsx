@@ -46,7 +46,15 @@ const EditPasswordForm = ({
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onFormSubmit)}>
+      <form
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            form.handleSubmit(onFormSubmit)();
+          }
+        }}
+        onSubmit={form.handleSubmit(onFormSubmit)}
+      >
         <fieldset>
           <legend className="sr-only">Изменить пароль</legend>
           <div className="flex flex-col gap-2 mb-4">

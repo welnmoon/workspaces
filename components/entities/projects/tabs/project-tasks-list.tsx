@@ -43,24 +43,24 @@ const ProjectTabsList = ({
   setSelectedIds,
   isDeleteTasksPending,
 }: ProjectTabsListProps) => {
-  const toggle = (id: number) => {
-    setSelectedIds((prev) => {
-      const copy = new Set(prev);
-      copy.has(id) ? copy.delete(id) : copy.add(id);
-      return copy;
-    });
-  };
-
-  const isSelected = (id: number) => selectedIds.has(id);
-
   return (
     <section className="space-y-3">
       {hasAnyFilter && listTasks.length > 0 && (
         <MessageInfo text={`Найдено ${listTasks.length} задач`} />
       )}
       {sprints.length}
-      <ProjectSprints sprints={sprints} />
-      <ProjectBacklogs backlogs={backlogTasks} />
+      <ProjectSprints
+        sprints={sprints}
+        selectedIds={selectedIds}
+        setSelectedIds={setSelectedIds}
+        isDeleteTasksPending={isDeleteTasksPending}
+      />
+      <ProjectBacklogs
+        backlogs={backlogTasks}
+        selectedIds={selectedIds}
+        setSelectedIds={setSelectedIds}
+        isDeleteTasksPending={isDeleteTasksPending}
+      />
 
       {/* {hasAnyFilter && listTasks.length === 0 && (
         <EmptyState

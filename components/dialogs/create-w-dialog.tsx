@@ -96,6 +96,16 @@ const CreateWorkspaceDialog = () => {
         <FormProvider {...form}>
           <form
             className="w-full h-full flex flex-col"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                if (step === 1) {
+                  goNext();
+                } else {
+                  form.handleSubmit(onFormSubmit)();
+                }
+              }
+            }}
             onSubmit={form.handleSubmit(onFormSubmit)}
           >
             {step === 1 && (

@@ -18,7 +18,7 @@ import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 import getTaskStatusColor from '@/helpers/get-status-color';
 import type { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import { useCreateTask } from '@/hooks/tasks/use-create-task';
@@ -32,16 +32,28 @@ import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
 import { useSprintTasks } from '@/hooks/tasks/use-sprints-tasks';
 import { useQueryClient } from '@tanstack/react-query';
 import { clientRoutes } from '@/lib/routes/client-routes';
+import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 
 const TasksSprintAccordion = ({
   sprint,
+  selectedIds,
+  setSelectedIds,
+  isDeleteTasksPending,
 }: {
   sprint: SprintWithTasksWithAssigneesDTO;
+  selectedIds?: Set<number>;
+  setSelectedIds?: Dispatch<SetStateAction<Set<number>>>;
+  isDeleteTasksPending?: boolean;
 }) => {
   const [hoverId, setHoverId] = useState<number>();
+  
   const pathname = usePathname();
   const router = useRouter();
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
+  const withSelection = useMemo(
+    () => selectedIds !== undefined && setSelectedIds !== undefined,
+    [selectedIds, setSelectedIds]
+  );
 
   const qc = useQueryClient();
   const sprintQueryKey = ['sprintTasks', sprint.id, projectId, workspaceId];
@@ -86,6 +98,16 @@ const TasksSprintAccordion = ({
         },
       }
     );
+  const toggle = (id: number) => {
+    if (!withSelection || !setSelectedIds) return;
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      copy.has(id) ? copy.delete(id) : copy.add(id);
+      return copy;
+    });
+  };
+
+  const isSelected = (id: number) => (selectedIds ? selectedIds.has(id) : false);
   return (
     <Accordion
       type="single"
@@ -111,6 +133,7 @@ const TasksSprintAccordion = ({
               <Table>
                 <TableHeader className="bg-zinc-50">
                   <TableRow className="text-left text-xs font-semibold text-muted-foreground">
+                    {withSelection && <TableHead className="w-10 px-4 py-3" />}
                     <TableHead className="px-4 py-3">Название</TableHead>
                     <TableHead className="px-4 py-3">Статус</TableHead>
                     <TableHead className="px-4 py-3">Приоритет</TableHead>
@@ -135,8 +158,32 @@ const TasksSprintAccordion = ({
                       <TableRow
                         onMouseEnter={() => setHoverId(t.id)}
                         key={t.id}
-                        className="transition hover:bg-zinc-50"
+                        className={cn(
+                          'transition hover:bg-zinc-50',
+                          isSelected(t.id) && 'bg-neutral-50'
+                        )}
                       >
+                        {withSelection && (
+                          <TableCell className="w-10">
+                            {isSelected(t.id) ? (
+                              <FaRegCheckSquare
+                                size={18}
+                                className={cn(
+                                  isDeleteTasksPending && 'text-muted-foreground'
+                                )}
+                                onClick={() => toggle(t.id)}
+                              />
+                            ) : (
+                              <FaRegSquare
+                                size={18}
+                                className={cn(
+                                  isDeleteTasksPending && 'text-muted-foreground'
+                                )}
+                                onClick={() => toggle(t.id)}
+                              />
+                            )}
+                          </TableCell>
+                        )}
                         <TableCell className="px-4 py-3 font-medium text-foreground">
                           {t.title}
                         </TableCell>

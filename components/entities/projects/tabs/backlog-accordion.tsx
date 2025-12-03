@@ -24,20 +24,33 @@ import { useCreateTask } from '@/hooks/tasks/use-create-task';
 import { usePathname } from 'next/navigation';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import BacklogTaskActions from './backlog-task-actions';
 import { useMembers } from '@/hooks/members/use-members';
 import { useChangeTaskAssignee } from '@/hooks/tasks/use-change-assignee';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
+  selectedIds?: Set<number>;
+  setSelectedIds?: Dispatch<SetStateAction<Set<number>>>;
+  isDeleteTasksPending?: boolean;
 };
 
-const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
+const BacklogAccordion = ({
+  tasks,
+  selectedIds,
+  setSelectedIds,
+  isDeleteTasksPending,
+}: BacklogAccordionProps) => {
   const [hoverId, setHoverId] = useState<number>();
   const pathname = usePathname();
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
+  const withSelection = useMemo(
+    () => selectedIds !== undefined && setSelectedIds !== undefined,
+    [selectedIds, setSelectedIds]
+  );
 
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
     useCreateTask(workspaceId!, projectId!);
@@ -65,6 +78,17 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
         toast.error('Не удалось создать задачу');
       },
     });
+  const toggle = (id: number) => {
+    if (!withSelection || !setSelectedIds) return;
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      copy.has(id) ? copy.delete(id) : copy.add(id);
+      return copy;
+    });
+  };
+
+  const isSelected = (id: number) => (selectedIds ? selectedIds.has(id) : false);
+
   return (
     <Accordion
       type="single"
@@ -90,6 +114,7 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
               <Table>
                 <TableHeader className="bg-zinc-50">
                   <TableRow className="text-left text-xs font-semibold text-muted-foreground">
+                    {withSelection && <TableHead className="w-10 px-4 py-3" />}
                     <TableHead className="px-4 py-3">Название</TableHead>
                     <TableHead className="px-4 py-3">Статус</TableHead>
                     <TableHead className="px-4 py-3">Приоритет</TableHead>
@@ -114,8 +139,32 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
                       <TableRow
                         onMouseEnter={() => setHoverId(t.id)}
                         key={t.id}
-                        className="transition hover:bg-zinc-50"
+                        className={cn(
+                          'transition hover:bg-zinc-50',
+                          isSelected(t.id) && 'bg-neutral-50'
+                        )}
                       >
+                        {withSelection && (
+                          <TableCell className="w-10">
+                            {isSelected(t.id) ? (
+                              <FaRegCheckSquare
+                                size={18}
+                                className={cn(
+                                  isDeleteTasksPending && 'text-muted-foreground'
+                                )}
+                                onClick={() => toggle(t.id)}
+                              />
+                            ) : (
+                              <FaRegSquare
+                                size={18}
+                                className={cn(
+                                  isDeleteTasksPending && 'text-muted-foreground'
+                                )}
+                                onClick={() => toggle(t.id)}
+                              />
+                            )}
+                          </TableCell>
+                        )}
                         <TableCell className="px-4 py-3 font-medium text-foreground">
                           {t.title}
                         </TableCell>

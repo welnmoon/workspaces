@@ -39,6 +39,12 @@ const SendWMembersNotificationForm = ({
   return (
     <FormProvider {...form}>
       <form
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            form.handleSubmit(handleSubmit)();
+          }
+        }}
         onSubmit={form.handleSubmit(handleSubmit)}
         className={cn('space-y-4', className)}
       >
