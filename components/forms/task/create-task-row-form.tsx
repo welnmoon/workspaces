@@ -59,7 +59,7 @@ export const CreateTaskRowForm = ({
         <Checkbox disabled />
         <FormInput
           name="title"
-          placeholder="Напиши имя задач"
+          placeholder="Напиши имя задачи"
           containerClassName="flex-1"
           className="h-8 border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
         />

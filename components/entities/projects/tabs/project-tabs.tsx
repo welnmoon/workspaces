@@ -24,8 +24,8 @@ import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
 import toast from 'react-hot-toast';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
-import ProjectTabsBacklog from './project-tabs-backlog';
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
+import BacklogAccordion from './backlog-accordion';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -92,11 +92,8 @@ const ProjectTabs = ({
     queryKey,
   });
 
-  const { data: optimisticTasks } = useTasksWithAssignee(
-    projectId,
-    workspaceId,
-    tasks
-  );
+  const { data: optimisticTasks, isLoading: isTasksLoading } =
+    useTasksWithAssignee(projectId, workspaceId, tasks);
 
   //----------------------Filter Tasks--------------------------//
   useEffect(() => {
@@ -296,7 +293,7 @@ const ProjectTabs = ({
       </TabsContent>
 
       <TabsContent value="backlog" className="mt-2">
-        <ProjectTabsBacklog
+        {/* <ProjectTabsBacklog
           backlogTasks={backlogTasks}
           hasAnyFilter={hasAnyFilter}
           hasStatusFilter={hasStatusFilter}
@@ -307,6 +304,12 @@ const ProjectTabs = ({
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
           isDeleteTasksPending={isDeleteTasksPending}
+        /> */}
+        <BacklogAccordion
+          tasks={backlogTasks}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          isDeleteTasksPending={isTasksLoading}
         />
       </TabsContent>
     </Tabs>

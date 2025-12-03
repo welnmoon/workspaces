@@ -33,6 +33,7 @@ import { useSprintTasks } from '@/hooks/tasks/use-sprints-tasks';
 import { useQueryClient } from '@tanstack/react-query';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const TasksSprintAccordion = ({
   sprint,
@@ -46,7 +47,8 @@ const TasksSprintAccordion = ({
   isDeleteTasksPending?: boolean;
 }) => {
   const [hoverId, setHoverId] = useState<number>();
-  
+  const isMobile = useIsMobile();
+
   const pathname = usePathname();
   const router = useRouter();
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
@@ -107,7 +109,8 @@ const TasksSprintAccordion = ({
     });
   };
 
-  const isSelected = (id: number) => (selectedIds ? selectedIds.has(id) : false);
+  const isSelected = (id: number) =>
+    selectedIds ? selectedIds.has(id) : false;
   return (
     <Accordion
       type="single"
@@ -129,16 +132,18 @@ const TasksSprintAccordion = ({
               В спринте пока нет задач
             </div>
           ) : (
-            <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
-              <Table>
+            <div className="md:overflow-visible overflow-x-auto rounded-2xl border bg-white shadow-sm">
+              <Table className="table-fixed min-w-[720px]">
                 <TableHeader className="bg-zinc-50">
                   <TableRow className="text-left text-xs font-semibold text-muted-foreground">
                     {withSelection && <TableHead className="w-10 px-4 py-3" />}
-                    <TableHead className="px-4 py-3">Название</TableHead>
-                    <TableHead className="px-4 py-3">Статус</TableHead>
-                    <TableHead className="px-4 py-3">Приоритет</TableHead>
-                    <TableHead className="px-4 py-3">Исполнитель</TableHead>
-                    <TableHead className="px-4 py-3"></TableHead>
+                    <TableHead className="px-4 py-3 w-full">Название</TableHead>
+                    <TableHead className="px-4 py-3 w-40">Статус</TableHead>
+                    <TableHead className="px-4 py-3 w-40">Приоритет</TableHead>
+                    <TableHead className="px-4 py-3 w-50">
+                      Исполнитель
+                    </TableHead>
+                    <TableHead className="px-4 py-3 w-10"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="text-sm">
@@ -169,7 +174,8 @@ const TasksSprintAccordion = ({
                               <FaRegCheckSquare
                                 size={18}
                                 className={cn(
-                                  isDeleteTasksPending && 'text-muted-foreground'
+                                  isDeleteTasksPending &&
+                                    'text-muted-foreground'
                                 )}
                                 onClick={() => toggle(t.id)}
                               />
@@ -177,7 +183,8 @@ const TasksSprintAccordion = ({
                               <FaRegSquare
                                 size={18}
                                 className={cn(
-                                  isDeleteTasksPending && 'text-muted-foreground'
+                                  isDeleteTasksPending &&
+                                    'text-muted-foreground'
                                 )}
                                 onClick={() => toggle(t.id)}
                               />
@@ -202,11 +209,23 @@ const TasksSprintAccordion = ({
                         <TableCell className="px-4 py-3 text-muted-foreground">
                           {priorityLabel}
                         </TableCell>
-                        <TableCell className="px-4 py-3 text-muted-foreground">
+                        <TableCell className="px-4 w-1/5 py-3 text-muted-foreground">
                           {assigneeName}
                         </TableCell>
-                        <TableCell className="px-4 py-3 text-muted-foreground">
-                          {hoverId === t.id && (
+                        <TableCell className="px-4 py-3 w-1/9 text-muted-foreground">
+                          {hoverId === t.id && !isMobile && (
+                            <BacklogTaskActions
+                              disabled={isCreateTaskPending}
+                              onMove={() => {}}
+                              onChangeStatus={() => {}}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
+                              onDelete={() => {}}
+                              members={members}
+                              taskId={t.id}
+                            />
+                          )}
+                          {isMobile && (
                             <BacklogTaskActions
                               disabled={isCreateTaskPending}
                               onMove={() => {}}
