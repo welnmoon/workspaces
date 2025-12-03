@@ -24,11 +24,26 @@ export class SprintService {
     });
   }
 
-  static async createSprint(projectId: number, name: string) {
+  static async createSprint({
+    projectId,
+    name,
+    goal,
+    startDate,
+    endDate,
+  }: {
+    projectId: number;
+    name: string;
+    goal?: string | null;
+    startDate?: Date | null;
+    endDate?: Date | null;
+  }) {
     return await prisma.sprint.create({
       data: {
         name,
         projectId,
+        goal: goal ?? null,
+        startDate: startDate ?? null,
+        endDate: endDate ?? null,
       },
     });
   }

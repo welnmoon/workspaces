@@ -55,7 +55,6 @@ export const CreateTaskRowForm = ({
           isFocused && 'ring-1 ring-primary/40 bg-primary/5'
         )}
       >
-        {/* чекбокс, как у Jira */}
         <Checkbox disabled />
         <FormInput
           name="title"
@@ -63,17 +62,7 @@ export const CreateTaskRowForm = ({
           containerClassName="flex-1"
           className="h-8 border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
         />
-        {/* сам инпут с названием задачи */}
-        {/* <Input
-          value={form.getValues('title')}
-          onChange={(e) => setTitle(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder="new task"
-          className="h-8 border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-        /> */}
 
-        {/* псевдо-иконки даты / ассайни (как в Jira, но пока без логики) */}
         <button
           type="button"
           className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-muted"
@@ -90,7 +79,6 @@ export const CreateTaskRowForm = ({
           <User2 className="h-4 w-4 text-muted-foreground" />
         </button>
 
-        {/* кнопка 'Создать ↵' */}
         <Button type="submit" size="sm" disabled={isLoading} className="h-8">
           {isLoading ? <LoaderComponent /> : 'Создать ↵'}
         </Button>

@@ -119,8 +119,8 @@ const TasksSprintAccordion = ({
       defaultValue={`Бэклог`}
     >
       <AccordionItem value={`backlog`}>
-        <AccordionTrigger className="flex items-center justify-between">
-          <span className="font-semibold">{sprint.name}</span>
+        <AccordionTrigger className="flex items-center justify-between bg-zinc-50 rounded-t-md px-4">
+          <span className="font-semibold text-xl w-30 ">{sprint.name}</span>
           <span className="text-xs text-muted-foreground">
             {sprintTasks.length} задач
           </span>

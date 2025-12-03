@@ -26,6 +26,10 @@ import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import BacklogAccordion from './backlog-accordion';
+import { useSprintCreate } from '@/hooks/tasks/use-sprint-create';
+import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
+import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
+import { useMembers } from '@/hooks/members/use-members';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -50,6 +54,9 @@ const ProjectTabs = ({
 }: ProjectTabsProps) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+
+  // members for accordions and for create task form
+  const { data: members } = useMembers(workspaceId!, projectId!);
 
   const queryClient = useQueryClient();
   const queryKey = ['tasks', projectId, workspaceId];
@@ -83,8 +90,17 @@ const ProjectTabs = ({
   };
 
   const syncCache = (updatedTasks: TaskWithAssigneeDTO[]) => {
-    setAllTasks(updatedTasks);
-    queryClient.setQueryData(queryKey, updatedTasks);
+    setAllTasks((prev) => {
+      const tasksMap = new Map(prev.map((t) => [t.id, t]));
+      for (const t of updatedTasks) {
+        tasksMap.set(t.id, t);
+      }
+
+      const newTasksArray = Array.from(tasksMap.values());
+      queryClient.setQueryData(queryKey, newTasksArray);
+
+      return newTasksArray;
+    });
   };
 
   const { changeStatus, isPending } = useTaskStatusChange({
@@ -117,6 +133,22 @@ const ProjectTabs = ({
   const listTasks = useMemo(() => {
     return filterTasks(allTasks, status, dateRange);
   }, [allTasks, status, dateRange]);
+
+  //---------------------Sprint------------------------------------------//
+
+  const { mutate: onCreateSprint, isPending: isCreateSprintPending } =
+    useSprintCreate(workspaceId, projectId);
+
+  const onCreateSprintHandler = (payload: CreateSprintSchema) => {
+    onCreateSprint(payload, {
+      onSuccess: () => {
+        toast.success('Спринт успешно создан');
+      },
+      onError: (e) => {
+        toast.error(e.message ?? 'Произошла ошибка при создании спринта');
+      },
+    });
+  };
 
   //----------------------Tasks Board - Kanban--------------------------//
   useEffect(() => {
@@ -241,6 +273,12 @@ const ProjectTabs = ({
             </div>
           )}
         </div>
+
+        <CreateTaskDialog
+          members={members!}
+          projectId={projectId}
+          workspaceId={workspaceId}
+        />
       </div>
 
       <TabsContent value="list" className="space-y-4">
@@ -268,6 +306,8 @@ const ProjectTabs = ({
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
           isDeleteTasksPending={isDeleteTasksPending}
+          onCreateSprint={onCreateSprintHandler}
+          onCreateSprintPending={isCreateSprintPending}
         />
       </TabsContent>
 

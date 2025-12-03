@@ -8,6 +8,8 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import ProjectSprints from './project-sprints';
 import ProjectBacklogs from './project-backlogs';
+import { useSprintCreate } from '@/hooks/tasks/use-sprint-create';
+import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -27,6 +29,9 @@ type ProjectTabsListProps = {
   selectedIds: Set<number>;
   setSelectedIds: Dispatch<SetStateAction<Set<number>>>;
   isDeleteTasksPending: boolean;
+
+  onCreateSprint: (payload: CreateSprintSchema) => void;
+  onCreateSprintPending: boolean;
 };
 
 const ProjectTabsList = ({
@@ -42,13 +47,18 @@ const ProjectTabsList = ({
   selectedIds,
   setSelectedIds,
   isDeleteTasksPending,
+
+  onCreateSprint,
+  onCreateSprintPending,
 }: ProjectTabsListProps) => {
   return (
     <section className="space-y-3">
       {hasAnyFilter && listTasks.length > 0 && (
         <MessageInfo text={`Найдено ${listTasks.length} задач`} />
       )}
-      {sprints.length}
+
+      
+
       <ProjectSprints
         sprints={sprints}
         selectedIds={selectedIds}
