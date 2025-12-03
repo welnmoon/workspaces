@@ -42,26 +42,27 @@ const TasksSprintAccordion = ({
   const pathname = usePathname();
   const router = useRouter();
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
-  if (!workspaceId || !projectId) {
-    router.push(clientRoutes.workspacesPage());
-    return;
-  }
+
   const qc = useQueryClient();
   const sprintQueryKey = ['sprintTasks', sprint.id, projectId, workspaceId];
 
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
-    useCreateTask(workspaceId, projectId);
+    useCreateTask(workspaceId!, projectId!);
 
-  const { data: members } = useMembers(workspaceId, projectId);
+  const { data: members } = useMembers(workspaceId!, projectId!);
   const { data: sprintTasks = [] } = useSprintTasks(
-    workspaceId,
-    projectId,
+    workspaceId!,
+    projectId!,
     sprint.id,
     sprint.tasks
   );
   const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
     useChangeTaskAssignee(workspaceId!, projectId!, sprintQueryKey);
 
+  if (!workspaceId || !projectId) {
+    router.push(clientRoutes.workspacesPage());
+    return;
+  }
   // handlers
 
   const onChangeAssigneeHandler = (
