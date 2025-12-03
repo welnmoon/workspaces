@@ -18,29 +18,90 @@ import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 import getTaskStatusColor from '@/helpers/get-status-color';
 import type { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
+import { useCreateTask } from '@/hooks/tasks/use-create-task';
+import { useChangeTaskAssignee } from '@/hooks/tasks/use-change-assignee';
+import { useMembers } from '@/hooks/members/use-members';
+import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import toast from 'react-hot-toast';
+import BacklogTaskActions from './backlog-task-actions';
+import { CreateTaskRowForm } from '@/components/forms/task/create-task-row-form';
+import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
+import { useSprintTasks } from '@/hooks/tasks/use-sprints-tasks';
+import { useQueryClient } from '@tanstack/react-query';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
 const TasksSprintAccordion = ({
   sprint,
 }: {
   sprint: SprintWithTasksWithAssigneesDTO;
 }) => {
+  const [hoverId, setHoverId] = useState<number>();
+  const pathname = usePathname();
+  const router = useRouter();
+  const { projectId, workspaceId } = getIdsFromPathname(pathname);
+  if (!workspaceId || !projectId) {
+    router.push(clientRoutes.workspacesPage());
+    return;
+  }
+  const qc = useQueryClient();
+  const sprintQueryKey = ['sprintTasks', sprint.id, projectId, workspaceId];
+
+  const { mutate: onCreateTask, isPending: isCreateTaskPending } =
+    useCreateTask(workspaceId, projectId);
+
+  const { data: members } = useMembers(workspaceId, projectId);
+  const { data: sprintTasks = [] } = useSprintTasks(
+    workspaceId,
+    projectId,
+    sprint.id,
+    sprint.tasks
+  );
+  const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
+    useChangeTaskAssignee(workspaceId!, projectId!, sprintQueryKey);
+
+  // handlers
+
+  const onChangeAssigneeHandler = (
+    taskId: number,
+    assigneeId: string | null,
+    assignee?: MembershipSelectUserDTO['user']
+  ) => {
+    onChangeAssignee({ taskId, assigneeId, assignee }, { onSuccess: () => {} });
+  };
+
+  const handleCreateTask = (payload: CreateTaskFormValues) =>
+    onCreateTask(
+      { ...payload, sprintId: sprint.id },
+      {
+        onSuccess: () => {
+          toast.success('Задача успешно создана');
+          qc.invalidateQueries({ queryKey: sprintQueryKey });
+        },
+        onError: () => {
+          toast.error('Не удалось создать задачу');
+        },
+      }
+    );
   return (
     <Accordion
       type="single"
       collapsible
       className="w-full"
-      defaultValue={`sprint-${sprint.id}`}
+      defaultValue={`Бэклог`}
     >
-      <AccordionItem value={`sprint-${sprint.id}`}>
+      <AccordionItem value={`backlog`}>
         <AccordionTrigger className="flex items-center justify-between">
           <span className="font-semibold">{sprint.name}</span>
           <span className="text-xs text-muted-foreground">
-            {sprint.tasks.length} задач
+            {sprintTasks.length} задач
           </span>
         </AccordionTrigger>
 
         <AccordionContent className="flex flex-col gap-3 text-sm">
-          {sprint.tasks.length === 0 ? (
+          {sprintTasks.length === 0 ? (
             <div className="text-muted-foreground text-sm">
               В спринте пока нет задач
             </div>
@@ -53,24 +114,28 @@ const TasksSprintAccordion = ({
                     <TableHead className="px-4 py-3">Статус</TableHead>
                     <TableHead className="px-4 py-3">Приоритет</TableHead>
                     <TableHead className="px-4 py-3">Исполнитель</TableHead>
-                    <TableHead className="px-4 py-3">Дедлайн</TableHead>
+                    <TableHead className="px-4 py-3"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="text-sm">
-                  {sprint.tasks.map((t) => {
+                  {sprintTasks.map((t) => {
                     const statusTitle =
                       STATUS_COLUMNS.find((s) => s.id === t.status)?.title ??
                       t.status;
                     const priorityLabel = TASK_PRIORITY_LABELS[t.priority];
-                    const due =
-                      t.dueDate && new Date(t.dueDate).toLocaleDateString();
+                    // const due =
+                    //   t.dueDate && new Date(t.dueDate).toLocaleDateString();
                     const assigneeName = t.assignee
                       ? `${t.assignee.firstName || ''} ${t.assignee.lastName || ''}`.trim() ||
                         t.assignee.email
                       : 'Не назначен';
 
                     return (
-                      <TableRow key={t.id} className="transition hover:bg-zinc-50">
+                      <TableRow
+                        onMouseEnter={() => setHoverId(t.id)}
+                        key={t.id}
+                        className="transition hover:bg-zinc-50"
+                      >
                         <TableCell className="px-4 py-3 font-medium text-foreground">
                           {t.title}
                         </TableCell>
@@ -93,13 +158,28 @@ const TasksSprintAccordion = ({
                           {assigneeName}
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
-                          {due || '—'}
+                          {hoverId === t.id && (
+                            <BacklogTaskActions
+                              disabled={isCreateTaskPending}
+                              onMove={() => {}}
+                              onChangeStatus={() => {}}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
+                              onDelete={() => {}}
+                              members={members}
+                              taskId={t.id}
+                            />
+                          )}
                         </TableCell>
                       </TableRow>
                     );
                   })}
                 </TableBody>
               </Table>
+              <CreateTaskRowForm
+                onCreate={handleCreateTask}
+                isLoading={isCreateTaskPending}
+              />
             </div>
           )}
         </AccordionContent>

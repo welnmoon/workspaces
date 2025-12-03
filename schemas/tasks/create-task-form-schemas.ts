@@ -11,6 +11,7 @@ export const createTaskFormSchema = z.object({
   dueDate: z.string().min(1, 'Укажите срок выполнения').optional(),
   assigneeId: z.string().optional(),
   priority: z.enum(TASK_PRIORITY_ARRAY),
+  sprintId: z.number().optional(),
 });
 
 export type CreateTaskFormValues = z.infer<typeof createTaskFormSchema>;

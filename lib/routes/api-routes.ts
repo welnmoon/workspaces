@@ -24,6 +24,11 @@ export const apiRoutes = {
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
   getTasksWithAssignee: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks/with-assignee`,
+  getSprintTasks: (
+    workspaceId: number,
+    projectId: number,
+    sprintId: number
+  ) => `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/tasks`,
   updateTaskStatus: (taskId: number) => `/api/task/${taskId}/update-status`,
   createTask: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,

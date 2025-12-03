@@ -134,6 +134,7 @@ export class TaskService {
     dueDate,
     assigneeId,
     priority,
+    sprintId,
   }: {
     projectId: number;
     title: string;
@@ -141,6 +142,7 @@ export class TaskService {
     dueDate?: string;
     assigneeId: string | undefined;
     priority: TaskPriority;
+    sprintId: number | null;
   }) {
     let parsedDueDate: Date | undefined = undefined;
 
@@ -182,6 +184,7 @@ export class TaskService {
         projectId: Number(projectId),
         assigneeId,
         priority: priority || TaskPriority.LOW,
+        sprintId,
       },
     });
 

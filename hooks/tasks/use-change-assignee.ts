@@ -1,7 +1,7 @@
 import { AppError } from '@/lib/errors';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
 
 type ChangeAssigneeVars = {
   taskId: number;
@@ -11,9 +11,11 @@ type ChangeAssigneeVars = {
 
 export const useChangeTaskAssignee = (
   workspaceId: number,
-  projectId: number
+  projectId: number,
+  queryKeyOverride?: QueryKey
 ) => {
   const qc = useQueryClient();
+  const queryKey = queryKeyOverride ?? ['tasks', projectId, workspaceId];
 
   return useMutation({
     mutationFn: async ({ taskId, assigneeId }: ChangeAssigneeVars) => {
@@ -35,16 +37,12 @@ export const useChangeTaskAssignee = (
       return res;
     },
     onMutate: async ({ taskId, assigneeId, assignee }) => {
-      qc.cancelQueries({ queryKey: ['tasks', projectId, workspaceId] });
+      qc.cancelQueries({ queryKey });
 
-      const previous = qc.getQueryData<TaskWithAssigneeDTO[]>([
-        'tasks',
-        projectId,
-        workspaceId,
-      ]);
+      const previous = qc.getQueryData<TaskWithAssigneeDTO[]>(queryKey);
 
       qc.setQueryData<TaskWithAssigneeDTO[] | undefined>(
-        ['tasks', projectId, workspaceId],
+        queryKey,
         (old) =>
           old
             ? old.map((t) =>
@@ -63,11 +61,11 @@ export const useChangeTaskAssignee = (
     },
     onError: (_error, _vars, context) => {
       if (context?.previous) {
-        qc.setQueryData(['tasks', projectId, workspaceId], context.previous);
+        qc.setQueryData(queryKey, context.previous);
       }
     },
     onSettled: () => {
-      qc.invalidateQueries({ queryKey: ['tasks', projectId, workspaceId] });
+      qc.invalidateQueries({ queryKey });
     },
   });
 };

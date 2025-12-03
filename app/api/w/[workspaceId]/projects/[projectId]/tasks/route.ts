@@ -6,9 +6,16 @@ import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
 import { Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { AppError } from '@/lib/errors';
+import z from 'zod';
 
 // POST /api/w/[workspaceId]/projects/[projectId]/tasks
 // Create a new task in the project
+
+const createTasWithSprintSchema = z.object({
+  title: z.string(),
+  assigneeId: z.string().optional(),
+  sprintId: z.number().optional(),
+});
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ workspaceId: string; projectId: string }> }
@@ -21,14 +28,15 @@ export async function POST(
       allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],
     });
 
-    const { title, description, dueDate, assigneeId, priority } =
+    const { title, sprintId, assigneeId, description, priority, dueDate } =
       await req.json();
     const data = createTaskFormSchema.safeParse({
       title,
-      description,
-      dueDate,
       assigneeId,
+      sprintId,
+      description,
       priority,
+      dueDate,
     });
     if (!data.success)
       return badRequest('Invalid task data', data.error.format());
@@ -40,7 +48,7 @@ export async function POST(
       dueDate: data.data.dueDate,
       assigneeId: data.data.assigneeId,
       priority: data.data.priority,
-      
+      sprintId: data.data.sprintId || null,
     });
     return created(task);
   } catch (e) {
@@ -48,7 +56,10 @@ export async function POST(
       if (e.code === 'TASK_ALREADY_EXISTS') {
         return conflict(e.message, e.code);
       }
-      return NextResponse.json({ code: e.code, message: e.message }, { status: e.status });
+      return NextResponse.json(
+        { code: e.code, message: e.message },
+        { status: e.status }
+      );
     }
 
     return serverError('Failed to create task', e);

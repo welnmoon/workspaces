@@ -11,12 +11,10 @@ import {
 } from '@/schemas/tasks/create-task-form-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormInput from '../form-input';
+import LoaderComponent from '@/components/ui/loader';
 
 type QuickCreateBacklogTaskRowProps = {
-  onCreate: (payload: {
-    title: string;
-    description?: string;
-  }) => Promise<void> | void;
+  onCreate: (payload: CreateTaskFormValues) => Promise<void> | void;
   isLoading?: boolean;
 };
 
@@ -88,7 +86,7 @@ export const CreateTaskRowForm = ({
 
         {/* кнопка 'Создать ↵' */}
         <Button type="submit" size="sm" disabled={isLoading} className="h-8">
-          {isLoading ? 'Создаём…' : 'Создать ↵'}
+          {isLoading ? <LoaderComponent /> : 'Создать ↵'}
         </Button>
       </form>
     </FormProvider>

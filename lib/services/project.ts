@@ -155,6 +155,21 @@ export class ProjectService {
     });
   }
 
+  static async getProjectSprintTasks(projectId: number, sprintId: number) {
+    return prisma.task.findMany({
+      where: {
+        projectId,
+        sprintId,
+      },
+      include: {
+        assignee: true,
+      },
+      orderBy: {
+        dueDate: 'asc',
+      },
+    });
+  }
+
   //-------------------------------------//
   //--------- For sidebar ---------------//
   //-------------------------------------//
