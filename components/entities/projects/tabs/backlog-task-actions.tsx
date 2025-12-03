@@ -12,16 +12,22 @@ import { Ellipsis } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import getFullName from '@/helpers/profile.ts/get-full-name';
+import { UseMutateFunction } from '@tanstack/react-query';
 
 type BacklogTaskActionsProps = {
   disabled?: boolean;
   onMove?: () => void;
   onChangeStatus?: () => void;
   onChangePriority?: () => void;
-  onChangeAssignee?: (id: number) => void;
+  onChangeAssignee?: (
+    taskId: number,
+    assigneeId: string | null,
+    assignee?: MembershipSelectUserDTO['user']
+  ) => void;
   onDelete?: () => void;
 
   members: MembershipSelectUserDTO[] | undefined;
+  taskId: number;
 };
 
 const BacklogTaskActions = ({
@@ -33,6 +39,7 @@ const BacklogTaskActions = ({
   onDelete,
 
   members,
+  taskId,
 }: BacklogTaskActionsProps) => {
   const membersList = Array.isArray(members) ? members : [];
   return (
@@ -69,7 +76,9 @@ const BacklogTaskActions = ({
                 {membersList.map((member) => (
                   <DropdownMenuItem
                     key={member.id}
-                    onClick={() => onChangeAssignee?.(member.id)}
+                    onClick={() =>
+                      onChangeAssignee?.(taskId, member.user.id, member.user)
+                    }
                   >
                     {/* <div className="flex items-center gap-2"> */}
                     {/* <Avatar className="h-6 w-6">

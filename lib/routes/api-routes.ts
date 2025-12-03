@@ -61,4 +61,6 @@ export const apiRoutes = {
   deleteMember: (memberId: number) => `/api/members/${memberId}/delete`,
   getMembers: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/members`,
+  changeAssignee: (taskId: number, workspaceId: number, projectId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/change-assignee`,
 };

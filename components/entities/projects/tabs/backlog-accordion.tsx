@@ -27,6 +27,8 @@ import toast from 'react-hot-toast';
 import { useState } from 'react';
 import BacklogTaskActions from './backlog-task-actions';
 import { useMembers } from '@/hooks/members/use-members';
+import { useChangeTaskAssignee } from '@/hooks/tasks/use-change-assignee';
+import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
@@ -36,9 +38,23 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
   const [hoverId, setHoverId] = useState<number>();
   const pathname = usePathname();
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
+
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
     useCreateTask(workspaceId!, projectId!);
+
   const { data: members } = useMembers(workspaceId!, projectId!);
+  const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
+    useChangeTaskAssignee(workspaceId!, projectId!);
+
+  // handlers
+
+  const onChangeAssigneeHandler = (
+    taskId: number,
+    assigneeId: string | null,
+    assignee?: MembershipSelectUserDTO['user']
+  ) => {
+    onChangeAssignee({ taskId, assigneeId, assignee }, { onSuccess: () => {} });
+  };
 
   const handleCreateTask = (payload: { title: string; description?: string }) =>
     onCreateTask(payload, {
@@ -128,9 +144,10 @@ const BacklogAccordion = ({ tasks }: BacklogAccordionProps) => {
                               onMove={() => {}}
                               onChangeStatus={() => {}}
                               onChangePriority={() => {}}
-                              onChangeAssignee={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
                               onDelete={() => {}}
                               members={members}
+                              taskId={t.id}
                             />
                           )}
                         </TableCell>

@@ -226,4 +226,19 @@ export class TaskService {
       throw e;
     }
   }
+
+  static async changeAssignee(
+    projectId: number,
+    taskId: number,
+    assigneeId: string | null
+  ) {
+    return await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        assigneeId,
+      },
+    });
+  }
 }
