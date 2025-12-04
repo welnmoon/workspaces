@@ -12,6 +12,7 @@ import MainBtn from '../buttons/main-btn';
 import CreateTaskForm from '../forms/task/create-task-form';
 import { useState } from 'react';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
+import { PlusCircle } from 'lucide-react';
 
 const CreateTaskDialog = ({
   workspaceId,
@@ -27,7 +28,10 @@ const CreateTaskDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <MainBtn text="Создать задачу" />
+        <MainBtn
+          text="Создать задачу"
+          icon={<PlusCircle className="text-white" size={20} />}
+        />
       </DialogTrigger>
       <DialogContent className="max-h-[80vh] sm:max-w-2xl">
         <DialogHeader className="space-y-1 text-left">

@@ -5,18 +5,24 @@ import { PlusCircle } from 'lucide-react';
 
 type MainBtnProps = ButtonProps & {
   text?: string;
+  icon?: React.ReactNode;
   children?: React.ReactNode;
 };
 
 const MainBtn = forwardRef<HTMLButtonElement, MainBtnProps>(
-  ({ text, className, children, ...props }, ref) => {
+  ({ text, icon, className, children, ...props }, ref) => {
+    const Icon = icon ?? <PlusCircle className="text-white" size={20} />;
+
     return (
       <Button
         ref={ref}
-        className={cn('bg-zinc-800 hover:bg-zinc-900', className)}
+        className={cn(
+          'bg-zinc-800 hover:bg-zinc-900 inline-flex items-center gap-2',
+          className
+        )}
         {...props}
       >
-        <PlusCircle className='text-white' size={20}/>
+        {Icon}
         {text} {children}
       </Button>
     );

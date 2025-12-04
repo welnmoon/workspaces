@@ -3,16 +3,18 @@ import { apiRoutes } from '@/lib/routes/api-routes';
 import { TaskFullDTO, TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const useChangePriority = (
-  workspaceId: number,
-  projectId: number,
-  taskId: number
-) => {
+type ChangePriorityVars = {
+  taskId: number;
+  priority: TaskPriorityDTO;
+  sprintId?: number | null;
+};
+
+export const useChangePriority = (workspaceId: number, projectId: number) => {
   const qc = useQueryClient();
+  const tasksKey = ['tasks', projectId, workspaceId];
 
   return useMutation({
-    mutationFn: async (priority: TaskPriorityDTO) => {
-      console.log('useChangePriority:', priority);
+    mutationFn: async ({ taskId, priority }: ChangePriorityVars) => {
       const res = await fetch(
         apiRoutes.changePriority(workspaceId, projectId, taskId),
         {
@@ -22,9 +24,8 @@ export const useChangePriority = (
         }
       );
 
-      if (!res.ok)
-      {
-        console.log(await res.json())
+      if (!res.ok) {
+        console.log(await res.json());
         throw new AppError(
           500,
           'CHANGE_PRIORITY_ERROR',
@@ -34,27 +35,48 @@ export const useChangePriority = (
 
       return priority;
     },
-    onMutate: async (priority: TaskPriorityDTO) => {
-      const key = ['tasks', projectId, workspaceId];
-      await qc.cancelQueries({ queryKey: key });
+    onMutate: async ({ taskId, priority, sprintId }) => {
+      await qc.cancelQueries({ queryKey: tasksKey });
 
-      const previous = qc.getQueryData<TaskFullDTO[]>(key);
+      const previousTasks = qc.getQueryData<TaskFullDTO[]>(tasksKey);
+      const sprintKey =
+        sprintId !== undefined ? ['sprintTasks', sprintId, projectId, workspaceId] : null;
 
-      qc.setQueryData<TaskFullDTO[] | undefined>(key, (old) =>
+      qc.setQueryData<TaskFullDTO[] | undefined>(tasksKey, (old) =>
         old
-          ? old.map((t) => (t.id === taskId ? { ...t, priority: priority } : t))
+          ? old.map((t) => (t.id === taskId ? { ...t, priority } : t))
           : old
       );
 
-      return { previous };
+      if (sprintKey) {
+        qc.setQueryData<TaskFullDTO[] | undefined>(sprintKey, (old) =>
+          old
+            ? old.map((t) => (t.id === taskId ? { ...t, priority } : t))
+            : old
+        );
+      }
+
+      return { previousTasks, sprintKey };
     },
-    onError: (_error, _id, context) => {
-      if (context?.previous) {
-        qc.setQueryData(['tasks', projectId, workspaceId], context.previous);
+    onError: (_error, _vars, context) => {
+      if (context?.previousTasks) {
+        qc.setQueryData(tasksKey, context.previousTasks);
+      }
+      if (context?.sprintKey) {
+        qc.invalidateQueries({ queryKey: context.sprintKey });
       }
     },
-    onSettled: () => {
-      qc.invalidateQueries({ queryKey: ['tasks', projectId, workspaceId] });
+    onSettled: (_data, _error, variables, context) => {
+      qc.invalidateQueries({ queryKey: tasksKey });
+      const sprintId = variables?.sprintId;
+      if (sprintId !== undefined) {
+        qc.invalidateQueries({
+          queryKey: ['sprintTasks', sprintId, projectId, workspaceId],
+        });
+      }
+      if (context?.sprintKey && sprintId === undefined) {
+        qc.invalidateQueries({ queryKey: context.sprintKey });
+      }
     },
   });
 };

@@ -31,6 +31,7 @@ import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
 import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
 import { useMembers } from '@/hooks/members/use-members';
 import MainBtn from '@/components/buttons/main-btn';
+import { FaPenToSquare } from 'react-icons/fa6';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -286,10 +287,13 @@ const ProjectTabs = ({
           projectId={projectId}
           workspaceId={workspaceId}
         />
-        <MainBtn
-          onClick={() => setCreateSprint((prev) => !prev)}
-          text={createSprint ? 'Отменить' : 'Создать спринт'}
-        />
+        {activeTab === 'list' && (
+          <MainBtn
+            onClick={() => setCreateSprint((prev) => !prev)}
+            text={createSprint ? 'Отменить' : 'Создать спринт'}
+            icon={<FaPenToSquare className="text-white" size={20} />}
+          />
+        )}
       </div>
 
       <TabsContent value="list" className="space-y-4">
@@ -363,6 +367,7 @@ const ProjectTabs = ({
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
           isDeleteTasksPending={isTasksLoading}
+          isTasksLoading={isTasksLoading}
         />
       </TabsContent>
     </Tabs>

@@ -36,6 +36,9 @@ import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useSprints } from '@/hooks/tasks/sprint/use-sprints';
 import { useMoveTask } from '@/hooks/tasks/use-move-task';
+import TaskSelectPriority from '../../tasks/task-select-priority';
+import { useChangePriority } from '@/hooks/tasks/use-change-priority';
+import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 
 const TasksSprintAccordion = ({
   sprint,
@@ -61,6 +64,7 @@ const TasksSprintAccordion = ({
 
   const qc = useQueryClient();
   const sprintQueryKey = ['sprintTasks', sprint.id, projectId, workspaceId];
+  const tasksQueryKey = ['tasks', projectId, workspaceId];
 
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
     useCreateTask(workspaceId!, projectId!);
@@ -105,6 +109,28 @@ const TasksSprintAccordion = ({
     router.push(clientRoutes.workspacesPage());
     return;
   }
+
+  //--------TASK-----Priority-----------------------------------------//
+
+  const { mutate: onChangePriority, isPending: onChangePriorityPending } =
+    useChangePriority(workspaceId!, projectId!);
+
+  const onChangePriorityHandler = (
+    taskId: number,
+    priority: TaskPriorityDTO
+  ) => {
+    onChangePriority(
+      { taskId, priority, sprintId: sprint.id },
+      {
+        onError: (e) => {
+          toast.error(
+            e.message ?? 'Произошла ошибка при обновлении приоритета'
+          );
+        },
+      }
+    );
+  };
+
   // handlers
 
   const onChangeAssigneeHandler = (
@@ -236,7 +262,11 @@ const TasksSprintAccordion = ({
                           </Badge>
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
-                          {priorityLabel}
+                          <TaskSelectPriority
+                            taskId={t.id}
+                            priority={t.priority}
+                            onChangePriority={onChangePriorityHandler}
+                          />
                         </TableCell>
                         <TableCell className="px-4 w-1/5 py-3 text-muted-foreground">
                           {assigneeName}

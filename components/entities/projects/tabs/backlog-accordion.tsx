@@ -17,7 +17,10 @@ import {
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
 import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 import getTaskStatusColor from '@/helpers/get-status-color';
-import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
+import type {
+  TaskPriorityDTO,
+  TaskWithAssigneeDTO,
+} from '@/types/prisma/DTO/tasks';
 import { cn } from '@/lib/utils';
 import { CreateTaskRowForm } from '@/components/forms/task/create-task-row-form';
 import { useCreateTask } from '@/hooks/tasks/use-create-task';
@@ -33,12 +36,16 @@ import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useMoveTask } from '@/hooks/tasks/use-move-task';
 import { useSprints } from '@/hooks/tasks/sprint/use-sprints';
+import SelectPriority from '@/components/forms/task/select-priority';
+import TaskSelectPriority from '../../tasks/task-select-priority';
+import { useChangePriority } from '@/hooks/tasks/use-change-priority';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
   selectedIds?: Set<number>;
   setSelectedIds?: Dispatch<SetStateAction<Set<number>>>;
   isDeleteTasksPending?: boolean;
+  isTasksLoading?: boolean;
 };
 
 const BacklogAccordion = ({
@@ -46,6 +53,7 @@ const BacklogAccordion = ({
   selectedIds,
   setSelectedIds,
   isDeleteTasksPending,
+  isTasksLoading = false,
 }: BacklogAccordionProps) => {
   const isMobile = useIsMobile();
   const [hoverId, setHoverId] = useState<number>();
@@ -82,6 +90,27 @@ const BacklogAccordion = ({
         },
         onError: (e) => {
           toast.error(e.message);
+        },
+      }
+    );
+  };
+
+  //--------TASK-----Priority-----------------------------------------//
+
+  const { mutate: onChangePriority, isPending: onChangePriorityPending } =
+    useChangePriority(workspaceId!, projectId!);
+
+  const onChangePriorityHandler = (
+    taskId: number,
+    priority: TaskPriorityDTO
+  ) => {
+    onChangePriority(
+      { taskId, priority, sprintId: null },
+      {
+        onError: (e) => {
+          toast.error(
+            e.message ?? 'Произошла ошибка при обновлении приоритета'
+          );
         },
       }
     );
@@ -217,7 +246,13 @@ const BacklogAccordion = ({
                           </Badge>
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
-                          {priorityLabel}
+                          {/* {priorityLabel} */}
+
+                          <TaskSelectPriority
+                            taskId={t.id}
+                            priority={t.priority}
+                            onChangePriority={onChangePriorityHandler}
+                          />
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
                           {assigneeName}
