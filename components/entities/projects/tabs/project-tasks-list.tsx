@@ -3,7 +3,7 @@ import { MessageInfo } from '@/components/message';
 import type { TaskStatusDTO } from '@/const/tasks-status';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import ProjectSprints from './project-sprints';
@@ -66,6 +66,17 @@ const ProjectTabsList = ({
     projectId!,
     sprints
   );
+
+  const createSprintFormRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (createSprint && createSprintFormRef.current) {
+      createSprintFormRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [createSprint]);
   return (
     <section className="space-y-3">
       {hasAnyFilter && listTasks.length > 0 && (
@@ -80,11 +91,14 @@ const ProjectTabsList = ({
         isDeleteTasksPending={isDeleteTasksPending}
       />
       {createSprint && !onCreateSprintPending && (
-        <CreateSprintRowForm
-          isPending={onCreateSprintPending}
-          onCreateSprint={onCreateSprint}
-          sprintsCount={sprints.length}
-        />
+        <div ref={createSprintFormRef}>
+          <CreateSprintRowForm
+            isPending={onCreateSprintPending}
+            onCreateSprint={onCreateSprint}
+            sprintsCount={sprints.length}
+            isFormShowing={createSprint}
+          />
+        </div>
       )}
       <ProjectBacklogs
         backlogs={backlogTasks}

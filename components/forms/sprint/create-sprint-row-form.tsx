@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Calendar, User2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
+// import { Checkbox } from '@/components/ui/checkbox';
+import { FaPenToSquare } from 'react-icons/fa6';
+
 import { FormProvider, useForm } from 'react-hook-form';
 import {
   createTaskFormSchema,
@@ -18,15 +20,17 @@ import {
 } from '@/schemas/sprint/create-sprint-schema';
 
 const CreateSprintRowForm = ({
+  isFormShowing,
   sprintsCount,
   onCreateSprint,
   isPending,
 }: {
+  isFormShowing: boolean;
   sprintsCount: number | undefined;
   onCreateSprint: (payload: CreateSprintSchema) => void;
   isPending: boolean;
 }) => {
-  //   const [isFocused, setIsFocused] = useState(false);
+  const [highlighted, setHighlighted] = useState(false);
   const nextSprint = sprintsCount ? sprintsCount + 1 : 1;
   const form = useForm<CreateSprintSchema>({
     resolver: zodResolver(createSprintSchema),
@@ -41,6 +45,14 @@ const CreateSprintRowForm = ({
   const handleSubmit = () => {
     onCreateSprint(form.getValues());
   };
+
+  useEffect(() => {
+    if (isFormShowing) {
+      setHighlighted(true);
+      const timer = setTimeout(() => setHighlighted(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isFormShowing]);
   return (
     <FormProvider {...form}>
       <form
@@ -53,11 +65,13 @@ const CreateSprintRowForm = ({
         onSubmit={form.handleSubmit(handleSubmit)}
         className={cn(
           'flex items-center gap-2 px-2 py-1.5 text-sm',
-          'bg-background w-full'
+          'bg-background w-full',
+          highlighted && 'animate-highlight'
           //   isFocused && 'ring-1 ring-primary/40 bg-primary/5'
         )}
       >
-        <Checkbox disabled />
+        {/* <Checkbox disabled /> */}
+        <FaPenToSquare size={20} className="text-zinc-500 animate-pulse" />
         <FormInput
           name="name"
           placeholder="Напиши имя спринта"

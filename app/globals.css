@@ -112,7 +112,6 @@ button {
   }
 }
 
-
 /*Стиль для переноса текста*/
 .your-text {
   display: block; /* займет доступную ширину и позволит перенос */
@@ -135,19 +134,32 @@ button {
     transform: translateY(0) rotate(0);
   }
 }
-/* Можно inline или обычным блоком @theme — разницы для этого случая нет */
+
+/* Form animation after scroll*/
+@keyframes highlight-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6);
+    background-color: rgba(59, 130, 246, 0.08);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+    background-color: transparent;
+  }
+}
+
+.animate-highlight {
+  animation: highlight-pulse 1.2s ease-out;
+}
+
 @theme inline {
   /* базовые оттенки бренда */
   --color-primary-50: #f0f5ff;
   --color-primary-100: #d6e4ff;
-  --color-primary-500: #2f54eb; /* основной */
+  --color-primary-500: #2f54eb;
   --color-primary-600: #1d39c4;
 
-  /* если хочешь, чтобы просто text-primary без суффикса работал,
-     задай базовую переменную без номера: */
   --color-primary: #2f54eb;
 
-  /* остальные цвета */
   --color-secondary: #13c2c2;
   --color-background: #ffffff;
   --color-background-dark: #0a0a0a;
