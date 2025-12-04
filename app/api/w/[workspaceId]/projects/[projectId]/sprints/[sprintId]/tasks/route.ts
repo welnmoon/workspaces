@@ -1,5 +1,5 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { ok, serverError } from '@/lib/http';
+import { ok, serverError } from '@/lib/http/http';
 import { ProjectService } from '@/lib/services/project';
 import { Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
@@ -9,7 +9,11 @@ export async function GET(
   {
     params,
   }: {
-    params: Promise<{ workspaceId: string; projectId: string; sprintId: string }>;
+    params: Promise<{
+      workspaceId: string;
+      projectId: string;
+      sprintId: string;
+    }>;
   }
 ) {
   try {

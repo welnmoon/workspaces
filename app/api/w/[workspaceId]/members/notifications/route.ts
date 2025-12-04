@@ -2,7 +2,7 @@ import { requireWorkspaceMember } from '@/guards/workspace';
 import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { AppError } from '@/lib/errors';
-import { badRequest, ok, serverError, unprocessable } from '@/lib/http';
+import { badRequest, ok, serverError, unprocessable } from '@/lib/http/http';
 import { NotificationService } from '@/lib/services/notifications';
 import { sendNotificationToWMembersSchema } from '@/schemas/notification/send-notification-to-w-members-schema';
 import { Prisma, Role } from '@prisma/client';

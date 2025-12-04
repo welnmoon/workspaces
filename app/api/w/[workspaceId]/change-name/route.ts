@@ -1,12 +1,7 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
-import {
-  noContent,
-  serverError,
-
-  unprocessable,
-} from '@/lib/http';
+import { noContent, serverError, unprocessable } from '@/lib/http/http';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
 import { Role } from '@prisma/client';

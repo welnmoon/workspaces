@@ -2,7 +2,7 @@
 
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
-import { noContent } from '@/lib/http';
+import { noContent } from '@/lib/http/http';
 import { PROVIDER_IDS } from '@/lib/providers';
 import { AuthService } from '@/lib/services/auth';
 import { NextRequest, NextResponse } from 'next/server';

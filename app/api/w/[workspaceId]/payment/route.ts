@@ -8,7 +8,7 @@ import {
   serverError,
   unauthorized,
   unprocessable,
-} from '@/lib/http';
+} from '@/lib/http/http';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { paymentSchema } from '@/schemas/workspace/payment-schema';
 import { NextRequest } from 'next/server';

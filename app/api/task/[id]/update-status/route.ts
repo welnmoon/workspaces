@@ -1,7 +1,7 @@
 import { TASK_STATUSES } from '@/const/tasks-status';
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
-import { badRequest, noContent, serverError } from '@/lib/http';
+import { badRequest, noContent, serverError } from '@/lib/http/http';
 import { TaskService } from '@/lib/services/tasks';
 import { TaskStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';

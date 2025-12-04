@@ -1,5 +1,11 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { badRequest, conflict, created, ok, serverError } from '@/lib/http';
+import {
+  badRequest,
+  conflict,
+  created,
+  ok,
+  serverError,
+} from '@/lib/http/http';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { ProjectService } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';

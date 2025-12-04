@@ -1,6 +1,7 @@
 import { Button, type ButtonProps } from '../ui/button';
 import { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
+import { PlusCircle } from 'lucide-react';
 
 type MainBtnProps = ButtonProps & {
   text?: string;
@@ -12,9 +13,10 @@ const MainBtn = forwardRef<HTMLButtonElement, MainBtnProps>(
     return (
       <Button
         ref={ref}
-        className={cn('bg-primary-500 hover:bg-primary-600', className)}
+        className={cn('bg-zinc-800 hover:bg-zinc-900', className)}
         {...props}
       >
+        <PlusCircle className='text-white' size={20}s/>
         {text} {children}
       </Button>
     );

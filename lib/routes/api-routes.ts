@@ -32,10 +32,14 @@ export const apiRoutes = {
   changePriority: (workspaceId: number, projectId: number, taskId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/change-priority`,
   deleteTasksBulk: () => `/api/task/bulk-delete`,
+  moveTask: (workspaceId: number, projectId: number, taskId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/move`,
 
   // Sprint
   createSprint: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/sprints/create`,
+  getSprints: (workspaceId: number, projectId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/sprints`,
 
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,

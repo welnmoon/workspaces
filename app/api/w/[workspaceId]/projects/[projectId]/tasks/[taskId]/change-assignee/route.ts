@@ -2,7 +2,12 @@ import { requireWorkspaceMember } from '@/guards/workspace';
 import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { AppError } from '@/lib/errors';
-import { badRequest, noContent, serverError, unprocessable } from '@/lib/http';
+import {
+  badRequest,
+  noContent,
+  serverError,
+  unprocessable,
+} from '@/lib/http/http';
 import { MembershipService } from '@/lib/services/membership';
 import { TaskService } from '@/lib/services/tasks';
 import { Prisma, Role } from '@prisma/client';
@@ -49,7 +54,7 @@ export async function PATCH(
       return NextResponse.json(e.message, { status: e.status });
     }
 
-    if(e instanceof Prisma.PrismaClientKnownRequestError) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
       return NextResponse.json(e.message, { status: 422, statusText: e.code });
     }
 

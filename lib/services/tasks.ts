@@ -161,6 +161,7 @@ export class TaskService {
     const existing = await prisma.task.findFirst({
       where: {
         projectId: Number(projectId),
+        sprintId: sprintId,
         title: {
           equals: title,
           mode: 'insensitive',
@@ -241,6 +242,45 @@ export class TaskService {
       },
       data: {
         assigneeId,
+      },
+    });
+  }
+
+  static async moveTask(
+    taskId: number,
+    sprintId: number | null,
+    projectId: number
+  ) {
+    const current = await prisma.task.findUnique({
+      where: { id: taskId },
+      select: { title: true, projectId: true },
+    });
+
+    if (!current || current.projectId !== projectId) {
+      throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+    }
+
+    const taskExistInNewSprint = await prisma.task.findFirst({
+      where: {
+        projectId,
+        sprintId,
+        title: { equals: current.title, mode: 'insensitive' },
+        NOT: { id: taskId },
+      },
+    });
+    if (taskExistInNewSprint) {
+      throw new AppError(
+        409,
+        'TASK_ALREADY_EXISTS_IN_NEW_SPRINT',
+        'Задача уже существует в новом спринте'
+      );
+    }
+    return await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        sprintId,
       },
     });
   }

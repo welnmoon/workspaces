@@ -2,7 +2,7 @@ import { requireWorkspaceMember } from '@/guards/workspace';
 import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { AppError } from '@/lib/errors';
-import { noContent, serverError } from '@/lib/http';
+import { noContent, serverError } from '@/lib/http/http';
 import { TaskService } from '@/lib/services/tasks';
 import { Prisma, Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';

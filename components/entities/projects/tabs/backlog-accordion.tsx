@@ -25,12 +25,14 @@ import { usePathname } from 'next/navigation';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import toast from 'react-hot-toast';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
-import BacklogTaskActions from './backlog-task-actions';
+import TaskActions from './task-actions';
 import { useMembers } from '@/hooks/members/use-members';
 import { useChangeTaskAssignee } from '@/hooks/tasks/use-change-assignee';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useMoveTask } from '@/hooks/tasks/use-move-task';
+import { useSprints } from '@/hooks/tasks/sprint/use-sprints';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
@@ -53,13 +55,40 @@ const BacklogAccordion = ({
     () => selectedIds !== undefined && setSelectedIds !== undefined,
     [selectedIds, setSelectedIds]
   );
-
+  // Task
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
     useCreateTask(workspaceId!, projectId!);
 
-  const { data: members } = useMembers(workspaceId!, projectId!);
+  const { data: sprints } = useSprints(workspaceId!, projectId!);
+
+  const sprintsMap = useMemo(() => {
+    return new Map(sprints && sprints.map((s) => [s.id, s.name]));
+  }, [sprints]);
+
   const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
     useChangeTaskAssignee(workspaceId!, projectId!);
+
+  const { mutate: onMoveTask } = useMoveTask(workspaceId!, projectId!);
+
+  const onMoveTaskHandle = (sprintId: number | null, taskId: number) => {
+    onMoveTask(
+      {
+        taskId,
+        sprintId: sprintId || null,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Задача успешно перемещена');
+        },
+        onError: (e) => {
+          toast.error(e.message);
+        },
+      }
+    );
+  };
+
+  // Members
+  const { data: members } = useMembers(workspaceId!, projectId!);
 
   // handlers
 
@@ -195,9 +224,10 @@ const BacklogAccordion = ({
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
                           {hoverId === t.id && !isMobile && (
-                            <BacklogTaskActions
+                            <TaskActions
                               disabled={isCreateTaskPending}
-                              onMove={() => {}}
+                              onMove={onMoveTaskHandle}
+                              sprintsMap={sprintsMap}
                               onChangeStatus={() => {}}
                               onChangePriority={() => {}}
                               onChangeAssignee={onChangeAssigneeHandler}
@@ -207,9 +237,10 @@ const BacklogAccordion = ({
                             />
                           )}
                           {isMobile && (
-                            <BacklogTaskActions
+                            <TaskActions
+                              sprintsMap={sprintsMap}
                               disabled={isCreateTaskPending}
-                              onMove={() => {}}
+                              onMove={onMoveTaskHandle}
                               onChangeStatus={() => {}}
                               onChangePriority={() => {}}
                               onChangeAssignee={onChangeAssigneeHandler}

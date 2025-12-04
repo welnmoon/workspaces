@@ -1,7 +1,7 @@
 import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { AppError } from '@/lib/errors';
-import { noContent, serverError } from '@/lib/http';
+import { noContent, serverError } from '@/lib/http/http';
 import { MembershipService } from '@/lib/services/membership';
 import { NextRequest, NextResponse } from 'next/server';
 

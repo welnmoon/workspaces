@@ -1,5 +1,5 @@
 import { requireUser } from '@/helpers/require-user';
-import { conflict, created, serverError, unprocessable } from '@/lib/http';
+import { conflict, created, serverError, unprocessable } from '@/lib/http/http';
 import { prisma } from '@/lib/prisma';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';

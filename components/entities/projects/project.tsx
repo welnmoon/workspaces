@@ -66,19 +66,19 @@ const ProjectComponent = ({
 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex-1 min-w-0 text-sm text-muted-foreground">
-          <Description text={project.description || 'No description'} />
+          <Description text={project.description || null} />
         </div>
-        <CreateTaskDialog
+        {/* <CreateTaskDialog
           members={members}
           projectId={project.id}
           workspaceId={workspaceId}
-        />
+        /> */}
       </div>
 
       <Divider />
 
       <ProjectTabs
-      sprints={sprints}
+        sprints={sprints}
         tasks={tasks}
         workspaceId={workspaceId}
         projectId={project.id}

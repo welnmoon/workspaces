@@ -1,5 +1,11 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { badRequest, conflict, created, ok, serverError } from '@/lib/http';
+import {
+  badRequest,
+  conflict,
+  created,
+  ok,
+  serverError,
+} from '@/lib/http/http';
 import { ProjectService } from '@/lib/services/project';
 import { TaskService } from '@/lib/services/tasks';
 import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
@@ -54,6 +60,7 @@ export async function POST(
   } catch (e) {
     if (e instanceof AppError) {
       if (e.code === 'TASK_ALREADY_EXISTS') {
+        console.log('Error creating task', e);
         return conflict(e.message, e.code);
       }
       return NextResponse.json(

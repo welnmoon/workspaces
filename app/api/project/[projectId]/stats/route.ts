@@ -1,6 +1,6 @@
 import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
-import { notFound, ok, serverError } from '@/lib/http';
+import { notFound, ok, serverError } from '@/lib/http/http';
 import { ProjectService } from '@/lib/services/project';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 import { NextRequest } from 'next/server';

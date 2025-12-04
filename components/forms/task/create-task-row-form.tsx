@@ -22,7 +22,7 @@ export const CreateTaskRowForm = ({
   onCreate,
   isLoading,
 }: QuickCreateBacklogTaskRowProps) => {
-  const [isFocused, setIsFocused] = useState(false);
+  // const [isFocused, setIsFocused] = useState(false);
   const form = useForm<CreateTaskFormValues>({
     resolver: zodResolver(createTaskFormSchema),
     defaultValues: {
@@ -52,7 +52,7 @@ export const CreateTaskRowForm = ({
         className={cn(
           'flex items-center gap-2 px-2 py-1.5 text-sm',
           'bg-background w-full',
-          isFocused && 'ring-1 ring-primary/40 bg-primary/5'
+          // isFocused && 'ring-1 ring-primary/40 bg-primary/5'
         )}
       >
         <Checkbox disabled />

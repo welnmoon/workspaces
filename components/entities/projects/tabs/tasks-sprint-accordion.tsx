@@ -26,14 +26,16 @@ import { useChangeTaskAssignee } from '@/hooks/tasks/use-change-assignee';
 import { useMembers } from '@/hooks/members/use-members';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import toast from 'react-hot-toast';
-import BacklogTaskActions from './backlog-task-actions';
+import TaskActions from './task-actions';
 import { CreateTaskRowForm } from '@/components/forms/task/create-task-row-form';
 import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
-import { useSprintTasks } from '@/hooks/tasks/use-sprints-tasks';
+import { useSprintTasks } from '@/hooks/tasks/sprint/use-sprints-tasks';
 import { useQueryClient } from '@tanstack/react-query';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useSprints } from '@/hooks/tasks/sprint/use-sprints';
+import { useMoveTask } from '@/hooks/tasks/use-move-task';
 
 const TasksSprintAccordion = ({
   sprint,
@@ -64,6 +66,7 @@ const TasksSprintAccordion = ({
     useCreateTask(workspaceId!, projectId!);
 
   const { data: members } = useMembers(workspaceId!, projectId!);
+
   const { data: sprintTasks = [] } = useSprintTasks(
     workspaceId!,
     projectId!,
@@ -72,6 +75,31 @@ const TasksSprintAccordion = ({
   );
   const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
     useChangeTaskAssignee(workspaceId!, projectId!, sprintQueryKey);
+
+  const { data: sprints } = useSprints(workspaceId!, projectId!);
+
+  const sprintsMap = useMemo(() => {
+    return new Map(sprints && sprints.map((s) => [s.id, s.name]));
+  }, [sprints]);
+
+  const { mutate: onMoveTask } = useMoveTask(workspaceId!, projectId!);
+
+  const onMoveTaskHandle = (sprintId: number | null, taskId: number) => {
+    onMoveTask(
+      {
+        taskId,
+        sprintId: sprintId || null,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Задача успешно перемещена');
+        },
+        onError: (e) => {
+          toast.error(e.message);
+        },
+      }
+    );
+  };
 
   if (!workspaceId || !projectId) {
     router.push(clientRoutes.workspacesPage());
@@ -128,9 +156,10 @@ const TasksSprintAccordion = ({
 
         <AccordionContent className="flex flex-col gap-3 text-sm">
           {sprintTasks.length === 0 ? (
-            <div className="text-muted-foreground text-sm">
-              В спринте пока нет задач
-            </div>
+            <CreateTaskRowForm
+              onCreate={handleCreateTask}
+              isLoading={isCreateTaskPending}
+            />
           ) : (
             <div className="md:overflow-visible overflow-x-auto rounded-2xl border bg-white shadow-sm">
               <Table className="table-fixed min-w-[720px]">
@@ -214,9 +243,10 @@ const TasksSprintAccordion = ({
                         </TableCell>
                         <TableCell className="px-4 py-3 w-1/9 text-muted-foreground">
                           {hoverId === t.id && !isMobile && (
-                            <BacklogTaskActions
+                            <TaskActions
                               disabled={isCreateTaskPending}
-                              onMove={() => {}}
+                              sprintsMap={sprintsMap}
+                              onMove={onMoveTaskHandle}
                               onChangeStatus={() => {}}
                               onChangePriority={() => {}}
                               onChangeAssignee={onChangeAssigneeHandler}
@@ -226,9 +256,10 @@ const TasksSprintAccordion = ({
                             />
                           )}
                           {isMobile && (
-                            <BacklogTaskActions
+                            <TaskActions
                               disabled={isCreateTaskPending}
-                              onMove={() => {}}
+                              sprintsMap={sprintsMap}
+                              onMove={onMoveTaskHandle}
                               onChangeStatus={() => {}}
                               onChangePriority={() => {}}
                               onChangeAssignee={onChangeAssigneeHandler}

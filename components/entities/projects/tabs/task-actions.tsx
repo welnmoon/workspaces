@@ -14,11 +14,12 @@ import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import getFullName from '@/helpers/profile.ts/get-full-name';
 import { UseMutateFunction } from '@tanstack/react-query';
 
-type BacklogTaskActionsProps = {
+type TaskActionsProps = {
   disabled?: boolean;
-  onMove?: () => void;
+  onMove: (sprintId: number | null, taskId: number) => void;
   onChangeStatus?: () => void;
   onChangePriority?: () => void;
+  sprintsMap: Map<number, string>;
   onChangeAssignee?: (
     taskId: number,
     assigneeId: string | null,
@@ -30,8 +31,9 @@ type BacklogTaskActionsProps = {
   taskId: number;
 };
 
-const BacklogTaskActions = ({
+const TaskActions = ({
   disabled,
+  sprintsMap,
   onMove,
   onChangeStatus,
   onChangePriority,
@@ -40,7 +42,7 @@ const BacklogTaskActions = ({
 
   members,
   taskId,
-}: BacklogTaskActionsProps) => {
+}: TaskActionsProps) => {
   const membersList = Array.isArray(members) ? members : [];
   return (
     <DropdownMenu>
@@ -55,13 +57,53 @@ const BacklogTaskActions = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem onClick={onMove}>Переместить задачу</DropdownMenuItem>
+        {/*-----------------------------------------*/}
+        {/*---------------Moving----------------*/}
+        {/*-----------------------------------------*/}
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Переместить задачу</DropdownMenuSubTrigger>
+          <DropdownMenuSubContent className="w-60">
+            {membersList !== undefined && (
+              <>
+                {sprintsMap.size === 0 && (
+                  <DropdownMenuItem disabled>
+                    Нет доступных спринтов
+                  </DropdownMenuItem>
+                )}
+                {Array.from(sprintsMap.entries()).map(([sprintId, sprintName]) => (
+                  <DropdownMenuItem
+                    key={sprintId}
+                    onClick={() => onMove(sprintId, taskId)}
+                  >
+                    {sprintName}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuItem onClick={() => onMove(null, taskId)}>
+                  В бэклог
+                </DropdownMenuItem>
+              </>
+            )}
+
+            {membersList === undefined && <span>Ошибка</span>}
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+        {/*-----------------------------------------*/}
+        {/*---------------Status----------------*/}
+        {/*-----------------------------------------*/}
         <DropdownMenuItem onClick={onChangeStatus}>
           Изменить статус
         </DropdownMenuItem>
+
+        {/*-----------------------------------------*/}
+        {/*---------------Priority----------------*/}
+        {/*-----------------------------------------*/}
         <DropdownMenuItem onClick={onChangePriority}>
           Изменить приоритет
         </DropdownMenuItem>
+
+        {/*-----------------------------------------*/}
+        {/*---------------Assignee----------------*/}
+        {/*-----------------------------------------*/}
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Изменить исполнителя</DropdownMenuSubTrigger>
 
@@ -102,6 +144,9 @@ const BacklogTaskActions = ({
             {membersList === undefined && <span>Ошибка</span>}
           </DropdownMenuSubContent>
         </DropdownMenuSub>
+        {/*-----------------------------------------*/}
+        {/*---------------Delete----------------*/}
+        {/*-----------------------------------------*/}
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"
           onClick={onDelete}
@@ -113,4 +158,4 @@ const BacklogTaskActions = ({
   );
 };
 
-export default BacklogTaskActions;
+export default TaskActions;

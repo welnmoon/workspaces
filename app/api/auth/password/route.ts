@@ -1,6 +1,6 @@
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
-import { badRequest, noContent, serverError } from '@/lib/http';
+import { badRequest, noContent, serverError } from '@/lib/http/http';
 import { AuthService } from '@/lib/services/auth';
 import { passwordChangeSchema } from '@/schemas/auth/passwrod-change-schema';
 import { NextRequest, NextResponse } from 'next/server';

@@ -1,5 +1,5 @@
 import { requireUser } from '@/helpers/require-user';
-import { noContent, serverError } from '@/lib/http';
+import { noContent, serverError } from '@/lib/http/http';
 import { NotificationService } from '@/lib/services/notifications';
 import { Prisma } from '@prisma/client';
 import { NextRequest } from 'next/server';

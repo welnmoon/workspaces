@@ -26,10 +26,11 @@ import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import BacklogAccordion from './backlog-accordion';
-import { useSprintCreate } from '@/hooks/tasks/use-sprint-create';
+import { useSprintCreate } from '@/hooks/tasks/sprint/use-sprint-create';
 import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
 import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
 import { useMembers } from '@/hooks/members/use-members';
+import MainBtn from '@/components/buttons/main-btn';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -54,6 +55,7 @@ const ProjectTabs = ({
 }: ProjectTabsProps) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [createSprint, setCreateSprint] = useState(false);
 
   // members for accordions and for create task form
   const { data: members } = useMembers(workspaceId!, projectId!);
@@ -142,7 +144,7 @@ const ProjectTabs = ({
   const onCreateSprintHandler = (payload: CreateSprintSchema) => {
     onCreateSprint(payload, {
       onSuccess: () => {
-        toast.success('Спринт успешно создан');
+        setCreateSprint(false);
       },
       onError: (e) => {
         toast.error(e.message ?? 'Произошла ошибка при создании спринта');
@@ -180,6 +182,11 @@ const ProjectTabs = ({
   const [activeTab, setActiveTab] = useState<
     'list' | 'kanban' | 'stats' | 'backlog'
   >('list');
+
+  // для пробрасывания спринтов в экшены задачи чтобы могли выбрать спринт для moving
+  const sprintsId = useMemo(() => {
+    return new Map(sprints.map((s) => [s.id, s.name]));
+  }, [sprints]);
 
   return (
     <Tabs
@@ -279,6 +286,10 @@ const ProjectTabs = ({
           projectId={projectId}
           workspaceId={workspaceId}
         />
+        <MainBtn
+          onClick={() => setCreateSprint((prev) => !prev)}
+          text={createSprint ? 'Отменить' : 'Создать спринт'}
+        />
       </div>
 
       <TabsContent value="list" className="space-y-4">
@@ -295,6 +306,8 @@ const ProjectTabs = ({
 
         <ProjectTabsList
           sprints={sprints}
+          createSprint={createSprint}
+          // sprintsId={sprintsId}
           backlogTasks={backlogTasks}
           listTasks={listTasks}
           hasAnyFilter={hasAnyFilter}

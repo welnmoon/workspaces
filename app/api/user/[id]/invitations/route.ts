@@ -1,5 +1,5 @@
 import { requireUser } from '@/helpers/require-user';
-import { created } from '@/lib/http';
+import { created } from '@/lib/http/http';
 import { InvitationService } from '@/lib/services/invitation';
 
 // API: getReceivedInvitations

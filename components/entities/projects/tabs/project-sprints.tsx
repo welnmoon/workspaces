@@ -19,7 +19,7 @@ const ProjectSprints = ({
         <TasksSprintAccordion
           key={s.id}
           sprint={s}
-          selectedIds={selectedIds}
+          // selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
           isDeleteTasksPending={isDeleteTasksPending}
         />

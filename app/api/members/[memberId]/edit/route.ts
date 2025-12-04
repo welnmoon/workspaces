@@ -1,6 +1,6 @@
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
-import { serverError } from '@/lib/http';
+import { serverError } from '@/lib/http/http';
 import { MembershipService } from '@/lib/services/membership';
 import { editMemberFormSchema } from '@/schemas/member/member';
 import { NextRequest, NextResponse } from 'next/server';

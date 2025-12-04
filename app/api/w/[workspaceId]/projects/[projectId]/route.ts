@@ -1,5 +1,11 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { badRequest, noContent, notFound, ok, serverError } from '@/lib/http';
+import {
+  badRequest,
+  noContent,
+  notFound,
+  ok,
+  serverError,
+} from '@/lib/http/http';
 import { ProjectService } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
 import { Prisma, Role } from '@prisma/client';

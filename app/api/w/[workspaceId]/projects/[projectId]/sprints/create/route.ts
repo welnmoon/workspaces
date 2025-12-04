@@ -1,6 +1,11 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { AppError } from '@/lib/errors';
-import { badRequest, created, serverError, unprocessable } from '@/lib/http';
+import {
+  badRequest,
+  created,
+  serverError,
+  unprocessable,
+} from '@/lib/http/http';
 import { SprintService } from '@/lib/services/sprint';
 import { validateId } from '@/helpers/validate-id';
 import { Role } from '@prisma/client';

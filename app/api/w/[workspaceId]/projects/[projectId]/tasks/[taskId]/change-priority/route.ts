@@ -4,7 +4,7 @@ import { requireWorkspaceMember } from '@/guards/workspace';
 import { NextRequest, NextResponse } from 'next/server';
 import { TaskService } from '@/lib/services/tasks';
 import { changeTaskPrioritySchema } from '@/schemas/tasks/change-task-priority-schema';
-import { noContent, serverError, unprocessable } from '@/lib/http';
+import { noContent, serverError, unprocessable } from '@/lib/http/http';
 import { AppError } from '@/lib/errors';
 import { ZodError } from 'zod';
 import { Prisma, Role } from '@prisma/client';

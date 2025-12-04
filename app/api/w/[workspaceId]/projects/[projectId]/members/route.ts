@@ -1,5 +1,5 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { ok, serverError } from '@/lib/http';
+import { ok, serverError } from '@/lib/http/http';
 import { MembershipService } from '@/lib/services/membership';
 import { Role } from '@prisma/client';
 import type { NextRequest } from 'next/server';

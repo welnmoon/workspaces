@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import { getServerSession } from 'next-auth';
-import { badRequest, conflict, serverError, unprocessable } from '@/lib/http';
+import {
+  badRequest,
+  conflict,
+  serverError,
+  unprocessable,
+} from '@/lib/http/http';
 import { resend } from '@/lib/email/resend-client';
 import { registerSchema } from '@/components/forms/register/register-schema';
 import crypto from 'crypto';
