@@ -16,7 +16,7 @@ const MainBtn = forwardRef<HTMLButtonElement, MainBtnProps>(
         className={cn('bg-zinc-800 hover:bg-zinc-900', className)}
         {...props}
       >
-        <PlusCircle className='text-white' size={20}s/>
+        <PlusCircle className='text-white' size={20}/>
         {text} {children}
       </Button>
     );

@@ -129,7 +129,7 @@ const BacklogAccordion = ({
       defaultValue={`backlog`}
     >
       <AccordionItem value={`backlog`}>
-        <AccordionTrigger className="flex justify-between items-center bg-zinc-50 rounded-t-md px-4">
+        <AccordionTrigger className="flex justify-between items-center bg-zinc-100 rounded-t-md px-4">
           <span className="font-semibold text-xl w-30">Backlog</span>
           <span className="text-xs text-muted-foreground">
             {tasks.length} задач
