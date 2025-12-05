@@ -79,12 +79,17 @@ const TasksSprintAccordion = ({
   );
   const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
     useChangeTaskAssignee(workspaceId!, projectId!, sprintQueryKey);
+  
 
+  // -------SPRINTS-----------------------------------------//
+  
   const { data: sprints } = useSprints(workspaceId!, projectId!);
-
+  // for sprint select in task actions
   const sprintsMap = useMemo(() => {
     return new Map(sprints && sprints.map((s) => [s.id, s.name]));
   }, [sprints]);
+
+  // --------TASK-----MOVE-----------------------------------------//
 
   const { mutate: onMoveTask } = useMoveTask(workspaceId!, projectId!);
 
@@ -104,11 +109,6 @@ const TasksSprintAccordion = ({
       }
     );
   };
-
-  if (!workspaceId || !projectId) {
-    router.push(clientRoutes.workspacesPage());
-    return;
-  }
 
   //--------TASK-----Priority-----------------------------------------//
 
@@ -131,7 +131,13 @@ const TasksSprintAccordion = ({
     );
   };
 
-  // handlers
+  // --------------------Conditions-------------------------------------
+  if (!workspaceId || !projectId) {
+    router.push(clientRoutes.workspacesPage());
+    return;
+  }
+
+  // -------------------Handlers-------------------------------------
 
   const onChangeAssigneeHandler = (
     taskId: number,
@@ -154,6 +160,11 @@ const TasksSprintAccordion = ({
         },
       }
     );
+
+  // ---------------------for checkboxes--------------------------
+  const isSelected = (id: number) =>
+    selectedIds ? selectedIds.has(id) : false;
+
   const toggle = (id: number) => {
     if (!withSelection || !setSelectedIds) return;
     setSelectedIds((prev) => {
@@ -163,8 +174,6 @@ const TasksSprintAccordion = ({
     });
   };
 
-  const isSelected = (id: number) =>
-    selectedIds ? selectedIds.has(id) : false;
   return (
     <Accordion
       type="single"
