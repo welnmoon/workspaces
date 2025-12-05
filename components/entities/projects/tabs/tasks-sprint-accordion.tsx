@@ -41,6 +41,7 @@ import { useChangePriority } from '@/hooks/tasks/use-change-priority';
 import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Timer } from 'lucide-react';
+import { useChangeStatus } from '@/hooks/tasks/use-change-status';
 import { ChevronDown, GoalIcon } from 'lucide-react';
 import { formatDateRange } from '@/helpers/format-date';
 import { useSprintTasksStats } from '@/hooks/tasks/sprint/use-sprint-tasks-stats';
@@ -124,6 +125,9 @@ const TasksSprintAccordion = ({
   const { mutate: onChangePriority, isPending: onChangePriorityPending } =
     useChangePriority(workspaceId!, projectId!);
 
+  const { mutate: onChangeStatus, isPending: onChangeStatusPending } =
+    useChangeStatus(workspaceId!, projectId!);
+
   const onChangePriorityHandler = (
     taskId: number,
     priority: TaskPriorityDTO
@@ -134,6 +138,19 @@ const TasksSprintAccordion = ({
         onError: (e) => {
           toast.error(
             e.message ?? 'Произошла ошибка при обновлении приоритета'
+          );
+        },
+      }
+    );
+  };
+
+  const onChangeStatusHandler = (taskId: number, status: TaskStatusDTO) => {
+    onChangeStatus(
+      { taskId, status, sprintId: sprint.id },
+      {
+        onError: (e) => {
+          toast.error(
+            e.message ?? 'Произошла ошибка при обновлении статуса'
           );
         },
       }
@@ -339,28 +356,28 @@ const TasksSprintAccordion = ({
                         </TableCell>
                         <TableCell className="px-4 py-3 w-1/9 text-muted-foreground">
                           {hoverId === t.id && !isMobile && (
-                            <TaskActions
-                              disabled={isCreateTaskPending}
-                              sprintsMap={sprintsMap}
-                              onMove={onMoveTaskHandle}
-                              onChangeStatus={() => {}}
-                              onChangePriority={() => {}}
-                              onChangeAssignee={onChangeAssigneeHandler}
-                              onDelete={() => {}}
-                              members={members}
-                              taskId={t.id}
+                          <TaskActions
+                            disabled={isCreateTaskPending}
+                            sprintsMap={sprintsMap}
+                            onMove={onMoveTaskHandle}
+                            onChangeStatus={onChangeStatusHandler}
+                            onChangePriority={() => {}}
+                            onChangeAssignee={onChangeAssigneeHandler}
+                            onDelete={() => {}}
+                            members={members}
+                            taskId={t.id}
                             />
                           )}
                           {isMobile && (
-                            <TaskActions
-                              disabled={isCreateTaskPending}
-                              sprintsMap={sprintsMap}
-                              onMove={onMoveTaskHandle}
-                              onChangeStatus={() => {}}
-                              onChangePriority={() => {}}
-                              onChangeAssignee={onChangeAssigneeHandler}
-                              onDelete={() => {}}
-                              members={members}
+                          <TaskActions
+                            disabled={isCreateTaskPending}
+                            sprintsMap={sprintsMap}
+                            onMove={onMoveTaskHandle}
+                            onChangeStatus={onChangeStatusHandler}
+                            onChangePriority={() => {}}
+                            onChangeAssignee={onChangeAssigneeHandler}
+                            onDelete={() => {}}
+                            members={members}
                               taskId={t.id}
                             />
                           )}

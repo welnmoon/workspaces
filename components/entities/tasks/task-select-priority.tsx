@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -6,6 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
+import getPriorityColor from '@/helpers/getPriorityColor';
 import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 
 const TaskSelectPriority = ({
@@ -25,13 +27,15 @@ const TaskSelectPriority = ({
       }}
       value={priority ?? 'LOW'}
     >
-      <SelectTrigger className="w-20 px-2 py-1">
+      <SelectTrigger className="w-30 text-xs">
         <SelectValue placeholder="Приоритет" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="text-xs">
         {Object.entries(TASK_PRIORITY_LABELS).map(([key, value]) => (
           <SelectItem key={key} value={key}>
-            {value}
+            <Badge className={getPriorityColor({ priority: key as TaskPriorityDTO })}>
+              {value}
+            </Badge>
           </SelectItem>
         ))}
       </SelectContent>

@@ -39,6 +39,7 @@ import { useSprints } from '@/hooks/tasks/sprint/use-sprints';
 import SelectPriority from '@/components/forms/task/select-priority';
 import TaskSelectPriority from '../../tasks/task-select-priority';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
+import { useChangeStatus } from '@/hooks/tasks/use-change-status';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
@@ -100,6 +101,9 @@ const BacklogAccordion = ({
   const { mutate: onChangePriority, isPending: onChangePriorityPending } =
     useChangePriority(workspaceId!, projectId!);
 
+  const { mutate: onChangeStatus, isPending: onChangeStatusPending } =
+    useChangeStatus(workspaceId!, projectId!);
+
   const onChangePriorityHandler = (
     taskId: number,
     priority: TaskPriorityDTO
@@ -110,6 +114,19 @@ const BacklogAccordion = ({
         onError: (e) => {
           toast.error(
             e.message ?? 'Произошла ошибка при обновлении приоритета'
+          );
+        },
+      }
+    );
+  };
+
+  const onChangeStatusHandler = (taskId: number, status: TaskStatusDTO) => {
+    onChangeStatus(
+      { taskId, status, sprintId: null },
+      {
+        onError: (e) => {
+          toast.error(
+            e.message ?? 'Произошла ошибка при обновлении статуса'
           );
         },
       }
@@ -261,29 +278,29 @@ const BacklogAccordion = ({
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
                           {hoverId === t.id && !isMobile && (
-                            <TaskActions
-                              disabled={isCreateTaskPending}
-                              onMove={onMoveTaskHandle}
-                              sprintsMap={sprintsMap}
-                              onChangeStatus={() => {}}
-                              onChangePriority={() => {}}
-                              onChangeAssignee={onChangeAssigneeHandler}
-                              onDelete={() => {}}
-                              members={members}
-                              taskId={t.id}
+                          <TaskActions
+                            disabled={isCreateTaskPending}
+                            onMove={onMoveTaskHandle}
+                            sprintsMap={sprintsMap}
+                            onChangeStatus={onChangeStatusHandler}
+                            onChangePriority={() => {}}
+                            onChangeAssignee={onChangeAssigneeHandler}
+                            onDelete={() => {}}
+                            members={members}
+                            taskId={t.id}
                             />
                           )}
                           {isMobile && (
-                            <TaskActions
-                              sprintsMap={sprintsMap}
-                              disabled={isCreateTaskPending}
-                              onMove={onMoveTaskHandle}
-                              onChangeStatus={() => {}}
-                              onChangePriority={() => {}}
-                              onChangeAssignee={onChangeAssigneeHandler}
-                              onDelete={() => {}}
-                              members={members}
-                              taskId={t.id}
+                          <TaskActions
+                            sprintsMap={sprintsMap}
+                            disabled={isCreateTaskPending}
+                            onMove={onMoveTaskHandle}
+                            onChangeStatus={onChangeStatusHandler}
+                            onChangePriority={() => {}}
+                            onChangeAssignee={onChangeAssigneeHandler}
+                            onDelete={() => {}}
+                            members={members}
+                            taskId={t.id}
                             />
                           )}
                         </TableCell>

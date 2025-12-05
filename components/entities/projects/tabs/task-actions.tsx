@@ -12,12 +12,12 @@ import { Ellipsis } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import getFullName from '@/helpers/profile.ts/get-full-name';
-import { UseMutateFunction } from '@tanstack/react-query';
+import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 
 type TaskActionsProps = {
   disabled?: boolean;
   onMove: (sprintId: number | null, taskId: number) => void;
-  onChangeStatus?: () => void;
+  onChangeStatus?: (taskId: number, status: TaskStatusDTO) => void;
   onChangePriority?: () => void;
   sprintsMap: Map<number, string>;
   onChangeAssignee?: (
@@ -90,9 +90,19 @@ const TaskActions = ({
         {/*-----------------------------------------*/}
         {/*---------------Status----------------*/}
         {/*-----------------------------------------*/}
-        <DropdownMenuItem onClick={onChangeStatus}>
-          Изменить статус
-        </DropdownMenuItem>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Изменить статус</DropdownMenuSubTrigger>
+          <DropdownMenuSubContent className="w-56">
+            {STATUS_COLUMNS.map((status) => (
+              <DropdownMenuItem
+                key={status.id}
+                onClick={() => onChangeStatus?.(taskId, status.id)}
+              >
+                {status.title}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
 
         {/*-----------------------------------------*/}
         {/*---------------Priority----------------*/}
