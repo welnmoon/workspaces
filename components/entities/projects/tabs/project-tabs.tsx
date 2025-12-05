@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProjectTabsList from './project-tasks-list';
 import ProjectTasksBoard from '../project-tasks-board';
@@ -121,21 +121,9 @@ const ProjectTabs = ({
     }
   }, [optimisticTasks]);
 
-  const sprintTasks = useMemo(() => {
-    return allTasks.filter((t) => t.sprintId !== null);
-  }, [allTasks]);
+  const backlogTasks = allTasks.filter((t) => t.sprintId === null);
 
-  const backlogTasks = useMemo(() => {
-    return allTasks.filter((t) => t.sprintId === null);
-  }, [allTasks]);
-
-  const filteredBacklogTasks = useMemo(() => {
-    return filterTasks(backlogTasks, status, dateRange);
-  }, [backlogTasks, status, dateRange]);
-
-  const listTasks = useMemo(() => {
-    return filterTasks(allTasks, status, dateRange);
-  }, [allTasks, status, dateRange]);
+  const listTasks = filterTasks(allTasks, status, dateRange);
 
   //---------------------Sprint------------------------------------------//
 
@@ -155,21 +143,16 @@ const ProjectTabs = ({
 
   //----------------------Tasks Board - Kanban--------------------------//
   useEffect(() => {
-    setBoardTasks(sprintTasks);
-  }, [sprintTasks]);
+    setBoardTasks(allTasks.filter((t) => t.sprintId !== null));
+  }, [allTasks]);
 
-  const tasksByStatus = useMemo(() => {
-    return tasksFilterByStatus({ tasks: boardTasks });
-  }, [boardTasks]);
+  const tasksByStatus = tasksFilterByStatus({ tasks: boardTasks });
   // обновляем кэш с помощью sync
   const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, syncCache);
 
-  const remainTasksCount = useMemo(() => {
-    const totalDone = allTaskStats?.tasksDoneCount ?? 0;
-    const shown = Number(doneTasksCount);
-    const remain = totalDone - shown;
-    return remain > 0 ? remain : 0;
-  }, [allTaskStats, doneTasksCount]);
+  const totalDone = allTaskStats?.tasksDoneCount ?? 0;
+  const shown = Number(doneTasksCount);
+  const remainTasksCount = totalDone - shown > 0 ? totalDone - shown : 0;
 
   const hasDateFilter = Boolean(dateRange?.from || dateRange?.to);
   const hasStatusFilter = status !== 'ALL';
@@ -185,9 +168,9 @@ const ProjectTabs = ({
   >('list');
 
   // для пробрасывания спринтов в экшены задачи чтобы могли выбрать спринт для moving
-  const sprintsId = useMemo(() => {
-    return new Map(sprints.map((s) => [s.id, s.name]));
-  }, [sprints]);
+  // const sprintsId = useMemo(() => {
+  //   return new Map(sprints.map((s) => [s.id, s.name]));
+  // }, [sprints]);
 
   return (
     <Tabs

@@ -11,3 +11,12 @@ export type SprintWithTasksWithAssigneesDTO = Prisma.SprintGetPayload<{
     };
   };
 }>;
+
+export type SprintTasksStatsDTO = {
+  tasksCount: number;
+  tasksToDoCount: number;
+  tasksInProgressCount: number;
+  tasksDoneCount: number;
+  tasksBlockedCount: number;
+  tasksOverdueCount: number;
+};

@@ -19,8 +19,11 @@ const TaskSelectPriority = ({
 }) => {
   return (
     <Select
-      onValueChange={(key) => onChangePriority(taskId, key as TaskPriorityDTO)}
-      value={priority || 'loading'}
+      onValueChange={(key) => {
+        const next = key as TaskPriorityDTO;
+        if (next !== priority) onChangePriority(taskId, next);
+      }}
+      value={priority ?? 'LOW'}
     >
       <SelectTrigger className="w-20 px-2 py-1">
         <SelectValue placeholder="Приоритет" />

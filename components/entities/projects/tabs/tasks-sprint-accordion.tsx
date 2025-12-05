@@ -39,6 +39,13 @@ import { useMoveTask } from '@/hooks/tasks/use-move-task';
 import TaskSelectPriority from '../../tasks/task-select-priority';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
 import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
+import { Button } from '@/components/ui/button';
+import { BookOpen, Timer } from 'lucide-react';
+import { ChevronDown, GoalIcon } from 'lucide-react';
+import { formatDateRange } from '@/helpers/format-date';
+import { useSprintTasksStats } from '@/hooks/tasks/sprint/use-sprint-tasks-stats';
+import { Skeleton } from '@/components/ui/skeleton';
+import { FaBarsProgress } from 'react-icons/fa6';
 
 const TasksSprintAccordion = ({
   sprint,
@@ -64,7 +71,6 @@ const TasksSprintAccordion = ({
 
   const qc = useQueryClient();
   const sprintQueryKey = ['sprintTasks', sprint.id, projectId, workspaceId];
-  const tasksQueryKey = ['tasks', projectId, workspaceId];
 
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
     useCreateTask(workspaceId!, projectId!);
@@ -79,15 +85,18 @@ const TasksSprintAccordion = ({
   );
   const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
     useChangeTaskAssignee(workspaceId!, projectId!, sprintQueryKey);
-  
 
   // -------SPRINTS-----------------------------------------//
-  
+
   const { data: sprints } = useSprints(workspaceId!, projectId!);
   // for sprint select in task actions
   const sprintsMap = useMemo(() => {
     return new Map(sprints && sprints.map((s) => [s.id, s.name]));
   }, [sprints]);
+
+  // stats
+  const { data: sprintTasksStats, isLoading: isSprintTasksStatsLoading } =
+    useSprintTasksStats(workspaceId!, projectId!, sprint.id);
 
   // --------TASK-----MOVE-----------------------------------------//
 
@@ -182,11 +191,59 @@ const TasksSprintAccordion = ({
       defaultValue={`Бэклог`}
     >
       <AccordionItem value={`backlog`}>
-        <AccordionTrigger className="flex items-center justify-between bg-zinc-50 rounded-t-md px-4">
-          <span className="font-semibold text-xl w-30 ">{sprint.name}</span>
-          <span className="text-xs text-muted-foreground">
-            {sprintTasks.length} задач
-          </span>
+        <AccordionTrigger
+          asChild
+          className="flex items-center justify-between bg-zinc-50 rounded-t-md px-4"
+        >
+          <div>
+            <div className="flex gap-4 items-center">
+              <div className="flex gap-4 items-center min-w-60">
+                <span className="font-semibold text-xl min-w-30 ">
+                  {sprint.name}
+                </span>
+                <div className='flex gap-2'>
+                  <span className="text-xs text-muted-foreground">
+                    {sprintTasks.length} задач
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {formatDateRange(sprint.startDate, sprint.endDate)}
+                  </span>
+                </div>
+              </div>
+
+              {!isSprintTasksStatsLoading && (
+                <div className="flex gap-2 items-center w-30">
+                  <Badge variant="outline" className="gap-1">
+                    <BookOpen size={14} />
+                    {sprintTasksStats?.tasksCount}
+                  </Badge>
+                  <Badge variant="success" className="gap-1">
+                    <GoalIcon size={14} />
+                    {sprintTasksStats?.tasksDoneCount}
+                  </Badge>
+                  <Badge variant="default" className="gap-1 bg-primary-100">
+                    <Timer size={14} />
+                    {sprintTasksStats?.tasksInProgressCount}
+                  </Badge>
+                </div>
+              )}
+              {isSprintTasksStatsLoading && (
+                <div className="flex gap-2 items-center">
+                  <Badge variant="outline" className="gap-1">
+                    <Skeleton className="h-4 w-4" />
+                  </Badge>
+                  <Badge variant="success" className="gap-1">
+                    <Skeleton className="h-4 w-4" />
+                  </Badge>
+                  <Badge variant="default" className="gap-1">
+                    <Skeleton className="h-4 w-4" />
+                  </Badge>
+                </div>
+              )}
+            </div>
+
+            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+          </div>
         </AccordionTrigger>
 
         <AccordionContent className="flex flex-col gap-3 text-sm">
@@ -264,7 +321,7 @@ const TasksSprintAccordion = ({
                               getTaskStatusColor({
                                 taskStatus: t.status as TaskStatusDTO,
                               }),
-                              'text-white font-medium'
+                              'font-medium'
                             )}
                           >
                             {statusTitle}

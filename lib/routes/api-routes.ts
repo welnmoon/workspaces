@@ -40,6 +40,11 @@ export const apiRoutes = {
     `/api/w/${workspaceId}/projects/${projectId}/sprints/create`,
   getSprints: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/sprints`,
+  getSprintTasksStats: (
+    workspaceId: number,
+    projectId: number,
+    sprintId: number
+  ) => `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/stats`,
 
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
