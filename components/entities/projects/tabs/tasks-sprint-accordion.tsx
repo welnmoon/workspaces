@@ -42,6 +42,7 @@ import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Timer } from 'lucide-react';
 import { useChangeStatus } from '@/hooks/tasks/use-change-status';
+import { useDeleteTask } from '@/hooks/tasks/use-delete-task';
 import { ChevronDown, GoalIcon } from 'lucide-react';
 import { formatDateRange, formatDateTimeRange } from '@/helpers/format-date';
 import { useSprintTasksStats } from '@/hooks/tasks/sprint/use-sprint-tasks-stats';
@@ -128,6 +129,8 @@ const TasksSprintAccordion = ({
   const { mutate: onChangeStatus, isPending: onChangeStatusPending } =
     useChangeStatus(workspaceId!, projectId!);
 
+  const { mutate: onDeleteTask } = useDeleteTask(workspaceId!, projectId!);
+
   const onChangePriorityHandler = (
     taskId: number,
     priority: TaskPriorityDTO
@@ -151,6 +154,17 @@ const TasksSprintAccordion = ({
         onError: (e) => {
           toast.error(e.message ?? 'Произошла ошибка при обновлении статуса');
         },
+      }
+    );
+  };
+
+  const onDeleteTaskHandler = (taskId: number) => {
+    onDeleteTask(
+      { taskId, sprintId: sprint.id },
+      {
+        onSuccess: () => toast.success('Задача удалена'),
+        onError: (e) =>
+          toast.error(e.message ?? 'Не удалось удалить задачу'),
       }
     );
   };
@@ -362,31 +376,31 @@ const TasksSprintAccordion = ({
                             <TaskActions
                               disabled={isCreateTaskPending}
                               sprintsMap={sprintsMap}
-                              onMove={onMoveTaskHandle}
-                              onChangeStatus={onChangeStatusHandler}
-                              onChangePriority={() => {}}
-                              onChangeAssignee={onChangeAssigneeHandler}
-                              onDelete={() => {}}
-                              members={members}
-                              taskId={t.id}
-                              // startDate={sprint.startDate}
-                              // endDate={sprint.endDate}
-                            />
+                            onMove={onMoveTaskHandle}
+                            onChangeStatus={onChangeStatusHandler}
+                            onChangePriority={() => {}}
+                            onChangeAssignee={onChangeAssigneeHandler}
+                            onDelete={onDeleteTaskHandler}
+                            members={members}
+                            taskId={t.id}
+                            // startDate={sprint.startDate}
+                            // endDate={sprint.endDate}
+                          />
                           )}
                           {isMobile && (
                             <TaskActions
                               disabled={isCreateTaskPending}
                               sprintsMap={sprintsMap}
-                              onMove={onMoveTaskHandle}
-                              onChangeStatus={onChangeStatusHandler}
-                              onChangePriority={() => {}}
-                              onChangeAssignee={onChangeAssigneeHandler}
-                              onDelete={() => {}}
-                              members={members}
-                              taskId={t.id}
-                              // startDate={sprint.startDate}
-                              // endDate={sprint.endDate}
-                            />
+                            onMove={onMoveTaskHandle}
+                            onChangeStatus={onChangeStatusHandler}
+                            onChangePriority={() => {}}
+                            onChangeAssignee={onChangeAssigneeHandler}
+                            onDelete={onDeleteTaskHandler}
+                            members={members}
+                            taskId={t.id}
+                            // startDate={sprint.startDate}
+                            // endDate={sprint.endDate}
+                          />
                           )}
                         </TableCell>
                       </TableRow>

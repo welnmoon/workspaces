@@ -45,6 +45,8 @@ export const apiRoutes = {
     projectId: number,
     sprintId: number
   ) => `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/stats`,
+  deleteTask: (workspaceId: number, projectId: number, taskId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}`,
   changeSprintDates: (
     workspaceId: number,
     projectId: number,

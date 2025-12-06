@@ -25,7 +25,7 @@ type TaskActionsProps = {
     assigneeId: string | null,
     assignee?: MembershipSelectUserDTO['user']
   ) => void;
-  onDelete?: () => void;
+  onDelete?: (taskId: number) => void;
 
   members: MembershipSelectUserDTO[] | undefined;
   taskId: number;
@@ -157,13 +157,12 @@ const TaskActions = ({
           </DropdownMenuSubContent>
         </DropdownMenuSub>
 
-        <DropdownMenuItem>{}</DropdownMenuItem>
         {/*-----------------------------------------*/}
         {/*---------------Delete----------------*/}
         {/*-----------------------------------------*/}
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"
-          onClick={onDelete}
+          onClick={() => onDelete?.(taskId)}
         >
           Удалить
         </DropdownMenuItem>

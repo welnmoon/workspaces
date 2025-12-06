@@ -40,6 +40,7 @@ import SelectPriority from '@/components/forms/task/select-priority';
 import TaskSelectPriority from '../../tasks/task-select-priority';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
 import { useChangeStatus } from '@/hooks/tasks/use-change-status';
+import { useDeleteTask } from '@/hooks/tasks/use-delete-task';
 
 type BacklogAccordionProps = {
   tasks: TaskWithAssigneeDTO[];
@@ -104,6 +105,8 @@ const BacklogAccordion = ({
   const { mutate: onChangeStatus, isPending: onChangeStatusPending } =
     useChangeStatus(workspaceId!, projectId!);
 
+  const { mutate: onDeleteTask } = useDeleteTask(workspaceId!, projectId!);
+
   const onChangePriorityHandler = (
     taskId: number,
     priority: TaskPriorityDTO
@@ -120,6 +123,16 @@ const BacklogAccordion = ({
     );
   };
 
+  const onDeleteTaskHandler = (taskId: number) => {
+    onDeleteTask(
+      { taskId, sprintId: null },
+      {
+        onSuccess: () => toast.success('Задача удалена'),
+        onError: (e) =>
+          toast.error(e.message ?? 'Не удалось удалить задачу'),
+      }
+    );
+  };
   const onChangeStatusHandler = (taskId: number, status: TaskStatusDTO) => {
     onChangeStatus(
       { taskId, status, sprintId: null },
@@ -280,27 +293,27 @@ const BacklogAccordion = ({
                           {hoverId === t.id && !isMobile && (
                           <TaskActions
                             disabled={isCreateTaskPending}
-                            onMove={onMoveTaskHandle}
-                            sprintsMap={sprintsMap}
-                            onChangeStatus={onChangeStatusHandler}
-                            onChangePriority={() => {}}
-                            onChangeAssignee={onChangeAssigneeHandler}
-                            onDelete={() => {}}
-                            members={members}
-                            taskId={t.id}
+                              onMove={onMoveTaskHandle}
+                              sprintsMap={sprintsMap}
+                              onChangeStatus={onChangeStatusHandler}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
+                              onDelete={onDeleteTaskHandler}
+                              members={members}
+                              taskId={t.id}
                             />
                           )}
                           {isMobile && (
                           <TaskActions
-                            sprintsMap={sprintsMap}
-                            disabled={isCreateTaskPending}
-                            onMove={onMoveTaskHandle}
-                            onChangeStatus={onChangeStatusHandler}
-                            onChangePriority={() => {}}
-                            onChangeAssignee={onChangeAssigneeHandler}
-                            onDelete={() => {}}
-                            members={members}
-                            taskId={t.id}
+                              sprintsMap={sprintsMap}
+                              disabled={isCreateTaskPending}
+                              onMove={onMoveTaskHandle}
+                              onChangeStatus={onChangeStatusHandler}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
+                              onDelete={onDeleteTaskHandler}
+                              members={members}
+                              taskId={t.id}
                             />
                           )}
                         </TableCell>

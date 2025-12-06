@@ -284,4 +284,19 @@ export class TaskService {
       },
     });
   }
+
+  static async deleteTask(taskId: number, projectId: number) {
+    const task = await prisma.task.findUnique({
+      where: { id: taskId },
+      select: { projectId: true },
+    });
+
+    if (!task || task.projectId !== projectId) {
+      throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+    }
+
+    return prisma.task.delete({
+      where: { id: taskId },
+    });
+  }
 }
