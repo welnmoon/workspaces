@@ -5,7 +5,6 @@ import { handleApiError } from '@/lib/http/handle-api-error';
 import { ok } from '@/lib/http/http';
 import { SprintService } from '@/lib/services/sprint';
 import { SprintTasksStatsDTO } from '@/types/prisma/DTO/sprint';
-import { Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
 export async function GET(
@@ -21,8 +20,7 @@ export async function GET(
 ) {
   try {
     await requireUser();
-    const { projectId, sprintId } = await params;
-    const projectIdNum = validateId(projectId);
+    const { sprintId } = await params;
     const sprintIdNum = validateId(sprintId);
 
     const stats: SprintTasksStatsDTO =
