@@ -45,6 +45,12 @@ export const apiRoutes = {
     projectId: number,
     sprintId: number
   ) => `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/stats`,
+  changeSprintDates: (
+    workspaceId: number,
+    projectId: number,
+    sprintId: number
+  ) =>
+    `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/change-dates`,
 
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,

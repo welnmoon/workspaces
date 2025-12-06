@@ -70,14 +70,16 @@ const TaskActions = ({
                     Нет доступных спринтов
                   </DropdownMenuItem>
                 )}
-                {Array.from(sprintsMap.entries()).map(([sprintId, sprintName]) => (
-                  <DropdownMenuItem
-                    key={sprintId}
-                    onClick={() => onMove(sprintId, taskId)}
-                  >
-                    {sprintName}
-                  </DropdownMenuItem>
-                ))}
+                {Array.from(sprintsMap.entries()).map(
+                  ([sprintId, sprintName]) => (
+                    <DropdownMenuItem
+                      key={sprintId}
+                      onClick={() => onMove(sprintId, taskId)}
+                    >
+                      {sprintName}
+                    </DropdownMenuItem>
+                  )
+                )}
                 <DropdownMenuItem onClick={() => onMove(null, taskId)}>
                   В бэклог
                 </DropdownMenuItem>
@@ -154,6 +156,8 @@ const TaskActions = ({
             {membersList === undefined && <span>Ошибка</span>}
           </DropdownMenuSubContent>
         </DropdownMenuSub>
+
+        <DropdownMenuItem>{}</DropdownMenuItem>
         {/*-----------------------------------------*/}
         {/*---------------Delete----------------*/}
         {/*-----------------------------------------*/}

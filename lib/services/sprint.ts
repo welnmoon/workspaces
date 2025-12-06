@@ -22,6 +22,32 @@ export class SprintService {
           },
         },
       },
+      orderBy: {
+        startDate: 'asc',
+      },
+    });
+  }
+
+  static async changeSprintDates({
+    sprintId,
+    projectId,
+    startDate,
+    endDate,
+  }: {
+    sprintId: number;
+    projectId: number;
+    startDate: Date | null;
+    endDate: Date | null;
+  }) {
+    return prisma.sprint.update({
+      where: {
+        id: sprintId,
+        projectId,
+      },
+      data: {
+        startDate,
+        endDate,
+      },
     });
   }
 

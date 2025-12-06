@@ -43,7 +43,7 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Timer } from 'lucide-react';
 import { useChangeStatus } from '@/hooks/tasks/use-change-status';
 import { ChevronDown, GoalIcon } from 'lucide-react';
-import { formatDateRange } from '@/helpers/format-date';
+import { formatDateRange, formatDateTimeRange } from '@/helpers/format-date';
 import { useSprintTasksStats } from '@/hooks/tasks/sprint/use-sprint-tasks-stats';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FaBarsProgress } from 'react-icons/fa6';
@@ -149,9 +149,7 @@ const TasksSprintAccordion = ({
       { taskId, status, sprintId: sprint.id },
       {
         onError: (e) => {
-          toast.error(
-            e.message ?? 'Произошла ошибка при обновлении статуса'
-          );
+          toast.error(e.message ?? 'Произошла ошибка при обновлении статуса');
         },
       }
     );
@@ -218,12 +216,12 @@ const TasksSprintAccordion = ({
                 <span className="font-semibold text-xl min-w-30 ">
                   {sprint.name}
                 </span>
-                <div className='flex gap-2'>
+                <div className="flex gap-2">
                   <span className="text-xs text-muted-foreground">
                     {sprintTasks.length} задач
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {formatDateRange(sprint.startDate, sprint.endDate)}
+                    {formatDateTimeRange(sprint.startDate, sprint.endDate, 'ru-RU', undefined, 'UTC')}
                   </span>
                 </div>
               </div>
@@ -266,8 +264,13 @@ const TasksSprintAccordion = ({
         <AccordionContent className="flex flex-col gap-3 text-sm">
           {sprintTasks.length === 0 ? (
             <CreateTaskRowForm
+              workspaceId={workspaceId}
+              projectId={projectId}
+              sprintId={sprint.id}
               onCreate={handleCreateTask}
               isLoading={isCreateTaskPending}
+              startDate={sprint.startDate}
+              endDate={sprint.endDate}
             />
           ) : (
             <div className="md:overflow-visible overflow-x-auto rounded-2xl border bg-white shadow-sm">
@@ -356,29 +359,33 @@ const TasksSprintAccordion = ({
                         </TableCell>
                         <TableCell className="px-4 py-3 w-1/9 text-muted-foreground">
                           {hoverId === t.id && !isMobile && (
-                          <TaskActions
-                            disabled={isCreateTaskPending}
-                            sprintsMap={sprintsMap}
-                            onMove={onMoveTaskHandle}
-                            onChangeStatus={onChangeStatusHandler}
-                            onChangePriority={() => {}}
-                            onChangeAssignee={onChangeAssigneeHandler}
-                            onDelete={() => {}}
-                            members={members}
-                            taskId={t.id}
+                            <TaskActions
+                              disabled={isCreateTaskPending}
+                              sprintsMap={sprintsMap}
+                              onMove={onMoveTaskHandle}
+                              onChangeStatus={onChangeStatusHandler}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
+                              onDelete={() => {}}
+                              members={members}
+                              taskId={t.id}
+                              // startDate={sprint.startDate}
+                              // endDate={sprint.endDate}
                             />
                           )}
                           {isMobile && (
-                          <TaskActions
-                            disabled={isCreateTaskPending}
-                            sprintsMap={sprintsMap}
-                            onMove={onMoveTaskHandle}
-                            onChangeStatus={onChangeStatusHandler}
-                            onChangePriority={() => {}}
-                            onChangeAssignee={onChangeAssigneeHandler}
-                            onDelete={() => {}}
-                            members={members}
+                            <TaskActions
+                              disabled={isCreateTaskPending}
+                              sprintsMap={sprintsMap}
+                              onMove={onMoveTaskHandle}
+                              onChangeStatus={onChangeStatusHandler}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
+                              onDelete={() => {}}
+                              members={members}
                               taskId={t.id}
+                              // startDate={sprint.startDate}
+                              // endDate={sprint.endDate}
                             />
                           )}
                         </TableCell>
@@ -390,6 +397,11 @@ const TasksSprintAccordion = ({
               <CreateTaskRowForm
                 onCreate={handleCreateTask}
                 isLoading={isCreateTaskPending}
+                startDate={sprint.startDate}
+                endDate={sprint.endDate}
+                workspaceId={workspaceId}
+                projectId={projectId}
+                sprintId={sprint.id}
               />
             </div>
           )}
