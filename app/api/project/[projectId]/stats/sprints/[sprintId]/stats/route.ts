@@ -14,7 +14,6 @@ export async function GET(
     params,
   }: {
     params: Promise<{
-      workspaceId: string;
       projectId: string;
       sprintId: string;
     }>;
@@ -22,16 +21,12 @@ export async function GET(
 ) {
   try {
     await requireUser();
-    const workspaceId = validateId((await params).workspaceId);
-    const projectId = validateId((await params).projectId);
-    const sprintId = validateId((await params).sprintId);
-    await requireWorkspaceMember({
-      workspaceId,
-      allowed: [Role.ADMIN, Role.MEMBER, Role.OWNER],
-    });
+    const { projectId, sprintId } = await params;
+    const projectIdNum = validateId(projectId);
+    const sprintIdNum = validateId(sprintId);
 
     const stats: SprintTasksStatsDTO =
-      await SprintService.getSprintTasksStats(sprintId);
+      await SprintService.getSprintTasksStats(sprintIdNum);
 
     return ok(stats);
   } catch (e) {
