@@ -14,10 +14,12 @@ import { Heading } from '../../ui/heading';
 import ProjectMemberTasksAllStats from './project-member-tasks-stats';
 import ProjectTabs from './tabs/project-tabs';
 import ProjectTasksAllStats from './project-tasks-stats';
+import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 
 export type StatusFilter = TaskStatusDTO | 'ALL';
 
 const ProjectComponent = ({
+  sprints,
   project,
   workspaceId,
   tasks,
@@ -26,6 +28,7 @@ const ProjectComponent = ({
   memberTaskStats,
   members,
 }: {
+  sprints: SprintWithTasksWithAssigneesDTO[];
   project: Project;
   workspaceId: number;
   tasks: TaskWithAssigneeDTO[];
@@ -63,18 +66,19 @@ const ProjectComponent = ({
 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex-1 min-w-0 text-sm text-muted-foreground">
-          <Description text={project.description || 'No description'} />
+          <Description text={project.description || null} />
         </div>
-        <CreateTaskDialog
+        {/* <CreateTaskDialog
           members={members}
           projectId={project.id}
           workspaceId={workspaceId}
-        />
+        /> */}
       </div>
 
       <Divider />
 
       <ProjectTabs
+        sprints={sprints}
         tasks={tasks}
         workspaceId={workspaceId}
         projectId={project.id}

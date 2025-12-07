@@ -56,7 +56,7 @@ const ProjectCard = ({
                 className="flex items-center justify-between"
                 href={clientRoutes.projectPage(workspaceId, projectId)}
               >
-                <span className="underline-anim truncate max-w-full min-w-fit">
+                <span className="underline-anim truncate max-w-full min-w-fit text-wrap">
                   {title}
                 </span>
               </Link>

@@ -8,6 +8,10 @@ interface EmptyStateProps {
   subtitle?: string | React.ReactElement;
   icon?: string | React.ReactNode;
   className?: string;
+  iconIsImage?: boolean;
+  imageSrc?: string;
+  imageAlt?: string;
+  imageClassName?: string;
 }
 
 const EmptyState = ({
@@ -15,7 +19,12 @@ const EmptyState = ({
   subtitle,
   icon = '📭',
   className,
+  iconIsImage = false,
+  imageSrc,
+  imageAlt,
+  imageClassName,
 }: EmptyStateProps) => {
+  const [imgLoaded, setImgLoaded] = React.useState(false);
   return (
     <div
       className={cn(
@@ -23,7 +32,32 @@ const EmptyState = ({
         className
       )}
     >
-      <div className="text-5xl mb-2">{icon}</div>
+      <div className="text-5xl mb-2">
+        {iconIsImage ? (
+          <>
+            <img
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setImgLoaded(true)}
+              src={imageSrc}
+              alt={imageAlt}
+              className={cn(
+                imageClassName,
+                imgLoaded ? 'opacity-100' : 'opacity-0'
+              )}
+            />
+            {!imgLoaded && (
+              <div
+                className={cn(
+                  'rounded-md bg-gray-200 animate-pulse',
+                  imageClassName
+                )}
+              />
+            )}
+          </>
+        ) : (
+          icon
+        )}
+      </div>
       <h3 className="text-lg font-semibold">{title}</h3>
       {subtitle && <p className="text-sm mt-1 text-zinc-400">{subtitle}</p>}
     </div>

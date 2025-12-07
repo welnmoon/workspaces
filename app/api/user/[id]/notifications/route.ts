@@ -1,5 +1,5 @@
 import { requireUser } from '@/helpers/require-user';
-import { ok } from '@/lib/http';
+import { ok } from '@/lib/http/http';
 import { NotificationService } from '@/lib/services/notifications';
 
 // API: get notifications

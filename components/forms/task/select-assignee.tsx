@@ -43,23 +43,25 @@ const SelectAssignee = ({
               <SelectValue placeholder="Исполнитель" />
             </SelectTrigger>
             <SelectContent className="w-full">
-              {members.map((member) => (
-                <SelectItem
-                  className="flex gap-2"
-                  key={member.id}
-                  value={String(member.user.id)}
-                >
-                  <span>
-                    {getFullName({
-                      firstName: member.user.firstName,
-                      lastName: member.user.lastName,
-                    })}
-                  </span>
-                  <span>
-                    {member.user.email ? ` (${member.user.email})` : ''}
-                  </span>
-                </SelectItem>
-              ))}
+              {members &&
+                members.map((member) => (
+                  <SelectItem
+                    className="flex gap-2"
+                    key={member.id}
+                    value={String(member.user.id)}
+                  >
+                    <span>
+                      {getFullName({
+                        firstName: member.user.firstName,
+                        lastName: member.user.lastName,
+                      })}
+                    </span>
+                    <span>
+                      {member.user.email ? ` (${member.user.email})` : ''}
+                    </span>
+                  </SelectItem>
+                ))}
+              {members.length === 0 && <span>Нет исполнителей</span>}
             </SelectContent>
           </Select>
         )}

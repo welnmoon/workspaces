@@ -87,14 +87,13 @@ export default function TaskCard({
 
   const { mutate: onPriorityMutate } = useChangePriority(
     workspaceId,
-    projectId,
-    taskId
+    projectId
   );
   const changeTaskPriority = () => {
     const order: TaskPriorityDTO[] = TASK_PRIORITY_ARRAY;
     const currentIndex = order.indexOf(priority);
     const next = order[currentIndex + 1] ?? order[0];
-    onPriorityMutate(next);
+    onPriorityMutate({ priority: next, taskId });
   };
 
   return (
@@ -164,7 +163,6 @@ export default function TaskCard({
       </CardHeader>
 
       <CardContent className="mt-2 flex items-center justify-between gap-2 p-0">
-        {/* Дедлайн, в духе Jira: маленький текст + красный если просрочено */}
         <div className="flex flex-col gap-0.5">
           <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
             <span>Срок</span>

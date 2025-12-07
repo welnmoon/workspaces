@@ -49,13 +49,17 @@ const ProjectTasksBoard = ({
         {filteredTasks.length === 0 && (
           <div>
             <EmptyState
-              icon={
-                <img
-                  src="/images/tasks-page-banner.png"
-                  alt="Иллюстрация проекта"
-                  className="mt-6 w-1/2 mx-auto h-auto object-contain"
-                />
-              }
+              iconIsImage={true}
+              // icon={
+              //   <img
+              //     src="/images/tasks-page-banner.png"
+              //     alt="Иллюстрация проекта"
+              //     className="mt-6 w-1/2 mx-auto h-auto object-contain"
+              //   />
+              // }
+              imageSrc="/images/tasks-page-banner.png"
+              imageAlt="Иллюстрация проекта"
+              imageClassName="mt-6 w-1/2 mx-auto h-auto object-contain"
               title="Ну что, начинаем?"
               subtitle="Добавьте первую задачу — и ваш проект засияет."
             />

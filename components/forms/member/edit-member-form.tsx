@@ -64,7 +64,15 @@ const EditMemberForm = ({
   };
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            form.handleSubmit(handleSubmit)();
+          }
+        }}
+        onSubmit={form.handleSubmit(handleSubmit)}
+      >
         <div className="space-y-2">
           <Label className="text-sm font-medium">Роль участника</Label>
           <Controller

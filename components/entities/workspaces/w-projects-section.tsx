@@ -8,6 +8,7 @@ import type { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 import { useProjects } from '@/hooks/project/use-projects';
 import type { WorkspaceDTO } from '@/types/prisma/DTO/workspaces';
 import { FullRoleDTO, RolesEnum } from '@/types/prisma/DTO/role';
+import EmptyState from '@/components/empty-state';
 
 export type WProjectsSectionProps = {
   userRole: FullRoleDTO;
@@ -22,10 +23,7 @@ const WProjectsSection = ({
   workspace,
   projects,
 }: WProjectsSectionProps) => {
-  const {
-    data: optimisticProjects,
-
-  } = useProjects(workspaceId, projects);
+  const { data: optimisticProjects } = useProjects(workspaceId, projects);
   return (
     <section>
       <div className="flex justify-between">
@@ -45,9 +43,10 @@ const WProjectsSection = ({
           />
         ))}
         {optimisticProjects?.length === 0 && (
-          <div className="w-full py-8 text-center text-muted-foreground">
-            No projects found
-          </div>
+          <EmptyState
+            title="Проектов нет"
+            subtitle="Создайте первый проект, чтобы начать работу."
+          />
         )}
       </section>
     </section>

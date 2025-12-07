@@ -134,17 +134,34 @@ export class TaskService {
     dueDate,
     assigneeId,
     priority,
+    sprintId,
   }: {
     projectId: number;
     title: string;
     description: string | undefined;
-    dueDate: string;
+    dueDate?: string;
     assigneeId: string | undefined;
     priority: TaskPriority;
+    sprintId: number | null;
   }) {
+    let parsedDueDate: Date | undefined = undefined;
+
+    if (dueDate) {
+      const d = new Date(dueDate);
+      if (isNaN(d.getTime())) {
+        throw new AppError(
+          400,
+          'INVALID_DUE_DATE',
+          'Укажите корректный дедлайн'
+        );
+      }
+      parsedDueDate = d;
+    }
+
     const existing = await prisma.task.findFirst({
       where: {
         projectId: Number(projectId),
+        sprintId: sprintId,
         title: {
           equals: title,
           mode: 'insensitive',
@@ -164,10 +181,11 @@ export class TaskService {
       data: {
         title,
         description: description || 'Без описания',
-        dueDate: dueDate ? new Date(dueDate) : undefined,
+        dueDate: parsedDueDate,
         projectId: Number(projectId),
         assigneeId,
         priority: priority || TaskPriority.LOW,
+        sprintId,
       },
     });
 
@@ -211,5 +229,74 @@ export class TaskService {
 
       throw e;
     }
+  }
+
+  static async changeAssignee(
+    projectId: number,
+    taskId: number,
+    assigneeId: string | null
+  ) {
+    return await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        assigneeId,
+      },
+    });
+  }
+
+  static async moveTask(
+    taskId: number,
+    sprintId: number | null,
+    projectId: number
+  ) {
+    const current = await prisma.task.findUnique({
+      where: { id: taskId },
+      select: { title: true, projectId: true },
+    });
+
+    if (!current || current.projectId !== projectId) {
+      throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+    }
+
+    const taskExistInNewSprint = await prisma.task.findFirst({
+      where: {
+        projectId,
+        sprintId,
+        title: { equals: current.title, mode: 'insensitive' },
+        NOT: { id: taskId },
+      },
+    });
+    if (taskExistInNewSprint) {
+      throw new AppError(
+        409,
+        'TASK_ALREADY_EXISTS_IN_NEW_SPRINT',
+        'Задача уже существует в новом спринте'
+      );
+    }
+    return await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        sprintId,
+      },
+    });
+  }
+
+  static async deleteTask(taskId: number, projectId: number) {
+    const task = await prisma.task.findUnique({
+      where: { id: taskId },
+      select: { projectId: true },
+    });
+
+    if (!task || task.projectId !== projectId) {
+      throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+    }
+
+    return prisma.task.delete({
+      where: { id: taskId },
+    });
   }
 }

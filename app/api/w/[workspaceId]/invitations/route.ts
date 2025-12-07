@@ -1,5 +1,5 @@
 import { requireUser } from '@/helpers/require-user';
-import { badRequest, conflict, created } from '@/lib/http';
+import { badRequest, conflict, created } from '@/lib/http/http';
 import { InvitationService } from '@/lib/services/invitation';
 import { invitationCreateSchema } from '@/schemas/notification/inv-create-schema';
 

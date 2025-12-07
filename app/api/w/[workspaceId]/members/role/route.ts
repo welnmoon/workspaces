@@ -1,5 +1,5 @@
 import { requireUser } from '@/helpers/require-user';
-import { ok, serverError } from '@/lib/http';
+import { ok, serverError } from '@/lib/http/http';
 import { MembershipService } from '@/lib/services/membership';
 import { NextRequest } from 'next/server';
 

@@ -111,6 +111,11 @@ const LoginForm = () => {
 
           <FormProvider {...form}>
             <form
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  form.handleSubmit(onLoginSubmit)();
+                }
+              }}
               onSubmit={form.handleSubmit(onLoginSubmit)}
               className="space-y-5"
             >

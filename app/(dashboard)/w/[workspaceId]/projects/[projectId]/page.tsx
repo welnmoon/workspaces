@@ -6,6 +6,7 @@ import { ProjectService } from '@/lib/services/project';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { isMember } from '@/helpers/is-member';
 import EmptyState from '@/components/empty-state';
+import { SprintService } from '@/lib/services/sprint';
 
 const ProjectPage = async ({
   params,
@@ -34,12 +35,14 @@ const ProjectPage = async ({
     return <NotFound text="Project" />;
   }
 
-  const [tasks, allTaskStats, memberTaskStats, members] = await Promise.all([
-    ProjectService.getProjectTasksWithAssignee(project.id),
-    ProjectService.getProjectTasksStats(project.id),
-    ProjectService.getProjectMemberTasksStats(project.id, id),
-    WorkspaceService.getWorkspaceMembers(Number(workspaceId)),
-  ]);
+  const [tasks, allTaskStats, memberTaskStats, members, sprintsWithTasks] =
+    await Promise.all([
+      ProjectService.getProjectTasksWithAssignee(project.id),
+      ProjectService.getProjectTasksStats(project.id),
+      ProjectService.getProjectMemberTasksStats(project.id, id),
+      WorkspaceService.getWorkspaceMembers(Number(workspaceId)),
+      SprintService.getProjectSprintsWithTasks(project.id),
+    ]);
 
   let workspaceName = await prisma.workspace.findUnique({
     where: {
@@ -59,6 +62,7 @@ const ProjectPage = async ({
       {!project && <NotFound text="Project" />}
       {project && (
         <ProjectComponent
+          sprints={sprintsWithTasks}
           workspaceId={Number(workspaceId)}
           tasks={tasks}
           project={project}

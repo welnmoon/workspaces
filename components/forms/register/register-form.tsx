@@ -123,6 +123,11 @@ const RegisterForm = () => {
 
           <FormProvider {...form}>
             <form
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  form.handleSubmit(onRegisterSubmit)();
+                }
+              }}
               onSubmit={form.handleSubmit(onRegisterSubmit)}
               aria-label="Форма регистрации"
               className="space-y-5"

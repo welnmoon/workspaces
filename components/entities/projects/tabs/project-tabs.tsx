@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProjectTabsList from './project-tasks-list';
 import ProjectTasksBoard from '../project-tasks-board';
@@ -24,10 +24,19 @@ import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
 import toast from 'react-hot-toast';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
+import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
+import BacklogAccordion from './backlog-accordion';
+import { useSprintCreate } from '@/hooks/tasks/sprint/use-sprint-create';
+import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
+import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
+import { useMembers } from '@/hooks/members/use-members';
+import MainBtn from '@/components/buttons/main-btn';
+import { FaPenToSquare } from 'react-icons/fa6';
 
 type StatusFilter = TaskStatusDTO | 'ALL';
 
 type ProjectTabsProps = {
+  sprints: SprintWithTasksWithAssigneesDTO[];
   tasks: TaskWithAssigneeDTO[];
   workspaceId: number;
   projectId: number;
@@ -38,6 +47,7 @@ type ProjectTabsProps = {
 const doneCounts = [10, 25, 50];
 
 const ProjectTabs = ({
+  sprints,
   tasks,
   workspaceId,
   projectId,
@@ -46,16 +56,29 @@ const ProjectTabs = ({
 }: ProjectTabsProps) => {
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
+  const [createSprint, setCreateSprint] = useState(false);
+
+  // members for accordions and for create task form
+  const { data: members } = useMembers(workspaceId!, projectId!);
+
+  const queryClient = useQueryClient();
+  const queryKey = ['tasks', projectId, workspaceId];
+
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
+
+  //----------------------Tasks--------------------------//
+  const [allTasks, setAllTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
+  const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>([]);
   const [doneTasksCount, setDoneTasksCount] = useState<string>(
     String(doneCounts[0])
   );
-  const queryClient = useQueryClient();
-  const queryKey = ['tasks', projectId, workspaceId];
-  // delete tasks
+
+  //----------------------Delete Tasks--------------------------//
   const [selectedIds, setSelectedIds] = useState(new Set<number>());
+
   const { mutate: deleteTasks, isPending: isDeleteTasksPending } =
-    useDeleteTasksBulk(workspaceId, projectId);
+    useDeleteTasksBulk(workspaceId, projectId, setAllTasks, queryKey);
 
   const handleDeleteTasks = () => {
     deleteTasks(selectedIds, {
@@ -69,64 +92,95 @@ const ProjectTabs = ({
     });
   };
 
-  const syncCache = (updatedTasks: TaskWithAssigneeDTO[]) =>
-    queryClient.setQueryData(queryKey, updatedTasks);
+  const syncCache = (updatedTasks: TaskWithAssigneeDTO[]) => {
+    setAllTasks((prev) => {
+      const tasksMap = new Map(prev.map((t) => [t.id, t]));
+      for (const t of updatedTasks) {
+        tasksMap.set(t.id, t);
+      }
+
+      const newTasksArray = Array.from(tasksMap.values());
+      queryClient.setQueryData(queryKey, newTasksArray);
+
+      return newTasksArray;
+    });
+  };
+
   const { changeStatus, isPending } = useTaskStatusChange({
-    setBoardTasks,
+    setBoardTasks: setAllTasks,
     queryKey,
   });
 
-  // в onDragEnd или где-то ещё:
+  const { data: optimisticTasks, isLoading: isTasksLoading } =
+    useTasksWithAssignee(projectId, workspaceId, tasks);
 
-  const { data: optimisticTasks } = useTasksWithAssignee(
-    projectId,
-    workspaceId,
-    tasks
-  );
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-  const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
-
+  //----------------------Filter Tasks--------------------------//
   useEffect(() => {
-    setBoardTasks(optimisticTasks || []);
+    if (optimisticTasks && Array.isArray(optimisticTasks)) {
+      setAllTasks(optimisticTasks);
+    }
   }, [optimisticTasks]);
 
-  const listTasks = useMemo(() => {
-    return filterTasks(boardTasks, status, dateRange);
-  }, [boardTasks, status, dateRange]);
+  const backlogTasks = allTasks.filter((t) => t.sprintId === null);
 
-  const tasksByStatus = useMemo(() => {
-    return tasksFilterByStatus({ tasks: boardTasks });
-  }, [boardTasks]);
+  const listTasks = filterTasks(allTasks, status, dateRange);
 
-  const remainTasksCount = useMemo(() => {
-    const totalDone = allTaskStats?.tasksDoneCount ?? 0;
-    const shown = Number(doneTasksCount);
-    const remain = totalDone - shown;
-    return remain > 0 ? remain : 0;
-  }, [allTaskStats, doneTasksCount]);
+  //---------------------Sprint------------------------------------------//
+
+  const { mutate: onCreateSprint, isPending: isCreateSprintPending } =
+    useSprintCreate(workspaceId, projectId);
+
+  const onCreateSprintHandler = (payload: CreateSprintSchema) => {
+    onCreateSprint(payload, {
+      onSuccess: () => {
+        setCreateSprint(false);
+      },
+      onError: (e) => {
+        toast.error(e.message ?? 'Произошла ошибка при создании спринта');
+      },
+    });
+  };
+
+  //----------------------Tasks Board - Kanban--------------------------//
+  useEffect(() => {
+    setBoardTasks(allTasks.filter((t) => t.sprintId !== null));
+  }, [allTasks]);
+
+  const tasksByStatus = tasksFilterByStatus({ tasks: boardTasks });
+  // обновляем кэш с помощью sync
+  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, syncCache);
+
+  const totalDone = allTaskStats?.tasksDoneCount ?? 0;
+  const shown = Number(doneTasksCount);
+  const remainTasksCount = totalDone - shown > 0 ? totalDone - shown : 0;
 
   const hasDateFilter = Boolean(dateRange?.from || dateRange?.to);
   const hasStatusFilter = status !== 'ALL';
   const hasAnyFilter = hasStatusFilter || hasDateFilter;
-
-  const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, syncCache);
 
   const resetFilters = () => {
     setStatus('ALL');
     setDateRange(undefined);
   };
 
-  const [activeTab, setActiveTab] = useState<'list' | 'kanban' | 'stats'>(
-    'list'
-  );
+  const [activeTab, setActiveTab] = useState<
+    'list' | 'kanban' | 'stats' | 'backlog'
+  >('list');
+
+  // для пробрасывания спринтов в экшены задачи чтобы могли выбрать спринт для moving
+  // const sprintsId = useMemo(() => {
+  //   return new Map(sprints.map((s) => [s.id, s.name]));
+  // }, [sprints]);
 
   return (
     <Tabs
       value={activeTab}
-      onValueChange={(v) => setActiveTab(v as 'list' | 'kanban' | 'stats')}
+      onValueChange={(v) =>
+        setActiveTab(v as 'list' | 'kanban' | 'stats' | 'backlog')
+      }
       className="w-full space-y-4"
     >
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3 sticky top-20 z-10 bg-white p-2 rounded-xl shadow ">
         <TabsList className="inline-flex flex-wrap gap-1">
           <TabsTrigger value="list" className="flex items-center gap-2">
             <List className="h-4 w-4" />
@@ -135,6 +189,10 @@ const ProjectTabs = ({
           <TabsTrigger value="kanban" className="flex items-center gap-2">
             <Kanban className="h-4 w-4" />
             <span>Канбан</span>
+          </TabsTrigger>
+          <TabsTrigger value="backlog" className="flex items-center gap-2">
+            <IoStatsChart className="h-4 w-4" />
+            <span>Бэклог</span>
           </TabsTrigger>
           <TabsTrigger value="stats" className="flex items-center gap-2">
             <IoStatsChart className="h-4 w-4" />
@@ -206,9 +264,22 @@ const ProjectTabs = ({
             </div>
           )}
         </div>
+
+        <CreateTaskDialog
+          members={members!}
+          projectId={projectId}
+          workspaceId={workspaceId}
+        />
+        {activeTab === 'list' && (
+          <MainBtn
+            onClick={() => setCreateSprint((prev) => !prev)}
+            text={createSprint ? 'Отменить' : 'Создать спринт'}
+            icon={<FaPenToSquare className="text-white" size={20} />}
+          />
+        )}
       </div>
 
-      <TabsContent  value="list" className="space-y-4">
+      <TabsContent value="list" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-muted-foreground">
             Всего задач: <span className="font-medium">{listTasks.length}</span>
@@ -221,6 +292,10 @@ const ProjectTabs = ({
         </div>
 
         <ProjectTabsList
+          sprints={sprints}
+          createSprint={createSprint}
+          // sprintsId={sprintsId}
+          backlogTasks={backlogTasks}
           listTasks={listTasks}
           hasAnyFilter={hasAnyFilter}
           hasStatusFilter={hasStatusFilter}
@@ -231,6 +306,8 @@ const ProjectTabs = ({
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
           isDeleteTasksPending={isDeleteTasksPending}
+          onCreateSprint={onCreateSprintHandler}
+          onCreateSprintPending={isCreateSprintPending}
         />
       </TabsContent>
 
@@ -252,6 +329,28 @@ const ProjectTabs = ({
         <ProjectTasksStats
           allTaskStats={allTaskStats}
           memberTaskStats={memberTaskStats}
+        />
+      </TabsContent>
+
+      <TabsContent value="backlog" className="mt-2">
+        {/* <ProjectTabsBacklog
+          backlogTasks={backlogTasks}
+          hasAnyFilter={hasAnyFilter}
+          hasStatusFilter={hasStatusFilter}
+          hasDateFilter={hasDateFilter}
+          status={status}
+          onStatusChange={changeStatus}
+          isStatusPending={isPending}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          isDeleteTasksPending={isDeleteTasksPending}
+        /> */}
+        <BacklogAccordion
+          tasks={backlogTasks}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          isDeleteTasksPending={isTasksLoading}
+          isTasksLoading={isTasksLoading}
         />
       </TabsContent>
     </Tabs>

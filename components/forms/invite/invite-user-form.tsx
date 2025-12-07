@@ -78,7 +78,16 @@ const InviteUserForm = ({ workspaceId, onSuccess }: InviteUserFormProps) => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            form.handleSubmit(handleSubmit)();
+          }
+        }}
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-4"
+      >
         <FormInput
           name="email"
           label="E-mail"
