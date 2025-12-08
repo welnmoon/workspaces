@@ -10,10 +10,10 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import WorkspacePopover from '@/components/entities/workspaces/workspace-popover';
 import WorkspaceTabs from '@/components/entities/workspaces/workspace-tabs';
 import { WProjectsSectionProps } from '@/components/entities/workspaces/w-projects-section';
+import WorkspaceOverview from '@/components/entities/workspaces/workspace-overview';
 import { isMember } from '@/helpers/is-member';
 import EmptyState from '@/components/empty-state';
 import { tariffs } from '@/const/tariffs';
-import { cn } from '@/lib/utils';
 
 const WorkspacePage = async ({
   params,
@@ -91,45 +91,17 @@ const WorkspacePage = async ({
         )}
       </div>
 
-      <div className="flex gap-4  text-sm text-muted-foreground items-center">
-        <span>
-          Участников: <b>{membersCount}</b>
-        </span>
-        <span>
-          Проектов: <b>{projectsCount}</b>
-        </span>
-        <div className="bg-zinc-100 px-2 py-1 rounded-md flex gap-3">
-          <span className="text-zinc-400 ">Задачи</span>
-          <span>
-            Всего: <b>{tasksTotal}</b>
-          </span>
-          <span>
-            В работе: <b>{tasksInProgress}</b>
-          </span>
-          <span>
-            Выполненные: <b className="text-green-500">{tasksDone}</b>
-          </span>
-          <span>
-            Новые: <b className="text-blue-500">{tasksToDoCount}</b>
-          </span>
-          <span>
-            Просроченные: <b className="text-red-500">{tasksOverdue}</b>
-          </span>
-        </div>
-
-        <div className="bg-primary-100 rounded-md px-2 py-1">
-          Ваша роль: <span className="font-medium">{userRole}</span>
-        </div>
-        <div
-          className={cn(' rounded-md px-2 py-1')}
-          style={{
-            backgroundColor: wTariff.color,
-            color: wTariff.textColor,
-          }}
-        >
-          План: <span className="font-medium">{wTariff.name}</span>
-        </div>
-      </div>
+      <WorkspaceOverview
+        membersCount={membersCount}
+        projectsCount={projectsCount}
+        tasksTotal={tasksTotal}
+        tasksInProgress={tasksInProgress}
+        tasksDone={tasksDone}
+        tasksToDoCount={tasksToDoCount}
+        tasksOverdue={tasksOverdue}
+        userRole={userRole!}
+        tariff={wTariff}
+      />
 
       <Divider />
       <WorkspaceTabs
