@@ -7,6 +7,7 @@ import HeroSection from '@/components/root/main/hero/hero';
 import CompaniesMarquee from '@/components/root/main/marquee/companies-marquee';
 
 import RootContainer from '@/components/root/root-container';
+import FAQ from '@/components/root/main/faq/faq';
 
 export default function Home() {
   return (
@@ -31,6 +32,15 @@ export default function Home() {
       </section>
 
       <Advantages />
+      <RootContainer
+      // className="sm:max-w-screen-sm
+      //     md:max-w-screen-sm
+      //     lg:max-w-screen-md
+      //     xl:max-w-screen-xl
+      //     2xl:max-w-screen-xl"
+      >
+        <FAQ />
+      </RootContainer>
       <Footer />
     </main>
   );
