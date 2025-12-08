@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { NotificationPages } from '@/types/notification-pages';
 import NotificationsPagination from './notifications-pagination';
 import Description from '@/components/ui/desc';
+import { Spinner } from '@/components/ui/spinner';
+import EmptyState from '@/components/empty-state';
 
 const NotificationsClient = ({
   // notifications,
@@ -31,11 +33,21 @@ const NotificationsClient = ({
   });
 
   if (isLoading) {
-    return <div>Загружаем уведомления...</div>;
+    return (
+      <div>
+        Загружаем уведомления <Spinner />
+      </div>
+    );
   }
 
   if (isError || !notificationPages) {
-    return <div>Ошибка при загрузке уведомлений</div>;
+    return (
+      <EmptyState
+        title="Произошла ошибка при получении уведомлении"
+        subtitle="Попробуйте ещё раз"
+        icon="😢"
+      />
+    );
   }
 
   const { notifications, pagesCount, totalNotificationsCount } =
