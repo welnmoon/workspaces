@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { formatDateTimeRange } from '@/helpers/format-date';
+import { formatDateRange } from '@/helpers/format-date';
 import { Calendar } from 'lucide-react';
 import { CalendarComponent } from '@/components/ui/calendar';
 import { useEffect, useState } from 'react';
@@ -31,13 +31,6 @@ const SprintDateRangePopover = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setRange({
-      from: initialStartDate ? new Date(initialStartDate) : undefined,
-      to: initialEndDate ? new Date(initialEndDate) : undefined,
-    });
-  }, [initialStartDate, initialEndDate]);
-
-  useEffect(() => {
     if (closePopover) {
       setOpen(false);
     }
@@ -54,9 +47,7 @@ const SprintDateRangePopover = ({
         >
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <span className="text-zinc-500">
-            {range && (range.from || range.to)
-              ? formatDateTimeRange(range.from, range.to, 'ru-RU', 'спринта', 'UTC')
-              : 'Дата спринта не выбрана'}
+            {range && formatDateRange(range.from, range.to, 'ru-RU', 'спринта')}
           </span>
         </button>
       </PopoverTrigger>
@@ -70,12 +61,14 @@ const SprintDateRangePopover = ({
           className="w-[500px]"
         />
         <Button
-          disabled={!range?.from || !range?.to || isPending}
           onClick={() =>
-            range?.from && range?.to &&
             handleChangeDates({
-              startDate: range.from.toISOString(),
-              endDate: range.to.toISOString(),
+              startDate: range?.from
+                ? range?.from.toISOString()
+                : new Date().toISOString(),
+              endDate: range?.to
+                ? range?.to.toISOString()
+                : new Date().toISOString(),
             })
           }
         >

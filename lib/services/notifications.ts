@@ -1,6 +1,7 @@
 import { NotificationType } from '@prisma/client';
 import { AppError } from '../errors';
 import { prisma } from '../prisma';
+import { NotificationPages } from '@/types/notification-pages';
 
 export class NotificationService {
   static async getNotifications(userId: string) {
@@ -63,5 +64,44 @@ export class NotificationService {
         },
       })),
     });
+  }
+
+  static async getNotificationPages(
+    userId: string,
+    limit: number,
+    pageNumber: number
+  ): Promise<NotificationPages> {
+    const totalPagesCount = await prisma.notification.count({
+      where: {
+        userId,
+      },
+    });
+
+    const totalNotificationsCount = await prisma.notification.count({
+      where: {
+        userId,
+      },
+    });
+    const pagesCount = Math.ceil(totalPagesCount / limit);
+    const currentPage = Math.min(Math.max(pageNumber, 1), pagesCount || 1);
+    const skip = (currentPage - 1) * limit;
+
+    const notifications = await prisma.notification.findMany({
+      where: {
+        userId,
+      },
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return {
+      pagesCount,
+      notifications,
+      currentPage,
+      totalNotificationsCount,
+    };
   }
 }

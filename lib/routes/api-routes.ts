@@ -78,6 +78,7 @@ export const apiRoutes = {
     `/api/user/${userId}/notifications/${notificationId}/hidden`,
   sendNotificationsToWMembers: (workspaceId: number) =>
     `/api/w/${workspaceId}/members/notifications`,
+  getNotificationPages: (userId: string) => `/api/user/${userId}/notifications/pages`,
 
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,

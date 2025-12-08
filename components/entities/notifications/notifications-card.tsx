@@ -17,6 +17,7 @@ type Props = {
   workspaceId: number | null;
   isRead: boolean;
   createdAt: Date | string;
+  isTrashButtonVisible?: boolean;
 };
 
 const NotificationCard = ({
@@ -28,6 +29,7 @@ const NotificationCard = ({
   workspaceId,
   isRead,
   createdAt,
+  isTrashButtonVisible = true,
 }: Props) => {
   const { mutate: markRead, isPending } = useMarkReadNotification(userId);
 
@@ -53,7 +55,9 @@ const NotificationCard = ({
         </div>
       </header>
 
-      <p className="mt-2 text-sm text-muted-foreground">{message}</p>
+      <p className="mt-2 text-sm text-muted-foreground wrap-break-word line-clamp-2">
+        {message}
+      </p>
 
       {workspaceId && (
         <Link
@@ -75,10 +79,12 @@ const NotificationCard = ({
           <CheckCircle2 className="h-4 w-4" />
           {isRead ? 'Прочитано' : 'Отметить как прочитанное'}
         </Button>
-        <Button variant="ghost" size="sm" className="gap-1 text-destructive">
-          <Trash2 className="h-4 w-4" />
-          Скрыть
-        </Button>
+        {isTrashButtonVisible && (
+          <Button variant="ghost" size="sm" className="gap-1 text-destructive">
+            <Trash2 className="h-4 w-4" />
+            Скрыть
+          </Button>
+        )}
       </footer>
     </article>
   );

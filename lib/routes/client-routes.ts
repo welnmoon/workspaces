@@ -21,5 +21,5 @@ export const clientRoutes = {
   ) => `/pricing?workspaceId=${workspaceId}&workspaceName=${workspaceName}
   `,
 
-  notificationsPage: () => `/profile/notifications`,
+  notificationsPage: () => `/notifications`,
 };

@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { NAV_LINKS } from '@/const/navigation';
 import { RenderNavigation } from '../sidebar-nav';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
 // Этот компонент показывается только на больших экранах
 const DashboardSidebarStatic = ({
@@ -85,7 +86,9 @@ const DashboardSidebarStatic = ({
     sticky top-0"
     >
       <div className="mb-6">
-        <WorkspaceLogo />
+        <Link href={clientRoutes.workspacesPage()} aria-label="К рабочим пространствам">
+          <WorkspaceLogo />
+        </Link>
       </div>
       <div className="flex flex-1 flex-col gap-2">
         <WorkspaceSelect
