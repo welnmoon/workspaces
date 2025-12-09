@@ -26,7 +26,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import BacklogAccordion from './backlog-accordion';
-import { useSprintCreate } from '@/hooks/tasks/sprint/use-sprint-create';
+import { useSprintCreate } from '@/hooks/sprint/use-sprint-create';
 import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
 import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
 import { useMembers } from '@/hooks/members/use-members';

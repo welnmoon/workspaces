@@ -29,12 +29,12 @@ import toast from 'react-hot-toast';
 import TaskActions from './task-actions';
 import { CreateTaskRowForm } from '@/components/forms/task/create-task-row-form';
 import { CreateTaskFormValues } from '@/schemas/tasks/create-task-form-schemas';
-import { useSprintTasks } from '@/hooks/tasks/sprint/use-sprints-tasks';
+import { useSprintTasks } from '@/hooks/sprint/use-sprints-tasks';
 import { useQueryClient } from '@tanstack/react-query';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useSprints } from '@/hooks/tasks/sprint/use-sprints';
+import { useSprints } from '@/hooks/sprint/use-sprints';
 import { useMoveTask } from '@/hooks/tasks/use-move-task';
 import TaskSelectPriority from '../../tasks/task-select-priority';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
@@ -44,10 +44,12 @@ import { BookOpen, Timer } from 'lucide-react';
 import { useChangeStatus } from '@/hooks/tasks/use-change-status';
 import { useDeleteTask } from '@/hooks/tasks/use-delete-task';
 import { ChevronDown, GoalIcon } from 'lucide-react';
-import { formatDateRange, formatDateTimeRange } from '@/helpers/format-date';
-import { useSprintTasksStats } from '@/hooks/tasks/sprint/use-sprint-tasks-stats';
+import { formatDateTimeRange } from '@/helpers/format-date';
+import { useSprintTasksStats } from '@/hooks/sprint/use-sprint-tasks-stats';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FaBarsProgress } from 'react-icons/fa6';
+import SprintDateRangePopover from '../sprints/sprint-date-range-popover';
+import { useChangeSprintDates } from '@/hooks/sprint/use-change-sprint-dates';
 
 const TasksSprintAccordion = ({
   sprint,
@@ -99,6 +101,15 @@ const TasksSprintAccordion = ({
   // stats
   const { data: sprintTasksStats, isLoading: isSprintTasksStatsLoading } =
     useSprintTasksStats(workspaceId!, projectId!, sprint.id);
+
+  // change sprint dates
+  const {
+    mutate: changeSprintDates,
+    isPending: isChangeSprintDatesPending,
+    isSuccess: isChangeSprintDatesSuccess,
+    isError: isChangeSprintDatesError,
+  } = useChangeSprintDates(workspaceId!, projectId!, sprint.id);
+  const closePopover = isChangeSprintDatesSuccess || isChangeSprintDatesError;
 
   // --------TASK-----MOVE-----------------------------------------//
 
@@ -163,8 +174,7 @@ const TasksSprintAccordion = ({
       { taskId, sprintId: sprint.id },
       {
         onSuccess: () => toast.success('Задача удалена'),
-        onError: (e) =>
-          toast.error(e.message ?? 'Не удалось удалить задачу'),
+        onError: (e) => toast.error(e.message ?? 'Не удалось удалить задачу'),
       }
     );
   };
@@ -176,6 +186,15 @@ const TasksSprintAccordion = ({
   }
 
   // -------------------Handlers-------------------------------------
+  const handleChangeDates = (payload: { startDate: string; endDate: string }) =>
+    changeSprintDates(payload, {
+      onSuccess: () => {
+        toast.success('Даты успешно изменены');
+      },
+      onError: (e) => {
+        toast.error(e.message);
+      },
+    });
 
   const onChangeAssigneeHandler = (
     taskId: number,
@@ -224,20 +243,22 @@ const TasksSprintAccordion = ({
           asChild
           className="flex items-center justify-between bg-zinc-50 rounded-t-md px-4"
         >
-          <div>
+          <div className="flex justify-between items-center w-full">
             <div className="flex gap-4 items-center">
               <div className="flex gap-4 items-center min-w-60">
                 <span className="font-semibold text-xl min-w-30 ">
                   {sprint.name}
                 </span>
-                <div className="flex gap-2">
-                  <span className="text-xs text-muted-foreground">
-                    {sprintTasks.length} задач
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {formatDateTimeRange(sprint.startDate, sprint.endDate, 'ru-RU', undefined, 'UTC')}
-                  </span>
-                </div>
+
+                <span className="text-xs text-muted-foreground hover:no-underline">
+                  {formatDateTimeRange(
+                    sprint.startDate,
+                    sprint.endDate,
+                    'ru-RU',
+                    undefined,
+                    'UTC'
+                  )}
+                </span>
               </div>
 
               {!isSprintTasksStatsLoading && (
@@ -276,18 +297,20 @@ const TasksSprintAccordion = ({
         </AccordionTrigger>
 
         <AccordionContent className="flex flex-col gap-3 text-sm">
-          {sprintTasks.length === 0 ? (
-            <CreateTaskRowForm
-              workspaceId={workspaceId}
-              projectId={projectId}
-              sprintId={sprint.id}
-              onCreate={handleCreateTask}
-              isLoading={isCreateTaskPending}
-              startDate={sprint.startDate}
-              endDate={sprint.endDate}
+          <div className="flex items-center justify-between mt-4 rounded-md border border-zinc-200 px-2 py-1">
+            <span className="text-sm font-semibold">Данные спринта</span>
+            <Button>Изменить цвет</Button>
+            <SprintDateRangePopover
+              initialStartDate={sprint.startDate}
+              initialEndDate={sprint.endDate}
+              handleChangeDates={handleChangeDates}
+              isPending={isChangeSprintDatesPending}
+              closePopover={closePopover}
             />
-          ) : (
-            <div className="md:overflow-visible overflow-x-auto rounded-2xl border bg-white shadow-sm">
+          </div>
+
+          {sprintTasks.length > 0 && (
+            <div className="md:overflow-visible overflow-x-auto rounded-2xl border bg-white">
               <Table className="table-fixed min-w-[720px]">
                 <TableHeader className="bg-zinc-50">
                   <TableRow className="text-left text-xs font-semibold text-muted-foreground">
@@ -376,31 +399,31 @@ const TasksSprintAccordion = ({
                             <TaskActions
                               disabled={isCreateTaskPending}
                               sprintsMap={sprintsMap}
-                            onMove={onMoveTaskHandle}
-                            onChangeStatus={onChangeStatusHandler}
-                            onChangePriority={() => {}}
-                            onChangeAssignee={onChangeAssigneeHandler}
-                            onDelete={onDeleteTaskHandler}
-                            members={members}
-                            taskId={t.id}
-                            // startDate={sprint.startDate}
-                            // endDate={sprint.endDate}
-                          />
+                              onMove={onMoveTaskHandle}
+                              onChangeStatus={onChangeStatusHandler}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
+                              onDelete={onDeleteTaskHandler}
+                              members={members}
+                              taskId={t.id}
+                              // startDate={sprint.startDate}
+                              // endDate={sprint.endDate}
+                            />
                           )}
                           {isMobile && (
                             <TaskActions
                               disabled={isCreateTaskPending}
                               sprintsMap={sprintsMap}
-                            onMove={onMoveTaskHandle}
-                            onChangeStatus={onChangeStatusHandler}
-                            onChangePriority={() => {}}
-                            onChangeAssignee={onChangeAssigneeHandler}
-                            onDelete={onDeleteTaskHandler}
-                            members={members}
-                            taskId={t.id}
-                            // startDate={sprint.startDate}
-                            // endDate={sprint.endDate}
-                          />
+                              onMove={onMoveTaskHandle}
+                              onChangeStatus={onChangeStatusHandler}
+                              onChangePriority={() => {}}
+                              onChangeAssignee={onChangeAssigneeHandler}
+                              onDelete={onDeleteTaskHandler}
+                              members={members}
+                              taskId={t.id}
+                              // startDate={sprint.startDate}
+                              // endDate={sprint.endDate}
+                            />
                           )}
                         </TableCell>
                       </TableRow>
@@ -408,17 +431,12 @@ const TasksSprintAccordion = ({
                   })}
                 </TableBody>
               </Table>
-              <CreateTaskRowForm
-                onCreate={handleCreateTask}
-                isLoading={isCreateTaskPending}
-                startDate={sprint.startDate}
-                endDate={sprint.endDate}
-                workspaceId={workspaceId}
-                projectId={projectId}
-                sprintId={sprint.id}
-              />
             </div>
           )}
+          <CreateTaskRowForm
+            onCreate={handleCreateTask}
+            isLoading={isCreateTaskPending}
+          />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

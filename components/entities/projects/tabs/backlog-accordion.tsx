@@ -35,7 +35,7 @@ import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useMoveTask } from '@/hooks/tasks/use-move-task';
-import { useSprints } from '@/hooks/tasks/sprint/use-sprints';
+import { useSprints } from '@/hooks/sprint/use-sprints';
 import SelectPriority from '@/components/forms/task/select-priority';
 import TaskSelectPriority from '../../tasks/task-select-priority';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
@@ -128,8 +128,7 @@ const BacklogAccordion = ({
       { taskId, sprintId: null },
       {
         onSuccess: () => toast.success('Задача удалена'),
-        onError: (e) =>
-          toast.error(e.message ?? 'Не удалось удалить задачу'),
+        onError: (e) => toast.error(e.message ?? 'Не удалось удалить задачу'),
       }
     );
   };
@@ -138,9 +137,7 @@ const BacklogAccordion = ({
       { taskId, status, sprintId: null },
       {
         onError: (e) => {
-          toast.error(
-            e.message ?? 'Произошла ошибка при обновлении статуса'
-          );
+          toast.error(e.message ?? 'Произошла ошибка при обновлении статуса');
         },
       }
     );
@@ -188,13 +185,15 @@ const BacklogAccordion = ({
       defaultValue={`backlog`}
     >
       <AccordionItem value={`backlog`}>
-        <AccordionTrigger className="flex gap-4 items-center bg-zinc-100 rounded-t-md px-4">
-          <span className="font-semibold text-xl min-w-30 max-w-40">
-            Backlog
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {tasks.length} задач
-          </span>
+        <AccordionTrigger asChild className="bg-zinc-100 rounded-t-md px-4">
+          <div className="flex gap-4 items-center ">
+            <span className="font-semibold text-xl min-w-30 max-w-40">
+              Backlog
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {tasks.length} задач
+            </span>
+          </div>
         </AccordionTrigger>
 
         <AccordionContent className="flex flex-col gap-3 text-sm">
@@ -291,8 +290,8 @@ const BacklogAccordion = ({
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
                           {hoverId === t.id && !isMobile && (
-                          <TaskActions
-                            disabled={isCreateTaskPending}
+                            <TaskActions
+                              disabled={isCreateTaskPending}
                               onMove={onMoveTaskHandle}
                               sprintsMap={sprintsMap}
                               onChangeStatus={onChangeStatusHandler}
@@ -304,7 +303,7 @@ const BacklogAccordion = ({
                             />
                           )}
                           {isMobile && (
-                          <TaskActions
+                            <TaskActions
                               sprintsMap={sprintsMap}
                               disabled={isCreateTaskPending}
                               onMove={onMoveTaskHandle}
