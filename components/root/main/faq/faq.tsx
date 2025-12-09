@@ -51,9 +51,9 @@ const FAQ = () => {
         </span>
       </div>
 
-      <div className="flex gap-4 h-100">
+      <div className="flex flex-col lg:flex-row gap-4">
         {/*Right Side - categories*/}
-        <div className="flex flex-col gap-2 py-4 pr-4 rounded-md w-[45%]">
+        <div className="flex flex-col gap-2 py-4 pr-4 rounded-md w-full lg:w-[45%]">
           {FAQ_CATEGORIES.map((category) => (
             <div
               key={category.id}
@@ -82,7 +82,10 @@ const FAQ = () => {
         <Accordion
           type="single"
           collapsible
-          className={cn('w-full border border-zinc-200 rounded-md h-fit my-4')}
+          className={cn(
+            'w-full border border-zinc-200 rounded-md my-4 lg:h-fit xl:h-auto'
+          )}
+          defaultValue={currentQuestions[0]?.id}
         >
           {currentQuestions.map((q) => (
             <AccordionItem

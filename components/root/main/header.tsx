@@ -23,7 +23,7 @@ export function RootNavigationMenu() {
             {navSections.map((section) => (
               <NavigationMenuItem key={section.title}>
                 <NavigationMenuTrigger>{section.title}</NavigationMenuTrigger>
-                <NavigationMenuContent className="flex w-[260px] gap-2 p-4 md:w-[320px] lg:w-[360px]">
+                <NavigationMenuContent className="flex  gap-2 p-4 w-max">
                   {section.title === 'Продукт' && (
                     <div className="w-1/2 px-3 py-2 rounded-md flex flex-col gap-2 bg-zinc-50">
                       <Heading level={4} className="font-semibold">
@@ -61,7 +61,7 @@ export function RootNavigationMenu() {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <AuthButtons className="justify-self-end"/>
+      <AuthButtons className="justify-self-end" />
     </header>
   );
 }
