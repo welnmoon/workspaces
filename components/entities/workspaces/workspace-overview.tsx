@@ -10,6 +10,11 @@ import {
   Shield,
   BadgeCheck,
 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 import type { TariffConfig } from '@/types/prisma/DTO/payment';
 import type { FullRoleDTO } from '@/types/prisma/DTO/role';
@@ -40,64 +45,109 @@ const WorkspaceOverview = ({
   return (
     <div className="flex gap-4 text-sm text-muted-foreground items-center">
       {/* Members */}
-      <span className="flex items-center gap-1">
-        <Users size={16} />
-        <b>{membersCount}</b>
-      </span>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="flex items-center gap-1 cursor-default">
+            <Users size={16} />
+            <b>{membersCount}</b>
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Участники</TooltipContent>
+      </Tooltip>
 
       {/* Projects */}
-      <span className="flex items-center gap-1">
-        <FolderKanban size={16} />
-        <b>{projectsCount}</b>
-      </span>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="flex items-center gap-1 cursor-default">
+            <FolderKanban size={16} />
+            <b>{projectsCount}</b>
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Проекты</TooltipContent>
+      </Tooltip>
 
       {/* Tasks block */}
       <div className="bg-zinc-100 px-2 py-1 rounded-md flex gap-3 items-center">
         <ListTodo size={16} className="text-zinc-400" />
 
-        <span className="flex items-center gap-1">
-          <BadgeInfo size={14} />
-          <b>{tasksTotal}</b>
-        </span>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="flex items-center gap-1 cursor-default">
+              <BadgeInfo size={14} />
+              <b>{tasksTotal}</b>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Всего задач</TooltipContent>
+        </Tooltip>
 
-        <span className="flex items-center gap-1">
-          <Loader size={14} />
-          <b>{tasksInProgress}</b>
-        </span>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="flex items-center gap-1 cursor-default">
+              <Loader size={14} />
+              <b>{tasksInProgress}</b>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">В работе</TooltipContent>
+        </Tooltip>
 
-        <span className="flex items-center gap-1">
-          <CheckCircle2 size={14} className="text-green-500" />
-          <b className="text-green-500">{tasksDone}</b>
-        </span>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="flex items-center gap-1 cursor-default">
+              <CheckCircle2 size={14} className="text-green-500" />
+              <b className="text-green-500">{tasksDone}</b>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Выполненные</TooltipContent>
+        </Tooltip>
 
-        <span className="flex items-center gap-1">
-          <PlusCircle size={14} className="text-blue-500" />
-          <b className="text-blue-500">{tasksToDoCount}</b>
-        </span>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="flex items-center gap-1 cursor-default">
+              <PlusCircle size={14} className="text-blue-500" />
+              <b className="text-blue-500">{tasksToDoCount}</b>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Новые</TooltipContent>
+        </Tooltip>
 
-        <span className="flex items-center gap-1">
-          <AlarmClock size={14} className="text-red-500" />
-          <b className="text-red-500">{tasksOverdue}</b>
-        </span>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="flex items-center gap-1 cursor-default">
+              <AlarmClock size={14} className="text-red-500" />
+              <b className="text-red-500">{tasksOverdue}</b>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Просроченные</TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Role */}
-      <div className="bg-primary-100 rounded-md px-2 py-1 flex items-center gap-1">
-        <Shield size={16} />
-        <span className="font-medium">{userRole}</span>
-      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="bg-primary-100 rounded-md px-2 py-1 flex items-center gap-1 cursor-default">
+            <Shield size={16} />
+            <span className="font-medium">{userRole}</span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Ваша роль</TooltipContent>
+      </Tooltip>
 
       {/* Tariff */}
-      <div
-        className="rounded-md px-2 py-1 flex items-center gap-1"
-        style={{
-          backgroundColor: tariff.color,
-          color: tariff.textColor,
-        }}
-      >
-        <BadgeCheck size={16} />
-        <span className="font-medium">{tariff.name}</span>
-      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className="rounded-md px-2 py-1 flex items-center gap-1 cursor-default"
+            style={{
+              backgroundColor: tariff.color,
+              color: tariff.textColor,
+            }}
+          >
+            <BadgeCheck size={16} />
+            <span className="font-medium">{tariff.name}</span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Тарифный план</TooltipContent>
+      </Tooltip>
     </div>
   );
 };
