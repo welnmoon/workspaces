@@ -1,3 +1,16 @@
+import {
+  Users,
+  FolderKanban,
+  ListTodo,
+  Loader,
+  CheckCircle2,
+  PlusCircle,
+  AlarmClock,
+  BadgeInfo,
+  Shield,
+  BadgeCheck,
+} from 'lucide-react';
+
 import type { TariffConfig } from '@/types/prisma/DTO/payment';
 import type { FullRoleDTO } from '@/types/prisma/DTO/role';
 
@@ -26,42 +39,64 @@ const WorkspaceOverview = ({
 }: WorkspaceOverviewProps) => {
   return (
     <div className="flex gap-4 text-sm text-muted-foreground items-center">
-      <span>
-        Участников: <b>{membersCount}</b>
+      {/* Members */}
+      <span className="flex items-center gap-1">
+        <Users size={16} />
+        <b>{membersCount}</b>
       </span>
-      <span>
-        Проектов: <b>{projectsCount}</b>
+
+      {/* Projects */}
+      <span className="flex items-center gap-1">
+        <FolderKanban size={16} />
+        <b>{projectsCount}</b>
       </span>
-      <div className="bg-zinc-100 px-2 py-1 rounded-md flex gap-3">
-        <span className="text-zinc-400 ">Задачи</span>
-        <span>
-          Всего: <b>{tasksTotal}</b>
+
+      {/* Tasks block */}
+      <div className="bg-zinc-100 px-2 py-1 rounded-md flex gap-3 items-center">
+        <ListTodo size={16} className="text-zinc-400" />
+
+        <span className="flex items-center gap-1">
+          <BadgeInfo size={14} />
+          <b>{tasksTotal}</b>
         </span>
-        <span>
-          В работе: <b>{tasksInProgress}</b>
+
+        <span className="flex items-center gap-1">
+          <Loader size={14} />
+          <b>{tasksInProgress}</b>
         </span>
-        <span>
-          Выполненные: <b className="text-green-500">{tasksDone}</b>
+
+        <span className="flex items-center gap-1">
+          <CheckCircle2 size={14} className="text-green-500" />
+          <b className="text-green-500">{tasksDone}</b>
         </span>
-        <span>
-          Новые: <b className="text-blue-500">{tasksToDoCount}</b>
+
+        <span className="flex items-center gap-1">
+          <PlusCircle size={14} className="text-blue-500" />
+          <b className="text-blue-500">{tasksToDoCount}</b>
         </span>
-        <span>
-          Просроченные: <b className="text-red-500">{tasksOverdue}</b>
+
+        <span className="flex items-center gap-1">
+          <AlarmClock size={14} className="text-red-500" />
+          <b className="text-red-500">{tasksOverdue}</b>
         </span>
       </div>
 
-      <div className="bg-primary-100 rounded-md px-2 py-1">
-        Ваша роль: <span className="font-medium">{userRole}</span>
+      {/* Role */}
+      <div className="bg-primary-100 rounded-md px-2 py-1 flex items-center gap-1">
+        <Shield size={16} />
+        <span className="font-medium">{userRole}</span>
       </div>
+
+      {/* Tariff */}
       <div
-        className="rounded-md px-2 py-1"
+        className="rounded-md px-2 py-1 flex items-center gap-1"
         style={{
           backgroundColor: tariff.color,
           color: tariff.textColor,
         }}
       >
-        План: <span className="font-medium">{tariff.name}</span>
+        <BadgeCheck size={16} />
+        <span className="font-medium">{tariff.name}</span>
       </div>
     </div>
   );
