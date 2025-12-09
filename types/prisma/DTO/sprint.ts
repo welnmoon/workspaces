@@ -1,4 +1,4 @@
-import { Prisma, Sprint } from '@prisma/client';
+import { Prisma, Sprint, SprintColor } from '@prisma/client';
 
 export type SprintFullDTO = Sprint;
 
@@ -20,3 +20,5 @@ export type SprintTasksStatsDTO = {
   tasksBlockedCount: number;
   tasksOverdueCount: number;
 };
+
+export type SprintColorDTO = SprintColor;

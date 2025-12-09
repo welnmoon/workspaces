@@ -28,6 +28,6 @@ export async function GET(
 
     return ok(stats);
   } catch (e) {
-    await handleApiError(e);
+    return handleApiError(e);
   }
 }

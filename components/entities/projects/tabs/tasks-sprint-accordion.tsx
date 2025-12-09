@@ -16,7 +16,10 @@ import {
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
 import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 import getTaskStatusColor from '@/helpers/get-status-color';
-import type { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
+import type {
+  SprintColorDTO,
+  SprintWithTasksWithAssigneesDTO,
+} from '@/types/prisma/DTO/sprint';
 import { cn } from '@/lib/utils';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -39,7 +42,6 @@ import { useMoveTask } from '@/hooks/tasks/use-move-task';
 import TaskSelectPriority from '../../tasks/task-select-priority';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
 import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
-import { Button } from '@/components/ui/button';
 import { BookOpen, Timer } from 'lucide-react';
 import { useChangeStatus } from '@/hooks/tasks/use-change-status';
 import { useDeleteTask } from '@/hooks/tasks/use-delete-task';
@@ -47,9 +49,11 @@ import { ChevronDown, GoalIcon } from 'lucide-react';
 import { formatDateTimeRange } from '@/helpers/format-date';
 import { useSprintTasksStats } from '@/hooks/sprint/use-sprint-tasks-stats';
 import { Skeleton } from '@/components/ui/skeleton';
-import { FaBarsProgress } from 'react-icons/fa6';
 import SprintDateRangePopover from '../sprints/sprint-date-range-popover';
 import { useChangeSprintDates } from '@/hooks/sprint/use-change-sprint-dates';
+import { useChangeSprintColor } from '@/hooks/sprint/use-change-sprint-color';
+import { SprintColors } from '@/const/colors/sprint-colors';
+import { SprintColorDropdown } from '../sprints/sprint-color-dropdown';
 
 const TasksSprintAccordion = ({
   sprint,
@@ -110,6 +114,19 @@ const TasksSprintAccordion = ({
     isError: isChangeSprintDatesError,
   } = useChangeSprintDates(workspaceId!, projectId!, sprint.id);
   const closePopover = isChangeSprintDatesSuccess || isChangeSprintDatesError;
+
+  // Sprint color
+  const { mutate: changeSprintColor, isPending: isChangeSprintColorPending } =
+    useChangeSprintColor(workspaceId!, projectId!, sprint.id);
+
+  const changeSprintColorHandler = (color: SprintColorDTO) => {
+    changeSprintColor(color, {
+      onSuccess: () => {},
+      onError: (e) => {
+        toast.error(e.message);
+      },
+    });
+  };
 
   // --------TASK-----MOVE-----------------------------------------//
 
@@ -235,13 +252,18 @@ const TasksSprintAccordion = ({
     <Accordion
       type="single"
       collapsible
-      className="w-full"
+      className={cn('w-full')}
       defaultValue={`Бэклог`}
     >
       <AccordionItem value={`backlog`}>
         <AccordionTrigger
           asChild
-          className="flex items-center justify-between bg-zinc-50 rounded-t-md px-4"
+          className={cn(
+            'flex items-center justify-between bg-zinc-50 rounded-t-md px-4'
+          )}
+          style={{
+            backgroundColor: SprintColors[sprint.color],
+          }}
         >
           <div className="flex justify-between items-center w-full">
             <div className="flex gap-4 items-center">
@@ -299,14 +321,20 @@ const TasksSprintAccordion = ({
         <AccordionContent className="flex flex-col gap-3 text-sm">
           <div className="flex items-center justify-between mt-4 rounded-md border border-zinc-200 px-2 py-1">
             <span className="text-sm font-semibold">Данные спринта</span>
-            <Button>Изменить цвет</Button>
-            <SprintDateRangePopover
-              initialStartDate={sprint.startDate}
-              initialEndDate={sprint.endDate}
-              handleChangeDates={handleChangeDates}
-              isPending={isChangeSprintDatesPending}
-              closePopover={closePopover}
-            />
+            <div className="flex gap-2">
+              <SprintColorDropdown
+                value={sprint.color as SprintColorDTO}
+                onChange={changeSprintColorHandler}
+                disabled={isChangeSprintColorPending}
+              />
+              <SprintDateRangePopover
+                initialStartDate={sprint.startDate}
+                initialEndDate={sprint.endDate}
+                handleChangeDates={handleChangeDates}
+                isPending={isChangeSprintDatesPending}
+                closePopover={closePopover}
+              />
+            </div>
           </div>
 
           {sprintTasks.length > 0 && (

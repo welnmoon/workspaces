@@ -32,6 +32,8 @@ export const apiRoutes = {
   changePriority: (workspaceId: number, projectId: number, taskId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/change-priority`,
   deleteTasksBulk: () => `/api/task/bulk-delete`,
+  deleteTask: (workspaceId: number, projectId: number, taskId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}`,
   moveTask: (workspaceId: number, projectId: number, taskId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/move`,
 
@@ -45,15 +47,21 @@ export const apiRoutes = {
     projectId: number,
     sprintId: number
   ) => `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/stats`,
-  deleteTask: (workspaceId: number, projectId: number, taskId: number) =>
-    `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}`,
+
   changeSprintDates: (
     workspaceId: number,
     projectId: number,
     sprintId: number
   ) =>
     `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/change-dates`,
+  changeSprintColor: (
+    workspaceId: number,
+    projectId: number,
+    sprintId: number
+  ) =>
+    `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/change-color`,
 
+    // User
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
   deleteUserAccount: (provider: ProviderId) => `/api/auth/accounts/${provider}`,
@@ -78,7 +86,8 @@ export const apiRoutes = {
     `/api/user/${userId}/notifications/${notificationId}/hidden`,
   sendNotificationsToWMembers: (workspaceId: number) =>
     `/api/w/${workspaceId}/members/notifications`,
-  getNotificationPages: (userId: string) => `/api/user/${userId}/notifications/pages`,
+  getNotificationPages: (userId: string) =>
+    `/api/user/${userId}/notifications/pages`,
 
   // member
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,

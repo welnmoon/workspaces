@@ -1,5 +1,6 @@
 import { SprintTasksStatsDTO } from '@/types/prisma/DTO/sprint';
 import { prisma } from '../prisma';
+import { SprintColor } from '@prisma/client';
 
 export class SprintService {
   static async getProjectSprints(projectId: number) {
@@ -115,5 +116,12 @@ export class SprintService {
       tasksBlockedCount: statusCounts.BLOCKED,
       tasksOverdueCount: overdue,
     };
+  }
+
+  static async changeColor(color: SprintColor, sprintId: number) {
+    return prisma.sprint.update({
+      where: { id: sprintId },
+      data: { color },
+    });
   }
 }

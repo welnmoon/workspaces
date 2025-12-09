@@ -19,6 +19,6 @@ export async function POST(req: NextRequest) {
 
     return ok(data as NotificationPages);
   } catch (e) {
-    handleApiError(e);
+    return handleApiError(e);
   }
 }

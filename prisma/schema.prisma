@@ -124,7 +124,7 @@ model Sprint {
   endDate     DateTime?
   status      SprintStatus @default(PLANNED)
 
-  color SprintColor? @default(POWDER)
+  color SprintColor @default(POWDER)
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
