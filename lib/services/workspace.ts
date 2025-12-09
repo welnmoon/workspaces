@@ -143,4 +143,12 @@ export class WorkspaceService {
       },
     });
   }
+
+  static async getWorkspaceInvites(workspaceId: number) {
+    return prisma.invitation.findMany({
+      where: {
+        workspaceId,
+      },
+    });
+  }
 }

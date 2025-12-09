@@ -14,6 +14,7 @@ import WorkspaceOverview from '@/components/entities/workspaces/workspace-overvi
 import { isMember } from '@/helpers/is-member';
 import EmptyState from '@/components/empty-state';
 import { tariffs } from '@/const/tariffs';
+import { validateId } from '@/helpers/validate-id';
 
 const WorkspacePage = async ({
   params,
@@ -21,10 +22,10 @@ const WorkspacePage = async ({
   params: Promise<{ workspaceId: string }>;
 }) => {
   const user = await requireUser();
-  const workspaceIdNumber = Number((await params).workspaceId);
+  const workspaceIdNumber = validateId((await params).workspaceId);
   const memberCheck = await isMember(workspaceIdNumber, user.id);
 
-  const [userRole, workspace, projects, memberships, role, payments] =
+  const [userRole, workspace, projects, memberships, role, payments, invites] =
     await Promise.all([
       MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
       WorkspaceService.getWorkspaceById(workspaceIdNumber),
@@ -32,6 +33,7 @@ const WorkspacePage = async ({
       WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
       MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
       WorkspaceService.getPayments(workspaceIdNumber),
+      WorkspaceService.getWorkspaceInvites(workspaceIdNumber),
     ]);
 
   if (!workspace) {
@@ -109,6 +111,7 @@ const WorkspacePage = async ({
         user={user}
         members={memberships}
         projectSectionProps={projectSectionProps}
+        invites={invites}
       />
     </main>
   );

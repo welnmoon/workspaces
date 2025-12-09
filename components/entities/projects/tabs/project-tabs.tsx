@@ -165,14 +165,14 @@ const ProjectTabs = ({
   };
 
   const [activeTab, setActiveTab] = useState<
-    'list' | 'kanban' | 'stats' | 'backlog' | 'invites'
+    'list' | 'kanban' | 'stats' | 'backlog'
   >('list');
 
   return (
     <Tabs
       value={activeTab}
       onValueChange={(v) =>
-        setActiveTab(v as 'list' | 'kanban' | 'stats' | 'backlog' | 'invites')
+        setActiveTab(v as 'list' | 'kanban' | 'stats' | 'backlog')
       }
       className="w-full space-y-4"
     >
@@ -193,10 +193,6 @@ const ProjectTabs = ({
           <TabsTrigger value="stats" className="flex items-center gap-2">
             <IoStatsChart className="h-4 w-4" />
             <span>Статистика</span>
-          </TabsTrigger>
-          <TabsTrigger value="invites" className="flex items-center gap-2">
-            <FcInvite className="h-4 w-4" />
-            <span>Приглашения</span>
           </TabsTrigger>
         </TabsList>
 
@@ -352,9 +348,6 @@ const ProjectTabs = ({
           isDeleteTasksPending={isTasksLoading}
           isTasksLoading={isTasksLoading}
         />
-      </TabsContent>
-      <TabsContent value="invites" className="mt-2">
-        Invites
       </TabsContent>
     </Tabs>
   );
