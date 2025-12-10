@@ -109,9 +109,9 @@ const TaskActions = ({
         {/*-----------------------------------------*/}
         {/*---------------Priority----------------*/}
         {/*-----------------------------------------*/}
-        <DropdownMenuItem onClick={onChangePriority}>
+        {/* <DropdownMenuItem onClick={onChangePriority}>
           Изменить приоритет
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         {/*-----------------------------------------*/}
         {/*---------------Assignee----------------*/}

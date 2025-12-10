@@ -54,6 +54,10 @@ import { useChangeSprintDates } from '@/hooks/sprint/use-change-sprint-dates';
 import { useChangeSprintColor } from '@/hooks/sprint/use-change-sprint-color';
 import { SprintColors } from '@/const/colors/sprint-colors';
 import { SprintColorDropdown } from '../sprints/sprint-color-dropdown';
+import TasksFilterPopover from '@/components/filters/tasks-filter-popover';
+import type { DateRange } from 'react-day-picker';
+import { filterTasks } from '@/helpers/task/filter-tasks';
+import { Button } from '@/components/ui/button';
 
 const TasksSprintAccordion = ({
   sprint,
@@ -72,6 +76,10 @@ const TasksSprintAccordion = ({
 }) => {
   const [hoverId, setHoverId] = useState<number>();
   const isMobile = useIsMobile();
+  const [statusFilter, setStatusFilter] = useState<TaskStatusDTO | 'ALL'>(
+    'ALL'
+  );
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -95,6 +103,7 @@ const TasksSprintAccordion = ({
     sprint.id,
     sprint.tasks
   );
+  const filteredSprintTasks = filterTasks(sprintTasks, statusFilter, dateRange);
   const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
     useChangeTaskAssignee(workspaceId!, projectId!, sprintQueryKey);
 
@@ -130,6 +139,13 @@ const TasksSprintAccordion = ({
         toast.error(e.message);
       },
     });
+  };
+
+  const hasSprintFilters =
+    statusFilter !== 'ALL' || Boolean(dateRange?.from || dateRange?.to);
+  const resetSprintFilters = () => {
+    setStatusFilter('ALL');
+    setDateRange(undefined);
   };
 
   // --------TASK-----MOVE-----------------------------------------//
@@ -336,10 +352,31 @@ const TasksSprintAccordion = ({
           </div>
         </AccordionTrigger>
 
-        <AccordionContent className="flex flex-col gap-3 text-sm">
+        <AccordionContent className="flex flex-col gap-3 text-sm bg-white px-4">
           <div className="flex items-center justify-between mt-4 rounded-md border border-zinc-200 px-2 py-1">
             <span className="text-sm font-semibold">Данные спринта</span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <TasksFilterPopover
+                status={statusFilter}
+                setStatus={(s) =>
+                  setStatusFilter((s as TaskStatusDTO) ?? 'ALL')
+                }
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                resetFilters={resetSprintFilters}
+                hasAnyFilter={hasSprintFilters}
+                statusFilter={true}
+              />
+              {hasSprintFilters && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 px-3 text-xs"
+                  onClick={resetSprintFilters}
+                >
+                  Сбросить
+                </Button>
+              )}
               <SprintColorDropdown
                 value={sprint.color as SprintColorDTO}
                 onChange={changeSprintColorHandler}
@@ -371,7 +408,7 @@ const TasksSprintAccordion = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody className="text-sm">
-                  {sprintTasks.map((t) => {
+                  {filteredSprintTasks.map((t) => {
                     const statusTitle =
                       STATUS_COLUMNS.find((s) => s.id === t.status)?.title ??
                       t.status;

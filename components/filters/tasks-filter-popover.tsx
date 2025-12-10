@@ -38,13 +38,12 @@ const TasksFilterPopover = ({
         <Button
           variant={hasAnyFilter ? 'secondary' : 'outline'}
           className={cn(
-            'h-9 gap-2 text-sm shadow-sm',
+            'h-9 gap-2 text-sm bg-none shadow-none',
             hasAnyFilter && 'border-primary/50 bg-primary/5 text-primary-700',
             className
           )}
         >
           <Filter className="h-4 w-4" />
-          Фильтры
         </Button>
       </PopoverTrigger>
 

@@ -4,22 +4,17 @@ import { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProjectTabsList from './project-tasks-list';
 import ProjectTasksBoard from '../project-tasks-board';
-import type { TaskStatusDTO } from '@/const/tasks-status';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
-import { filterTasks } from '@/helpers/task/filter-tasks';
 import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
 import useMediaQuery from '@/hooks/use-media-query';
 import { useTasksWithAssignee } from '@/hooks/tasks/use-tasks-with-assignee';
 import { useQueryClient } from '@tanstack/react-query';
-import type { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
-import TasksFilterPopover from '@/components/filters/tasks-filter-popover';
 import { Kanban, List, Trash } from 'lucide-react';
 import type { TaskStats } from '@/types/service/task-stats';
 import ProjectTasksStats from '../project-tasks-stats';
 import { IoStatsChart } from 'react-icons/io5';
-import { useTaskStatusChange } from '@/hooks/tasks/use-task-status-change';
 import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
 import toast from 'react-hot-toast';
 import { Spinner } from '@/components/ui/spinner';
@@ -33,8 +28,6 @@ import { useMembers } from '@/hooks/members/use-members';
 import MainBtn from '@/components/buttons/main-btn';
 import { FaPenToSquare } from 'react-icons/fa6';
 import { FcInvite } from 'react-icons/fc';
-
-type StatusFilter = TaskStatusDTO | 'ALL';
 
 type ProjectTabsProps = {
   sprints: SprintWithTasksWithAssigneesDTO[];
@@ -55,8 +48,6 @@ const ProjectTabs = ({
   allTaskStats,
   memberTaskStats,
 }: ProjectTabsProps) => {
-  const [status, setStatus] = useState<StatusFilter>('ALL');
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [createSprint, setCreateSprint] = useState(false);
   const [openSprintIds, setOpenSprintIds] = useState<string[]>([]);
 
@@ -108,11 +99,6 @@ const ProjectTabs = ({
     });
   };
 
-  const { changeStatus, isPending } = useTaskStatusChange({
-    setBoardTasks: setAllTasks,
-    queryKey,
-  });
-
   const { data: optimisticTasks, isLoading: isTasksLoading } =
     useTasksWithAssignee(projectId, workspaceId, tasks);
 
@@ -125,7 +111,7 @@ const ProjectTabs = ({
 
   const backlogTasks = allTasks.filter((t) => t.sprintId === null);
 
-  const listTasks = filterTasks(allTasks, status, dateRange);
+  const listTasks = allTasks;
 
   //---------------------Sprint------------------------------------------//
 
@@ -155,15 +141,6 @@ const ProjectTabs = ({
   const totalDone = allTaskStats?.tasksDoneCount ?? 0;
   const shown = Number(doneTasksCount);
   const remainTasksCount = totalDone - shown > 0 ? totalDone - shown : 0;
-
-  const hasDateFilter = Boolean(dateRange?.from || dateRange?.to);
-  const hasStatusFilter = status !== 'ALL';
-  const hasAnyFilter = hasStatusFilter || hasDateFilter;
-
-  const resetFilters = () => {
-    setStatus('ALL');
-    setDateRange(undefined);
-  };
 
   const [activeTab, setActiveTab] = useState<
     'list' | 'kanban' | 'stats' | 'backlog'
@@ -198,48 +175,6 @@ const ProjectTabs = ({
         </TabsList>
 
         <div className="flex flex-wrap items-center gap-2">
-          {activeTab === 'list' && (
-            <>
-              <TasksFilterPopover
-                status={status}
-                setStatus={(s) => setStatus((s as StatusFilter) ?? 'ALL')}
-                dateRange={dateRange}
-                setDateRange={setDateRange}
-                resetFilters={resetFilters}
-                hasAnyFilter={hasAnyFilter}
-                statusFilter={true}
-              />
-              <Button
-                onClick={resetFilters}
-                variant="outline"
-                className="h-9 px-3 text-xs"
-                disabled={!hasAnyFilter}
-              >
-                Сбросить
-              </Button>
-            </>
-          )}
-          {activeTab === 'kanban' && (
-            <>
-              <TasksFilterPopover
-                status={status}
-                setStatus={(s) => setStatus((s as StatusFilter) ?? 'ALL')}
-                dateRange={dateRange}
-                setDateRange={setDateRange}
-                resetFilters={resetFilters}
-                hasAnyFilter={hasAnyFilter}
-                statusFilter={false}
-              />
-              <Button
-                onClick={resetFilters}
-                variant="outline"
-                className="h-9 px-3 text-xs"
-              >
-                Сбросить
-              </Button>
-            </>
-          )}
-          {activeTab === 'stats' && null}
           {selectedIds.size > 0 && (
             <div className="relative">
               <Button
@@ -289,11 +224,6 @@ const ProjectTabs = ({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-muted-foreground">
             Всего задач: <span className="font-medium">{listTasks.length}</span>
-            {hasAnyFilter && (
-              <span className="ml-2 text-xs text-blue-500">
-                (Фильтр применён)
-              </span>
-            )}
           </div>
         </div>
 
@@ -302,13 +232,6 @@ const ProjectTabs = ({
           createSprint={createSprint}
           // sprintsId={sprintsId}
           backlogTasks={backlogTasks}
-          listTasks={listTasks}
-          hasAnyFilter={hasAnyFilter}
-          hasStatusFilter={hasStatusFilter}
-          hasDateFilter={hasDateFilter}
-          status={status}
-          onStatusChange={changeStatus}
-          isStatusPending={isPending}
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
           isDeleteTasksPending={isDeleteTasksPending}

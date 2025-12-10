@@ -18,7 +18,7 @@ const ProjectSprints = ({
   setOpenSprintIds: Dispatch<SetStateAction<string[]>>;
 }) => {
   return (
-    <section>
+    <section className="flex flex-col gap-4">
       {sprints.map((s) => (
         <TasksSprintAccordion
           openSprintIds={openSprintIds}

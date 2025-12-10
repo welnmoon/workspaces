@@ -50,7 +50,7 @@ const TaskSelectPriority = ({
       <SelectTrigger className="w-30 text-xs bg-transparent shadow-none border-none">
         <SelectValue placeholder="Приоритет" />
       </SelectTrigger>
-      <SelectContent className="text-xs">
+      <SelectContent className="text-xs ">
         {Object.entries(TASK_PRIORITY_LABELS).map(([key, value]) => (
           <SelectItem key={key} value={key}>
             <div className="flex items-center gap-2">

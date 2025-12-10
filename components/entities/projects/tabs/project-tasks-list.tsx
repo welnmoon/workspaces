@@ -1,6 +1,4 @@
 'use client';
-import { MessageInfo } from '@/components/message';
-import type { TaskStatusDTO } from '@/const/tasks-status';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
@@ -15,23 +13,11 @@ import { useSprints } from '@/hooks/sprint/use-sprints';
 import { usePathname } from 'next/navigation';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 
-type StatusFilter = TaskStatusDTO | 'ALL';
-
 type ProjectTabsListProps = {
   sprints: SprintWithTasksWithAssigneesDTO[];
   createSprint: boolean;
   // sprintsId: Map<number, string>;
-  listTasks: TaskWithAssigneeDTO[];
   backlogTasks: TaskWithAssigneeDTO[];
-  hasAnyFilter: boolean;
-  hasStatusFilter: boolean;
-  hasDateFilter: boolean;
-  status: StatusFilter;
-  onStatusChange: (
-    taskId: number,
-    status: TaskStatusDTO
-  ) => void | Promise<void>;
-  isStatusPending?: boolean;
   selectedIds: Set<number>;
   setSelectedIds: Dispatch<SetStateAction<Set<number>>>;
   isDeleteTasksPending: boolean;
@@ -46,14 +32,7 @@ const ProjectTabsList = ({
   sprints,
   createSprint,
   // sprintsId,
-  listTasks,
   backlogTasks,
-  hasAnyFilter,
-  hasStatusFilter,
-  hasDateFilter,
-  status,
-  onStatusChange,
-  isStatusPending,
   selectedIds,
   setSelectedIds,
   isDeleteTasksPending,
@@ -82,10 +61,6 @@ const ProjectTabsList = ({
   }, [createSprint]);
   return (
     <section className="space-y-3">
-      {hasAnyFilter && listTasks.length > 0 && (
-        <MessageInfo text={`Найдено ${listTasks.length} задач`} />
-      )}
-
       <ProjectSprints
         sprints={optimisticSprints!}
         // sprintsId={sprintsId}
