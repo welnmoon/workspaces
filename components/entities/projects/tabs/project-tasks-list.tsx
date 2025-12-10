@@ -38,6 +38,8 @@ type ProjectTabsListProps = {
 
   onCreateSprint: (payload: CreateSprintSchema) => void;
   onCreateSprintPending: boolean;
+  openSprintIds: string[];
+  setOpenSprintIds: Dispatch<SetStateAction<string[]>>;
 };
 
 const ProjectTabsList = ({
@@ -55,9 +57,10 @@ const ProjectTabsList = ({
   selectedIds,
   setSelectedIds,
   isDeleteTasksPending,
-
   onCreateSprint,
   onCreateSprintPending,
+  openSprintIds,
+  setOpenSprintIds,
 }: ProjectTabsListProps) => {
   const pathname = usePathname();
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
@@ -89,6 +92,8 @@ const ProjectTabsList = ({
         selectedIds={selectedIds}
         setSelectedIds={setSelectedIds}
         isDeleteTasksPending={isDeleteTasksPending}
+        openSprintIds={openSprintIds}
+        setOpenSprintIds={setOpenSprintIds}
       />
       {createSprint && !onCreateSprintPending && (
         <div ref={createSprintFormRef}>

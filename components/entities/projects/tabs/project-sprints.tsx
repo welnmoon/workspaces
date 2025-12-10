@@ -7,16 +7,22 @@ const ProjectSprints = ({
   selectedIds,
   setSelectedIds,
   isDeleteTasksPending,
+  openSprintIds,
+  setOpenSprintIds,
 }: {
   sprints: SprintWithTasksWithAssigneesDTO[];
   selectedIds?: Set<number>;
   setSelectedIds?: Dispatch<SetStateAction<Set<number>>>;
   isDeleteTasksPending?: boolean;
+  openSprintIds: string[];
+  setOpenSprintIds: Dispatch<SetStateAction<string[]>>;
 }) => {
   return (
     <section>
       {sprints.map((s) => (
         <TasksSprintAccordion
+          openSprintIds={openSprintIds}
+          setOpenSprintIds={setOpenSprintIds}
           key={s.id}
           sprint={s}
           // selectedIds={selectedIds}

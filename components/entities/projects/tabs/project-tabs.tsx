@@ -58,6 +58,7 @@ const ProjectTabs = ({
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [createSprint, setCreateSprint] = useState(false);
+  const [openSprintIds, setOpenSprintIds] = useState<string[]>([]);
 
   // members for accordions and for create task form
   const { data: members } = useMembers(workspaceId!, projectId!);
@@ -273,6 +274,15 @@ const ProjectTabs = ({
             icon={<FaPenToSquare className="text-white" size={20} />}
           />
         )}
+        {activeTab === 'list' && openSprintIds.length > 0 && (
+          <Button
+            variant="outline"
+            className="h-9 px-3 text-xs"
+            onClick={() => setOpenSprintIds([])}
+          >
+            Свернуть все спринты
+          </Button>
+        )}
       </div>
 
       <TabsContent value="list" className="space-y-4">
@@ -304,6 +314,8 @@ const ProjectTabs = ({
           isDeleteTasksPending={isDeleteTasksPending}
           onCreateSprint={onCreateSprintHandler}
           onCreateSprintPending={isCreateSprintPending}
+          openSprintIds={openSprintIds}
+          setOpenSprintIds={setOpenSprintIds}
         />
       </TabsContent>
 

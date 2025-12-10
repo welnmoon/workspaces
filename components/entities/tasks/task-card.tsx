@@ -16,6 +16,13 @@ import { TASK_PRIORITY_ARRAY, TASK_PRIORITY_LABELS } from '@/const/priority';
 import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
 import { AlertTriangle, Flame, ArrowUp, ArrowDown } from 'lucide-react';
+import { priorityIcons } from './task-select-priority';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface TaskCardProps {
   title: string;
@@ -29,6 +36,13 @@ interface TaskCardProps {
   assignee?: UserDTO | null;
   priority: TaskPriorityDTO;
 }
+
+const priorityColors: Record<TaskPriorityDTO, string> = {
+  URGENT: 'bg-red-100 text-red-700 border-red-200',
+  HIGH: 'bg-orange-100 text-orange-700 border-orange-200',
+  MEDIUM: 'bg-blue-100 text-blue-700 border-blue-200',
+  LOW: 'bg-slate-100 text-slate-600 border-slate-200',
+};
 
 export default function TaskCard({
   title,
@@ -76,13 +90,6 @@ export default function TaskCard({
   const assigneeInitials =
     (assignee?.firstName?.[0] ?? '') + (assignee?.lastName?.[0] ?? '');
 
-  const priorityColors: Record<TaskPriorityDTO, string> = {
-    URGENT: 'bg-red-100 text-red-700 border-red-200',
-    HIGH: 'bg-orange-100 text-orange-700 border-orange-200',
-    MEDIUM: 'bg-amber-100 text-amber-700 border-amber-200',
-    LOW: 'bg-slate-100 text-slate-600 border-slate-200',
-  };
-
   const priorityLabel = TASK_PRIORITY_LABELS[priority];
 
   const { mutate: onPriorityMutate } = useChangePriority(
@@ -114,7 +121,7 @@ export default function TaskCard({
           </span>
 
           {/* статус + приоритет */}
-          <div className="flex flex-col gap-2 w-24">
+          <div className="flex gap-2 w-fit">
             <Badge
               variant="outline"
               className="border-none flex justify-center w-full bg-muted px-2 py-0.5 text-[11px] leading-none"
@@ -122,22 +129,34 @@ export default function TaskCard({
               <span className={statusTextClass}>{status}</span>
             </Badge>
 
-            <Badge
-              onClick={changeTaskPriority}
-              variant="outline"
-              className={cn(
-                'flex items-center gap-1 justify-center border px-2 py-0.5 text-[11px]',
-                priorityColors[priority]
-              )}
-            >
-              {/* ИКОНКИ ПО ПРИОРИТЕТУ */}
-              {priority === 'URGENT' && <Flame size={12} />}
-              {priority === 'HIGH' && <AlertTriangle size={12} />}
-              {priority === 'MEDIUM' && <ArrowUp size={12} />}
-              {priority === 'LOW' && <ArrowDown size={12} />}
-
-              {priorityLabel}
-            </Badge>
+            <TooltipProvider>
+              <Tooltip delayDuration={500}>
+                <TooltipTrigger asChild>
+                  <Badge
+                    onClick={changeTaskPriority}
+                    variant="outline"
+                    className={cn(
+                      'ml-auto flex items-center w-fit gap-1 justify-center border px-2 py-0.5 text-[11px]',
+                      priorityColors[priority]
+                    )}
+                  >
+                    {priorityIcons[priority]}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="bottom"
+                  className="max-w-xs text-xs text-center"
+                >
+                  <div className="font-medium  text-white">{priorityLabel}</div>
+                  <div className="text-zinc-500 mt-1">
+                    Нажми для смены приоритета.
+                  </div>
+                  <div className="text-zinc-500 mt-1">
+                    Участники с ролью Member не могут менять приоритет.
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
 

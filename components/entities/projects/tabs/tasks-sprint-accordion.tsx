@@ -60,11 +60,15 @@ const TasksSprintAccordion = ({
   selectedIds,
   setSelectedIds,
   isDeleteTasksPending,
+  openSprintIds,
+  setOpenSprintIds,
 }: {
   sprint: SprintWithTasksWithAssigneesDTO;
   selectedIds?: Set<number>;
   setSelectedIds?: Dispatch<SetStateAction<Set<number>>>;
   isDeleteTasksPending?: boolean;
+  openSprintIds: string[];
+  setOpenSprintIds: Dispatch<SetStateAction<string[]>>;
 }) => {
   const [hoverId, setHoverId] = useState<number>();
   const isMobile = useIsMobile();
@@ -248,12 +252,26 @@ const TasksSprintAccordion = ({
     });
   };
 
+  const isOpen = openSprintIds.includes(String(sprint.id));
+
+  const handleAccordionChange = (val: string | undefined) => {
+    setOpenSprintIds((prev) => {
+      const idStr = String(sprint.id);
+      if (val) {
+        if (prev.includes(idStr)) return prev;
+        return [...prev, idStr];
+      }
+      return prev.filter((id) => id !== idStr);
+    });
+  };
+
   return (
     <Accordion
       type="single"
       collapsible
       className={cn('w-full')}
-      defaultValue={`Бэклог`}
+      value={isOpen ? 'backlog' : ''}
+      onValueChange={handleAccordionChange}
     >
       <AccordionItem value={`backlog`}>
         <AccordionTrigger
