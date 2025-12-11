@@ -1,24 +1,23 @@
-import { Badge } from '@/components/ui/badge';
+import CumulativeDoneChart from '@/components/charts/cumulative-done-chart';
 import { TaskStats } from '@/types/service/task-stats';
-import {
-  FaListUl,
-  FaRegClock,
-  FaPlay,
-  FaCheckCircle,
-  FaBan,
-  FaExclamationTriangle,
-} from 'react-icons/fa';
+
 const ProjectTasksAllStats = ({
   allTaskStats,
   memberTaskStats,
+  workspaceId,
+  projectId,
 }: {
   allTaskStats: TaskStats;
   memberTaskStats: TaskStats;
+  workspaceId: number;
+  projectId: number;
 }) => {
   return (
-    <section>
+    <section className="block xl:flex xl:flex-wrap xl:gap-4">
+      <CumulativeDoneChart workspaceId={workspaceId} projectId={projectId} />
+
       {/* Для всех */}
-      <div className="flex flex-wrap gap-4 my-4 text-sm items-center">
+      {/* <div className="flex flex-wrap gap-4 my-4 text-sm items-center">
         <Badge variant="outline">Для всех</Badge>
 
         <span className="flex items-center gap-2">
@@ -44,10 +43,10 @@ const ProjectTasksAllStats = ({
         <span className="flex items-center gap-2 text-rose-600">
           <FaExclamationTriangle /> Просрочено: {allTaskStats.tasksOverdueCount}
         </span>
-      </div>
+      </div> */}
 
       {/* Для пользователя */}
-      <div className="flex flex-wrap gap-4 my-4 text-sm items-center">
+      {/* <div className="flex flex-wrap gap-4 my-4 text-sm items-center">
         <Badge variant="default" className="bg-blue-600 hover:bg-blue-700">
           Для вас
         </Badge>
@@ -76,7 +75,7 @@ const ProjectTasksAllStats = ({
           <FaExclamationTriangle /> Просрочено:{' '}
           {memberTaskStats.tasksOverdueCount}
         </span>
-      </div>
+      </div> */}
     </section>
   );
 };

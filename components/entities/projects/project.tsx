@@ -8,12 +8,12 @@ import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { Breadcrumbs } from '../../bread-crumbs';
 import Divider from '../../divider';
-import CreateTaskDialog from '../../dialogs/create-task-dialog';
+
 import Description from '../../ui/desc';
 import { Heading } from '../../ui/heading';
-import ProjectMemberTasksAllStats from './project-member-tasks-stats';
+
 import ProjectTabs from './tabs/project-tabs';
-import ProjectTasksAllStats from './project-tasks-stats';
+
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 
 export type StatusFilter = TaskStatusDTO | 'ALL';
@@ -71,7 +71,7 @@ const ProjectComponent = ({
       <Divider />
 
       <div
-        className="p-4 rounded-md bg-cover bg-center bg-fixed"
+        className="p-4 rounded-md bg-cover bg-center bg-fixed min-h-screen"
         style={{
           backgroundImage: "url('/images/workspaces/project-bg.jpg')",
         }}

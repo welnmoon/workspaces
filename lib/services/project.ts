@@ -2,11 +2,16 @@ import {
   workspaceIdExistSchema,
   CreateProjectFormValues,
 } from '@/schemas/projects/create-project-form-schemas';
-import { ProjectListDTO } from '@/types/prisma/DTO/projects';
+import {
+  ProjectCompletedTasksDTO,
+  ProjectListDTO,
+} from '@/types/prisma/DTO/projects';
 import { prisma } from '../prisma';
+import logger from '../logger';
 import { TaskStats } from '@/types/service/task-stats';
 import { Prisma, TaskStatus } from '@prisma/client';
 import { AppError } from '../errors';
+import { endOfDay, startOfDay, subMonths } from 'date-fns';
 
 export class ProjectService {
   //-------------------------------------//
@@ -295,5 +300,53 @@ export class ProjectService {
       tasksBlockedCount: statusCounts.BLOCKED,
       tasksOverdueCount: overdue,
     };
+  }
+
+  // --------------------------------------------//
+  // -----------------Analytics-----------------//
+  // --------------------------------------------//
+
+  static async getCompletedTasks(
+    projectId: number,
+    from?: Date,
+    to?: Date
+  ): Promise<ProjectCompletedTasksDTO[]> {
+    const start = startOfDay(from ?? subMonths(new Date(), 1));
+    const end = endOfDay(to ?? new Date());
+    logger.debug(
+      `[ProjectService.getCompletedTasks] project=${projectId} range ${start.toISOString()} -> ${end.toISOString()}`
+    );
+
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId,
+        status: 'DONE',
+        completedAt: {
+          gte: start,
+          lte: end,
+        },
+      },
+      select: {
+        completedAt: true,
+      },
+    });
+    logger.debug(
+      `[ProjectService.getCompletedTasks] raw completed records=${tasks.length}`
+    );
+
+    const byDate = tasks.reduce<Record<string, number>>((acc, t) => {
+      if (!t.completedAt) return acc;
+      const dateKey = t.completedAt.toISOString().split('T')[0];
+      acc[dateKey] = (acc[dateKey] || 0) + 1;
+      return acc;
+    }, {});
+    logger.debug(
+      `[ProjectService.getCompletedTasks] grouped=${JSON.stringify(byDate)}`
+    );
+
+    return Object.entries(byDate).map(([date, count]) => ({
+      date,
+      count,
+    }));
   }
 }

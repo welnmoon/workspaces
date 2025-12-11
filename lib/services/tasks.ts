@@ -1,4 +1,5 @@
 import { Prisma, TaskPriority, TaskStatus } from '@prisma/client';
+import logger from '../logger';
 import { prisma } from '../prisma';
 import { AppError } from '../errors';
 
@@ -91,19 +92,13 @@ export class TaskService {
       where: {
         id: taskId,
       },
-    });
-
-    if (!task) {
-      throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
-    }
-
-    const w = await prisma.workspace.findFirst({
-      where: {
-        projects: {
-          some: {
-            tasks: {
-              some: {
-                id: taskId,
+      include: {
+        project: {
+          select: {
+            workspaceId: true,
+            workspace: {
+              select: {
+                ownerId: true,
               },
             },
           },
@@ -111,11 +106,26 @@ export class TaskService {
       },
     });
 
-    if (!w)
-      throw new AppError(404, 'WORKSPACE_NOT_FOUND', 'Пространство не найдено');
+    if (!task) {
+      throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+    }
 
-    if (task?.assigneeId !== userId && userId !== w.ownerId)
+    const workspaceOwnerId = task.project?.workspace?.ownerId ?? null;
+    const workspaceId = task.project?.workspaceId;
+
+    if (!workspaceId) {
+      throw new AppError(404, 'WORKSPACE_NOT_FOUND', 'Пространство не найдено');
+    }
+
+    if (task.assigneeId !== userId && userId !== workspaceOwnerId)
       throw new AppError(403, 'NOT_PERMITTED', 'Недостаточно прав');
+
+    const completedAt =
+      status === 'DONE' ? (task.completedAt ?? new Date()) : null;
+
+    logger.info(
+      `[TaskService.updateTaskStatus] task=${taskId} status ${task.status} -> ${status} completedAt=${completedAt?.toISOString() ?? 'null'}`
+    );
 
     return await prisma.task.update({
       where: {
@@ -123,6 +133,7 @@ export class TaskService {
       },
       data: {
         status,
+        completedAt,
       },
     });
   }

@@ -61,7 +61,7 @@ export const apiRoutes = {
   ) =>
     `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/change-color`,
 
-    // User
+  // User
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
   deleteUserAccount: (provider: ProviderId) => `/api/auth/accounts/${provider}`,
@@ -96,4 +96,8 @@ export const apiRoutes = {
     `/api/w/${workspaceId}/projects/${projectId}/members`,
   changeAssignee: (taskId: number, workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/change-assignee`,
+
+  // Analytics
+  getProjectDoneTasks: (workspaceId: number, projectId: number) =>
+    `/api/charts/workspace/${workspaceId}/project/${projectId}/done-tasks`,
 };

@@ -2,7 +2,7 @@ import type { Project } from '@prisma/client';
 
 export type ProjectCreateDTO = Pick<
   Project,
-  'name' | 'description' | 'workspaceId' 
+  'name' | 'description' | 'workspaceId'
 >;
 
 export type ProjectSelectDTO = Pick<Project, 'id' | 'name'>;
@@ -22,3 +22,8 @@ export type ProjectUpdateDTO = Partial<Pick<Project, 'name' | 'description'>>;
 export type ProjectDeleteDTO = Pick<Project, 'id'>;
 
 export type ProjectWithoutDatesDTO = Omit<Project, 'createdAt' | 'updatedAt'>;
+
+export type ProjectCompletedTasksDTO = {
+  count: number;
+  date: string | null;
+};
