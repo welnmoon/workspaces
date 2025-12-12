@@ -25,5 +25,23 @@ export type ProjectWithoutDatesDTO = Omit<Project, 'createdAt' | 'updatedAt'>;
 
 export type ProjectCompletedTasksDTO = {
   count: number;
-  date: string | null;
+  date: string;
+};
+
+// Completed vs created
+
+export type CreatedAndCompletedTasksInPoint = {
+  created: number;
+  completed: number;
+  date: string;
+};
+
+export type ProjectCompletedTaskVsCreatedDTO = {
+  from: string;
+  to: string;
+  points: CreatedAndCompletedTasksInPoint[];
+  totals: {
+    created: number;
+    completed: number;
+  };
 };

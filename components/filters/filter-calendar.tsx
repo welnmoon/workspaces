@@ -5,6 +5,7 @@ import { CalendarComponent } from '../ui/calendar';
 import { DateRange } from 'react-day-picker';
 import { cn } from '@/lib/utils';
 import { Calendar1 } from 'lucide-react';
+import { isValidDate } from '@/helpers/time/is-valid-date';
 
 const FilterCalendar = ({
   dateRange,
@@ -18,9 +19,12 @@ const FilterCalendar = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={cn('', className)}>
+        <Button
+          variant="outline"
+          className={cn('shadow-none px-2 py-0', className)}
+        >
           {dateRange?.from && dateRange?.to ? (
-            `${format(dateRange.from, 'dd.MM.yyyy')} – ${format(dateRange.to, 'dd.MM.yyyy')}`
+            `${isValidDate(dateRange.from) && format(dateRange.from, 'dd.MM.yyyy')} – ${isValidDate(dateRange.to) && format(dateRange.to, 'dd.MM.yyyy')}`
           ) : (
             <span className="flex gap-2 items-center">
               <Calendar1 /> Выберите диапазон

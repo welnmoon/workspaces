@@ -3,7 +3,9 @@ import {
   CreateProjectFormValues,
 } from '@/schemas/projects/create-project-form-schemas';
 import {
+  CreatedAndCompletedTasksInPoint,
   ProjectCompletedTasksDTO,
+  ProjectCompletedTaskVsCreatedDTO,
   ProjectListDTO,
 } from '@/types/prisma/DTO/projects';
 import { prisma } from '../prisma';
@@ -12,6 +14,7 @@ import { TaskStats } from '@/types/service/task-stats';
 import { Prisma, TaskStatus } from '@prisma/client';
 import { AppError } from '../errors';
 import { endOfDay, startOfDay, subMonths } from 'date-fns';
+import { date } from 'zod';
 
 export class ProjectService {
   //-------------------------------------//
@@ -348,5 +351,94 @@ export class ProjectService {
       date,
       count,
     }));
+  }
+
+  static async getCompletedVsCreatedTasks(
+    projectId: number,
+    from: Date,
+    to: Date,
+    sprintId: number | null
+  ): Promise<ProjectCompletedTaskVsCreatedDTO> {
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId,
+        OR: [
+          { createdAt: { gte: from, lte: to } },
+          { completedAt: { gte: from, lte: to } },
+        ],
+      },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        completedAt: true,
+      },
+    });
+
+    const createdMap = new Map<string, number>();
+    const completedMap = new Map<string, number>();
+
+    const inc = (map: Map<string, number>, date: Date) => {
+      const day = date.toISOString().split('T')[0];
+      map.set(day, (map.get(day) || 0) + 1);
+    };
+
+    for (const task of tasks) {
+      if (
+        task.completedAt &&
+        task.completedAt >= from &&
+        task.completedAt <= to &&
+        task.status === 'DONE'
+      ) {
+        inc(completedMap, task.completedAt);
+      }
+      if (
+        task.createdAt &&
+        task.createdAt >= from &&
+        task.createdAt <= to &&
+        task.completedAt === null &&
+        task.status !== 'DONE'
+      ) {
+        inc(createdMap, task.createdAt);
+      }
+    }
+
+    const merged = new Map<string, { created: number; completed: number }>();
+
+    for (const [date, count] of completedMap) {
+      const prev = merged.get(date) ?? { created: 0, completed: 0 };
+      merged.set(date, {
+        ...prev,
+        completed: count,
+      });
+    }
+
+    for (const [date, count] of createdMap) {
+      const prev = merged.get(date) ?? { created: 0, completed: 0 };
+      merged.set(date, {
+        ...prev,
+        created: count,
+      });
+    }
+
+    const points: CreatedAndCompletedTasksInPoint[] = Array.from(
+      merged.entries()
+    )
+      .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+      .map(([date, { created, completed }]) => ({
+        date,
+        created,
+        completed,
+      }));
+
+    return {
+      from: from.toISOString(),
+      to: to.toISOString(),
+      points: points,
+      totals: {
+        created: Array.from(createdMap.values()).reduce((a, b) => a + b, 0),
+        completed: Array.from(completedMap.values()).reduce((a, b) => a + b, 0),
+      },
+    };
   }
 }

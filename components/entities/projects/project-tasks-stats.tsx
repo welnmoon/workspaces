@@ -1,4 +1,6 @@
+import CompletedVsCreatedTasks from '@/components/charts/created-vs-done-tasks-chart';
 import CumulativeDoneChart from '@/components/charts/cumulative-done-chart';
+import DailyDoneChart from '@/components/charts/daily-done-chart';
 import { TaskStats } from '@/types/service/task-stats';
 
 const ProjectTasksAllStats = ({
@@ -12,9 +14,30 @@ const ProjectTasksAllStats = ({
   workspaceId: number;
   projectId: number;
 }) => {
+  const defaultFrom = new Date(
+    new Date().getTime() - 7 * 24 * 60 * 60 * 1000
+  ).toISOString(); // 7 days
+  const defaultTo = new Date().toISOString();
   return (
     <section className="block xl:flex xl:flex-wrap xl:gap-4">
-      <CumulativeDoneChart workspaceId={workspaceId} projectId={projectId} />
+      <CumulativeDoneChart
+        workspaceId={workspaceId}
+        projectId={projectId}
+        defaultFrom={defaultFrom}
+        defaultTo={defaultTo}
+      />
+      <DailyDoneChart
+        workspaceId={workspaceId}
+        projectId={projectId}
+        defaultFrom={defaultFrom}
+        defaultTo={defaultTo}
+      />
+      <CompletedVsCreatedTasks
+        workspaceId={workspaceId}
+        projectId={projectId}
+        defaultFrom={defaultFrom}
+        defaultTo={defaultTo}
+      />
 
       {/* Для всех */}
       {/* <div className="flex flex-wrap gap-4 my-4 text-sm items-center">

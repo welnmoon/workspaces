@@ -1,6 +1,6 @@
 'use client';
 
-import { formatTime } from '@/helpers/format-time';
+import { formatTime } from '@/helpers/time/format-time';
 import { NotificationTypes } from '@/types/prisma/DTO/notification';
 import { CheckCircle2, Trash2, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';

@@ -100,4 +100,6 @@ export const apiRoutes = {
   // Analytics
   getProjectDoneTasks: (workspaceId: number, projectId: number) =>
     `/api/charts/workspace/${workspaceId}/project/${projectId}/done-tasks`,
+  getProjectCreatedVsCompletedTasks: (workspaceId: number, projectId: number) =>
+    `/api/charts/workspace/${workspaceId}/project/${projectId}/created-vs-completed-tasks`,
 };

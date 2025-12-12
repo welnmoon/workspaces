@@ -10,7 +10,7 @@ export const useProjectsDoneTasks = (
   to?: string
 ) => {
   return useQuery({
-    queryKey: ['tasks', workspaceId, projectId],
+    queryKey: ['done-tasks', workspaceId, projectId],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (from) params.set('from', from);

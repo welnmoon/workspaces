@@ -1,4 +1,4 @@
-import { formatTime } from '@/helpers/format-time';
+import { formatTime } from '@/helpers/time/format-time';
 import { useHiddenNotification } from '@/hooks/notifications/use-delete-notification';
 import { useMarkReadNotification } from '@/hooks/notifications/use-mark-read-notification';
 import { cn } from '@/lib/utils';
