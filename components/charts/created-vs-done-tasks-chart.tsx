@@ -11,9 +11,8 @@ import {
   YAxis,
 } from 'recharts';
 import ChartsCard from './charts-card';
-import { useProjectsDoneTasks } from '@/hooks/analytics/project/use-projects-done-tasks';
 import { Spinner } from '../ui/spinner';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { MessageError } from '../message';
 import { DateRange } from 'react-day-picker';
@@ -57,6 +56,7 @@ export default function CompletedVsCreatedTasks({
     data: tasks,
     isError,
     isFetching,
+
   } = useCreatedVsCompletedTasks(workspaceId, projectId, from, to);
 
   const tasksList =
@@ -98,8 +98,18 @@ export default function CompletedVsCreatedTasks({
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" name='Созданные' dataKey="created" stroke="#f43f5e" />
-        <Line type="monotone" name='Выполненные' dataKey="completed" stroke="#1e3a8a" />
+        <Line
+          type="monotone"
+          name="Созданные"
+          dataKey="created"
+          stroke="#f43f5e"
+        />
+        <Line
+          type="monotone"
+          name="Выполненные"
+          dataKey="completed"
+          stroke="#1e3a8a"
+        />
         {/* <ReferenceLine x="Page C" stroke="red" label="Max PV PAGE" />
         <ReferenceLine y={9800} label="Max" stroke="red" /> */}
       </LineChart>

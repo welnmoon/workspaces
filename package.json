@@ -21,9 +21,13 @@
     ]
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@lottiefiles/dotlottie-react": "^0.17.7",
+    "@mui/material": "^7.3.6",
+    "@mui/x-charts": "^8.22.0",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@pdfme/common": "^5.5.2",
     "@pdfme/generator": "^5.5.2",

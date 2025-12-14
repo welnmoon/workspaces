@@ -1,6 +1,10 @@
+'use client';
+
 import CompletedVsCreatedTasks from '@/components/charts/created-vs-done-tasks-chart';
 import CumulativeDoneChart from '@/components/charts/cumulative-done-chart';
 import DailyDoneChart from '@/components/charts/daily-done-chart';
+import TasksByStatusPieChart from '@/components/charts/tasks-by-status-pie-chart';
+import UserActivityBarChart from '@/components/charts/user-activity-bar-chart';
 import { TaskStats } from '@/types/service/task-stats';
 
 const ProjectTasksAllStats = ({
@@ -38,6 +42,8 @@ const ProjectTasksAllStats = ({
         defaultFrom={defaultFrom}
         defaultTo={defaultTo}
       />
+      <TasksByStatusPieChart isAnimationActive />
+      <UserActivityBarChart />
 
       {/* Для всех */}
       {/* <div className="flex flex-wrap gap-4 my-4 text-sm items-center">

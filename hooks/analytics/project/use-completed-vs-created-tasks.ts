@@ -9,8 +9,7 @@ export const useCreatedVsCompletedTasks = (
   to?: string
 ) => {
   return useQuery({
-    queryKey: ['createdVsCompletedTasks', workspaceId, projectId],
-    initialData: {} as ProjectCompletedTaskVsCreatedDTO,
+    queryKey: ['createdVsCompletedTasks', workspaceId, projectId, from, to],
     enabled: !!workspaceId && !!projectId,
     queryFn: async () => {
       const params = new URLSearchParams();

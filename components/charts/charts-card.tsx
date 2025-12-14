@@ -19,30 +19,28 @@ const ChartsCard = ({
   className,
   dateRange,
   onSelectHandler,
+  noCalendar,
 }: {
   children: React.ReactNode;
-  title: string;
-  desc: string;
+  title?: string;
+  desc?: string;
   className?: string;
-  dateRange: DateRange | undefined;
-  onSelectHandler: (dateRange: DateRange | undefined) => void;
+  dateRange?: DateRange | undefined;
+  onSelectHandler?: (dateRange: DateRange | undefined) => void;
+  noCalendar?: boolean;
 }) => {
+  const handleSelect = onSelectHandler || (() => {});
   return (
     <Card className={cn('min-w-content shadow-none', className)}>
       <CardHeader>
         <CardTitle className="flex flex-col gap-2">
           <Heading level={3}>{title}</Heading>
-          <div>
+          {!noCalendar && (
             <FilterCalendar
               dateRange={dateRange}
-              onSelectHandler={onSelectHandler}
+              onSelectHandler={handleSelect}
             />
-            {/* {dateRange?.from && dateRange?.to && (
-              <Badge variant={'outline'}>
-                {dateRange.from.toDateString()} → {dateRange.to.toDateString()}
-              </Badge>
-            )} */}
-          </div>
+          )}
         </CardTitle>
         <CardDescription>{desc}</CardDescription>
       </CardHeader>
