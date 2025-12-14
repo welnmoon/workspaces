@@ -65,32 +65,39 @@ export default function DailyDoneChart({
       onSelectHandler={onDateSelectHandler}
     >
       {isError && 'Произошла ошибка'}
-      <LineChart
-        desc="ddwdwdwdwddddddddddddddddddd"
-        style={{
-          maxWidth: '700px',
-          maxHeight: '70vh',
-          aspectRatio: 1.618,
-        }}
-        className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
-        responsive
-        data={tasksList}
-        margin={{
-          top: 20,
-          right: 0,
-          left: 0,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        {/* <ReferenceLine x="Page C" stroke="red" label="Max PV PAGE" />
+      <div className="overflow-x-auto">
+        <LineChart
+          desc="ddwdwdwdwddddddddddddddddddd"
+          style={{
+            maxWidth: '700px',
+            maxHeight: '70vh',
+            aspectRatio: 1.618,
+          }}
+          className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
+          responsive
+          data={tasksList}
+          margin={{
+            top: 20,
+            right: 0,
+            left: 0,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          {/* <ReferenceLine x="Page C" stroke="red" label="Max PV PAGE" />
         <ReferenceLine y={9800} label="Max" stroke="red" /> */}
-        <Line type="monotone" name='Задачи' dataKey="count" stroke="#b7b981" />
-      </LineChart>
+          <Line
+            type="monotone"
+            name="Задачи"
+            dataKey="count"
+            stroke="#b7b981"
+          />
+        </LineChart>
+      </div>
       {isFetching && <Spinner className="absolute top-1/2 left-1/2" />}
       {isError && (
         <MessageError

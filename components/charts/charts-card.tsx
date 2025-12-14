@@ -33,7 +33,7 @@ const ChartsCard = ({
   return (
     <Card className={cn('min-w-content shadow-none', className)}>
       <CardHeader>
-        <CardTitle className="flex flex-col gap-2">
+        <CardTitle className="flex pb-2 flex-col gap-2">
           <Heading level={3}>{title}</Heading>
           {!noCalendar && (
             <FilterCalendar

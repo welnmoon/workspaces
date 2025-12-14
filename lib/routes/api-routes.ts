@@ -102,4 +102,6 @@ export const apiRoutes = {
     `/api/charts/workspace/${workspaceId}/project/${projectId}/done-tasks`,
   getProjectCreatedVsCompletedTasks: (workspaceId: number, projectId: number) =>
     `/api/charts/workspace/${workspaceId}/project/${projectId}/created-vs-completed-tasks`,
+  getUserActivity: (workspaceId: number, projectId: number) =>
+    `/api/charts/workspace/${workspaceId}/project/${projectId}/user-activity`,
 };

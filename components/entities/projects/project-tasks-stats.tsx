@@ -23,7 +23,8 @@ const ProjectTasksAllStats = ({
   ).toISOString(); // 7 days
   const defaultTo = new Date().toISOString();
   return (
-    <section className="block xl:flex xl:flex-wrap xl:gap-4">
+    // <section className="flex gap-4 flex-col xl:flex-row flex-wrap">
+    <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       <CumulativeDoneChart
         workspaceId={workspaceId}
         projectId={projectId}
@@ -43,7 +44,12 @@ const ProjectTasksAllStats = ({
         defaultTo={defaultTo}
       />
       <TasksByStatusPieChart isAnimationActive />
-      <UserActivityBarChart />
+      <UserActivityBarChart
+        workspaceId={workspaceId}
+        projectId={projectId}
+        defaultFrom={defaultFrom}
+        defaultTo={defaultTo}
+      />
 
       {/* Для всех */}
       {/* <div className="flex flex-wrap gap-4 my-4 text-sm items-center">

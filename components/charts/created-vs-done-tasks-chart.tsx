@@ -56,7 +56,6 @@ export default function CompletedVsCreatedTasks({
     data: tasks,
     isError,
     isFetching,
-
   } = useCreatedVsCompletedTasks(workspaceId, projectId, from, to);
 
   const tasksList =
@@ -76,43 +75,45 @@ export default function CompletedVsCreatedTasks({
       onSelectHandler={onDateSelectHandler}
     >
       {isError && 'Произошла ошибка'}
-      <LineChart
-        desc="ddwdwdwdwddddddddddddddddddd"
-        style={{
-          maxWidth: '700px',
-          maxHeight: '70vh',
-          aspectRatio: 1.618,
-        }}
-        className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
-        responsive
-        data={tasksList}
-        margin={{
-          top: 20,
-          right: 0,
-          left: 0,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line
-          type="monotone"
-          name="Созданные"
-          dataKey="created"
-          stroke="#f43f5e"
-        />
-        <Line
-          type="monotone"
-          name="Выполненные"
-          dataKey="completed"
-          stroke="#1e3a8a"
-        />
-        {/* <ReferenceLine x="Page C" stroke="red" label="Max PV PAGE" />
+      <div className="overflow-x-auto">
+        <LineChart
+          desc="ddwdwdwdwddddddddddddddddddd"
+          style={{
+            maxWidth: '700px',
+            maxHeight: '70vh',
+            aspectRatio: 1.618,
+          }}
+          className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
+          responsive
+          data={tasksList}
+          margin={{
+            top: 20,
+            right: 0,
+            left: 0,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line
+            type="monotone"
+            name="Созданные"
+            dataKey="created"
+            stroke="#f43f5e"
+          />
+          <Line
+            type="monotone"
+            name="Выполненные"
+            dataKey="completed"
+            stroke="#1e3a8a"
+          />
+          {/* <ReferenceLine x="Page C" stroke="red" label="Max PV PAGE" />
         <ReferenceLine y={9800} label="Max" stroke="red" /> */}
-      </LineChart>
+        </LineChart>
+      </div>
 
       {isFetching && <Spinner className="absolute top-1/2 left-1/2" />}
       {isError && (

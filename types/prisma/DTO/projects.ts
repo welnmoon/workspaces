@@ -45,3 +45,17 @@ export type ProjectCompletedTaskVsCreatedDTO = {
     completed: number;
   };
 };
+
+// user activity
+
+export type UserActivity = {
+  from: string;
+  to: string;
+  points: {
+    assigned: number;
+    completed: number;
+    user: string;
+    userId: string;
+  }[];
+  noAssigneeTasks: number;
+};

@@ -11,6 +11,7 @@ import { Spinner } from '../ui/spinner';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 
 const data = [
   { name: 'Group A', value: 400, fill: '#0088FE' },
@@ -41,11 +42,6 @@ export default function TasksByStatusPieChart({
   };
 
   const tasksStats = [
-    // {
-    //   name: 'Всего задач',
-    //   value: data?.tasksCount ?? 0,
-    //   fill: '#64748B', // нейтральный серо-синий
-    // },
     {
       name: 'Выполнено',
       value: getPercent(data?.tasksDoneCount ?? 0),
@@ -75,12 +71,12 @@ export default function TasksByStatusPieChart({
 
   return (
     <>
-      {isLoading ? (
-        <Skeleton className="w-100 h-100" />
-      ) : (
-        <ChartsCard noCalendar className="" title="Задачи по статусам">
-          <Button>В проекте</Button> {/*добавить выборку конкретного спринта*/}
-          <div className="flex flex-row gap-4 relative">
+      <ChartsCard noCalendar className="pb-2" title="Задачи по статусам">
+        <Badge variant={'warning'} className="mb-4">
+          Пока что только по проекту, скоро добавлю по спринтам
+        </Badge>
+        <div className="flex items-center flex-row gap-4">
+          <div className="relative overflow-x-auto">
             <PieChart
               series={[
                 {
@@ -94,28 +90,34 @@ export default function TasksByStatusPieChart({
                   valueFormatter: (item: { value: number }) => `${item.value}%`,
                 },
               ]}
+              className={cn(
+                '',
+                (isLoading || isFetching) && 'opacity-50 pointer-events-none'
+              )}
               height={200}
               width={200}
             />
-            {isFetching ||
-              (isLoading && <Spinner className="absolute left-1/2 top-1/2" />)}
-            <section>
-              {tasksStats.map((s) => (
-                <p key={s.name} className="flex gap-2">
-                  <span
-                    className={cn(
-                      'rounded-full w-5 h-5 inline-block',
-                      s.value === 0 && 'opacity-50'
-                    )}
-                    style={{ backgroundColor: s.fill }}
-                  />{' '}
-                  {s.name}
-                </p>
-              ))}
-            </section>
+            {(isFetching || isLoading) && (
+              <Spinner className="absolute left-1/2 top-1/2" />
+            )}
           </div>
-        </ChartsCard>
-      )}
+
+          <section>
+            {tasksStats.map((s) => (
+              <p key={s.name} className="flex gap-2">
+                <span
+                  className={cn(
+                    'rounded-full w-5 h-5 inline-block',
+                    s.value === 0 && 'opacity-50'
+                  )}
+                  style={{ backgroundColor: s.fill }}
+                />{' '}
+                {s.name}
+              </p>
+            ))}
+          </section>
+        </div>
+      </ChartsCard>
     </>
   );
 }

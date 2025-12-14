@@ -7,6 +7,7 @@ import {
   ProjectCompletedTasksDTO,
   ProjectCompletedTaskVsCreatedDTO,
   ProjectListDTO,
+  UserActivity,
 } from '@/types/prisma/DTO/projects';
 import { prisma } from '../prisma';
 import logger from '../logger';
@@ -439,6 +440,64 @@ export class ProjectService {
         created: Array.from(createdMap.values()).reduce((a, b) => a + b, 0),
         completed: Array.from(completedMap.values()).reduce((a, b) => a + b, 0),
       },
+    };
+  }
+
+  static async getUserActivity(
+    projectId: number,
+    from: Date,
+    to: Date
+  ): Promise<UserActivity> {
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId,
+        OR: [
+          { createdAt: { gte: from, lte: to } },
+          { completedAt: { gte: from, lte: to } },
+        ],
+      },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        completedAt: true,
+        assignee: true,
+      },
+    });
+
+    const map = new Map<
+      string,
+      { assigned: number; completed: number; user: string; userId: string }
+    >();
+    let noAssigneeTasks = 0;
+
+    for (let i = 0; i < tasks.length; i++) {
+      if (tasks[i].assignee === null) {
+        noAssigneeTasks++;
+        continue;
+      }
+      const task = map.get(tasks[i].assignee!.id);
+      if (!task) {
+        map.set(tasks[i].assignee!.id, {
+          assigned: 1,
+          completed: tasks[i].status === 'DONE' ? 1 : 0,
+          user:
+            tasks[i].assignee!.firstName + ' ' + tasks[i].assignee!.lastName,
+          userId: tasks[i].assignee!.id,
+        });
+      } else {
+        task.assigned++;
+        if (tasks[i].status === 'DONE') {
+          task.completed++;
+        }
+      }
+    }
+
+    return {
+      from: from.toISOString(),
+      to: to.toISOString(),
+      points: Array.from(map.values()),
+      noAssigneeTasks,
     };
   }
 }
