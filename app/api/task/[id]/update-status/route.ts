@@ -1,6 +1,7 @@
 import { TASK_STATUSES } from '@/const/tasks-status';
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
+import logger from '@/lib/logger';
 import { badRequest, noContent, serverError } from '@/lib/http/http';
 import { TaskService } from '@/lib/services/tasks';
 import { TaskStatus } from '@prisma/client';
@@ -27,6 +28,9 @@ export async function PATCH(
     if (!TASK_STATUSES.includes(status)) {
       return badRequest('Неверный статус задачи');
     }
+    logger.info(
+      `[PATCH task status] task=${taskId} requested status=${status} by user=${user.id}`
+    );
     await TaskService.updateTaskStatus(taskId, status, user.id);
 
     return noContent();

@@ -13,8 +13,9 @@ export async function GET(
   try {
     await requireUser();
     const projectId = (await context.params).projectId;
-    const projectIdNumber = validateId(projectId);
+    const projectIdNumber = validateId(projectId); 
     const stats = await ProjectService.getProjectTasksStats(projectIdNumber);
+    
     return ok(stats);
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {

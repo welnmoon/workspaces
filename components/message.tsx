@@ -1,5 +1,3 @@
-
-
 import { cn } from '@/lib/utils';
 
 interface MessageProps {
@@ -41,9 +39,13 @@ export const MessageEmpty = ({
 // Ошибка: можно использовать при ошибке запроса, загрузки и т.п.
 export const MessageError = ({
   text = 'Произошла ошибка',
+  className,
 }: {
   text?: string;
-}) => <Message className="text-red-500 font-medium">{text}</Message>;
+  className?: string;
+}) => (
+  <Message className={`text-red-500 font-medium ${className}`}>{text}</Message>
+);
 
 // Инфо: дополнительное описание
 export const MessageInfo = ({ text }: { text: string }) => (

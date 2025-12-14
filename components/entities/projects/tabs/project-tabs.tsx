@@ -222,7 +222,7 @@ const ProjectTabs = ({
 
       <TabsContent value="list" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-zinc-100">
             Всего задач: <span className="font-medium">{listTasks.length}</span>
           </div>
         </div>
@@ -258,6 +258,8 @@ const ProjectTabs = ({
       </TabsContent>
       <TabsContent value="stats" className="mt-2">
         <ProjectTasksStats
+          workspaceId={workspaceId}
+          projectId={projectId}
           allTaskStats={allTaskStats}
           memberTaskStats={memberTaskStats}
         />

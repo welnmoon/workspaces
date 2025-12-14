@@ -46,7 +46,7 @@ import { BookOpen, Timer } from 'lucide-react';
 import { useChangeStatus } from '@/hooks/tasks/use-change-status';
 import { useDeleteTask } from '@/hooks/tasks/use-delete-task';
 import { ChevronDown, GoalIcon } from 'lucide-react';
-import { formatDateTimeRange } from '@/helpers/format-date';
+import { formatDateTimeRange } from '@/helpers/time/format-date';
 import { useSprintTasksStats } from '@/hooks/sprint/use-sprint-tasks-stats';
 import { Skeleton } from '@/components/ui/skeleton';
 import SprintDateRangePopover from '../sprints/sprint-date-range-popover';
