@@ -24,7 +24,7 @@ const ProjectTasksAllStats = ({
   const defaultTo = new Date().toISOString();
   return (
     // <section className="flex gap-4 flex-col xl:flex-row flex-wrap">
-    <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <section className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
       <CumulativeDoneChart
         workspaceId={workspaceId}
         projectId={projectId}

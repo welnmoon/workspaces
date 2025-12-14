@@ -75,7 +75,7 @@ export default function TasksByStatusPieChart({
         <Badge variant={'warning'} className="mb-4">
           Пока что только по проекту, скоро добавлю по спринтам
         </Badge>
-        <div className="flex items-center flex-row gap-4">
+        <div className="flex items-center flex-col xl:flex-row gap-4">
           <div className="relative overflow-x-auto">
             <PieChart
               series={[

@@ -5,7 +5,6 @@ import {
   Legend,
   Line,
   LineChart,
-  ReferenceLine,
   Tooltip,
   XAxis,
   YAxis,
@@ -93,7 +92,7 @@ export default function CumulativeDoneChart({
   const tasksList = tasks || [];
   const cumulativeTasks = useMemo(() => {
     let prev = 0;
-    let res: CumulativeTasks[] = [];
+    const res: CumulativeTasks[] = [];
 
     for (let i = 0; i < tasksList.length; i++) {
       if (!tasksList[i].date) continue;
