@@ -1,4 +1,9 @@
-import { Prisma, TaskPriority, TaskStatus } from '@prisma/client';
+import {
+  AuditActions,
+  Prisma,
+  TaskPriority,
+  TaskStatus,
+} from '@prisma/client';
 import logger from '../logger';
 import { prisma } from '../prisma';
 import { AppError } from '../errors';
@@ -127,7 +132,7 @@ export class TaskService {
       `[TaskService.updateTaskStatus] task=${taskId} status ${task.status} -> ${status} completedAt=${completedAt?.toISOString() ?? 'null'}`
     );
 
-    return await prisma.task.update({
+    const updatedTask = await prisma.task.update({
       where: {
         id: taskId,
       },
@@ -136,6 +141,17 @@ export class TaskService {
         completedAt,
       },
     });
+
+    await writeTaskAuditLog({
+      userId,
+      workspaceId,
+      projectId: task.projectId,
+      taskId,
+      action: AuditActions.TASK_STATUS_CHANGED,
+      details: { from: task.status, to: status },
+    });
+
+    return updatedTask;
   }
 
   static async createTask({
@@ -146,6 +162,7 @@ export class TaskService {
     assigneeId,
     priority,
     sprintId,
+    actorId,
   }: {
     projectId: number;
     title: string;
@@ -154,6 +171,7 @@ export class TaskService {
     assigneeId: string | undefined;
     priority: TaskPriority;
     sprintId: number | null;
+    actorId: string;
   }) {
     let parsedDueDate: Date | undefined = undefined;
 
@@ -188,6 +206,15 @@ export class TaskService {
       );
     }
 
+    const project = await prisma.project.findUnique({
+      where: { id: Number(projectId) },
+      select: { workspaceId: true },
+    });
+
+    if (!project) {
+      throw new AppError(404, 'PROJECT_NOT_FOUND', 'Проект не найден');
+    }
+
     const task = await prisma.task.create({
       data: {
         title,
@@ -200,11 +227,24 @@ export class TaskService {
       },
     });
 
+    await writeTaskAuditLog({
+      userId: actorId,
+      workspaceId: project.workspaceId,
+      projectId: task.projectId,
+      taskId: task.id,
+      action: AuditActions.CREATE,
+      details: { title: task.title, assigneeId },
+    });
+
     return task;
   }
 
-  static async deleteTasksBulk(ids: number[], workspaceId: number) {
-    return await prisma.task.deleteMany({
+  static async deleteTasksBulk(
+    ids: number[],
+    workspaceId: number,
+    actorId: string
+  ) {
+    const deleted = await prisma.task.deleteMany({
       where: {
         id: {
           in: ids,
@@ -214,9 +254,28 @@ export class TaskService {
         },
       },
     });
+
+    if (deleted.count > 0) {
+      await prisma.auditLog.create({
+        data: {
+          userId: actorId,
+          workspaceId,
+          action: AuditActions.DELETE,
+          entityType: 'TASK',
+          entityId: ids.join(','),
+          details: JSON.stringify({ deletedIds: ids }),
+        },
+      });
+    }
+
+    return deleted;
   }
 
-  static async changePriority(taskId: number, priority: TaskPriority) {
+  static async changePriority(
+    taskId: number,
+    priority: TaskPriority,
+    actorId: string
+  ) {
     try {
       const updated = await prisma.task.update({
         where: {
@@ -225,9 +284,24 @@ export class TaskService {
         data: {
           priority,
         },
+        select: {
+          id: true,
+          title: true,
+          projectId: true,
+          project: { select: { workspaceId: true } },
+        },
       });
 
       console.log('SERVICE', updated);
+
+      await writeTaskAuditLog({
+        userId: actorId,
+        workspaceId: updated.project.workspaceId,
+        projectId: updated.projectId,
+        taskId,
+        action: AuditActions.UPDATE,
+        details: { priority },
+      });
 
       return updated;
     } catch (e) {
@@ -245,26 +319,48 @@ export class TaskService {
   static async changeAssignee(
     projectId: number,
     taskId: number,
-    assigneeId: string | null
+    assigneeId: string | null,
+    actorId: string
   ) {
-    return await prisma.task.update({
+    const updated = await prisma.task.update({
       where: {
         id: taskId,
       },
       data: {
         assigneeId,
       },
+      select: {
+        id: true,
+        project: { select: { workspaceId: true } },
+      },
     });
+
+    await writeTaskAuditLog({
+      userId: actorId,
+      workspaceId: updated.project.workspaceId,
+      projectId,
+      taskId,
+      action: AuditActions.TASK_ASSIGNEE_CHANGED,
+      details: { assigneeId },
+    });
+
+    return updated;
   }
 
   static async moveTask(
     taskId: number,
     sprintId: number | null,
-    projectId: number
+    projectId: number,
+    actorId: string
   ) {
     const current = await prisma.task.findUnique({
       where: { id: taskId },
-      select: { title: true, projectId: true },
+      select: {
+        title: true,
+        projectId: true,
+        sprintId: true,
+        project: { select: { workspaceId: true } },
+      },
     });
 
     if (!current || current.projectId !== projectId) {
@@ -286,7 +382,7 @@ export class TaskService {
         'Задача уже существует в новом спринте'
       );
     }
-    return await prisma.task.update({
+    const updated = await prisma.task.update({
       where: {
         id: taskId,
       },
@@ -294,20 +390,78 @@ export class TaskService {
         sprintId,
       },
     });
+
+    await writeTaskAuditLog({
+      userId: actorId,
+      workspaceId: current.project.workspaceId,
+      projectId,
+      taskId,
+      action: AuditActions.UPDATE,
+      details: { fromSprint: current.sprintId, toSprint: sprintId },
+    });
+
+    return updated;
   }
 
-  static async deleteTask(taskId: number, projectId: number) {
+  static async deleteTask(
+    taskId: number,
+    projectId: number,
+    actorId: string
+  ) {
     const task = await prisma.task.findUnique({
       where: { id: taskId },
-      select: { projectId: true },
+      select: {
+        projectId: true,
+        title: true,
+        project: { select: { workspaceId: true } },
+      },
     });
 
     if (!task || task.projectId !== projectId) {
       throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
     }
 
-    return prisma.task.delete({
+    const deleted = await prisma.task.delete({
       where: { id: taskId },
     });
+
+    await writeTaskAuditLog({
+      userId: actorId,
+      workspaceId: task.project.workspaceId,
+      projectId,
+      taskId,
+      action: AuditActions.DELETE,
+      details: { title: task.title },
+    });
+
+    return deleted;
   }
 }
+
+const writeTaskAuditLog = async ({
+  userId,
+  workspaceId,
+  projectId,
+  taskId,
+  action,
+  details,
+}: {
+  userId: string;
+  workspaceId: number;
+  projectId: number;
+  taskId: number | string;
+  action: AuditActions;
+  details?: Record<string, unknown>;
+}) => {
+  await prisma.auditLog.create({
+    data: {
+      userId,
+      workspaceId,
+      projectId,
+      action,
+      entityType: 'TASK',
+      entityId: String(taskId),
+      details: details ? JSON.stringify(details) : null,
+    },
+  });
+};

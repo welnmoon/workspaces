@@ -15,7 +15,7 @@ export async function PATCH(
   }
 ) {
   try {
-    await requireUser();
+    const user = await requireUser();
     const workspaceId = validateId((await params).workspaceId);
     const projectId = validateId((await params).projectId);
     const taskId = validateId((await params).taskId);
@@ -25,7 +25,7 @@ export async function PATCH(
     });
     const sprintId: number | null = await req.json();
 
-    await TaskService.moveTask(taskId, sprintId, projectId);
+    await TaskService.moveTask(taskId, sprintId, projectId, user.id);
 
     return noContent();
   } catch (e) {

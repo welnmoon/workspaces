@@ -274,8 +274,10 @@ model AuditLog {
   userId      String?
   workspaceId Int?
   projectId   Int?
+
   action      AuditActions
   entityType  String
+
   entityId    String?
   details     String?
   createdAt   DateTime     @default(now())
@@ -382,6 +384,7 @@ enum AuditActions {
   LOGIN
   LOGOUT
 }
+
 
 enum TaskPriority {
   LOW

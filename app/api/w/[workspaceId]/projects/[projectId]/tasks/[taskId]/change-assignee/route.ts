@@ -31,7 +31,7 @@ export async function PATCH(
   }
 ) {
   try {
-    await requireUser();
+    const user = await requireUser();
     const workspaceIdNumber = validateId((await params).workspaceId);
     await requireWorkspaceMember({
       workspaceId: workspaceIdNumber,
@@ -44,7 +44,12 @@ export async function PATCH(
       return unprocessable(res.error.message || 'Invalid request body');
     const { assigneeId } = res.data;
 
-    await TaskService.changeAssignee(projectIdNumber, taskIdNumber, assigneeId);
+    await TaskService.changeAssignee(
+      projectIdNumber,
+      taskIdNumber,
+      assigneeId,
+      user.id
+    );
 
     return noContent();
   } catch (e) {

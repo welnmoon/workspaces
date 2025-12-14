@@ -18,7 +18,7 @@ export async function PATCH(
   }
 ) {
   try {
-    await requireUser();
+    const user = await requireUser();
     const { workspaceId, taskId } = await params;
 
     const workspaceIdNumber = validateId(workspaceId);
@@ -31,7 +31,7 @@ export async function PATCH(
     const res = changeTaskPrioritySchema.safeParse(await req.json());
     if (!res.success) return unprocessable('Invalid request body');
     const { priority } = res.data;
-    await TaskService.changePriority(taskIdNumber, priority);
+    await TaskService.changePriority(taskIdNumber, priority, user.id);
 
     return noContent();
   } catch (e) {

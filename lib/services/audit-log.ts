@@ -1,28 +1,21 @@
 import { prisma } from '../prisma';
 
 export class AuditLogService {
-  static async create({
-    userId,
-    workspaceId,
-    invitationId,
-    email,
-    role,
-  }: {
-    userId: string;
-    workspaceId: number;
-    invitationId: number;
-    email: string;
-    role: string;
-  }) {
-    await prisma.auditLog.create({
-      data: {
-        userId,
-        workspaceId,
-        action: 'INVITE_SENT',
-        entityType: 'INVITATION',
-        entityId: String(invitationId),
-        details: JSON.stringify({ email, role }),
+  static async getWorkspaceLogs(workspaceId: number, limit = 100) {
+    return prisma.auditLog.findMany({
+      where: { workspaceId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
       },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
     });
   }
 }

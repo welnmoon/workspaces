@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(req: NextRequest) {
   try {
-    await requireUser();
+    const user = await requireUser();
     console.log('req', req);
     const body = await req.json();
     console.log('body', body, 'workspaceId', body.workspaceId);
@@ -20,7 +20,7 @@ export async function DELETE(req: NextRequest) {
       allowed: [Role.OWNER, Role.ADMIN],
     });
 
-    await TaskService.deleteTasksBulk(tasksIds, workspaceId);
+    await TaskService.deleteTasksBulk(tasksIds, workspaceId, user.id);
 
     return noContent();
   } catch (e) {

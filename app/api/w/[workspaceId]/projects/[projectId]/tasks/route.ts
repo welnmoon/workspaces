@@ -29,7 +29,7 @@ export async function POST(
   try {
     const { workspaceId, projectId } = await params;
 
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId: Number(workspaceId),
       allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],
     });
@@ -55,6 +55,7 @@ export async function POST(
       assigneeId: data.data.assigneeId,
       priority: data.data.priority,
       sprintId: data.data.sprintId || null,
+      actorId: user.id,
     });
     return created(task);
   } catch (e) {
