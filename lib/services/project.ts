@@ -562,8 +562,37 @@ export class ProjectService {
       noAssigneeTasks,
     };
   }
+
+  static async getSLA(projectId: number) {
+    // SLA % = (кол-во задач закрытых вовремя / кол-во задач с дедлайном) * 100
+    const [totalTasksCount, completedTasksInDeadlineCount] = await Promise.all([
+      prisma.task.count({
+        where: { projectId },
+      }),
+      prisma.task.count({
+        where: { projectId, status: 'DONE', completedAt: { lte: new Date() } },
+      }),
+    ]);
+    logger.debug(
+      `[ProjectService.getSLA] totalTasksCount=${totalTasksCount} completedTasksInDeadlineCount=${completedTasksInDeadlineCount}`
+    );
+
+    const SLA = (
+      (completedTasksInDeadlineCount / totalTasksCount) *
+      100
+    ).toFixed(2);
+    logger.debug(`[ProjectService.getSLA] SLA=${SLA}`);
+    return {
+      SLA,
+      totalTasksCount,
+      completedTasksInDeadlineCount,
+    };
+  }
 }
 
+//-----------------------------------------------------//
+//----------------Audit Logging-----------------------//
+//---------------------------------------------------//
 const logProjectAudit = async ({
   userId,
   workspaceId,

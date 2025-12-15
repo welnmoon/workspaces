@@ -59,3 +59,11 @@ export type UserActivity = {
   }[];
   noAssigneeTasks: number;
 };
+
+// SLA
+
+export type SLA = {
+  SLA: string;
+  totalTasksCount: number;
+  completedTasksInDeadlineCount: number;
+};

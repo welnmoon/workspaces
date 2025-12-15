@@ -1,0 +1,70 @@
+import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
+import ChartsCard from './charts-card';
+import { useSLATasks } from '@/hooks/analytics/project/use-sla-tasks';
+import { Spinner } from '../ui/spinner';
+import { cn } from '@/lib/utils';
+import { Badge } from '../ui/badge';
+import { Skeleton } from '../ui/skeleton';
+
+const SLAGauge = ({
+  workspaceId,
+  projectId,
+}: {
+  workspaceId: number;
+  projectId: number;
+}) => {
+  const { data, isLoading, isFetching } = useSLATasks(workspaceId, projectId);
+  const settings = {
+    width: 200,
+    height: 200,
+    value: data?.SLA ? Number(data.SLA) : 0,
+  };
+  return (
+    <ChartsCard desc="Процент задач, завершённых в срок" title="SLA" noCalendar>
+      <div
+        className={cn('relative', (isFetching || isLoading) && 'opacity-30')}
+      >
+        <Gauge
+          {...settings}
+          cornerRadius="50%"
+          sx={(theme) => ({
+            [`& .${gaugeClasses.valueText}`]: {
+              fontSize: 40,
+            },
+            [`& .${gaugeClasses.valueArc}`]: {
+              fill: '#52b202',
+            },
+            [`& .${gaugeClasses.referenceArc}`]: {
+              fill: theme.palette.text.disabled,
+            },
+          })}
+        />
+        {isLoading ||
+          (isFetching && (
+            <Spinner className="translate-y-1/2 translate-x-1/2" />
+          ))}
+      </div>
+      <div className="flex gap-2 ">
+        <Badge className="text-[16px]" variant={'outline'}>
+          SLA = Завершено в срок <span className="text-red-500"> / </span> Всего
+          задач с дедлайном
+        </Badge>
+        <Badge className="text-[16px]" variant={'outline'}>
+          {isLoading || isFetching ? (
+            <Spinner className="mr-2" />
+          ) : (
+            data?.completedTasksInDeadlineCount
+          )}{' '}
+          задач из{' '}
+          {isLoading || isFetching ? (
+            <Spinner className="ml-2" />
+          ) : (
+            data?.totalTasksCount
+          )}
+        </Badge>
+      </div>
+    </ChartsCard>
+  );
+};
+
+export default SLAGauge;
