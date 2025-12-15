@@ -14,10 +14,13 @@ const SLAGauge = ({
   projectId: number;
 }) => {
   const { data, isLoading, isFetching } = useSLATasks(workspaceId, projectId);
+  const slaValue = data?.SLA ? Number(data.SLA) : 0;
+  const color =
+    slaValue < 60 ? '#ef4444' : slaValue < 80 ? '#fbbf24' : '#22c55e';
   const settings = {
     width: 200,
     height: 200,
-    value: data?.SLA ? Number(data.SLA) : 0,
+    value: slaValue,
   };
   return (
     <ChartsCard
@@ -37,7 +40,7 @@ const SLAGauge = ({
               fontSize: 40,
             },
             [`& .${gaugeClasses.valueArc}`]: {
-              fill: '#4BB543',
+              fill: color,
             },
             [`& .${gaugeClasses.referenceArc}`]: {
               fill: '#f4f4f5',
