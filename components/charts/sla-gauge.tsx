@@ -20,7 +20,12 @@ const SLAGauge = ({
     value: data?.SLA ? Number(data.SLA) : 0,
   };
   return (
-    <ChartsCard desc="Процент задач, завершённых в срок" title="SLA" noCalendar>
+    <ChartsCard
+      desc="Процент задач, завершённых в срок"
+      title="SLA"
+      noCalendar
+      info="Показывает долю задач с дедлайном, закрытых в срок"
+    >
       <div
         className={cn('relative', (isFetching || isLoading) && 'opacity-30')}
       >
@@ -32,24 +37,22 @@ const SLAGauge = ({
               fontSize: 40,
             },
             [`& .${gaugeClasses.valueArc}`]: {
-              fill: '#52b202',
+              fill: '#4BB543',
             },
             [`& .${gaugeClasses.referenceArc}`]: {
-              fill: theme.palette.text.disabled,
+              fill: '#f4f4f5',
             },
           })}
         />
         {isLoading ||
-          (isFetching && (
-            <Spinner className="translate-y-1/2 translate-x-1/2" />
-          ))}
+          (isFetching && <Spinner className="absolute top-1/2 left-1/2" />)}
       </div>
-      <div className="flex gap-2 ">
+      <div className="flex gap-2 flex-wrap">
         <Badge className="text-[16px]" variant={'outline'}>
-          SLA = Завершено в срок <span className="text-red-500"> / </span> Всего
-          задач с дедлайном
+          SLA = Завершено в срок <span className="text-red-500 mx-2">/</span>{' '}
+          Всего задач с дедлайном
         </Badge>
-        <Badge className="text-[16px]" variant={'outline'}>
+        <Badge className="text-[16px]" variant={'success'}>
           {isLoading || isFetching ? (
             <Spinner className="mr-2" />
           ) : (
