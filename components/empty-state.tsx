@@ -1,3 +1,5 @@
+'use client';
+
 // components/ui/empty-state.tsx
 
 import { cn } from '@/lib/utils';
@@ -40,6 +42,7 @@ const EmptyState = ({
               onError={() => setImgLoaded(true)}
               src={imageSrc}
               alt={imageAlt}
+              draggable={false}
               className={cn(
                 imageClassName,
                 imgLoaded ? 'opacity-100' : 'opacity-0'

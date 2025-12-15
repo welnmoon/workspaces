@@ -1,6 +1,7 @@
 import { Breadcrumbs } from '@/components/bread-crumbs';
 import Audits from '@/components/entities/audit/audits';
 import { Heading } from '@/components/ui/heading';
+import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { AuditLogService } from '@/lib/services/audit-log';
@@ -10,6 +11,8 @@ const ActivityPage = async ({
 }: {
   params: Promise<{ workspaceId: string }>;
 }) => {
+  const user = await requireUser();
+
   const workspaceId = validateId((await params).workspaceId);
   const audits = await AuditLogService.getWorkspaceLogs(workspaceId, 100);
 
