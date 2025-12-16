@@ -39,6 +39,7 @@ const WProjectsSection = ({
             description={p.description || ''}
             projectId={p.id}
             workspaceId={workspace.id}
+            projectEnd={Boolean(p.endedAt)}
             key={p.id}
           />
         ))}

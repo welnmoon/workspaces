@@ -86,6 +86,7 @@ const ProjectsPage = async ({
             title={project.name}
             description={project.description || ''}
             projectId={project.id}
+            projectEnd={Boolean(project.endedAt)}
             workspaceId={workspace.id}
             // tasksTotal={tasksTotal}
             // tasksDone={tasksDone}

@@ -5,11 +5,13 @@ export const apiRoutes = {
   createProject: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
   someProject: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}`,
+  getProject: (workspaceId: number, projectId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}`,
   getProjects: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
   getProjectTasksStats: (projectId: number) =>
     `/api/project/${projectId}/stats`,
-  closeProject: (workspaceId: number, projectId: number) =>
-    `/api/w/${workspaceId}/projects/${projectId}/close`,
+  toggleProjectEnd: (workspaceId: number, projectId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/toggle-end`,
 
   createWorkspace: () => `/api/w`,
   updateWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,

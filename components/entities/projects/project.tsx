@@ -15,16 +15,30 @@ import { Heading } from '../../ui/heading';
 import ProjectTabs from './tabs/project-tabs';
 
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
-import { useCloseProject } from '@/hooks/project/use-close-project';
+import { useToggleProjectEnd } from '@/hooks/project/use-toggle-project-end';
 import toast from 'react-hot-toast';
 import { RippleButton } from '@/components/buttons/ripple-button';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { useRouter } from 'next/navigation';
+import { ProjectLockProvider } from './context/project-lock-context';
+import { useProject } from '@/hooks/project/use-project';
+import { useState } from 'react';
 import {
-  ProjectLockProvider,
-  useProjectLock,
-} from './context/project-lock-context';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -47,36 +61,49 @@ const ProjectComponent = ({
   memberTaskStats: TaskStats;
   members: MembershipSelectUserDTO[];
 }) => {
-  const router = useRouter();
-  const {
-    mutate: closeProject,
-    isPending: isCloseProjectPending,
-    isError: isCloseProjectError,
-    error: closeProjectError,
-  } = useCloseProject(workspaceId, project.id);
-  if (!project) return null;
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const { data: optimisticProject, isLoading: isProjectLoading } =
+    useProject(project);
+  const { mutate: toggleProjectEnd, isPending: isToggleProjectPending } =
+    useToggleProjectEnd(workspaceId, optimisticProject.id);
+  if (!optimisticProject) return null;
 
-  const projectEnded = Boolean(project.endedAt);
+  const projectEnded = Boolean(optimisticProject.endedAt);
 
   const onCloseProjectHandle = () => {
-    closeProject(undefined, {
+    setConfirmOpen(false);
+    const wasEnded = projectEnded;
+    toggleProjectEnd(undefined, {
       onSuccess: () => {
-        toast.success('Проект успешно завершен');
+        toast.success(
+          wasEnded ? 'Проект возвращен в работу' : 'Проект успешно завершен'
+        );
+        setConfirmOpen(false);
       },
       onError: () => {
-        toast.error('Не удалось завершить проект');
+        toast.error('Не удалось изменить статус проекта');
+        setConfirmOpen(false);
       },
     });
   };
 
+  const dialogTitle = projectEnded
+    ? 'Вернуть проект в работу?'
+    : 'Завершить проект?';
+  const dialogDescription = projectEnded
+    ? 'Редактирование снова станет доступным.'
+    : 'После завершения нельзя создавать/редактировать/удалять задачи.';
+  const dialogConfirm = projectEnded ? 'Вернуть' : 'Завершить';
+
   return (
     <ProjectLockProvider
       value={{
-        locked: Boolean(project.endedAt),
-        reason: `${project.endedAt?.toISOString()} - Проект закрыт`,
+        locked: Boolean(optimisticProject.endedAt),
+        reason: `Проект закрыт`,
       }}
     >
       <article className="space-y-4">
+        {isProjectLoading && 'Загрузка...'}
         <Heading className="mb-2 flex justify-between" level={3}>
           <div className="flex gap-2 items-center">
             <Breadcrumbs
@@ -94,27 +121,58 @@ const ProjectComponent = ({
                   href: clientRoutes.projectsPage(workspaceId),
                 },
                 {
-                  label: `${project.name}`,
-                  href: clientRoutes.projectPage(project.id, workspaceId),
+                  label: `${optimisticProject.name}`,
+                  href: clientRoutes.projectPage(
+                    optimisticProject.id,
+                    workspaceId
+                  ),
                 },
               ]}
             />
-            <ProjectEnd />
+            {projectEnded && <ProjectEnd />}
           </div>
-          <RippleButton
-            isLoading={isCloseProjectPending}
-            className={cn(
-              'min-w-10',
-              projectEnded ? 'bg-primary-500 text-white' : 'bg-zinc-800'
-            )}
-            onClick={() => onCloseProjectHandle()}
-          >
-            {projectEnded ? 'Вернуть проект' : 'Завершить проект'}
-          </RippleButton>
+          <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+            <DialogTrigger asChild>
+              <RippleButton
+                isLoading={isToggleProjectPending}
+                className={cn(
+                  'min-w-10',
+                  projectEnded ? 'bg-primary-500 text-white' : 'bg-zinc-800'
+                )}
+                disabled={isToggleProjectPending}
+              >
+                {projectEnded ? 'Вернуть проект' : 'Завершить проект'}
+              </RippleButton>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogDescription>{dialogDescription}</DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={isToggleProjectPending}
+                  onClick={() => setConfirmOpen(false)}
+                >
+                  Отмена
+                </Button>
+                <Button
+                  type="button"
+                  variant={projectEnded ? 'default' : 'destructive'}
+                  disabled={isToggleProjectPending}
+                  onClick={onCloseProjectHandle}
+                >
+                  {dialogConfirm}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </Heading>
 
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <Description text={project.description || null} />
+          <Description text={optimisticProject.description || null} />
         </div>
 
         <Divider />
@@ -129,10 +187,10 @@ const ProjectComponent = ({
             sprints={sprints}
             tasks={tasks}
             workspaceId={workspaceId}
-            projectId={project.id}
+            projectId={optimisticProject.id}
             allTaskStats={allTaskStats}
             memberTaskStats={memberTaskStats}
-            projectEnd={!!project.endedAt}
+            projectEnd={projectEnded}
           />
         </div>
       </article>
@@ -143,5 +201,14 @@ const ProjectComponent = ({
 export default ProjectComponent;
 
 const ProjectEnd = () => {
-  return <Badge variant={'info'}>Проект завершен</Badge>;
+  return (
+    <TooltipProvider>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger asChild>
+          <Badge variant={'info'}>Проект завершен</Badge>
+        </TooltipTrigger>
+        <TooltipContent>Проект закрыт. Изменения недоступны.</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 };

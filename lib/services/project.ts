@@ -94,13 +94,47 @@ export class ProjectService {
     return project;
   }
 
-  static async closeProject(projectId: number) {
-    await prisma.project.update({
+  static async toggleProjectEnd(
+    projectId: number,
+    actorId?: string,
+    workspaceId?: number
+  ) {
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { id: true, endedAt: true, workspaceId: true, name: true },
+    });
+
+    if (!project) {
+      throw new AppError(404, 'PROJECT_NOT_FOUND', 'Проект не найден');
+    }
+    if (workspaceId && project.workspaceId !== workspaceId) {
+      throw new AppError(404, 'PROJECT_NOT_FOUND', 'Проект не найден');
+    }
+
+    const nextEndedAt = project.endedAt ? null : new Date();
+
+    const updated = await prisma.project.update({
       where: { id: projectId },
       data: {
-        endedAt: new Date(),
+        endedAt: nextEndedAt,
       },
+      select: { id: true, endedAt: true, workspaceId: true, name: true },
     });
+
+    if (actorId) {
+      await logProjectAudit({
+        userId: actorId,
+        workspaceId: updated.workspaceId,
+        projectId: updated.id,
+        action: AuditActions.UPDATE,
+        details: {
+          event: project.endedAt ? 'PROJECT_REOPENED' : 'PROJECT_ENDED',
+          name: updated.name,
+        },
+      });
+    }
+
+    return updated;
   }
 
   static async getProjectById(projectId: number) {

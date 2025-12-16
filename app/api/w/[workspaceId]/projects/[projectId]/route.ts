@@ -25,6 +25,29 @@ function parseIds(workspaceId: string, projectId: string) {
   return { workspaceIdNumber, projectIdNumber };
 }
 
+// GET /api/w/[workspaceId]/projects/[projectId]
+// Get single project
+export async function GET(_req: NextRequest, context: Params) {
+  try {
+    const { workspaceId, projectId } = await context.params;
+    const ids = parseIds(workspaceId, projectId);
+    if (!ids) return badRequest('Invalid identifiers');
+
+    await requireWorkspaceMember({
+      workspaceId: ids.workspaceIdNumber,
+    });
+
+    const project = await ProjectService.getProjectById(ids.projectIdNumber);
+    if (!project || project.workspaceId !== ids.workspaceIdNumber) {
+      return notFound('Project not found');
+    }
+
+    return ok(project);
+  } catch (e) {
+    return serverError('Failed to get project', e);
+  }
+}
+
 // PATCH /api/w/[workspaceId]/projects/[projectId]
 // Update project details
 export async function PATCH(req: NextRequest, context: Params) {
