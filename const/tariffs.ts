@@ -1,12 +1,17 @@
-import type { TariffConfig, TariffDTO } from '@/types/prisma/DTO/payment';
+import { FaLeaf, FaRocket, FaBuilding } from 'react-icons/fa';
+import type { TariffConfig } from '@/types/prisma/DTO/payment';
 
-export const tariffs: Record<string, TariffConfig> = {
+export const tariffs: Record<
+  string,
+  TariffConfig & { icon: React.ElementType }
+> = {
   FREE: {
     amount: 0,
     currency: 'KZT',
     description: 'Бесплатный тариф',
     invoiceId: 'free-001',
     name: 'FREE',
+    icon: FaLeaf,
     features: [
       '1 воркспейс и 2 участника',
       'До 3 проектов без оплаты',
@@ -16,12 +21,14 @@ export const tariffs: Record<string, TariffConfig> = {
     color: '#13c2c2',
     textColor: '#fff',
   },
+
   PRO: {
     amount: 2990,
     currency: 'KZT',
     description: 'PRO — 1 месяц',
     invoiceId: 'pro-monthly',
     name: 'PRO',
+    icon: FaRocket,
     features: [
       'Неограниченные воркспейсы и участники',
       'Проекты и задачи с дедлайнами и приоритетами',
@@ -31,12 +38,14 @@ export const tariffs: Record<string, TariffConfig> = {
     color: '#fbbf24',
     textColor: '#000',
   },
+
   BUSINESS: {
     amount: 9990,
     currency: 'KZT',
     description: 'BUSINESS — 1 месяц',
     invoiceId: 'business-monthly',
     name: 'BUSINESS',
+    icon: FaBuilding,
     features: [
       'Все из PRO плюс контроль доступов для команд/отделов',
       'Отчёты и статистика за любой период',
@@ -47,3 +56,4 @@ export const tariffs: Record<string, TariffConfig> = {
     textColor: '#fff',
   },
 };
+

@@ -25,6 +25,9 @@ module.exports = {
         warning: '#faad14', // предупреждения
         muted: '#f5f5f5', // карточки, бордеры, ховеры
       },
+      // screens: {
+      //   mdlg: '900px',
+      // },
       keyframes: {
         'accordion-down': {
           from: { height: '0' },

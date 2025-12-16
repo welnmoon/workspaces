@@ -1,3 +1,5 @@
+'use client';
+
 import { Heading } from '@/components/ui/heading';
 import {
   Accordion,
