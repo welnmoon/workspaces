@@ -4,6 +4,7 @@ import {
   TaskPriority,
   TaskStatus,
 } from '@prisma/client';
+import { ensureProjectActive } from '@/guards/ensure-project-active';
 import logger from '../logger';
 import { prisma } from '../prisma';
 import { AppError } from '../errors';
@@ -122,6 +123,8 @@ export class TaskService {
       throw new AppError(404, 'WORKSPACE_NOT_FOUND', 'Пространство не найдено');
     }
 
+    await ensureProjectActive(task.projectId);
+
     if (task.assigneeId !== userId && userId !== workspaceOwnerId)
       throw new AppError(403, 'NOT_PERMITTED', 'Недостаточно прав');
 
@@ -187,6 +190,8 @@ export class TaskService {
       parsedDueDate = d;
     }
 
+    await ensureProjectActive(Number(projectId));
+
     const existing = await prisma.task.findFirst({
       where: {
         projectId: Number(projectId),
@@ -244,6 +249,19 @@ export class TaskService {
     workspaceId: number,
     actorId: string
   ) {
+    const tasks = await prisma.task.findMany({
+      where: {
+        id: { in: ids },
+        project: { workspaceId },
+      },
+      select: { projectId: true },
+    });
+
+    const projectIds = Array.from(new Set(tasks.map((t) => t.projectId)));
+    for (const projectId of projectIds) {
+      await ensureProjectActive(projectId);
+    }
+
     const deleted = await prisma.task.deleteMany({
       where: {
         id: {
@@ -277,6 +295,17 @@ export class TaskService {
     actorId: string
   ) {
     try {
+      const targetTask = await prisma.task.findUnique({
+        where: { id: taskId },
+        select: { projectId: true },
+      });
+
+      if (!targetTask) {
+        throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+      }
+
+      await ensureProjectActive(targetTask.projectId);
+
       const updated = await prisma.task.update({
         where: {
           id: taskId,
@@ -322,6 +351,8 @@ export class TaskService {
     assigneeId: string | null,
     actorId: string
   ) {
+    await ensureProjectActive(projectId);
+
     const updated = await prisma.task.update({
       where: {
         id: taskId,
@@ -367,6 +398,8 @@ export class TaskService {
       throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
     }
 
+    await ensureProjectActive(current.projectId);
+
     const taskExistInNewSprint = await prisma.task.findFirst({
       where: {
         projectId,
@@ -408,6 +441,8 @@ export class TaskService {
     projectId: number,
     actorId: string
   ) {
+    await ensureProjectActive(projectId);
+
     const task = await prisma.task.findUnique({
       where: { id: taskId },
       select: {

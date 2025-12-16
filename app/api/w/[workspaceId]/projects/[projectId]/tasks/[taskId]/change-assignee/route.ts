@@ -1,5 +1,4 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { AppError } from '@/lib/errors';
 import {
@@ -31,9 +30,8 @@ export async function PATCH(
   }
 ) {
   try {
-    const user = await requireUser();
     const workspaceIdNumber = validateId((await params).workspaceId);
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId: workspaceIdNumber,
       allowed: [Role.OWNER, Role.ADMIN],
     });

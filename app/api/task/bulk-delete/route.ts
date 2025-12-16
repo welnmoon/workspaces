@@ -1,5 +1,4 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { AppError } from '@/lib/errors';
 import { noContent, serverError } from '@/lib/http/http';
@@ -9,13 +8,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(req: NextRequest) {
   try {
-    const user = await requireUser();
     console.log('req', req);
     const body = await req.json();
     console.log('body', body, 'workspaceId', body.workspaceId);
     const workspaceId = validateId(body.workspaceId);
     const tasksIds: number[] = body.deleteTasksIds;
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId,
       allowed: [Role.OWNER, Role.ADMIN],
     });

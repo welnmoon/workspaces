@@ -8,7 +8,7 @@ export const useProjects = (
   initialData?: ProjectListDTO[]
 ) => {
   return useQuery({
-    queryKey: ['projects', workspaceId], // workspaceId - добавляем что бы при изменении workspace запрос обновлялся
+    queryKey: ['projects', workspaceId],
     enabled: workspaceId !== undefined,
     initialData: initialData,
     queryFn: async () => {

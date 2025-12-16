@@ -76,7 +76,7 @@ export default function CompletedVsCreatedTasks({
       info="Сравнение количества созданных и завершённых задач по дням"
     >
       {isError && 'Произошла ошибка'}
-      <div className="overflow-x-auto">
+      <div className="">
         <LineChart
           desc="ddwdwdwdwddddddddddddddddddd"
           style={{

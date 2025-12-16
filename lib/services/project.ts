@@ -94,6 +94,15 @@ export class ProjectService {
     return project;
   }
 
+  static async closeProject(projectId: number) {
+    await prisma.project.update({
+      where: { id: projectId },
+      data: {
+        endedAt: new Date(),
+      },
+    });
+  }
+
   static async getProjectById(projectId: number) {
     return prisma.project.findUnique({
       where: { id: projectId },

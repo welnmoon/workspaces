@@ -28,6 +28,7 @@ import { useMembers } from '@/hooks/members/use-members';
 import MainBtn from '@/components/buttons/main-btn';
 import { FaPenToSquare } from 'react-icons/fa6';
 import { FcInvite } from 'react-icons/fc';
+import { useProjectLock } from '../context/project-lock-context';
 
 type ProjectTabsProps = {
   sprints: SprintWithTasksWithAssigneesDTO[];
@@ -35,6 +36,7 @@ type ProjectTabsProps = {
   workspaceId: number;
   projectId: number;
   allTaskStats: TaskStats;
+  projectEnd: boolean;
   memberTaskStats: TaskStats;
 };
 
@@ -47,9 +49,11 @@ const ProjectTabs = ({
   projectId,
   allTaskStats,
   memberTaskStats,
+  projectEnd,
 }: ProjectTabsProps) => {
   const [createSprint, setCreateSprint] = useState(false);
   const [openSprintIds, setOpenSprintIds] = useState<string[]>([]);
+  const projectStatus = useProjectLock();
 
   // members for accordions and for create task form
   const { data: members } = useMembers(workspaceId!, projectId!);
@@ -154,6 +158,7 @@ const ProjectTabs = ({
       }
       className="w-full space-y-4"
     >
+      {`${projectStatus.locked}`}
       <div className="flex flex-wrap items-center gap-3 sticky top-20 z-10 bg-white p-2 rounded-xl shadow ">
         <TabsList className="inline-flex flex-wrap gap-1">
           <TabsTrigger value="list" className="flex items-center gap-2">

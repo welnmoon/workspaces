@@ -1,5 +1,4 @@
 import { validateId } from '@/helpers/validate-id';
-import { requireUser } from '@/helpers/require-user';
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { NextRequest, NextResponse } from 'next/server';
 import { TaskService } from '@/lib/services/tasks';
@@ -18,11 +17,10 @@ export async function PATCH(
   }
 ) {
   try {
-    const user = await requireUser();
     const { workspaceId, taskId } = await params;
 
     const workspaceIdNumber = validateId(workspaceId);
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId: workspaceIdNumber,
       allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],
     });

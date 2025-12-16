@@ -1,5 +1,4 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { AppError } from '@/lib/errors';
 import { badRequest, ok, serverError, unprocessable } from '@/lib/http/http';
@@ -14,11 +13,9 @@ export async function POST(
   { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
-    const { id: userId } = await requireUser();
-
     const workspaceId = validateId((await params).workspaceId);
 
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId,
       allowed: [Role.OWNER, Role.ADMIN],
     });
@@ -32,7 +29,7 @@ export async function POST(
       workspaceId,
       title,
       body,
-      userId
+      user.id
     );
 
     return ok('Notification sent successfully');
