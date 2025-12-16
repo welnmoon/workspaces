@@ -2,11 +2,11 @@ import { sendInviteEmail } from '@/components/mails/invitations/send-invitation'
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { generateToken } from '@/helpers/generate-token';
 import { prisma } from '../prisma';
-import { AuditLogService } from '@/lib/services/audit-log';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { MembershipStatus, Role } from '@prisma/client';
 import { addHours } from 'date-fns';
 import { AppError } from '../errors';
+import { AuditActionsType } from '@/types/prisma/DTO/audit';
 
 type CreateInvitationResult =
   | { kind: 'created'; id: number }
@@ -79,12 +79,13 @@ export class InvitationService {
       token: inv.token,
     });
 
-    await AuditLogService.create({
+    await logInvitationAudit({
       userId: id,
       workspaceId,
       invitationId: inv.id,
       email,
       role: inv.invitedRole,
+      action: 'INVITE_SENT',
     });
 
     return { kind: 'created', id: inv.id };
@@ -162,14 +163,37 @@ export class InvitationService {
       return membership;
     });
 
-    await AuditLogService.create({
+    await logInvitationAudit({
       userId,
       workspaceId: invitation.workspaceId,
       invitationId: invId,
       email: invitation.invitedUserEmail,
       role: invitation.invitedRole,
+      action: 'INVITE_ACCEPTED',
     });
 
     return result.id; // Membership ID
   }
 }
+
+const logInvitationAudit = async (params: {
+  userId: string;
+  workspaceId: number;
+  invitationId: number;
+  email: string;
+  role: Role;
+  action: AuditActionsType;
+}) => {
+  const { userId, workspaceId, invitationId, email, role, action } = params;
+
+  await prisma.auditLog.create({
+    data: {
+      userId,
+      workspaceId,
+      action,
+      entityType: 'INVITATION',
+      entityId: String(invitationId),
+      details: JSON.stringify({ email, role }),
+    },
+  });
+};

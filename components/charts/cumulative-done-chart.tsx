@@ -113,6 +113,7 @@ export default function CumulativeDoneChart({
       className="relative "
       dateRange={dateRange}
       onSelectHandler={onDateSelectHandler}
+      info="Накопительный итог завершённых задач за выбранный период"
     >
       {isError && 'Произошла ошибка'}
       <div className="overflow-x-auto">

@@ -73,9 +73,10 @@ export default function CompletedVsCreatedTasks({
       className="relative"
       dateRange={dateRange}
       onSelectHandler={onDateSelectHandler}
+      info="Сравнение количества созданных и завершённых задач по дням"
     >
       {isError && 'Произошла ошибка'}
-      <div className="overflow-x-auto">
+      <div className="">
         <LineChart
           desc="ddwdwdwdwddddddddddddddddddd"
           style={{

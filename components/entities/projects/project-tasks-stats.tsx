@@ -3,6 +3,7 @@
 import CompletedVsCreatedTasks from '@/components/charts/created-vs-done-tasks-chart';
 import CumulativeDoneChart from '@/components/charts/cumulative-done-chart';
 import DailyDoneChart from '@/components/charts/daily-done-chart';
+import SLAGauge from '@/components/charts/sla-gauge';
 import TasksByStatusPieChart from '@/components/charts/tasks-by-status-pie-chart';
 import UserActivityBarChart from '@/components/charts/user-activity-bar-chart';
 import { TaskStats } from '@/types/service/task-stats';
@@ -25,6 +26,7 @@ const ProjectTasksAllStats = ({
   return (
     // <section className="flex gap-4 flex-col xl:flex-row flex-wrap">
     <section className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+      <SLAGauge workspaceId={workspaceId} projectId={projectId} />
       <CumulativeDoneChart
         workspaceId={workspaceId}
         projectId={projectId}

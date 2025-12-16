@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { ArrowRight } from 'lucide-react';
 
 interface Crumb {
-  label: string;
+  label: string | React.ReactNode;
   href?: string;
 }
 

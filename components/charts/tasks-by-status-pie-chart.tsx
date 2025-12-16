@@ -71,7 +71,12 @@ export default function TasksByStatusPieChart({
 
   return (
     <>
-      <ChartsCard noCalendar className="pb-2" title="Задачи по статусам">
+      <ChartsCard
+        noCalendar
+        className="pb-2"
+        title="Задачи по статусам"
+        info="Распределение задач по статусам в текущем проекте"
+      >
         <Badge variant={'warning'} className="mb-4">
           Пока что только по проекту, скоро добавлю по спринтам
         </Badge>

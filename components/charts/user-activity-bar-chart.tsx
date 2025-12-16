@@ -55,6 +55,7 @@ const UserActivityBarChart = ({
       onSelectHandler={setDateRange}
       title="Активность участников"
       className="relative"
+      info="Сравнивает, сколько задач назначено и завершено каждым участником"
     >
       <div className="overflow-x-auto">
         <BarChart

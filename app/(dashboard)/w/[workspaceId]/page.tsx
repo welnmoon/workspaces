@@ -103,6 +103,7 @@ const WorkspacePage = async ({
         tasksOverdue={tasksOverdue}
         userRole={userRole!}
         tariff={wTariff}
+        workspaceId={workspaceIdNumber}
       />
 
       <Divider />

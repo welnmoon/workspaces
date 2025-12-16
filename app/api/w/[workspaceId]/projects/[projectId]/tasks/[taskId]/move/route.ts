@@ -1,5 +1,4 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { handleApiError } from '@/lib/http/handle-api-error';
 import { noContent } from '@/lib/http/http';
@@ -15,17 +14,16 @@ export async function PATCH(
   }
 ) {
   try {
-    await requireUser();
     const workspaceId = validateId((await params).workspaceId);
     const projectId = validateId((await params).projectId);
     const taskId = validateId((await params).taskId);
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId,
       allowed: ['OWNER', 'ADMIN'],
     });
     const sprintId: number | null = await req.json();
 
-    await TaskService.moveTask(taskId, sprintId, projectId);
+    await TaskService.moveTask(taskId, sprintId, projectId, user.id);
 
     return noContent();
   } catch (e) {

@@ -14,7 +14,13 @@ export type ProjectListDTO = Pick<
 
 export type ProjectFullDTO = Pick<
   Project,
-  'id' | 'name' | 'description' | 'workspaceId' | 'createdAt' | 'updatedAt'
+  | 'id'
+  | 'name'
+  | 'description'
+  | 'workspaceId'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'endedAt'
 >;
 
 export type ProjectUpdateDTO = Partial<Pick<Project, 'name' | 'description'>>;
@@ -58,4 +64,12 @@ export type UserActivity = {
     userId: string;
   }[];
   noAssigneeTasks: number;
+};
+
+// SLA
+
+export type SLA = {
+  SLA: string;
+  totalTasksCount: number;
+  completedTasksInDeadlineCount: number;
 };

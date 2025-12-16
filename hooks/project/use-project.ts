@@ -1,18 +1,25 @@
+import { parseErrorResponse } from '@/helpers/parse-error-response';
 import { apiRoutes } from '@/lib/routes/api-routes';
-import { TaskStats } from '@/types/service/task-stats';
+import { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 import { useQuery } from '@tanstack/react-query';
 
-export const useProject = (projectId: number) => {
+export const useProject = (project: ProjectFullDTO) => {
   return useQuery({
-    queryKey: ['project', projectId],
-    queryFn: async (): Promise<TaskStats> => {
-      const res = await fetch(apiRoutes.getProjectTasksStats(projectId), {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (!res.ok) throw new Error('Failed to fetch project');
+    initialData: project,
+    queryKey: ['project', project.id],
+    queryFn: async () => {
+      const res = await fetch(
+        apiRoutes.getProject(project.workspaceId, project.id),
+        { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+      );
+
+      if (!res.ok) {
+        parseErrorResponse(res);
+      }
+
       const data = await res.json();
-      return data.data as TaskStats;
+
+      return data.data as ProjectFullDTO;
     },
   });
 };

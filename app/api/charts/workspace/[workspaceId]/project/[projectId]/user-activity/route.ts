@@ -1,5 +1,4 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { handleApiError } from '@/lib/http/handle-api-error';
 import { ok } from '@/lib/http/http';
@@ -13,7 +12,6 @@ export async function GET(
   { params }: { params: Promise<{ workspaceId: string; projectId: string }> }
 ) {
   try {
-    await requireUser();
     const workspaceId = validateId((await params).workspaceId);
     const projectId = validateId((await params).projectId);
 

@@ -9,12 +9,17 @@ import {
   BadgeInfo,
   Shield,
   BadgeCheck,
+  InfoIcon,
 } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
 import type { TariffConfig } from '@/types/prisma/DTO/payment';
 import type { FullRoleDTO } from '@/types/prisma/DTO/role';
@@ -29,6 +34,7 @@ type WorkspaceOverviewProps = {
   tasksOverdue: number;
   userRole: FullRoleDTO;
   tariff: TariffConfig;
+  workspaceId: number;
 };
 
 const WorkspaceOverview = ({
@@ -41,6 +47,7 @@ const WorkspaceOverview = ({
   tasksOverdue,
   userRole,
   tariff,
+  workspaceId,
 }: WorkspaceOverviewProps) => {
   return (
     <div className="flex flex-col md:flex-row gap-4 text-sm text-muted-foreground ">
@@ -123,34 +130,59 @@ const WorkspaceOverview = ({
         </div>
       </div>
 
-      <div className="flex gap-4">
-        {/* Role */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="bg-primary-100 rounded-md px-2 py-1 flex items-center gap-1 cursor-default">
-              <Shield size={16} />
-              <span className="font-medium">{userRole}</span>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Ваша роль</TooltipContent>
-        </Tooltip>
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-4">
+          {/* Role */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="bg-primary-100 rounded-md px-2 py-1 flex items-center gap-1 cursor-default">
+                <Shield size={16} />
+                <span className="font-medium">{userRole}</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Ваша роль</TooltipContent>
+          </Tooltip>
 
-        {/* Tariff */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div
-              className="rounded-md px-2 py-1 flex items-center gap-1 cursor-default"
-              style={{
-                backgroundColor: tariff.color,
-                color: tariff.textColor,
-              }}
-            >
-              <BadgeCheck size={16} />
-              <span className="font-medium">{tariff.name}</span>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Тарифный план</TooltipContent>
-        </Tooltip>
+          {/* Tariff */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                className="rounded-md px-2 py-1 flex items-center gap-1 cursor-default"
+                style={{
+                  backgroundColor: tariff.color,
+                  color: tariff.textColor,
+                }}
+              >
+                <BadgeCheck size={16} />
+                <span className="font-medium">{tariff.name}</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Тарифный план</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href={clientRoutes.workspaceActivityPage(workspaceId)}
+                className="inline-flex items-center gap-1 text-primary-600 underline underline-offset-4 hover:text-primary-700 transition-colors"
+              >
+                Журнал аудита <ArrowUpRight size={14} />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-64 py-3 text-pretty">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <InfoIcon className="size-4" />
+                  <p className="text-sm font-medium">Журнал активности</p>
+                </div>
+                <p className="text-background/80">
+                  Хронология ключевых действий в рабочем пространстве: изменения
+                  задач, проектов и активности участников.
+                </p>
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
     </div>
   );

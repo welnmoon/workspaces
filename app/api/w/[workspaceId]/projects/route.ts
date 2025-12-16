@@ -26,16 +26,19 @@ export async function POST(
 
   const workspaceIdNumber = Number(workspaceId);
 
-  await requireWorkspaceMember({
+  const { user } = await requireWorkspaceMember({
     workspaceId: workspaceIdNumber,
     allowed: ['OWNER', 'ADMIN'] as Role[],
   });
 
   try {
-    const project = await ProjectService.createProject({
-      ...res.data,
-      workspaceId: workspaceIdNumber,
-    });
+    const project = await ProjectService.createProject(
+      {
+        ...res.data,
+        workspaceId: workspaceIdNumber,
+      },
+      user.id
+    );
 
     return created(
       project,

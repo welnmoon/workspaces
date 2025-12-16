@@ -1,6 +1,8 @@
 import { SprintTasksStatsDTO } from '@/types/prisma/DTO/sprint';
 import { prisma } from '../prisma';
 import { SprintColor } from '@prisma/client';
+import { ensureProjectActive } from '@/guards/ensure-project-active';
+import { AppError } from '../errors';
 
 export class SprintService {
   static async getProjectSprints(projectId: number) {
@@ -40,6 +42,7 @@ export class SprintService {
     startDate: Date | null;
     endDate: Date | null;
   }) {
+    await ensureProjectActive(projectId);
     return prisma.sprint.update({
       where: {
         id: sprintId,
@@ -65,6 +68,7 @@ export class SprintService {
     startDate?: Date | null;
     endDate?: Date | null;
   }) {
+    await ensureProjectActive(projectId);
     return await prisma.sprint.create({
       data: {
         name,
@@ -119,6 +123,17 @@ export class SprintService {
   }
 
   static async changeColor(color: SprintColor, sprintId: number) {
+    const sprint = await prisma.sprint.findUnique({
+      where: { id: sprintId },
+      select: { projectId: true },
+    });
+
+    if (!sprint) {
+      throw new AppError(404, 'SPRINT_NOT_FOUND', 'Спринт не найден');
+    }
+
+    await ensureProjectActive(sprint.projectId);
+
     return prisma.sprint.update({
       where: { id: sprintId },
       data: { color },

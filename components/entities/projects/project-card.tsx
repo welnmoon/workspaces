@@ -12,15 +12,18 @@ import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
 import ProjectCardBadge from './project-card-badge';
-import { useProject } from '@/hooks/project/use-project';
 import EditProjectPopover from './edit-project-popover';
 import EmptyState from '@/components/empty-state';
+import { useProjectStats } from '@/hooks/project/use-project-stats';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 const ProjectCard = ({
   title,
   description,
   projectId,
   workspaceId,
+  projectEnd,
   // tasksTotal,
   // tasksDone,
   // tasksInProgress,
@@ -31,13 +34,15 @@ const ProjectCard = ({
   description: string;
   projectId: number;
   workspaceId: number;
+  projectEnd?: boolean;
   // tasksTotal: number;
   // tasksDone: number;
   // tasksInProgress: number;
   // tasksToDoCount: number;
   // tasksOverdue: number;
 }) => {
-  const { data: stats, isLoading } = useProject(projectId);
+  const { data: stats, isLoading } = useProjectStats(projectId);
+  const isEnded = Boolean(projectEnd);
 
   const tasksCount = stats?.tasksCount ?? 0;
   const tasksToDoCount = stats?.tasksToDoCount ?? 0;
@@ -48,7 +53,7 @@ const ProjectCard = ({
 
   return (
     <Card className="flex flex-col">
-      <CardHeader className="h-fit">
+      <CardHeader className={cn('h-fit', isEnded && 'bg-zinc-50')}>
         <CardTitle>
           <div className="flex items-start justify-between gap-2">
             <Heading className="text-bold" level={2}>
@@ -60,6 +65,7 @@ const ProjectCard = ({
                   {title}
                 </span>
               </Link>
+              {isEnded && <Badge variant="info">Завершен</Badge>}
             </Heading>
             <EditProjectPopover
               projectId={projectId}

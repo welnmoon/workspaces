@@ -1,5 +1,4 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { handleApiError } from '@/lib/http/handle-api-error';
 import { noContent, unprocessable } from '@/lib/http/http';
@@ -24,7 +23,6 @@ export async function PATCH(
   }
 ) {
   try {
-    await requireUser();
     const workspaceId = validateId((await params).workspaceId);
     const projectId = validateId((await params).projectId);
     const sprintId = validateId((await params).sprintId);

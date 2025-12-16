@@ -1,5 +1,4 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
-import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';
 import { noContent, serverError } from '@/lib/http/http';
 import { prisma } from '@/lib/prisma';
@@ -15,7 +14,6 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ workspaceId: string }> }
 ) {
-  await requireUser();
   const NumberWorkspaceId = Number((await params).workspaceId);
   await requireWorkspaceMember({
     workspaceId: NumberWorkspaceId,

@@ -63,6 +63,7 @@ export default function DailyDoneChart({
       className="relative"
       dateRange={dateRange}
       onSelectHandler={onDateSelectHandler}
+      info="Количество задач, закрытых каждый день в выбранном диапазоне"
     >
       {isError && 'Произошла ошибка'}
       <div className="overflow-x-auto">

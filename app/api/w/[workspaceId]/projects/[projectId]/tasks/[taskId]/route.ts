@@ -24,12 +24,16 @@ export async function DELETE(
     const projectIdNum = validateId(projectId);
     const taskIdNum = validateId(taskId);
 
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId: workspaceIdNum,
       allowed: [Role.OWNER, Role.ADMIN, Role.MEMBER],
     });
 
-    const deleted = await TaskService.deleteTask(taskIdNum, projectIdNum);
+    const deleted = await TaskService.deleteTask(
+      taskIdNum,
+      projectIdNum,
+      user.id
+    );
     return ok(deleted);
   } catch (e) {
     return handleApiError(e);

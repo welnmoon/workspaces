@@ -12,7 +12,7 @@ import {
 import { prisma } from '../prisma';
 import logger from '../logger';
 import { TaskStats } from '@/types/service/task-stats';
-import { Prisma, TaskStatus } from '@prisma/client';
+import { AuditActions, Prisma, TaskStatus } from '@prisma/client';
 import { AppError } from '../errors';
 import { endOfDay, startOfDay, subMonths } from 'date-fns';
 import { date } from 'zod';
@@ -40,7 +40,10 @@ export class ProjectService {
       },
     });
   }
-  static async createProject(raw: unknown): Promise<ProjectListDTO> {
+  static async createProject(
+    raw: unknown,
+    actorId?: string
+  ): Promise<ProjectListDTO> {
     const data = workspaceIdExistSchema.parse(raw);
 
     const exists = await prisma.project.findFirst({
@@ -78,7 +81,60 @@ export class ProjectService {
       return project;
     });
 
+    if (actorId) {
+      await logProjectAudit({
+        userId: actorId,
+        workspaceId: project.workspaceId,
+        projectId: project.id,
+        action: AuditActions.CREATE,
+        details: { name: project.name },
+      });
+    }
+
     return project;
+  }
+
+  static async toggleProjectEnd(
+    projectId: number,
+    actorId?: string,
+    workspaceId?: number
+  ) {
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { id: true, endedAt: true, workspaceId: true, name: true },
+    });
+
+    if (!project) {
+      throw new AppError(404, 'PROJECT_NOT_FOUND', 'Проект не найден');
+    }
+    if (workspaceId && project.workspaceId !== workspaceId) {
+      throw new AppError(404, 'PROJECT_NOT_FOUND', 'Проект не найден');
+    }
+
+    const nextEndedAt = project.endedAt ? null : new Date();
+
+    const updated = await prisma.project.update({
+      where: { id: projectId },
+      data: {
+        endedAt: nextEndedAt,
+      },
+      select: { id: true, endedAt: true, workspaceId: true, name: true },
+    });
+
+    if (actorId) {
+      await logProjectAudit({
+        userId: actorId,
+        workspaceId: updated.workspaceId,
+        projectId: updated.id,
+        action: AuditActions.UPDATE,
+        details: {
+          event: project.endedAt ? 'PROJECT_REOPENED' : 'PROJECT_ENDED',
+          name: updated.name,
+        },
+      });
+    }
+
+    return updated;
   }
 
   static async getProjectById(projectId: number) {
@@ -96,20 +152,69 @@ export class ProjectService {
     });
   }
 
-  static async updateProject(projectId: number, data: CreateProjectFormValues) {
-    return prisma.project.update({
+  static async updateProject(
+    projectId: number,
+    data: CreateProjectFormValues,
+    actorId?: string
+  ) {
+    const before = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!before) {
+      throw new AppError(404, 'PROJECT_NOT_FOUND', 'Проект не найден');
+    }
+
+    const updated = await prisma.project.update({
       where: { id: projectId },
       data: {
         name: data.name,
         description: data.description,
       },
     });
+
+    if (actorId) {
+      const renamed = before.name !== updated.name;
+      await logProjectAudit({
+        userId: actorId,
+        workspaceId: updated.workspaceId,
+        projectId: updated.id,
+        action: renamed ? AuditActions.PROJECT_RENAMED : AuditActions.UPDATE,
+        details: {
+          before: { name: before.name, description: before.description },
+          after: { name: updated.name, description: updated.description },
+        },
+      });
+    }
+
+    return updated;
   }
 
-  static async deleteProject(projectId: number) {
-    return prisma.project.delete({
+  static async deleteProject(projectId: number, actorId?: string) {
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { id: true, name: true, workspaceId: true },
+    });
+
+    if (!project) {
+      throw new AppError(404, 'PROJECT_NOT_FOUND', 'Проект не найден');
+    }
+
+    const deleted = await prisma.project.delete({
       where: { id: projectId },
     });
+
+    if (actorId) {
+      await logProjectAudit({
+        userId: actorId,
+        workspaceId: project.workspaceId,
+        projectId: project.id,
+        action: AuditActions.DELETE,
+        details: { name: project.name },
+      });
+    }
+
+    return deleted;
   }
 
   static async isProjectInWorkspace(
@@ -500,4 +605,59 @@ export class ProjectService {
       noAssigneeTasks,
     };
   }
+
+  static async getSLA(projectId: number) {
+    // SLA % = (кол-во задач закрытых вовремя / кол-во задач с дедлайном) * 100
+    const [totalTasksCount, completedTasksInDeadlineCount] = await Promise.all([
+      prisma.task.count({
+        where: { projectId },
+      }),
+      prisma.task.count({
+        where: { projectId, status: 'DONE', completedAt: { lte: new Date() } },
+      }),
+    ]);
+    logger.debug(
+      `[ProjectService.getSLA] totalTasksCount=${totalTasksCount} completedTasksInDeadlineCount=${completedTasksInDeadlineCount}`
+    );
+
+    const SLA = (
+      (completedTasksInDeadlineCount / totalTasksCount) *
+      100
+    ).toFixed(2);
+    logger.debug(`[ProjectService.getSLA] SLA=${SLA}`);
+    return {
+      SLA,
+      totalTasksCount,
+      completedTasksInDeadlineCount,
+    };
+  }
 }
+
+//-----------------------------------------------------//
+//----------------Audit Logging-----------------------//
+//---------------------------------------------------//
+const logProjectAudit = async ({
+  userId,
+  workspaceId,
+  projectId,
+  action,
+  details,
+}: {
+  userId: string;
+  workspaceId: number;
+  projectId: number;
+  action: AuditActions;
+  details?: Record<string, unknown>;
+}) => {
+  await prisma.auditLog.create({
+    data: {
+      userId,
+      workspaceId,
+      projectId,
+      action,
+      entityType: 'PROJECT',
+      entityId: String(projectId),
+      details: details ? JSON.stringify(details) : null,
+    },
+  });
+};

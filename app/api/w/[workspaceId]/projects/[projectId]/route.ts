@@ -25,6 +25,29 @@ function parseIds(workspaceId: string, projectId: string) {
   return { workspaceIdNumber, projectIdNumber };
 }
 
+// GET /api/w/[workspaceId]/projects/[projectId]
+// Get single project
+export async function GET(_req: NextRequest, context: Params) {
+  try {
+    const { workspaceId, projectId } = await context.params;
+    const ids = parseIds(workspaceId, projectId);
+    if (!ids) return badRequest('Invalid identifiers');
+
+    await requireWorkspaceMember({
+      workspaceId: ids.workspaceIdNumber,
+    });
+
+    const project = await ProjectService.getProjectById(ids.projectIdNumber);
+    if (!project || project.workspaceId !== ids.workspaceIdNumber) {
+      return notFound('Project not found');
+    }
+
+    return ok(project);
+  } catch (e) {
+    return serverError('Failed to get project', e);
+  }
+}
+
 // PATCH /api/w/[workspaceId]/projects/[projectId]
 // Update project details
 export async function PATCH(req: NextRequest, context: Params) {
@@ -33,7 +56,7 @@ export async function PATCH(req: NextRequest, context: Params) {
     const ids = parseIds(workspaceId, projectId);
     if (!ids) return badRequest('Invalid identifiers');
 
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId: ids.workspaceIdNumber,
       allowed: [Role.OWNER, Role.ADMIN],
     });
@@ -48,7 +71,8 @@ export async function PATCH(req: NextRequest, context: Params) {
 
     const updated = await ProjectService.updateProject(
       ids.projectIdNumber,
-      parsed.data
+      parsed.data,
+      user.id
     );
     return ok(updated);
   } catch (e) {
@@ -64,7 +88,7 @@ export async function DELETE(_req: NextRequest, context: Params) {
     const ids = parseIds(workspaceId, projectId);
     if (!ids) return badRequest('Invalid identifiers');
 
-    await requireWorkspaceMember({
+    const { user } = await requireWorkspaceMember({
       workspaceId: ids.workspaceIdNumber,
       allowed: [Role.OWNER, Role.ADMIN],
     });
@@ -73,7 +97,7 @@ export async function DELETE(_req: NextRequest, context: Params) {
     if (!project || project.workspaceId !== ids.workspaceIdNumber)
       return notFound('Project not found');
 
-    await ProjectService.deleteProject(ids.projectIdNumber);
+    await ProjectService.deleteProject(ids.projectIdNumber, user.id);
     return noContent();
   } catch (e) {
     if (e instanceof Error) return badRequest(e.message);

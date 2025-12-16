@@ -1,14 +1,14 @@
 import { apiRoutes } from '@/lib/routes/api-routes';
-import { ProjectListDTO } from '@/types/prisma/DTO/projects';
+import { ProjectFullDTO, ProjectListDTO } from '@/types/prisma/DTO/projects';
 import { AppError } from '../../lib/errors';
 import { useQuery } from '@tanstack/react-query';
 
 export const useProjects = (
   workspaceId: number | undefined,
-  initialData?: ProjectListDTO[]
+  initialData?: ProjectFullDTO[]
 ) => {
   return useQuery({
-    queryKey: ['projects', workspaceId], // workspaceId - добавляем что бы при изменении workspace запрос обновлялся
+    queryKey: ['projects', workspaceId],
     enabled: workspaceId !== undefined,
     initialData: initialData,
     queryFn: async () => {
@@ -26,7 +26,7 @@ export const useProjects = (
       }
 
       const data = await res.json();
-      return (data.data || []) as ProjectListDTO[];
+      return (data.data || []) as ProjectFullDTO[];
     },
   });
 };

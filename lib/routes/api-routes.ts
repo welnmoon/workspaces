@@ -1,12 +1,17 @@
 import { ProviderId } from '../providers';
 
 export const apiRoutes = {
+  // project
   createProject: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
   someProject: (workspaceId: number, projectId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}`,
+  getProject: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}`,
   getProjects: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
   getProjectTasksStats: (projectId: number) =>
     `/api/project/${projectId}/stats`,
+  toggleProjectEnd: (workspaceId: number, projectId: number) =>
+    `/api/w/${workspaceId}/projects/${projectId}/toggle-end`,
 
   createWorkspace: () => `/api/w`,
   updateWorkspace: (workspaceId: number) => `/api/w/${workspaceId}`,
@@ -104,4 +109,6 @@ export const apiRoutes = {
     `/api/charts/workspace/${workspaceId}/project/${projectId}/created-vs-completed-tasks`,
   getUserActivity: (workspaceId: number, projectId: number) =>
     `/api/charts/workspace/${workspaceId}/project/${projectId}/user-activity`,
+  getProjectSLATasks: (workspaceId: number, projectId: number) =>
+    `/api/charts/workspace/${workspaceId}/project/${projectId}/sla-tasks`,
 };
