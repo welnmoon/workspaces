@@ -10,7 +10,12 @@ import NewHeroSection from '@/components/root/main/hero/new-hero';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import Stats from '@/components/root/main/stats';
 
-export type RootStats = { workspaces: number; projects: number; tasks: number };
+export type RootStats = {
+  workspaces: number;
+  projects: number;
+  tasks: number;
+  users: number;
+};
 
 async function Home() {
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
@@ -24,7 +29,7 @@ async function Home() {
   const stats = res.data as RootStats;
   return (
     <main>
-      <RootContainer>
+      <RootContainer size="md">
         <RootNavigationMenu />
         <NewHeroSection />
         {/* <HeroSection /> */}

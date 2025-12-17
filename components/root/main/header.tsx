@@ -15,9 +15,9 @@ import { AuthButtons } from '../buttons/auth-btns';
 
 export function RootNavigationMenu() {
   return (
-    <header className="grid grid-cols-[1fr_auto_1fr]">
+    <header className="grid grid-cols-[1fr_auto_1fr] items-center">
       <WorkspaceLogo className="justify-self-start" />
-      <div className="relative flex w-full justify-center pt-6 text-sm leading-[1.5]">
+      <div className="relative flex w-full justify-center text-sm leading-[1.5] items-center">
         <NavigationMenu>
           <NavigationMenuList>
             {navSections.map((section) => (

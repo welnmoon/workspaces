@@ -14,16 +14,22 @@ const HeroTariff = () => {
       <div className="min-h-fit">
         {currentTariff === tariffs.FREE.name && (
           <div className="flex justify-between h-full gap-4">
-            <div className="bg-neutral-200 w-1/2 rounded-md font-[600] text-neutral-700 py-4 px-6 text-lg">
-              Подходит для старта
-              <p className="mt-2 text-sm font-normal text-neutral-600">
+            <div className="bg-neutral-200 w-1/2 h-70 rounded-md relative">
+              <p className="font-[600] text-neutral-700 my-4 mx-6 wrap-break-word text-lg">
+                Подходит для старта
+              </p>
+              {/* <p className="mt-2 text-sm font-normal text-neutral-600">
                 Один воркспейс, базовые задачи, минимальные ограничения. Можно
                 попробовать продукт без привязки к карте.
-              </p>
+              </p> */}
+              <img
+                src="/images/hero/hero-free-1_cropped.avif"
+                className="absolute bottom-0 object-cover"
+              />
             </div>
 
             <div className="bg-neutral-100 w-1/2 rounded-md py-4 px-6 text-sm text-neutral-600">
-              Ограничения:
+              <p className="text-[20px] font-[600]">Ограничения:</p>
               <ul className="mt-2 list-disc list-inside">
                 <li>Ограничение на проекты</li>
                 <li>Без ролей и прав</li>
@@ -35,12 +41,18 @@ const HeroTariff = () => {
 
         {currentTariff === tariffs.PRO.name && (
           <div className="flex justify-between h-full gap-4">
-            <div className="bg-amber-100 w-1/2 rounded-md font-[600] text-neutral-800 py-4 px-6 text-lg">
-              Для небольших команд
-              <p className="mt-2 text-sm font-normal text-neutral-700">
+            <div className="bg-amber-100 w-1/2 rounded-md relative h-70">
+              <p className="font-[600] text-neutral-800 my-4 mx-6 wrap-break-word text-lg">
+                Для небольших команд
+              </p>
+              {/* <p className="mt-2 text-sm font-normal text-neutral-700">
                 Полный контроль над проектами и задачами. Подходит для
                 постоянной командной работы.
-              </p>
+              </p> */}
+              <img
+                src="/images/hero/hero-pro-1_cropped.avif"
+                className="absolute bottom-0 object-cover"
+              />
             </div>
 
             <div className="bg-amber-50 w-1/2 rounded-md py-4 px-6 text-sm text-neutral-700">
@@ -56,11 +68,17 @@ const HeroTariff = () => {
 
         {currentTariff === tariffs.BUSINESS.name && (
           <div className="flex justify-between h-full gap-4">
-            <div className="bg-red-100 w-1/2 rounded-md font-[600] text-neutral-800 py-4 px-6 text-lg">
-              Для компаний и отделов
-              <p className="mt-2 text-sm font-normal text-neutral-700">
-                Расширенный контроль, отчёты и кастомизация под бизнес-процессы.
+            <div className="bg-red-100 w-1/2 rounded-md relative h-70">
+              <p className="font-[600] text-neutral-800 my-4 mx-6 text-lg">
+                Для компаний и отделов
               </p>
+              {/* <p className="mt-2 text-sm font-normal text-neutral-700">
+                Расширенный контроль, отчёты и кастомизация под бизнес-процессы.
+              </p> */}
+              <img
+                src="/images/hero/hero-business-1_cropped.avif"
+                className="absolute bottom-0 object-cover"
+              />
             </div>
 
             <div className="bg-red-50 w-1/2 rounded-md py-4 px-6 text-sm text-neutral-700">

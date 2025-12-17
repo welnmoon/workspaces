@@ -2,6 +2,8 @@ import { BookIcon, GiftIcon, HeartIcon } from 'lucide-react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { tariffs } from '@/const/tariffs';
+import LinkButton from '@/components/buttons/link-btn';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
 const tariff_tabs = Object.entries(tariffs).map((t) => {
   return {
@@ -20,6 +22,7 @@ const TariffTabs = ({
 }) => {
   return (
     <div className="w-full text-right inset-shadow-sm py-4 px-2 rounded-md max-w-md">
+      <LinkButton text="Подробнее" href={clientRoutes.pricingPage()} />
       <Tabs defaultValue={currentTariff} className="gap-4">
         <TabsList className="h-full">
           {tariff_tabs.map(({ icon: Icon, name, value }) => (
