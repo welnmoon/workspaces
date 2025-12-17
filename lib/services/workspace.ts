@@ -114,16 +114,16 @@ export class WorkspaceService {
     });
   }
 
-  static async updateWorkspaceTariff(workspaceId: number, tariff: Tariff) {
-    return prisma.workspace.update({
-      where: {
-        id: Number(workspaceId),
-      },
-      data: {
-        tariff,
-      },
-    });
-  }
+  // static async updateWorkspaceTariff(workspaceId: number, tariff: Tariff) {
+  //   return prisma.workspace.update({
+  //     where: {
+  //       id: Number(workspaceId),
+  //     },
+  //     data: {
+  //       tariff,
+  //     },
+  //   });
+  // }
 
   static async updateName(workspaceId: number, name: string) {
     return prisma.workspace.update({
@@ -136,13 +136,13 @@ export class WorkspaceService {
     });
   }
 
-  static async getPayments(workspaceId: number) {
-    return prisma.payment.findMany({
-      where: {
-        workspaceId,
-      },
-    });
-  }
+  // static async getPayments(workspaceId: number) {
+  //   return prisma.payment.findMany({
+  //     where: {
+  //       workspaceId,
+  //     },
+  //   });
+  // }
 
   static async getWorkspaceInvites(workspaceId: number) {
     return prisma.invitation.findMany({

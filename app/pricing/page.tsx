@@ -10,13 +10,16 @@ import { cn } from '@/lib/utils';
 import { TariffDTO } from '@/types/prisma/DTO/payment';
 import { Check } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function PricingPage() {
+  const router = useRouter();
   const email = useSession().data?.user.email;
-  const searchParams = useSearchParams();
-  const wId = Number(searchParams.get('workspaceId'));
-  const wName = searchParams.get('workspaceName');
+  const userId = useSession().data?.user.id;
+
+  // const searchParams = useSearchParams();
+  // const wId = Number(searchParams.get('workspaceId'));
+  // const wName = searchParams.get('workspaceName');
 
   const tariffKeys = Object.keys(tariffs) as TariffDTO[];
 
@@ -24,7 +27,7 @@ export default function PricingPage() {
     <section className="py-16">
       <div className="container mx-auto max-w-6xl px-4">
         <Heading level={1}>Выберите тариф</Heading>
-        <Description text={`Простанрство: ${wName}, id: ${wId}`} />
+        {/* <Description text={`Простанрство: ${wName}, id: ${wId}`} /> */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {tariffKeys.map((key) => {
             const t = tariffs[key];
@@ -58,16 +61,19 @@ export default function PricingPage() {
                 </ul>
 
                 <Button
-                  onClick={() =>
-                    payWithCloudPayments(key, email, wId, {
+                  onClick={() => {
+                    if (!userId || userId === undefined) {
+                      router.push(clientRoutes.authLoginPage());
+                      return;
+                    }
+                    payWithCloudPayments(key, email, userId, {
                       onComplete(success) {
                         if (success) {
-                          window.location.href =
-                            clientRoutes.workspacePage(wId);
+                          window.location.href = clientRoutes.workspacesPage();
                         }
                       },
-                    })
-                  }
+                    });
+                  }}
                   disabled={t.amount === 0}
                   className={cn(
                     'mt-auto w-full text-center text-white rounded-lg py-2 transition',

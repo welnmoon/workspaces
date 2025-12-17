@@ -31,7 +31,7 @@ const WorkspaceTabs = ({
       <TabsList className="">
         <TabsTrigger value="projects">Проекты</TabsTrigger>
         <TabsTrigger value="members">Участники</TabsTrigger>
-        <TabsTrigger value="payments">Оплаты</TabsTrigger>
+        {/* <TabsTrigger value="payments">Оплаты</TabsTrigger> */}
         <TabsTrigger value="invites" className="flex items-center gap-2">
           Приглашения
         </TabsTrigger>
@@ -51,9 +51,9 @@ const WorkspaceTabs = ({
           members={members}
         />
       </TabsContent>
-      <TabsContent value="payments">
+      {/* <TabsContent value="payments">
         <PaymentsSection payments={payments} currentUserId={user.id} />
-      </TabsContent>
+      </TabsContent> */}
 
       <TabsContent value="invites" className="mt-2">
         <InvitesSection invites={invites} />

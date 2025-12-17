@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { Tariff } from '@prisma/client';
+import { UserService } from '@/lib/services/user';
+import { requireUser } from '@/helpers/require-user';
 
 const SECRET = process.env.CLOUD_PAYMENTS_SECRET;
 
 export async function POST(req: NextRequest) {
+  const { id } = await requireUser();
   if (!SECRET) {
     console.error('payment webhook: missing CLOUD_PAYMENTS_SECRET');
     return NextResponse.json(
@@ -61,7 +64,7 @@ export async function POST(req: NextRequest) {
     }
 
     // безопасно приводим к типу Tariff
-    await WorkspaceService.updateWorkspaceTariff(wId, tariffStr as Tariff);
+    await UserService.updateUserTariff(id, tariffStr as Tariff);
   }
 
   return new Response('OK', { status: 200 });

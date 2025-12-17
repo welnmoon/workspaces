@@ -14,7 +14,18 @@ import { ru } from 'date-fns/locale';
 import { PaymentDTO } from '@/types/prisma/DTO/payment';
 
 type PaymentsSectionProps = {
-  payments: PaymentDTO[];
+  payments: Array<
+    Omit<
+      PaymentDTO,
+      'paidAt' | 'createdAt' | 'updatedAt' | 'validUntil' | 'amount'
+    > & {
+      amount: number | string;
+      paidAt: Date | string | null;
+      createdAt: Date | string;
+      updatedAt: Date | string;
+      validUntil: Date | string | null;
+    }
+  >;
   currentUserId: string;
 };
 
@@ -76,6 +87,11 @@ export default function PaymentsSection({
             const isCurrentUser = payment.userId === currentUserId;
             const tariff = payment.tariff as keyof typeof tariffConfig;
             const status = payment.status as keyof typeof statusConfig;
+            const paidAt = payment.paidAt ? new Date(payment.paidAt) : null;
+            const createdAt = new Date(payment.createdAt);
+            const validUntil = payment.validUntil
+              ? new Date(payment.validUntil)
+              : null;
 
             return (
               <TableRow
@@ -84,11 +100,11 @@ export default function PaymentsSection({
               >
                 {/* Дата оплаты */}
                 <TableCell className="font-medium">
-                  {payment.paidAt
-                    ? format(payment.paidAt, 'dd MMM yyyy, HH:mm', {
+                  {paidAt
+                    ? format(paidAt, 'dd MMM yyyy, HH:mm', {
                         locale: ru,
                       })
-                    : format(payment.createdAt, 'dd MMM yyyy, HH:mm', {
+                    : format(createdAt, 'dd MMM yyyy, HH:mm', {
                         locale: ru,
                       })}
                 </TableCell>
@@ -127,15 +143,15 @@ export default function PaymentsSection({
 
                 {/* Действует до */}
                 <TableCell>
-                  {payment.validUntil ? (
+                  {validUntil ? (
                     <span
                       className={
-                        new Date(payment.validUntil) < new Date()
+                        validUntil < new Date()
                           ? 'text-red-600'
                           : 'text-green-600'
                       }
                     >
-                      {format(payment.validUntil, 'dd MMM yyyy', {
+                      {format(validUntil, 'dd MMM yyyy', {
                         locale: ru,
                       })}
                     </span>
