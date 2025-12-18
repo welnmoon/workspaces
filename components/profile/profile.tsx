@@ -230,9 +230,16 @@ const ProfileComponent = ({ userId }: Props) => {
                         <Card key={t.id} className="p-4">
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                              <p className="font-medium line-clamp-2">
+                              <BaseLink
+                                href={clientRoutes.taskPage(
+                                  t.project.workspace.id,
+                                  t.project.id,
+                                  t.id
+                                )}
+                                className="font-medium line-clamp-2 underline-anim"
+                              >
                                 {t.title}
-                              </p>
+                              </BaseLink>
                               <p className="text-xs text-muted-foreground mt-1">
                                 {t.completedAt
                                   ? format(t.completedAt, 'dd MMM yyyy, HH:mm', {

@@ -1,11 +1,9 @@
 import Footer from '@/components/root/main/footer';
 import Advantages from '@/components/root/main/advantages/advantages';
 import { RootNavigationMenu } from '@/components/root/main/header';
-import HeroSection from '@/components/root/main/hero/hero';
-import CompaniesMarquee from '@/components/root/main/marquee/companies-marquee';
 
 import RootContainer from '@/components/root/root-container';
-import FAQ from '@/components/root/main/faq/faq';
+import FaqRoot from '@/components/root/main/faq/faq-root';
 import NewHeroSection from '@/components/root/main/hero/new-hero';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import Stats from '@/components/root/main/stats';
@@ -25,6 +23,7 @@ async function Home() {
     cache: 'no-store',
     headers: { 'Content-Type': 'application/json' },
   }).then((res) => res.json());
+
 
   const stats = res.data as RootStats;
   return (
@@ -57,7 +56,7 @@ async function Home() {
       //     xl:max-w-screen-xl
       //     2xl:max-w-screen-xl"
       >
-        <FAQ />
+        <FaqRoot />
       </RootContainer>
       <Footer />
     </main>

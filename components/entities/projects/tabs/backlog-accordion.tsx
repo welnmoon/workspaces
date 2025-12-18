@@ -198,11 +198,11 @@ const BacklogAccordion = ({
 
         <AccordionContent className="flex flex-col gap-3 text-sm">
           {tasks.length === 0 ? (
-            <div className="text-muted-foreground text-sm rounded-2xl border bg-white">
+            <div className="text-muted-foreground text-sm border bg-white">
               В бэклоге пока нет задач
             </div>
           ) : (
-            <div className="md:overflow-visible overflow-x-auto rounded-2xl border bg-white shadow-sm">
+            <div className="md:overflow-visible overflow-x-auto border bg-white shadow-sm">
               <Table className="table-fixed min-w-[720px]">
                 <TableHeader className="bg-zinc-50">
                   <TableRow className="text-left text-xs font-semibold text-muted-foreground">
