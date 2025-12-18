@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { WorkspaceService } from '@/lib/services/workspace';
 import { Tariff } from '@prisma/client';
 import { UserService } from '@/lib/services/user';
-import { requireUser } from '@/helpers/require-user';
 
 const SECRET = process.env.CLOUD_PAYMENTS_SECRET;
 
 export async function POST(req: NextRequest) {
-  const { id } = await requireUser();
   if (!SECRET) {
     console.error('payment webhook: missing CLOUD_PAYMENTS_SECRET');
     return NextResponse.json(
@@ -40,13 +37,40 @@ export async function POST(req: NextRequest) {
 
   const status = data.status ?? data.Status;
   if (status === 'Completed') {
-    const wId = Number(data.jsonData?.workspaceId ?? data.Data?.workspaceId);
-    const tariffRaw = data.jsonData?.tariff ?? data.Data?.tariff;
+    const jsonDataRaw =
+      data.JsonData ??
+      data.jsonData ??
+      data.Data?.JsonData ??
+      data.Data?.jsonData ??
+      null;
+    const jsonData =
+      typeof jsonDataRaw === 'string'
+        ? JSON.parse(jsonDataRaw)
+        : jsonDataRaw ?? data.Data ?? {};
+
+    const accountId =
+      data.AccountId ??
+      data.accountId ??
+      data.Data?.AccountId ??
+      data.Data?.accountId ??
+      null;
+
+    let userId = String(jsonData?.userId ?? '');
+    const tariffRaw = jsonData?.tariff ?? data.Data?.tariff;
     const tariffStr =
       typeof tariffRaw === 'string' ? tariffRaw : String(tariffRaw);
 
-    if (!wId || !tariffStr) {
-      console.warn('payment webhook: missing workspaceId or tariff', data);
+    if (!userId && accountId) {
+      const user = await UserService.getUserByEmail(String(accountId));
+      userId = user?.id ?? '';
+    }
+
+    if (!userId || !tariffStr) {
+      console.warn('payment webhook: missing userId or tariff', {
+        userId,
+        accountId,
+        tariffStr,
+      });
       return NextResponse.json({ error: 'missing data' }, { status: 400 });
     }
 
@@ -64,7 +88,7 @@ export async function POST(req: NextRequest) {
     }
 
     // безопасно приводим к типу Tariff
-    await UserService.updateUserTariff(id, tariffStr as Tariff);
+    await UserService.updateUserTariff(userId, tariffStr as Tariff);
   }
 
   return new Response('OK', { status: 200 });

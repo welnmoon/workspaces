@@ -1,34 +1,23 @@
 import { requireUser } from '@/helpers/require-user';
-import { AppError } from '@/lib/errors';
 import { handleApiError } from '@/lib/http/handle-api-error';
-import {
-  badRequest,
-  forbidden,
-  noContent,
-  notFound,
-  serverError,
-  unauthorized,
-  unprocessable,
-} from '@/lib/http/http';
+import { forbidden, noContent, unprocessable } from '@/lib/http/http';
 import { UserService } from '@/lib/services/user';
-import { WorkspaceService } from '@/lib/services/workspace';
 import { paymentSchema } from '@/schemas/workspace/payment-schema';
 import { NextRequest } from 'next/server';
 
-// PATCH /api/w/:workspaceId/payment
+// PATCH /api/user/:id/payment
 // Manual tariff update (fallback to webhook)
-export async function PATCH(req: NextRequest) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = await requireUser();
-    // const workspaceId = Number((await params).workspaceId);
-    // if (Number.isNaN(workspaceId)) {
-    //   return badRequest('Некорректный идентификатор рабочего пространства');
-    // }
+    const user = await requireUser();
+    const requestedId = (await params).id;
 
-    // const workspace = await WorkspaceService.getWorkspaceById(workspaceId);
-    // if (!workspace) return notFound('Пространство не найдено');
-    // if (workspace.ownerId !== id)
-    //   return forbidden('Вы не являетесь владельцем пространства');
+    if (user.id !== requestedId) {
+      return forbidden('Недостаточно прав');
+    }
 
     const body = await req.json().catch(() => null);
     if (!body) return unprocessable('Некорректный JSON');
@@ -38,12 +27,9 @@ export async function PATCH(req: NextRequest) {
       return unprocessable(parsed.error.message, parsed.error.flatten());
     }
 
-    await UserService.updateUserTariff(id, parsed.data.name);
+    await UserService.updateUserTariff(requestedId, parsed.data.name);
     return noContent();
   } catch (e) {
-    handleApiError(e);
-    // if (e instanceof AppError) return unauthorized('Вы не авторизованы');
-    // console.error('payment update error', e);
-    // return serverError('Не удалось обновить тариф');
+    return handleApiError(e);
   }
 }

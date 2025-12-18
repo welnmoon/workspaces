@@ -16,7 +16,6 @@ import EmptyState from '@/components/empty-state';
 import { tariffs } from '@/const/tariffs';
 import { validateId } from '@/helpers/validate-id';
 import { UserService } from '@/lib/services/user';
-import { PaymentDTO } from '@/types/prisma/DTO/payment';
 
 const WorkspacePage = async ({
   params,
@@ -26,7 +25,6 @@ const WorkspacePage = async ({
   const user = await requireUser();
   const workspaceIdNumber = validateId((await params).workspaceId);
   const memberCheck = await isMember(workspaceIdNumber, user.id);
-  const payments = [] as PaymentDTO[]; // заглушка
   const [
     userRole,
     userTariff,
@@ -34,7 +32,6 @@ const WorkspacePage = async ({
     projects,
     memberships,
     role,
-    // payments,
     invites,
   ] = await Promise.all([
     MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
@@ -43,7 +40,6 @@ const WorkspacePage = async ({
     WorkspaceService.getWorkspaceProjects(workspaceIdNumber),
     WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
     MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
-    // WorkspaceService.getPayments(workspaceIdNumber),
     WorkspaceService.getWorkspaceInvites(workspaceIdNumber),
   ]);
 

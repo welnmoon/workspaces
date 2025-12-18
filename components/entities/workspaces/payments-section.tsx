@@ -70,7 +70,7 @@ export default function PaymentsSection({
   return (
     <section>
       <Table>
-        <TableCaption>История платежей по пространству</TableCaption>
+        <TableCaption>История платежей</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Дата</TableHead>

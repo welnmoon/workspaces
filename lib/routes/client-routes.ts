@@ -16,11 +16,7 @@ export const clientRoutes = {
   profilePage: () => `/profile`,
 
   // pricing
-  pricingPage: (
-    workspaceId?: number,
-    workspaceName?: string
-  ) => `/pricing?workspaceId=${workspaceId}&workspaceName=${workspaceName}
-  `,
+  pricingPage: () => `/pricing`,
 
   notificationsPage: () => `/notifications`,
 };
