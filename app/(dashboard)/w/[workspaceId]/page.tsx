@@ -15,6 +15,7 @@ import { isMember } from '@/helpers/is-member';
 import EmptyState from '@/components/empty-state';
 import { tariffs } from '@/const/tariffs';
 import { validateId } from '@/helpers/validate-id';
+import { UserService } from '@/lib/services/user';
 
 const WorkspacePage = async ({
   params,
@@ -24,17 +25,23 @@ const WorkspacePage = async ({
   const user = await requireUser();
   const workspaceIdNumber = validateId((await params).workspaceId);
   const memberCheck = await isMember(workspaceIdNumber, user.id);
-
-  const [userRole, workspace, projects, memberships, role, payments, invites] =
-    await Promise.all([
-      MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
-      WorkspaceService.getWorkspaceById(workspaceIdNumber),
-      WorkspaceService.getWorkspaceProjects(workspaceIdNumber),
-      WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
-      MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
-      WorkspaceService.getPayments(workspaceIdNumber),
-      WorkspaceService.getWorkspaceInvites(workspaceIdNumber),
-    ]);
+  const [
+    userRole,
+    userTariff,
+    workspace,
+    projects,
+    memberships,
+    role,
+    invites,
+  ] = await Promise.all([
+    MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
+    UserService.getUserTariff(user.id),
+    WorkspaceService.getWorkspaceById(workspaceIdNumber),
+    WorkspaceService.getWorkspaceProjects(workspaceIdNumber),
+    WorkspaceService.getWorkspaceMembers(workspaceIdNumber),
+    MembershipService.getUserRoleInWorkspace(user.id, workspaceIdNumber),
+    WorkspaceService.getWorkspaceInvites(workspaceIdNumber),
+  ]);
 
   if (!workspace) {
     return <EmptyState title="Пространство не найдено" />;
@@ -68,7 +75,7 @@ const WorkspacePage = async ({
     workspace,
     projects,
   };
-  const wTariff = tariffs[workspace.tariff as keyof typeof tariffs];
+  const wTariff = tariffs[userTariff?.currentTariff as keyof typeof tariffs];
   return (
     <main className="flex flex-col gap-4 ">
       <Breadcrumbs
@@ -108,7 +115,7 @@ const WorkspacePage = async ({
 
       <Divider />
       <WorkspaceTabs
-        payments={payments}
+     
         user={user}
         members={memberships}
         projectSectionProps={projectSectionProps}

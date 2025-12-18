@@ -5,6 +5,8 @@ import './globals.css';
 import RootProviders from '@/components/layout/Providers/root-providers';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { apiRoutes } from '@/lib/routes/api-routes';
+import { headers } from 'next/headers';
 
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
@@ -52,10 +54,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body className={`${satoshi.variable} ${manrope.variable}`}>
-        <RootProviders session={session}>{children}</RootProviders>{' '}
+        <RootProviders  session={session}>{children}</RootProviders>{' '}
         <script
           src="https://widget.cloudpayments.ru/bundles/cloudpayments"
           async

@@ -3,15 +3,9 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
-const BuyTariffButton = ({
-  workspaceId,
-  workspaceName,
-}: {
-  workspaceId: number;
-  workspaceName: string;
-}) => {
+const BuyTariffButton = () => {
   return (
-    <Link href={clientRoutes.pricingPage(workspaceId, workspaceName)}>
+    <Link href={clientRoutes.pricingPage()}>
       <Button
         variant="ghost"
         className={'w-full flex items-center justify-start gap-2 text-left'}

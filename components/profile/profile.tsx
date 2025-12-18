@@ -28,7 +28,12 @@ import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import OAuthEditDialog from '../dialogs/profile/oauth-edit-dialog';
 import { AccountFullDTO } from '@/types/prisma/DTO/account';
-import { MembershipWithWorkspaceDTO } from '@/types/prisma/DTO/memberships';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import PaymentsSection from '@/components/entities/workspaces/payments-section';
+import { useUserPayments } from '@/hooks/profile/use-user-payments';
+import { useUserCompletedTasks } from '@/hooks/profile/use-user-completed-tasks';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 type Props = {
   userId: string;
@@ -39,6 +44,10 @@ const ProfileComponent = ({ userId }: Props) => {
   const [editOAuth, setEditOAuth] = useState('');
 
   const { data: profile, isLoading, isError, error } = useProfile(userId);
+  const { data: payments = [], isLoading: paymentsLoading } =
+    useUserPayments(userId);
+  const { data: completedTasks = [], isLoading: completedTasksLoading } =
+    useUserCompletedTasks(userId);
 
   if (isLoading && !profile) {
     return <PageLoading text="Профиль загружается" />;
@@ -179,50 +188,89 @@ const ProfileComponent = ({ userId }: Props) => {
             </CardFooter>
           </Card>
 
-          {/* Workspaces */}
           <Card>
             <CardHeader>
-              <CardTitle>Ваши рабочие пространства</CardTitle>
+              <CardTitle>Активность</CardTitle>
               <CardDescription>
-                Доступные вам воркспейсы и статусы членства
+                Платежи и выполненные задачи в ваших проектах
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {profile.memberships.length > 0 ? (
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {profile.memberships.map((m: MembershipWithWorkspaceDTO) => (
-                    <div key={m.id} className="rounded-lg border p-3">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-medium truncate">
-                          <BaseLink
-                            href={clientRoutes.workspacePage(m.workspaceId)}
-                          >
-                            {m.workspace.name}
-                          </BaseLink>
-                        </span>
-                        <Badge variant="outline" className="capitalize">
-                          {m.role ?? 'member'}
-                        </Badge>
-                      </div>
-                      <Separator className="my-2" />
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>
-                          ID: <span className="font-mono">{m.workspaceId}</span>
-                        </span>
-                        {m.workspace?.tariff && (
-                          <Badge variant="outline" className="capitalize">
-                            {String(m.workspace.tariff).toLowerCase()}
-                          </Badge>
-                        )}
-                      </div>
+              <Tabs defaultValue="payments">
+                <TabsList>
+                  <TabsTrigger value="payments">Оплаты</TabsTrigger>
+                  <TabsTrigger value="done">Завершенные задачи</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="payments">
+                  {paymentsLoading ? (
+                    <p className="text-sm text-muted-foreground py-6">
+                      Загрузка...
+                    </p>
+                  ) : (
+                    <PaymentsSection
+                      payments={payments}
+                      currentUserId={profile.id}
+                    />
+                  )}
+                </TabsContent>
+
+                <TabsContent value="done">
+                  {completedTasksLoading ? (
+                    <p className="text-sm text-muted-foreground py-6">
+                      Загрузка...
+                    </p>
+                  ) : completedTasks.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-6">
+                      Пока нет завершенных задач
+                    </p>
+                  ) : (
+                    <div className="grid sm:grid-cols-2 gap-3 mt-3">
+                      {completedTasks.map((t) => (
+                        <Card key={t.id} className="p-4">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <p className="font-medium line-clamp-2">
+                                {t.title}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {t.completedAt
+                                  ? format(t.completedAt, 'dd MMM yyyy, HH:mm', {
+                                      locale: ru,
+                                    })
+                                  : 'Дата завершения неизвестна'}
+                              </p>
+                            </div>
+                            <Badge variant="success">DONE</Badge>
+                          </div>
+
+                          <Separator className="my-3" />
+
+                          <div className="flex items-center justify-between gap-2 text-xs">
+                            <BaseLink
+                              href={clientRoutes.projectPage(
+                                t.project.workspace.id,
+                                t.project.id
+                              )}
+                              className="truncate underline-anim"
+                            >
+                              {t.project.name}
+                            </BaseLink>
+                            <BaseLink
+                              href={clientRoutes.workspacePage(
+                                t.project.workspace.id
+                              )}
+                              className="truncate text-muted-foreground underline-anim"
+                            >
+                              {t.project.workspace.name}
+                            </BaseLink>
+                          </div>
+                        </Card>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Пока нет членств
-                </p>
-              )}
+                  )}
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         </div>

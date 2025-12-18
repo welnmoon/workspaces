@@ -111,4 +111,7 @@ export const apiRoutes = {
     `/api/charts/workspace/${workspaceId}/project/${projectId}/user-activity`,
   getProjectSLATasks: (workspaceId: number, projectId: number) =>
     `/api/charts/workspace/${workspaceId}/project/${projectId}/sla-tasks`,
+
+  //root
+  getRootStats: () => `/api/root/stats`,
 };

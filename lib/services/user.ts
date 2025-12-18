@@ -1,12 +1,25 @@
 import { profileSchema } from '@/schemas/profile/profile';
 import { UserProfileDTO } from '@/types/prisma/DTO/user';
 import { prisma } from '../prisma';
+import { Tariff } from '@prisma/client';
+import { tariffs } from '@/const/tariffs';
 
 export class UserService {
   static async getUserById(userId: string) {
     return await prisma.user.findUnique({
       where: {
         id: userId,
+      },
+    });
+  }
+
+  static async getUserTariff(userId: string) {
+    return await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        currentTariff: true,
       },
     });
   }
@@ -97,6 +110,64 @@ export class UserService {
       data: {
         emailVerified: new Date(),
       },
+    });
+  }
+
+  static async updateUserTariff(userId: string, tariff: Tariff) {
+    const amount = tariffs[tariff]?.amount ?? 0;
+
+    return prisma.$transaction(async (tx) => {
+      const payment = await tx.payment.create({
+        data: {
+          userId,
+          tariff,
+          amount,
+          currency: 'KZT',
+          status: 'COMPLETED',
+          paidAt: new Date(),
+        },
+      });
+
+      await tx.user.update({
+        where: { id: userId },
+        data: { currentTariff: tariff },
+      });
+
+      return payment;
+    });
+  }
+
+  static async getUserPayments(userId: string) {
+    return prisma.payment.findMany({
+      where: { userId },
+      orderBy: [{ paidAt: 'desc' }, { createdAt: 'desc' }],
+    });
+  }
+
+  static async getUserCompletedTasks(userId: string) {
+    return prisma.task.findMany({
+      where: {
+        assigneeId: userId,
+        status: 'DONE',
+      },
+      select: {
+        id: true,
+        title: true,
+        completedAt: true,
+        project: {
+          select: {
+            id: true,
+            name: true,
+            workspace: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: [{ completedAt: 'desc' }, { id: 'desc' }],
     });
   }
 }

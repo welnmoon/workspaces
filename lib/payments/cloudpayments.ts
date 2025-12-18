@@ -9,7 +9,7 @@ import { CloudPaymentsData } from '@/types/cloudpayments';
 export const payWithCloudPayments = (
   tariff: TariffDTO,
   email: string | null | undefined,
-  workspaceId: number,
+  userId: string,
   options?: {
     onSuccess?: () => void;
     onFail?: () => void;
@@ -39,11 +39,11 @@ export const payWithCloudPayments = (
       description: config.description,
       amount: config.amount,
       currency: config.currency,
-      invoiceId: `${config.invoiceId}-${workspaceId}-${Date.now()}`, // уникальный!
+      invoiceId: `${config.invoiceId}-${userId}-${Date.now()}`,
       accountId: email,
       skin: 'mini',
       data: {
-        workspaceId,
+        userId,
         tariff,
       } satisfies CloudPaymentsData, // полная типизация!
     },

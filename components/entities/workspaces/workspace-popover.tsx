@@ -38,10 +38,7 @@ const WorkspacePopover = ({
           description={workspaceDescription}
         />
         <WorkspaceNotifyButton workspaceId={workspaceId} userId={userId} />
-        <BuyTariffButton
-          workspaceName={workspaceName}
-          workspaceId={workspaceId}
-        />
+        <BuyTariffButton />
         <DownloadReportButton tasksDone={tasksDone} />
       </PopoverContent>
     </Popover>

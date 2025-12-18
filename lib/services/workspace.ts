@@ -114,17 +114,6 @@ export class WorkspaceService {
     });
   }
 
-  static async updateWorkspaceTariff(workspaceId: number, tariff: Tariff) {
-    return prisma.workspace.update({
-      where: {
-        id: Number(workspaceId),
-      },
-      data: {
-        tariff,
-      },
-    });
-  }
-
   static async updateName(workspaceId: number, name: string) {
     return prisma.workspace.update({
       where: {
@@ -132,14 +121,6 @@ export class WorkspaceService {
       },
       data: {
         name,
-      },
-    });
-  }
-
-  static async getPayments(workspaceId: number) {
-    return prisma.payment.findMany({
-      where: {
-        workspaceId,
       },
     });
   }

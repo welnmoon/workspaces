@@ -1,5 +1,3 @@
-'use client';
-
 import Footer from '@/components/root/main/footer';
 import Advantages from '@/components/root/main/advantages/advantages';
 import { RootNavigationMenu } from '@/components/root/main/header';
@@ -8,16 +6,36 @@ import CompaniesMarquee from '@/components/root/main/marquee/companies-marquee';
 
 import RootContainer from '@/components/root/root-container';
 import FAQ from '@/components/root/main/faq/faq';
+import NewHeroSection from '@/components/root/main/hero/new-hero';
+import { apiRoutes } from '@/lib/routes/api-routes';
+import Stats from '@/components/root/main/stats';
 
-export default function Home() {
+export type RootStats = {
+  workspaces: number;
+  projects: number;
+  tasks: number;
+  users: number;
+};
+
+async function Home() {
+  const origin = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+  const res = await fetch(`${origin}${apiRoutes.getRootStats()}`, {
+    method: 'GET',
+    next: { revalidate: 300 },
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+  }).then((res) => res.json());
+
+  const stats = res.data as RootStats;
   return (
     <main>
-      <RootContainer>
+      <RootContainer size="md">
         <RootNavigationMenu />
-
-        <HeroSection />
+        <NewHeroSection />
+        {/* <HeroSection /> */}
+        <Stats stats={stats} />
       </RootContainer>
-      <CompaniesMarquee />
+      {/* <CompaniesMarquee /> */}
 
       {/*Product Mockup*/}
       <section className="bg-gray-100 pt-8 relative mb-8">
@@ -45,3 +63,5 @@ export default function Home() {
     </main>
   );
 }
+
+export default Home;

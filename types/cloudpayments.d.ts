@@ -34,6 +34,7 @@ export interface CloudPaymentsData {
     | undefined;
 
   workspaceId?: number;
+  userId?: string;
   tariff?: string;
 }
 

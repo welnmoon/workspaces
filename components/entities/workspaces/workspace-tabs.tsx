@@ -4,8 +4,6 @@ import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import WMembersSection from './w-members-section';
 import type { SessionUser } from '@/helpers/require-user';
 import type { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
-import { PaymentDTO } from '@/types/prisma/DTO/payment';
-import PaymentsSection from './payments-section';
 import { InvitationDTO } from '@/types/prisma/DTO/invitations';
 import InvitesSection from './invites-section';
 
@@ -13,13 +11,11 @@ const WorkspaceTabs = ({
   user,
   projectSectionProps,
   members,
-  payments,
   invites,
 }: {
   projectSectionProps: WProjectsSectionProps;
   members: MembershipSelectUserDTO[];
   user: SessionUser;
-  payments: PaymentDTO[];
   invites: InvitationDTO[];
 }) => {
   const membersAndRoles = members.map((member) => ({
@@ -31,7 +27,6 @@ const WorkspaceTabs = ({
       <TabsList className="">
         <TabsTrigger value="projects">Проекты</TabsTrigger>
         <TabsTrigger value="members">Участники</TabsTrigger>
-        <TabsTrigger value="payments">Оплаты</TabsTrigger>
         <TabsTrigger value="invites" className="flex items-center gap-2">
           Приглашения
         </TabsTrigger>
@@ -50,9 +45,6 @@ const WorkspaceTabs = ({
           user={user}
           members={members}
         />
-      </TabsContent>
-      <TabsContent value="payments">
-        <PaymentsSection payments={payments} currentUserId={user.id} />
       </TabsContent>
 
       <TabsContent value="invites" className="mt-2">

@@ -3,8 +3,7 @@ export const clientRoutes = {
   projectPage: (workspaceId: number, projectId: number) =>
     `/w/${workspaceId}/projects/${projectId}`,
   projectsPage: (workspaceId: number) => `/w/${workspaceId}/projects`,
-  workspaceActivityPage: (workspaceId: number) =>
-    `/w/${workspaceId}/activity`,
+  workspaceActivityPage: (workspaceId: number) => `/w/${workspaceId}/activity`,
 
   taskPage: (workspaceId: number, projectId: number, taskId: number) =>
     `/w/${workspaceId}/projects/${projectId}/tasks/${taskId}`,
@@ -17,11 +16,7 @@ export const clientRoutes = {
   profilePage: () => `/profile`,
 
   // pricing
-  pricingPage: (
-    workspaceId: number,
-    workspaceName: string
-  ) => `/pricing?workspaceId=${workspaceId}&workspaceName=${workspaceName}
-  `,
+  pricingPage: () => `/pricing`,
 
   notificationsPage: () => `/notifications`,
 };
