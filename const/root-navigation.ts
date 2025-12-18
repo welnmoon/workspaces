@@ -14,6 +14,7 @@ export const navSections: {
   {
     title: 'Ресурсы',
     links: [
+      { label: 'FAQ', href: '/faq' },
       { label: 'Центр поддержки', href: '#' },
       { label: 'API и вебхуки', href: '#' },
       { label: 'Шаблоны команд', href: '#' },

@@ -1,5 +1,6 @@
 import Container from '@/components/container';
 import Header from '@/components/layout/header/header';
+import Footer from '@/components/root/main/footer';
 import { authOptions } from '@/lib/auth';
 import type { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
@@ -20,6 +21,7 @@ export default async function RootLayout({
     <Container>
       <Header session={session} />
       {children}
+      <Footer />
     </Container>
   );
 }
