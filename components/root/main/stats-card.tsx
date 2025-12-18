@@ -11,8 +11,8 @@ const StatsCard = ({
     decimals: 0,
   });
   return (
-    <Card key={item.name} className="p-0 gap-0 w-[22%] shadow-none">
-      <CardContent className="p-6">
+    <Card key={item.name} className="p-0 gap-0 shadow-none">
+      <CardContent className="py-2 px-4">
         <dt className=" text-muted-foreground">{item.name}</dt>
 
         <dd className="mt-1 text-primary-500 text-5xl font-bold wrap-break-word">
@@ -20,14 +20,14 @@ const StatsCard = ({
         </dd>
       </CardContent>
 
-      <CardFooter className="flex justify-end border-t border-border p-0!">
+      {/* <CardFooter className="flex justify-end border-t border-border p-0!">
         <a
           href={item.href}
           className="px-6 py-3 text-sm font-medium text-primary hover:text-primary/90"
         >
           View more →
         </a>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };

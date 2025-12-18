@@ -56,7 +56,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body className={`${satoshi.variable} ${manrope.variable}`}>
         <RootProviders  session={session}>{children}</RootProviders>{' '}
         <script

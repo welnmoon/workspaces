@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { Tariff } from '@prisma/client';
 import { UserService } from '@/lib/services/user';
+import { handleApiError } from '@/lib/http/handle-api-error';
 
 const SECRET = process.env.CLOUD_PAYMENTS_SECRET;
 
 export async function POST(req: NextRequest) {
+try {
   if (!SECRET) {
     console.error('payment webhook: missing CLOUD_PAYMENTS_SECRET');
     return NextResponse.json(
@@ -92,4 +94,7 @@ export async function POST(req: NextRequest) {
   }
 
   return new Response('OK', { status: 200 });
+} catch (e) {
+  handleApiError(e);
+}
 }

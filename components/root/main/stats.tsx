@@ -27,7 +27,7 @@ export default function Stats({ stats }: { stats: RootStats }) {
     },
   ];
   return (
-    <dl className="flex justify-between flex-wrap w-full">
+    <dl className="grid grid-cols-2 gap-4">
       {data.map((item) => (
         <StatsCard item={item} key={item.name} />
       ))}
