@@ -1,9 +1,12 @@
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { useCountUp } from '@/hooks/use-count-up';
+import { cn } from '@/lib/utils';
 const StatsCard = ({
   item,
+  animatedValueClass,
 }: {
   item: { name: string; value: number; href: string };
+  animatedValueClass: string;
 }) => {
   const animatedValue = useCountUp({
     start: 0,
@@ -15,7 +18,7 @@ const StatsCard = ({
       <CardContent className="py-2 px-4">
         <dt className=" text-muted-foreground">{item.name}</dt>
 
-        <dd className="mt-1 text-primary-500 text-5xl font-bold wrap-break-word">
+        <dd className={cn(animatedValueClass, 'text-primary-500')}>
           {animatedValue}
         </dd>
       </CardContent>
