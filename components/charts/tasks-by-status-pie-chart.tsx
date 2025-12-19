@@ -1,16 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import ChartsCard from './charts-card';
-import { DateRange } from 'react-day-picker';
 import { useTasksByStatus } from '@/hooks/analytics/project/use-tasks-by-status';
 import { usePathname } from 'next/navigation';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import { Spinner } from '../ui/spinner';
 import { cn } from '@/lib/utils';
-import { Skeleton } from '../ui/skeleton';
-import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 
 const data = [

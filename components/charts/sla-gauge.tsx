@@ -4,7 +4,6 @@ import { useSLATasks } from '@/hooks/analytics/project/use-sla-tasks';
 import { Spinner } from '../ui/spinner';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
-import { Skeleton } from '../ui/skeleton';
 
 const SLAGauge = ({
   workspaceId,

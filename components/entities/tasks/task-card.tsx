@@ -15,7 +15,6 @@ import { Badge } from '@/components/ui/badge';
 import { TASK_PRIORITY_ARRAY, TASK_PRIORITY_LABELS } from '@/const/priority';
 import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
-import { AlertTriangle, Flame, ArrowUp, ArrowDown } from 'lucide-react';
 import { priorityIcons } from './task-select-priority';
 import {
   Tooltip,

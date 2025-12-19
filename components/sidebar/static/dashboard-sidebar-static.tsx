@@ -9,7 +9,6 @@ import TaskSelect from '@/components/ui/select/task-select';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import { useTasks } from '@/hooks/tasks/use-tasks';
 import Link from 'next/link';
-import { NAV_LINKS } from '@/const/navigation';
 import { RenderNavigation } from '../sidebar-nav';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import { clientRoutes } from '@/lib/routes/client-routes';

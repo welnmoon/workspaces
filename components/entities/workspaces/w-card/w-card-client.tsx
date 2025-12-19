@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import WorkspaceCardActions from './workspace-card-actions';
-import { FullRoleDTO, ROLE_VALUES, RolesEnum } from '@/types/prisma/DTO/role';
+import { FullRoleDTO, RolesEnum } from '@/types/prisma/DTO/role';
 
 type Props = {
   avatarUrl: string | null;

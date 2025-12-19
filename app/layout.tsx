@@ -5,8 +5,6 @@ import './globals.css';
 import RootProviders from '@/components/layout/Providers/root-providers';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { apiRoutes } from '@/lib/routes/api-routes';
-import { headers } from 'next/headers';
 
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],

@@ -7,7 +7,6 @@ import { WorkspaceService } from '@/lib/services/workspace';
 import { isMember } from '@/helpers/is-member';
 import EmptyState from '@/components/empty-state';
 import { SprintService } from '@/lib/services/sprint';
-import { ProjectLockProvider } from '@/components/entities/projects/context/project-lock-context';
 
 const ProjectPage = async ({
   params,

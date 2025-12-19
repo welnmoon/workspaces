@@ -1,6 +1,5 @@
 import { apiRoutes } from '@/lib/routes/api-routes';
 import {
-  InvitationDTO,
   ReceivedInvitationDTO,
 } from '@/types/prisma/DTO/invitations';
 import { useQuery } from '@tanstack/react-query';

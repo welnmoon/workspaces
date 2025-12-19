@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import TariffTabs from './tariff-tabs';
 import { tariffs } from '@/const/tariffs';
-import { RootStats } from '@/app/page';
 
 type TariffKey = keyof typeof tariffs;
 const HeroTariff = () => {

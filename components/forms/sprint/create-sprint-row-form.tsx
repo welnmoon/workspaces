@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Calendar, User2 } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 // import { Checkbox } from '@/components/ui/checkbox';
 import { FaPenToSquare } from 'react-icons/fa6';
 
 import { FormProvider, useForm } from 'react-hook-form';
-import {
-  createTaskFormSchema,
-  CreateTaskFormValues,
-} from '@/schemas/tasks/create-task-form-schemas';
+
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormInput from '../form-input';
 import LoaderComponent from '@/components/ui/loader';

@@ -27,7 +27,6 @@ import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
 import { useMembers } from '@/hooks/members/use-members';
 import MainBtn from '@/components/buttons/main-btn';
 import { FaPenToSquare } from 'react-icons/fa6';
-import { FcInvite } from 'react-icons/fc';
 import { useProjectLock } from '../context/project-lock-context';
 
 type ProjectTabsProps = {

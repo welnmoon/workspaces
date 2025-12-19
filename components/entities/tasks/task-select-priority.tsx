@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -7,12 +6,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
-import getPriorityColor from '@/helpers/getPriorityColor';
 import { TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 
 import {
   ChevronUp,
-  Dot,
   ChevronDown,
   AlertTriangle,
   Circle,

@@ -36,7 +36,6 @@ import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useMoveTask } from '@/hooks/tasks/use-move-task';
 import { useSprints } from '@/hooks/sprint/use-sprints';
-import SelectPriority from '@/components/forms/task/select-priority';
 import TaskSelectPriority from '../../tasks/task-select-priority';
 import { useChangePriority } from '@/hooks/tasks/use-change-priority';
 import { useChangeStatus } from '@/hooks/tasks/use-change-status';

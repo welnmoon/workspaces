@@ -1,4 +1,4 @@
-import { AppError } from '@/lib/errors';
+import { parseErrorResponse } from '@/helpers/parse-error-response';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -11,28 +11,10 @@ export const useCreateTask = (workspaceId: number, projectId: number) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const raw = await res.text();
-      let parsed: any = null;
-      try {
-        parsed = raw ? JSON.parse(raw) : null;
-      } catch {
-        parsed = null;
-      }
 
       if (!res.ok) {
-        const message =
-          parsed?.message ||
-          parsed?.error ||
-          (Array.isArray(parsed?.errors)
-            ? parsed.errors.map((e: any) => e?.message || String(e)).join(', ')
-            : null) ||
-          raw ||
-          `Не удалось создать задачу: ${res.status} ${res.statusText}`;
-        const code = parsed?.code ?? 'CREATE_TASK_ERROR';
-        throw new AppError(res.status || 500, code, message);
+        throw await parseErrorResponse(res);
       }
-
-      return parsed;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tasks', projectId, workspaceId] });

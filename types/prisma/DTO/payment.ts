@@ -1,4 +1,4 @@
-import { Tariff, type Payment } from '@prisma/client';
+import { type Payment } from '@prisma/client';
 
 export type TariffDTO = 'FREE' | 'PRO' | 'BUSINESS';
 

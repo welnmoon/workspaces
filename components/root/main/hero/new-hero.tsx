@@ -97,6 +97,7 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
                 src={l.src}
                 title={l.alt}
                 alt={l.alt}
+                key={l.alt}
               />
             ))}
           </div>

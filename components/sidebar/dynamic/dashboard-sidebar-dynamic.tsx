@@ -14,7 +14,6 @@ import { useProjects } from '@/hooks/project/use-projects';
 import { useTasks } from '@/hooks/tasks/use-tasks';
 import Link from 'next/link';
 import { Heading } from '@/components/ui/heading';
-import { NAV_LINKS } from '@/const/navigation';
 import { RenderNavigation } from '../sidebar-nav';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import { clientRoutes } from '@/lib/routes/client-routes';

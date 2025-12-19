@@ -7,7 +7,6 @@ import {
   serverError,
   unprocessable,
 } from '@/lib/http/http';
-import { MembershipService } from '@/lib/services/membership';
 import { TaskService } from '@/lib/services/tasks';
 import { Prisma, Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';

@@ -6,7 +6,6 @@ import RootContainer from '@/components/root/root-container';
 import FaqRoot from '@/components/root/main/faq/faq-root';
 import NewHeroSection from '@/components/root/main/hero/new-hero';
 import { apiRoutes } from '@/lib/routes/api-routes';
-import Stats from '@/components/root/main/stats';
 import SmoothScrollProvider from '@/components/layout/Providers/SmoothScrollProvider';
 
 export type RootStats = {

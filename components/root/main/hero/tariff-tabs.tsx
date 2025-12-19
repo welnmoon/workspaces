@@ -1,9 +1,7 @@
-import { ArrowLeftIcon, BookIcon, GiftIcon, HeartIcon } from 'lucide-react';
+import { ArrowLeftIcon } from 'lucide-react';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { tariffs } from '@/const/tariffs';
-import LinkButton from '@/components/buttons/link-btn';
-import { clientRoutes } from '@/lib/routes/client-routes';
 import { Button } from '@/components/ui/button';
 
 const tariff_tabs = Object.entries(tariffs).map((t) => {

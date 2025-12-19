@@ -4,7 +4,7 @@ import {
 } from '@/types/prisma/DTO/workspaces';
 import { prisma } from '../prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
-import { Tariff, Workspace } from '@prisma/client';
+import { Workspace } from '@prisma/client';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 export class WorkspaceService {

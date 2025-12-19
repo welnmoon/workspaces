@@ -1,12 +1,11 @@
 'use client';
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import ProjectSprints from './project-sprints';
 import ProjectBacklogs from './project-backlogs';
-import { useSprintCreate } from '@/hooks/sprint/use-sprint-create';
 import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
 import CreateSprintRowForm from '@/components/forms/sprint/create-sprint-row-form';
 import { useSprints } from '@/hooks/sprint/use-sprints';

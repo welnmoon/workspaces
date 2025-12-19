@@ -1,5 +1,5 @@
 import { apiRoutes } from '@/lib/routes/api-routes';
-import { ProjectFullDTO, ProjectListDTO } from '@/types/prisma/DTO/projects';
+import { ProjectFullDTO } from '@/types/prisma/DTO/projects';
 import { AppError } from '../../lib/errors';
 import { useQuery } from '@tanstack/react-query';
 

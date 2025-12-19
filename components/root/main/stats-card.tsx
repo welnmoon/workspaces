@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useCountUp } from '@/hooks/use-count-up';
 import { cn } from '@/lib/utils';
 const StatsCard = ({
@@ -15,7 +15,7 @@ const StatsCard = ({
   });
   return (
     <Card key={item.name} className="p-0 gap-0 shadow-none">
-      <CardContent className="py-2 px-4">
+      <CardContent className="py-2 px-8">
         <dt className=" text-muted-foreground">{item.name}</dt>
 
         <dd className={cn(animatedValueClass, 'text-primary-500')}>
