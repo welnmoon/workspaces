@@ -13,8 +13,8 @@ import { useRouter } from 'next/navigation';
 
 export default function PricingPage() {
   const router = useRouter();
-  const email = useSession().data?.user.email;
-  const userId = useSession().data?.user.id;
+  const email = useSession().data?.user?.email;
+  const userId = useSession().data?.user?.id;
 
   // const searchParams = useSearchParams();
   // const wId = Number(searchParams.get('workspaceId'));

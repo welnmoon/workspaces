@@ -1,8 +1,9 @@
 import { authOptions } from '@/lib/auth';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { markUserOnline } from './mark-user-online';
 import { UserService } from '@/lib/services/user';
 import { AppError } from '@/lib/errors';
+import { Session } from 'next-auth';
 
 export type SessionUser = {
   id: string;
@@ -12,7 +13,7 @@ export type SessionUser = {
 };
 
 export async function requireUser(): Promise<SessionUser> {
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
   if (!session?.user?.id) {
     throw new AppError(401, 'UNAUTHORIZED', 'Unauthorized');
   }
