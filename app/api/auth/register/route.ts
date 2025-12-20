@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import {
   badRequest,
   conflict,
@@ -14,6 +14,7 @@ import { Prisma } from '@prisma/client';
 import { UserService } from '@/lib/services/user';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { Session } from 'next-auth';
 
 // sign up - это регистрация
 
@@ -21,12 +22,10 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {
-    // 1) Сначала сессия
-    const session = await getServerSession(authOptions);
+    const session = (await getServerSession(authOptions)) as Session | null;
     if (session)
       return badRequest('User already logged in', 'USER_ALREADY_LOGGED_IN');
 
-    // 2) Парсинг + базовые проверки
     const body = await req.json();
     const parsed = registerSchema.safeParse(body);
     if (!parsed.success) {
@@ -40,16 +39,13 @@ export async function POST(req: NextRequest) {
       return badRequest('Missing required fields');
     }
 
-    // 3) Ищем пользователя
     const user = await prisma.user.findUnique({ where: { email } });
 
-    // 4) Если верифицирован — 409
 
     if (user?.emailVerified) {
       return conflict('User already exists', 'USER_ALREADY_EXISTS');
     }
 
-    // 5) Готовим токен
     const rawToken = crypto.randomBytes(32).toString('hex'); // url-safe
     const tokenHash = crypto
       .createHash('sha256')
@@ -57,7 +53,6 @@ export async function POST(req: NextRequest) {
       .digest('hex');
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
-    // 6) Запись в БД
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {

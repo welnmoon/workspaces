@@ -3,7 +3,6 @@
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import WorkspaceCardClient from './w-card-client';
 import { useWorkspaceMemberRole } from '@/hooks/workspace/use-workspace-member-role';
-import { FullRoleDTO } from '@/types/prisma/DTO/role';
 
 const WorkspaceCard = ({
   workspace,

@@ -4,9 +4,8 @@ import { handleApiError } from '@/lib/http/handle-api-error';
 import { noContent, unprocessable } from '@/lib/http/http';
 import { SprintService } from '@/lib/services/sprint';
 import { changeSprintColorSchema } from '@/schemas/sprint/change-color';
-import { Role, SprintColor } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
-import z from 'zod';
 
 
 

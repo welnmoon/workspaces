@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import Description from '@/components/ui/desc';
 import { Heading } from '@/components/ui/heading';
 import { tariffs } from '@/const/tariffs';
 import { payWithCloudPayments } from '@/lib/payments/cloudpayments';
@@ -10,12 +9,12 @@ import { cn } from '@/lib/utils';
 import { TariffDTO } from '@/types/prisma/DTO/payment';
 import { Check } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function PricingPage() {
   const router = useRouter();
-  const email = useSession().data?.user.email;
-  const userId = useSession().data?.user.id;
+  const email = useSession().data?.user?.email;
+  const userId = useSession().data?.user?.id;
 
   // const searchParams = useSearchParams();
   // const wId = Number(searchParams.get('workspaceId'));

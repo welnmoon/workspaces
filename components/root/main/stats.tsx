@@ -3,7 +3,7 @@
 import { RootStats } from '@/app/page';
 import StatsCard from './stats-card';
 
-export default function Stats({ stats }: { stats: RootStats }) {
+export default function Stats({ stats, animatedValueClass }: { stats: RootStats, animatedValueClass: string }) {
   const data = [
     {
       name: 'Workspaces',
@@ -27,9 +27,9 @@ export default function Stats({ stats }: { stats: RootStats }) {
     },
   ];
   return (
-    <dl className="flex justify-between flex-wrap w-full">
+    <dl className="grid grid-cols-2 gap-4">
       {data.map((item) => (
-        <StatsCard item={item} key={item.name} />
+        <StatsCard animatedValueClass={animatedValueClass} item={item} key={item.name} />
       ))}
     </dl>
   );

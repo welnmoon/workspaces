@@ -1,4 +1,3 @@
-import { requireWorkspaceMember } from '@/guards/workspace';
 import { requireUser } from '@/helpers/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { handleApiError } from '@/lib/http/handle-api-error';

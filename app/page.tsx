@@ -6,7 +6,7 @@ import RootContainer from '@/components/root/root-container';
 import FaqRoot from '@/components/root/main/faq/faq-root';
 import NewHeroSection from '@/components/root/main/hero/new-hero';
 import { apiRoutes } from '@/lib/routes/api-routes';
-import Stats from '@/components/root/main/stats';
+import SmoothScrollProvider from '@/components/layout/Providers/SmoothScrollProvider';
 
 export type RootStats = {
   workspaces: number;
@@ -16,7 +16,7 @@ export type RootStats = {
 };
 
 async function Home() {
-  const origin = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+  const origin = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000';
   const res = await fetch(`${origin}${apiRoutes.getRootStats()}`, {
     method: 'GET',
     next: { revalidate: 300 },
@@ -24,15 +24,15 @@ async function Home() {
     headers: { 'Content-Type': 'application/json' },
   }).then((res) => res.json());
 
-
   const stats = res.data as RootStats;
   return (
     <main>
+      <SmoothScrollProvider />
       <RootContainer size="md">
         <RootNavigationMenu />
-        <NewHeroSection />
+        <NewHeroSection stats={stats} />
         {/* <HeroSection /> */}
-        <Stats stats={stats} />
+        {/* <Stats stats={stats} /> */}
       </RootContainer>
       {/* <CompaniesMarquee /> */}
 

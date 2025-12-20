@@ -1,7 +1,7 @@
 import { AppError } from '@/lib/errors';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { SendNotificationToWMembersSchema } from '@/schemas/notification/send-notification-to-w-members-schema';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useSendNotificationToWMembers = (
   userId: string,

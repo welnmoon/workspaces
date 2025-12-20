@@ -3,10 +3,9 @@ import { Manrope } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import RootProviders from '@/components/layout/Providers/root-providers';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { apiRoutes } from '@/lib/routes/api-routes';
-import { headers } from 'next/headers';
+import { Session } from 'next-auth';
 
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
@@ -53,12 +52,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
 
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body className={`${satoshi.variable} ${manrope.variable}`}>
-        <RootProviders  session={session}>{children}</RootProviders>{' '}
+        <RootProviders session={session}>{children}</RootProviders>{' '}
         <script
           src="https://widget.cloudpayments.ru/bundles/cloudpayments"
           async

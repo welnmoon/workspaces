@@ -3,7 +3,8 @@ import Header from '@/components/layout/header/header';
 import Footer from '@/components/root/main/footer';
 import { authOptions } from '@/lib/auth';
 import type { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,7 +16,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
 
   return (
     <Container>

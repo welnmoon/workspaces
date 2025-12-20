@@ -11,7 +11,6 @@ import FormInput from '../form-input';
 import SubmitBtn from '@/components/buttons/submit-btn';
 import BaseLink from '@/components/base-link';
 import { apiRoutes } from '@/lib/routes/api-routes';
-import { clientRoutes } from '@/lib/routes/client-routes';
 import { PROVIDERS } from '@/lib/providers';
 import LoginOauthButton from '@/components/buttons/auth/login-oauth-btn';
 import Image from 'next/image';

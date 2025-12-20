@@ -2,13 +2,11 @@
 
 import FormInput from '@/components/forms/form-input';
 import SubmitBtn from '@/components/buttons/submit-btn';
-import { apiRoutes } from '@/lib/routes/api-routes';
 import {
   CreateProjectFormValues,
   createProjectFormSchema,
 } from '@/schemas/projects/create-project-form-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useEditProject } from '@/hooks/project/use-edit-project';

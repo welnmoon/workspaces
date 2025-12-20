@@ -1,5 +1,4 @@
 import { parseErrorResponse } from '@/helpers/parse-error-response';
-import { AppError } from '@/lib/errors';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

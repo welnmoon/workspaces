@@ -3,8 +3,7 @@
 import { NotificationFullDTO } from '@/types/prisma/DTO/notification';
 import NotificationCard from './notifications-card';
 import { useNotificationPages } from '@/hooks/notifications/use-notification-pages';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { NotificationPages } from '@/types/notification-pages';
 import NotificationsPagination from './notifications-pagination';
 import Description from '@/components/ui/desc';

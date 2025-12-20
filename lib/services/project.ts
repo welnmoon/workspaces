@@ -15,7 +15,6 @@ import { TaskStats } from '@/types/service/task-stats';
 import { AuditActions, Prisma, TaskStatus } from '@prisma/client';
 import { AppError } from '../errors';
 import { endOfDay, startOfDay, subMonths } from 'date-fns';
-import { date } from 'zod';
 
 export class ProjectService {
   //-------------------------------------//

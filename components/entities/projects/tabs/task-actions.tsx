@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Ellipsis } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import getFullName from '@/helpers/profile.ts/get-full-name';
 import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
