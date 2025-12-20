@@ -8,10 +8,8 @@ import bcrypt from 'bcrypt';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
 // ← ЭТО ВСЁ, ЧТО НУЖНО ДЛЯ V4 (никаких NextAuthConfig!)
-import type { NextAuthOptions } from 'next-auth';
+import type { DefaultSession, NextAuthOptions, Session } from 'next-auth';
 import customPrismaAdapter from './custom-prisma-adapter';
-
-import type { DefaultSession } from 'next-auth';
 import { prisma } from './prisma';
 import { AppError } from './errors';
 
@@ -99,7 +97,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
 
-    async session({ session, token }) {
+    async session({ session, token }): Promise<Session> {
       // Если пользователь удалён из БД — логаут
       if (token.userExists === false) {
         session.expires = '1970-01-01T00:00:00.000Z';
@@ -118,3 +116,5 @@ export const authOptions: NextAuthOptions = {
 const handler = NextAuth(authOptions);
 export const GET = handler;
 export const POST = handler;
+
+
