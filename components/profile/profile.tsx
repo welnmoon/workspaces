@@ -2,6 +2,7 @@
 
 import AddAccounts from '@/components/profile/add-accounts';
 import { Heading } from '@/components/ui/heading';
+import { Button } from '@/components/ui/button';
 
 // shadcn/ui pieces
 import {
@@ -13,7 +14,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Mail } from 'lucide-react';
+import { LogOut, Mail } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import BaseLink from '@/components/base-link';
@@ -21,6 +22,7 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
 import { useState } from 'react';
 import ProfileEditDialog from '../dialogs/profile/profile-edit-dialog';
+import { LogoutConfirmDialog } from '../dialogs/profile/logout-confirm-dialog';
 import { useProfile } from '@/hooks/profile/use-profile';
 import PageLoading from '../page-loading';
 import PasswordEditDialog from '../dialogs/profile/password-edit-dialog';
@@ -42,6 +44,7 @@ const ProfileComponent = ({ userId }: Props) => {
   const [editing, setEditing] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
   const [editOAuth, setEditOAuth] = useState('');
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const { data: profile, isLoading, isError, error } = useProfile(userId);
   const { data: payments = [], isLoading: paymentsLoading } =
@@ -74,14 +77,24 @@ const ProfileComponent = ({ userId }: Props) => {
         <Heading level={1} className="text-3xl font-semibold tracking-tight">
           Профиль
         </Heading>
-        <ProfileEditDialog
-          open={editing}
-          setEditing={setEditing}
-          userId={profile.id}
-          firstName={profile.firstName || ''}
-          lastName={profile.lastName || ''}
-          image={profile.image || ''}
-        />
+        <div className="flex items-center gap-2">
+          <ProfileEditDialog
+            open={editing}
+            setEditing={setEditing}
+            userId={profile.id}
+            firstName={profile.firstName || ''}
+            lastName={profile.lastName || ''}
+            image={profile.image || ''}
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => setLogoutDialogOpen(true)}
+          >
+            <LogOut className="h-4 w-4" /> Выйти
+          </Button>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -282,8 +295,19 @@ const ProfileComponent = ({ userId }: Props) => {
           </Card>
         </div>
       </div>
+      <LogoutConfirmDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen} description="Вы уверены, что хотите выйти?" />
     </main>
   );
 };
 
 export default ProfileComponent;
+
+
+
+
+
+
+
+
+
+

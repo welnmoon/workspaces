@@ -197,7 +197,7 @@ const BacklogAccordion = ({
 
         <AccordionContent className="flex flex-col gap-3 text-sm">
           {tasks.length === 0 ? (
-            <div className="text-muted-foreground text-sm border bg-white">
+            <div className="text-muted-foreground text-sm border bg-white px-4 py-2">
               В бэклоге пока нет задач
             </div>
           ) : (

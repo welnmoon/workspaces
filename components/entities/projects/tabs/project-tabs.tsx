@@ -157,7 +157,6 @@ const ProjectTabs = ({
       }
       className="w-full space-y-4"
     >
-      {`${projectStatus.locked}`}
       <div className="flex flex-wrap items-center gap-3 sticky top-20 z-10 bg-white p-2 rounded-xl shadow ">
         <TabsList className="inline-flex flex-wrap gap-1">
           <TabsTrigger value="list" className="flex items-center gap-2">

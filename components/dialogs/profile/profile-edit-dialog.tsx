@@ -33,8 +33,9 @@ const ProfileEditDialog = ({
           variant="default"
           size="sm"
           className="gap-2"
+          icon={<UserRoundCog className="h-4 w-4" />}
         >
-          <UserRoundCog className="h-4 w-4" /> Редактировать
+          Редактировать
         </MainBtn>
       </DialogTrigger>
       <DialogContent>
