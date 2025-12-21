@@ -1,5 +1,10 @@
 'use client';
+
 import Link from 'next/link';
+import { WorkspaceLogo } from '@/components/ui/workspace-logo';
+import { AuthButtons } from '../buttons/auth-btns';
+import { navSections } from '@/const/root-navigation';
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -8,39 +13,25 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { navSections } from '@/const/root-navigation';
-import { Heading } from '@/components/ui/heading';
-import { WorkspaceLogo } from '@/components/ui/workspace-logo';
-import { AuthButtons } from '../buttons/auth-btns';
+
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
 
 export function RootNavigationMenu() {
   return (
-    <header className="grid grid-cols-[1fr_auto_1fr] items-center">
-      <WorkspaceLogo className="justify-self-start" />
-      <div className="relative flex w-full justify-center text-sm leading-[1.5] items-center">
+    <header className="flex items-center justify-between gap-3">
+      <WorkspaceLogo />
+
+      {/* Desktop nav */}
+      <div className="hidden lg:flex flex-1 justify-center">
         <NavigationMenu>
           <NavigationMenuList>
             {navSections.map((section) => (
               <NavigationMenuItem key={section.title}>
                 <NavigationMenuTrigger>{section.title}</NavigationMenuTrigger>
-                <NavigationMenuContent className="flex  gap-2 p-4 w-max">
-                  {section.title === 'Продукт' && (
-                    <div className="w-1/2 px-3 py-2 rounded-md flex flex-col gap-2 bg-zinc-50">
-                      <Heading level={4} className="font-semibold">
-                        Workspaces 2.0
-                      </Heading>
-                      <p className="text-xs text-muted-foreground leading-snug">
-                        Обновлённая навигация, интеграции и умные дашборды в
-                        одном месте.
-                      </p>
-                      <Link
-                        href="/product"
-                        className="text-xs text-blue-600 font-medium hover:underline"
-                      >
-                        Узнать больше →
-                      </Link>
-                    </div>
-                  )}
+                <NavigationMenuContent className="flex gap-2 p-4 w-max">
                   <ul className="flex-1 list-none">
                     {section.links.map((link) => (
                       <li key={link.label}>
@@ -61,7 +52,47 @@ export function RootNavigationMenu() {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <AuthButtons className="justify-self-end" />
+
+      {/* Right side desktop */}
+      <div className="hidden lg:flex items-center gap-2">
+        <AuthButtons />
+      </div>
+
+      {/* Mobile controls */}
+      <div className="lg:hidden flex items-center gap-2">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label="Открыть меню">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent side="right" className="w-[320px]">
+            <nav className="mt-6 space-y-6 px-6 overflow-y-auto pb-6">
+              <div className="items-center gap-2 border-b pb-4">
+                <AuthButtons />
+              </div>
+              {navSections.map((section) => (
+                <div key={section.title} className="space-y-2">
+                  <p className="text-sm font-semibold">{section.title}</p>
+                  <ul className="space-y-1">
+                    {section.links.map((link) => (
+                      <li key={link.label}>
+                        <Link
+                          href={link.href}
+                          className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
     </header>
   );
 }
