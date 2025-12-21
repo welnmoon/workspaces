@@ -29,7 +29,7 @@ const WorkspaceHub = ({
           text="Единое пространство"
           className="bg-blue-50 text-blue-600 border-blue-300/50"
         />
-        <Heading>Единое пространство для всей команды</Heading>
+        <Heading className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Единое пространство для всей команды</Heading>
         <p>
           Создавайте рабочие пространства для проектов, отделов или клиентов.
           Вся коммуникация, задачи и участники — в одном месте, без потери
@@ -57,3 +57,4 @@ const WorkspaceHub = ({
 };
 
 export default WorkspaceHub;
+

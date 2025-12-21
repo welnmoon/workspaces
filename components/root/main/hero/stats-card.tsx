@@ -15,8 +15,8 @@ const StatsCard = ({
   });
   return (
     <Card key={item.name} className="p-0 gap-0 shadow-none">
-      <CardContent className="py-2 px-8">
-        <dt className=" text-muted-foreground">{item.name}</dt>
+      <CardContent className="py-2 px-2 md:px-8">
+        <dt className="text-muted-foreground text-[12px] md:text[16px] lg:text-[20px]">{item.name}</dt>
 
         <dd className={cn(animatedValueClass, 'text-primary-500')}>
           {animatedValue}

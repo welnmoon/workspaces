@@ -12,8 +12,8 @@ const HeroTariff = () => {
       {/*TOP*/}
       <div className="min-h-fit">
         {currentTariff === tariffs.FREE.name && (
-          <div className="flex justify-between h-full gap-4">
-            <div className="bg-neutral-200 w-1/2 h-70 rounded-md relative">
+          <div className="flex flex-col sm:flex-row justify-between h-full gap-4">
+            <div className="bg-neutral-200 w-full sm:w-1/2 h-70 rounded-md relative">
               <p className="font-[600] text-neutral-700 my-4 mx-6 wrap-break-word text-lg">
                 Подходит для старта
               </p>
@@ -27,7 +27,7 @@ const HeroTariff = () => {
               />
             </div>
 
-            <div className="bg-neutral-100 w-1/2 rounded-md py-4 px-6 text-sm text-neutral-600">
+            <div className="bg-neutral-100 w-full sm:w-1/2 rounded-md py-4 px-6 text-sm text-neutral-600">
               <p className="text-[20px] font-[600]">Ограничения:</p>
               <ul className="mt-2 list-disc list-inside">
                 <li>Ограничение на проекты</li>
@@ -101,7 +101,7 @@ const HeroTariff = () => {
       {/*BOTTOM*/}
       <div className="lg:w-full">
         {currentTariff === tariffs.FREE.name && (
-          <div className="grid grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
             <div className="rounded-md bg-neutral-50 border px-4 py-3">
               <p className="font-medium text-neutral-800">Воркспейсы</p>
               <p className="text-neutral-600 mt-1">1 активный</p>

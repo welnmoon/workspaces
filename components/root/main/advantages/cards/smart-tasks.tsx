@@ -15,7 +15,7 @@ const SmartTasks = ({ className }: { className?: string }) => {
           text="Умные задачи"
           className="bg-rose-50 text-rose-600 border-rose-300/50"
         />
-        <Heading>Умные задачи и приоритеты</Heading>
+        <Heading className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Умные задачи и приоритеты</Heading>
         <p>
           Назначайте исполнителей, расставляйте приоритеты и сроки. Worknest
           автоматически синхронизирует статусы, чтобы команда всегда знала, что
@@ -36,3 +36,4 @@ const SmartTasks = ({ className }: { className?: string }) => {
 };
 
 export default SmartTasks;
+

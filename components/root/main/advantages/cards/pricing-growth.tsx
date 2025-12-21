@@ -19,7 +19,7 @@ const PricingGrowth = ({ className }: { className?: string }) => {
           className="bg-amber-50 text-amber-700 border-amber-300/50"
         />
 
-        <Heading>Бесплатно — с возможностью роста</Heading>
+        <Heading className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Бесплатно — с возможностью роста</Heading>
         <p>
           Начните с бесплатного тарифа и развивайтесь без ограничений.
           Переходите на Pro, чтобы открыть дополнительные проекты, участников и
@@ -45,3 +45,4 @@ const PricingGrowth = ({ className }: { className?: string }) => {
 };
 
 export default PricingGrowth;
+

@@ -15,7 +15,7 @@ const AnalyticsAudit = ({ className }: { className?: string }) => {
           text="Аналитика и аудит-лог"
           className="bg-sky-50 text-sky-600 border-sky-300/50"
         />
-        <Heading>Прозрачная аналитика и история действий</Heading>
+        <Heading className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Прозрачная аналитика и история действий</Heading>
         <p>
           Система фиксирует каждое изменение — от создания задачи до обновления
           статуса. Отчёты и аудит-лог помогают анализировать эффективность
@@ -36,3 +36,4 @@ const AnalyticsAudit = ({ className }: { className?: string }) => {
 };
 
 export default AnalyticsAudit;
+

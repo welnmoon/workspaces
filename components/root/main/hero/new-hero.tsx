@@ -4,7 +4,7 @@ import { Heading } from '@/components/ui/heading';
 import { FcCollaboration } from 'react-icons/fc';
 import HeroTariff from './hero-tariff';
 import { RootStats } from '@/app/page';
-import Stats from '../stats';
+import Stats from './stats';
 import { useCountUp } from '@/hooks/use-count-up';
 import { cn } from '@/lib/utils';
 
@@ -33,7 +33,8 @@ const logoWall = [
   },
 ];
 
-const animatedValueClass = 'mt-1 text-5xl font-bold wrap-break-word';
+const animatedValueClass =
+  'mt-1 text-3xl md:text-4xl lg:text-5xl ml-2 md:ml-0 font-bold wrap-break-word';
 
 const NewHeroSection = ({ stats }: { stats: RootStats }) => {
   const animatedValue = useCountUp({
@@ -51,7 +52,7 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
       <h2 className="visually-hidden">Hero section</h2>
       <div className="flex flex-col lg:flex-row gap-8 mb-0 mb-10 lg:mb-0">
         {/*LEFT SIDE*/}
-        <section className="flex flex-col justify-between border-r border-zinc-200 pb-8 pr-8">
+        <section className="flex flex-col justify-between md:border-r border-zinc-200 pb-8 pr-8">
           {/* TEXT */}
           <div className="flex flex-col gap-6">
             <Badge className="w-fit text-[14px]" variant="info">
@@ -59,7 +60,7 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
               Создано для командной работы
             </Badge>
 
-            <Heading className="text-6xl text-black">
+            <Heading className="lg-2xl md:4xl lg:text-6xl text-black">
               Управляйте работой команды в одном пространстве
             </Heading>
 
@@ -81,17 +82,17 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
         <HeroTariff />
       </div>
       {/*BOTTOM*/}
-      <section className="border flex flex-col gap-4 border-zinc-200 px-8 pt-4 pb-8 rounded-md">
+      <section className="md:border flex flex-col gap-4 border-zinc-200 px-8 pt-4 pb-8 rounded-md">
         <span className="text-zinc-500 pointer-events-none select-none">
           Нам доверяют
         </span>
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-40 lg:items-center">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-40 lg:items-center ">
           <span
             className={cn('text-amber-500 w-fit lg:w-50', animatedValueClass)}
           >
             {animatedValue}+
           </span>
-          <div className="flex flex-row justify-between flex-1">
+          <div className="flex flex-row gap-4 md:gap-0 md:justify-between flex-1 overflow-x-auto">
             {logoWall.map((l) => (
               <img
                 className={cn('pointer-events-none select-none', l.className)}

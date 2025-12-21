@@ -16,7 +16,7 @@ const TeamCollaboration = ({ className }: { className?: string }) => {
           className="bg-violet-50 text-violet-600 border-violet-300/50"
         />
 
-        <Heading>Совместная работа без барьеров</Heading>
+        <Heading className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Совместная работа без барьеров</Heading>
         <p>
           Приглашайте участников по email и управляйте ролями — Owner, Admin или
           Member. Делитесь задачами и проектами, контролируя доступ и
@@ -37,3 +37,4 @@ const TeamCollaboration = ({ className }: { className?: string }) => {
 };
 
 export default TeamCollaboration;
+

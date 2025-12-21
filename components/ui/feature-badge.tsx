@@ -11,7 +11,7 @@ export const FeatureBadge = ({ icon, text, className }: FeatureBadgeProps) => {
   return (
     <span
       className={cn(
-        'inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-sm font-medium',
+        'inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-xs sm:text-sm md:text-base font-medium',
         'bg-blue-50 text-blue-600 border border-blue-200/60',
         className
       )}
@@ -21,3 +21,4 @@ export const FeatureBadge = ({ icon, text, className }: FeatureBadgeProps) => {
     </span>
   );
 };
+

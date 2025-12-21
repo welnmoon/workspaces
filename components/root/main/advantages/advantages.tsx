@@ -13,7 +13,7 @@ const Advantages = () => {
     <section className="bg-white p-8">
       <RootContainer>
         <RootHeading
-          className="text-center mx-auto tracking-tight font-extrabold leading-tight text-4xl md:text-5xl
+          className="text-center mx-auto tracking-tight font-extrabold leading-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl
           text-neutral-800 lg:w-3/4"
           level={2}
         >

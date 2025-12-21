@@ -26,7 +26,7 @@ const ProjectControl = ({
           className="bg-lime-50 text-lime-700 border-lime-300/50"
         />
 
-        <Heading>Проекты под полным контролем</Heading>
+        <Heading className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Проекты под полным контролем</Heading>
         <p>
           Планируйте, отслеживайте и реализуйте проекты от идеи до релиза.
           Карточки, статусы и дедлайны помогают держать фокус и видеть общий
@@ -47,3 +47,4 @@ const ProjectControl = ({
 };
 
 export default ProjectControl;
+

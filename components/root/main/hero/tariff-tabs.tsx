@@ -20,12 +20,12 @@ const TariffTabs = ({
   setCurrentTariff: (tariff: string) => void;
 }) => {
   return (
-    <div className="w-full text-right inset-shadow-sm py-4 px-4 rounded-md max-w-md flex items-center justify-between">
-      <Button variant="ghost" className="group">
+    <div className="w-full text-right inset-shadow-sm py-4 px-1 md:px-4 rounded-md max-w-md mx flex flex-col md:flex-row  items-center justify-between">
+      <Button variant="ghost" className="group order-2 md:order-1">
         <ArrowLeftIcon className="transition-transform duration-200 group-hover:-translate-x-0.5" />
         К тарифам
       </Button>
-      <Tabs defaultValue={currentTariff} className="gap-4">
+      <Tabs defaultValue={currentTariff} className="gap-4 order-1 md:order-2">
         <TabsList className="h-full">
           {tariff_tabs.map(({ icon: Icon, name, value }) => (
             <TabsTrigger
