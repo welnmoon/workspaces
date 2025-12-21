@@ -13,10 +13,7 @@ import { PROVIDERS } from '@/lib/providers';
 import BaseLink from '@/components/base-link';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { loginSchema, LoginSchema } from './login-schema';
-import Image from 'next/image';
-import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import DividerWithText from '@/components/divider-with-text';
-import { RootHeading } from '@/components/root/root-heading';
 
 const LoginForm = () => {
   const router = useRouter();
