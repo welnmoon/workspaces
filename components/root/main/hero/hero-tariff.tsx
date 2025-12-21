@@ -99,7 +99,7 @@ const HeroTariff = () => {
       />
 
       {/*BOTTOM*/}
-      <div className="w-full">
+      <div className="lg:w-full">
         {currentTariff === tariffs.FREE.name && (
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div className="rounded-md bg-neutral-50 border px-4 py-3">

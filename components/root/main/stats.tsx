@@ -6,17 +6,17 @@ import StatsCard from './stats-card';
 export default function Stats({ stats, animatedValueClass }: { stats: RootStats, animatedValueClass: string }) {
   const data = [
     {
-      name: 'Workspaces',
+      name: 'Пространства',
       value: stats.workspaces,
       href: '#',
     },
     {
-      name: 'Projects',
+      name: 'Проекты',
       value: stats.projects,
       href: '#',
     },
     {
-      name: 'Tasks',
+      name: 'Задачи',
       value: stats.tasks,
       href: '#',
     },

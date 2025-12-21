@@ -49,11 +49,11 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
     `}
     >
       <h2 className="visually-hidden">Hero section</h2>
-      <div className="flex flex-col lg:flex-row gap-8 mb-0">
+      <div className="flex flex-col lg:flex-row gap-8 mb-0 mb-10 lg:mb-0">
         {/*LEFT SIDE*/}
         <section className="flex flex-col justify-between border-r border-zinc-200 pb-8 pr-8">
           {/* TEXT */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-6">
             <Badge className="w-fit text-[14px]" variant="info">
               <FcCollaboration className="mr-2" />
               Создано для командной работы
@@ -85,8 +85,10 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
         <span className="text-zinc-500 pointer-events-none select-none">
           Нам доверяют
         </span>
-        <div className="flex flex-row gap-40 items-center">
-          <span className={cn('text-amber-500', animatedValueClass)}>
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-40 lg:items-center">
+          <span
+            className={cn('text-amber-500 w-fit lg:w-50', animatedValueClass)}
+          >
             {animatedValue}+
           </span>
           <div className="flex flex-row justify-between flex-1">
