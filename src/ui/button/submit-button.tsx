@@ -1,21 +1,19 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
 import { Loader2 } from 'lucide-react';
 
-const SubmitBtn = ({
-  isLoading,
-  text,
-  className,
-}: {
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+type SubmitButtonProps = {
   isLoading: boolean;
   text?: string;
   className?: string;
-}) => {
+};
+
+const SubmitButton = ({ isLoading, text, className }: SubmitButtonProps) => {
   return (
     <Button
-      // className="cursor-pointer bg-primary-600 text-primary-50 hover:bg-primary-500"
       className={cn('w-40 bg-zinc-900', className)}
       type="submit"
       disabled={isLoading}
@@ -31,4 +29,5 @@ const SubmitBtn = ({
   );
 };
 
-export default SubmitBtn;
+export default SubmitButton;
+export { SubmitButton, type SubmitButtonProps };

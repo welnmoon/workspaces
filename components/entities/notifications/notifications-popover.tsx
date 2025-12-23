@@ -1,6 +1,5 @@
 'use client';
 
-import { LinkArrow } from '@/components/buttons/link-arrow';
 import { InvitationNotification } from '@/components/entities/notifications/invitation-notification';
 import { Notification } from '@/components/entities/notifications/notification';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,7 @@ import {
 import { useInvitations } from '@/hooks/notifications/invitations/use-invitations';
 import { useNotifications } from '@/hooks/notifications/use-notifications';
 import { clientRoutes } from '@/lib/routes/client-routes';
+import { LinkArrow } from '@/ui/icons/link-arrow';
 import { Bell } from 'lucide-react';
 
 const NotificationsPopover = ({ userId }: { userId: string }) => {

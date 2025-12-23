@@ -17,11 +17,11 @@ import ProjectTabs from './tabs/project-tabs';
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import { useToggleProjectEnd } from '@/hooks/project/use-toggle-project-end';
 import toast from 'react-hot-toast';
-import { RippleButton } from '@/components/buttons/ripple-button';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ProjectLockProvider } from './context/project-lock-context';
 import { useProject } from '@/hooks/project/use-project';
+import { RippleButton } from '@/ui/button/ripple-button';
 import { useState } from 'react';
 import {
   Dialog,

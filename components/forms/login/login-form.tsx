@@ -7,7 +7,7 @@ import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import FormInput from '../form-input';
-import SubmitBtn from '@/components/buttons/submit-btn';
+import { SubmitButton } from '@/ui/button/submit-button';
 import LoginOauthButton from '@/components/buttons/auth/login-oauth-btn';
 import { PROVIDERS } from '@/lib/providers';
 import BaseLink from '@/components/base-link';
@@ -89,7 +89,7 @@ const LoginForm = () => {
                 isPassword
               />
 
-              <SubmitBtn
+              <SubmitButton
                 text="Войти"
                 isLoading={form.formState.isSubmitting}
                 className="mt-2 w-full"

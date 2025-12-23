@@ -1,6 +1,7 @@
 'use client';
 
-import EditWorkspaceButton from '@/components/buttons/edit-workspace';
+import { useState } from 'react';
+
 import EditWorkspaceForm from '@/components/forms/workspace/edit-workspace-form';
 import {
   Dialog,
@@ -9,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { EditWorkspaceAction } from '@/features/workspaces/edit-workspace/edit-workspace.action';
 
 type EditWorkspaceDialogProps = {
   workspaceId: number;
@@ -27,7 +28,7 @@ const EditWorkspaceDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <EditWorkspaceButton />
+        <EditWorkspaceAction />
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

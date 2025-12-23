@@ -1,6 +1,5 @@
 'use client';
 
-import SubmitBtn from '@/components/buttons/submit-btn';
 import {
   Select,
   SelectContent,
@@ -20,6 +19,7 @@ import { FormProvider, useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import FormInput from '../form-input';
 import { ROLE_VALUES, RolesEnum } from '@/types/prisma/DTO/role';
+import { SubmitButton } from '@/ui/button/submit-button';
 
 type InviteUserFormProps = {
   workspaceId: number;
@@ -128,7 +128,7 @@ const InviteUserForm = ({ workspaceId, onSuccess }: InviteUserFormProps) => {
           type="number"
         />
 
-        <SubmitBtn
+        <SubmitButton
           className="2"
           isLoading={form.formState.isSubmitting}
           text="Пригласить"

@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { taskIsExpired } from '@/helpers/task/isExpired';
 import Desc from '@/components/ui/desc';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import GoBackBtn from '@/components/buttons/go-back-btn';
 import { useRouter } from 'next/navigation';
 import { Heading } from '@/components/ui/heading';
 import Link from 'next/link';
@@ -14,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { TASK_PRIORITY_LABELS } from '@/const/priority';
 import { TaskFullDTO, TaskPriorityDTO } from '@/types/prisma/DTO/tasks';
 import { UserDTO } from '@/types/prisma/DTO/user';
+import { GoBackButton } from '@/ui/navigation/go-back-button';
 
 const TaskComponent = ({
   task,
@@ -97,7 +97,7 @@ const TaskComponent = ({
             ]}
           />
         </div>
-        <GoBackBtn router={router} />
+        <GoBackButton router={router} />
       </div>
 
       {/* Заголовок задачи (как в Jira сверху) */}

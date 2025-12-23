@@ -2,45 +2,44 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
-import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
 import { Loader2, Trash2 } from 'lucide-react';
-import { apiRoutes } from '@/lib/routes/api-routes';
+import toast from 'react-hot-toast';
 
-type DeleteProjectButtonProps = {
-  workspaceId: number;
-  projectId: number;
+import { Button } from '@/components/ui/button';
+import { apiRoutes } from '@/lib/routes/api-routes';
+import { cn } from '@/lib/utils';
+
+type DeleteMemberActionProps = {
+  memberId: number;
   className?: string;
   children?: React.ReactNode;
 };
 
-const DeleteProjectButton = ({
-  workspaceId,
-  projectId,
+const DeleteMemberAction = ({
+  memberId,
   className,
   children,
-}: DeleteProjectButtonProps) => {
+}: DeleteMemberActionProps) => {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     try {
       setIsDeleting(true);
-      const res = await fetch(apiRoutes.someProject(workspaceId, projectId), {
+      const res = await fetch(apiRoutes.deleteMember(memberId), {
         method: 'DELETE',
       });
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        throw new Error(data?.message || 'Не удалось удалить проект');
+        throw new Error(data?.message || 'Не удалось удалить участника');
       }
 
-      toast.success('Проект удалён');
+      toast.success('Участник удалён');
       router.refresh();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : 'Не удалось удалить проект'
+        error instanceof Error ? error.message : 'Не удалось удалить участника'
       );
     } finally {
       setIsDeleting(false);
@@ -67,4 +66,4 @@ const DeleteProjectButton = ({
   );
 };
 
-export default DeleteProjectButton;
+export { DeleteMemberAction };

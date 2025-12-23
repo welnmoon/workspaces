@@ -10,7 +10,7 @@ import { VscSparkleFilled } from 'react-icons/vsc';
 
 const Advantages = () => {
   return (
-    <section className="bg-white p-8">
+    <section className="bg-white">
       <RootContainer>
         <RootHeading
           className="text-center mx-auto tracking-tight font-extrabold leading-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl
@@ -28,7 +28,7 @@ const Advantages = () => {
           , а не как разрозненные чаты и таблицы
         </RootHeading>
 
-        <div className="space-y-2 md:space-y-0 md:grid md:grid-cols-5 gap-3 w-full lg:w-3/4 mx-auto mt-8">
+        <div className="space-y-2 md:space-y-0 md:grid md:grid-cols-5 gap-3 w-full mt-8">
           <WorkspaceHub className="col-span-5 rounded-md overflow-hidden bg-[#F4F8FF] border border-blue-300/40" />
 
           <ProjectControl className="col-span-3 rounded-md overflow-hidden bg-[#F8FFE8] border border-lime-300/40" />

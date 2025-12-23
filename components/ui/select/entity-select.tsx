@@ -47,7 +47,7 @@ function EntitySelect<T>({
     value && items.some((i) => getId(i) === value) ? value : undefined;
   return (
     <>
-      <Label className="font-semibold text-xs text-muted-foreground uppercase">
+      <Label className="font-normal text-sm text-muted-foreground ">
         {label}
       </Label>
       <Select

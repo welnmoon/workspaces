@@ -2,8 +2,8 @@
 import { useRouter } from 'next/navigation';
 import { Heading } from './ui/heading';
 
-import LinkButton from './buttons/link-btn';
-import GoBackButton from './buttons/go-back-btn';
+import LinkButton from '@/ui/button/link-button';
+import { GoBackButton } from '@/ui/navigation/go-back-button';
 
 const NotFound = ({ text }: { text: string }) => {
   const router = useRouter();

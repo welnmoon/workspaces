@@ -1,6 +1,7 @@
-import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
 import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface LinkButtonProps {
   text: string;
@@ -25,3 +26,4 @@ const LinkButton = ({ text, href, className }: LinkButtonProps) => {
 };
 
 export default LinkButton;
+export { LinkButton, type LinkButtonProps };

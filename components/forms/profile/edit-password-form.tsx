@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from '../form-input';
-import SubmitBtn from '../../buttons/submit-btn';
 import toast from 'react-hot-toast';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -12,6 +11,7 @@ import {
   PasswordChangeSchemaDTO,
 } from '@/schemas/auth/passwrod-change-schema';
 import { useEditPassword } from '@/hooks/profile/use-edit-password';
+import { SubmitButton } from '@/ui/button/submit-button';
 
 const EditPasswordForm = ({
   setModalOpen,
@@ -71,7 +71,7 @@ const EditPasswordForm = ({
               type="password"
             />
           </div>
-          <SubmitBtn text="Изменить" isLoading={isPending} />
+          <SubmitButton text="Изменить" isLoading={isPending} />
         </fieldset>
       </form>
     </FormProvider>

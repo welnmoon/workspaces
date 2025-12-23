@@ -9,6 +9,8 @@ import Link from 'next/link';
 
 import WorkspaceCardActions from './workspace-card-actions';
 import { FullRoleDTO, RolesEnum } from '@/types/prisma/DTO/role';
+import { Badge } from '@/components/ui/badge';
+import { Shield, ShieldHalf, ShieldPlus } from 'lucide-react';
 
 type Props = {
   avatarUrl: string | null;
@@ -81,16 +83,20 @@ export default function WorkspaceCardClient({
         </div>
       </CardHeader>
 
-      <CardFooter className="text-sm text-muted-foreground">
+      <CardFooter className="text-sm font-light text-muted-foreground">
         {isRoleLoading ? (
           // Скелетон роли
           <span className="inline-block h-4 w-24 rounded bg-gray-200 animate-pulse" />
         ) : role ? (
-          // Когда загрузилась роль
-          <span>Вы: {role}</span>
+          <Badge variant={'outline'} className="flex items-center gap-2 font-light">
+            {role === 'OWNER' && (
+              <ShieldPlus size={15} className="text-zinc-400" />
+            )}
+            {role === 'ADMIN' && <Shield size={15} />}
+            {role === 'MEMBER' && <ShieldHalf size={15} />} {role}
+          </Badge>
         ) : (
-          // На всякий случай, если роли нет
-          <span>Роль не определена</span>
+          <Badge variant={'destructive'}>Роль не определена</Badge>
         )}
       </CardFooter>
     </Card>

@@ -1,6 +1,7 @@
 'use client';
 
-import CreateInvitationButton from '@/components/buttons/create-invitation';
+import { useState } from 'react';
+
 import InviteUserForm from '@/components/forms/invite/invite-user-form';
 import {
   Dialog,
@@ -9,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { CreateInvitationAction } from '@/features/invitations/create-invitation/create-invitation.action';
 
 type InviteUserDialogProps = {
   workspaceId: number;
@@ -21,7 +22,7 @@ const InviteUserDialog = ({ workspaceId }: InviteUserDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <CreateInvitationButton />
+        <CreateInvitationAction />
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

@@ -1,4 +1,4 @@
-import LinkButton from '@/components/buttons/link-btn';
+import LinkButton from '@/ui/button/link-button';
 import { Heading } from '@/components/ui/heading';
 
 const NotAuthPage = () => {

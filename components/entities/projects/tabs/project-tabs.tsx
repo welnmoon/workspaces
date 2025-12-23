@@ -25,9 +25,9 @@ import { useSprintCreate } from '@/hooks/sprint/use-sprint-create';
 import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
 import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
 import { useMembers } from '@/hooks/members/use-members';
-import MainBtn from '@/components/buttons/main-btn';
 import { FaPenToSquare } from 'react-icons/fa6';
 import { useProjectLock } from '../context/project-lock-context';
+import MainButton from '@/ui/button/main-button';
 
 type ProjectTabsProps = {
   sprints: SprintWithTasksWithAssigneesDTO[];
@@ -173,7 +173,7 @@ const ProjectTabs = ({
           </TabsTrigger>
           <TabsTrigger value="stats" className="flex items-center gap-2">
             <IoStatsChart className="h-4 w-4" />
-            <span>Статистика</span>
+            <span>Аналитика</span>
           </TabsTrigger>
         </TabsList>
 
@@ -206,7 +206,7 @@ const ProjectTabs = ({
           workspaceId={workspaceId}
         />
         {activeTab === 'list' && (
-          <MainBtn
+          <MainButton
             onClick={() => setCreateSprint((prev) => !prev)}
             text={createSprint ? 'Отменить' : 'Создать спринт'}
             icon={<FaPenToSquare className="text-white" size={20} />}

@@ -1,9 +1,10 @@
-import { IndentIncrease } from 'lucide-react';
-import { Button } from '../ui/button';
 import Link from 'next/link';
+import { IndentIncrease } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
-const BuyTariffButton = () => {
+const BuyTariffAction = () => {
   return (
     <Link href={clientRoutes.pricingPage()}>
       <Button
@@ -17,4 +18,4 @@ const BuyTariffButton = () => {
   );
 };
 
-export default BuyTariffButton;
+export { BuyTariffAction };

@@ -1,6 +1,7 @@
 'use client';
 
-import EditProjectButton from '@/components/buttons/edit-project-btn';
+import { useState } from 'react';
+
 import EditProjectForm from '@/components/forms/project/edit-project-form';
 import {
   Dialog,
@@ -10,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { EditProjectAction } from '@/features/projects/edit-project/edit-project.action';
 
 type EditProjectDialogProps = {
   workspaceId: number;
@@ -30,7 +31,7 @@ const EditProjectDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <EditProjectButton />
+        <EditProjectAction />
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="space-y-2 text-left">

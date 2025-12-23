@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from '../form-input';
-import SubmitBtn from '../../buttons/submit-btn';
 import toast from 'react-hot-toast';
 import { Dispatch, SetStateAction } from 'react';
 import { useEditProfile } from '@/hooks/profile/use-edit-profile';
@@ -11,6 +10,7 @@ import {
   editProfileSchema,
   EditProfileValue,
 } from '@/schemas/profile/edit-profile-info';
+import { SubmitButton } from '@/ui/button/submit-button';
 
 const EditProfileForm = ({
   userId,
@@ -69,7 +69,7 @@ const EditProfileForm = ({
               placeholder="Ссылка на изображение"
             />
           </div>
-          <SubmitBtn text="Сохранить" isLoading={isPending} />
+          <SubmitButton text="Сохранить" isLoading={isPending} />
         </fieldset>
       </form>
     </FormProvider>

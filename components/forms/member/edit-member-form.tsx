@@ -1,4 +1,4 @@
-import SubmitBtn from '@/components/buttons/submit-btn';
+import { SubmitButton } from '@/ui/button/submit-button';
 import {
   Select,
   SelectContent,
@@ -105,7 +105,10 @@ const EditMemberForm = ({
             )}
           />
         </div>
-        <SubmitBtn isLoading={form.formState.isSubmitting} text="Обновить" />
+        <SubmitButton
+          isLoading={form.formState.isSubmitting}
+          text="Обновить"
+        />
       </form>
     </FormProvider>
   );

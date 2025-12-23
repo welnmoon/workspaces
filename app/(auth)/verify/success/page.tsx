@@ -1,7 +1,7 @@
 // app/verify/success/page.tsx
 'use client';
 
-import LinkButton from '@/components/buttons/link-btn';
+import LinkButton from '@/ui/button/link-button';
 import { useSearchParams } from 'next/navigation';
 
 export default function VerifySuccessPage() {

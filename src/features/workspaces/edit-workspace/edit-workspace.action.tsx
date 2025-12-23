@@ -1,9 +1,10 @@
-import { cn } from '@/lib/utils';
-import { Edit } from 'lucide-react';
 import { forwardRef } from 'react';
-import { Button } from '../ui/button';
+import { Edit } from 'lucide-react';
 
-const EditWorkspaceButton = forwardRef<
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+const EditWorkspaceAction = forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
 >(({ className, children, ...props }, ref) => (
@@ -21,6 +22,6 @@ const EditWorkspaceButton = forwardRef<
   </Button>
 ));
 
-EditWorkspaceButton.displayName = 'EditWorkspaceButton';
+EditWorkspaceAction.displayName = 'EditWorkspaceAction';
 
-export default EditWorkspaceButton;
+export { EditWorkspaceAction };

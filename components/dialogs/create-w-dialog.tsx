@@ -1,4 +1,11 @@
 'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+
 import {
   Dialog,
   DialogContent,
@@ -6,24 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import MainBtn from '../buttons/main-btn';
 import CreateWorkspaceForm from '../forms/w/create-w-form';
-import { useState } from 'react';
-import { Button } from '../ui/button';
 import WorkspaceAvatars from '../entities/workspaces/workspace-avatars';
+import { Button } from '@/components/ui/button';
 import { Heading } from '../ui/heading';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
-
-import toast from 'react-hot-toast';
 import { apiRoutes } from '@/lib/routes/api-routes';
-import { useRouter } from 'next/navigation';
 import {
   createWorkspaceFormSchema,
   CreateWorkspaceFormValues,
 } from '@/schemas/workspace/create-workspace-form-schema';
-import SubmitBtn from '../buttons/submit-btn';
+import MainButton from '@/ui/button/main-button';
+import { SubmitButton } from '@/ui/button/submit-button';
 
 const CreateWorkspaceDialog = () => {
   const [step, setStep] = useState<1 | 2>(1);
@@ -85,7 +85,7 @@ const CreateWorkspaceDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <MainBtn text="Создать воркспейс" />
+        <MainButton text="Создать воркспейс" />
       </DialogTrigger>
       <DialogContent className="max-h-[80vh]">
         <DialogHeader>
@@ -146,7 +146,7 @@ const CreateWorkspaceDialog = () => {
                   <Button variant={'outline'} onClick={() => setStep(1)}>
                     Назад
                   </Button>
-                  <SubmitBtn
+                  <SubmitButton
                     text="Создать вокрспейс"
                     isLoading={form.formState.isSubmitting}
                   />

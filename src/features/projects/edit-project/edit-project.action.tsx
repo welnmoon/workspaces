@@ -1,17 +1,20 @@
-import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
 import { Edit } from 'lucide-react';
 
-const EditButton = ({
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+type EditProjectActionProps = {
+  className?: string;
+  onClick?: () => void;
+  children?: React.ReactNode;
+};
+
+const EditProjectAction = ({
   className,
   children,
   onClick,
   ...props
-}: {
-  className?: string;
-  onClick?: () => void;
-  children?: React.ReactNode;
-}) => (
+}: EditProjectActionProps) => (
   <Button
     onClick={onClick}
     variant="ghost"
@@ -26,4 +29,4 @@ const EditButton = ({
   </Button>
 );
 
-export default EditButton;
+export { EditProjectAction };

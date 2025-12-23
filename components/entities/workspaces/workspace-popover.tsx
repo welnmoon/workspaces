@@ -1,13 +1,13 @@
-import InviteUserDialog from '@/components/dialogs/invite-user-dialog';
-import EditWorkspaceDialog from '@/components/dialogs/edit-workspace-dialog';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { BuyTariffAction } from '@/features/billing/buy-tariff/buy-tariff.action';
+import { DownloadReportAction } from '@/features/reports/download-report/download-report.action';
+import EditWorkspaceDialog from '@/components/dialogs/edit-workspace-dialog';
+import InviteUserDialog from '@/components/dialogs/invite-user-dialog';
 import { IoMenu } from 'react-icons/io5';
-import BuyTariffButton from '@/components/buttons/tariff-buy';
-import DownloadReportButton from '@/components/buttons/download-report-btn';
 import WorkspaceNotifyButton from './workspace-notify-button';
 
 type WorkspacePopoverProps = {
@@ -38,8 +38,8 @@ const WorkspacePopover = ({
           description={workspaceDescription}
         />
         <WorkspaceNotifyButton workspaceId={workspaceId} userId={userId} />
-        <BuyTariffButton />
-        <DownloadReportButton tasksDone={tasksDone} />
+        <BuyTariffAction />
+        <DownloadReportAction tasksDone={tasksDone} />
       </PopoverContent>
     </Popover>
   );

@@ -8,16 +8,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import MainBtn from '../buttons/main-btn';
 import CreateProjectForm from '../forms/project/create-project-form';
 import { useState } from 'react';
+import MainButton from '@/ui/button/main-button';
 
 const CreateProjectDialog = ({ workspaceId }: { workspaceId: number }) => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <MainBtn text="Создать проект" />
+        <MainButton text="Создать проект" />
       </DialogTrigger>
       <DialogContent className="max-h-[80vh] sm:max-w-2xl">
         <DialogHeader className="space-y-1 text-left">

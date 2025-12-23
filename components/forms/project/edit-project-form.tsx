@@ -1,15 +1,15 @@
 'use client';
 
-import FormInput from '@/components/forms/form-input';
-import SubmitBtn from '@/components/buttons/submit-btn';
 import {
   CreateProjectFormValues,
   createProjectFormSchema,
 } from '@/schemas/projects/create-project-form-schemas';
+import FormInput from '@/components/forms/form-input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useEditProject } from '@/hooks/project/use-edit-project';
+import { SubmitButton } from '@/ui/button/submit-button';
 
 type EditProjectFormProps = {
   workspaceId: number;
@@ -75,7 +75,7 @@ const EditProjectForm = ({
           placeholder="Кратко опишите цели и задачи"
         />
         <div className="pt-2">
-          <SubmitBtn text="Сохранить" isLoading={isEditPending} />
+          <SubmitButton text="Сохранить" isLoading={isEditPending} />
         </div>
       </form>
     </FormProvider>

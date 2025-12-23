@@ -4,20 +4,20 @@ import { useMemo, useState } from 'react';
 import { Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '../ui/dialog';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
-const DownloadReportButton = ({ tasksDone }: { tasksDone: number }) => {
+const DownloadReportAction = ({ tasksDone }: { tasksDone: number }) => {
   const today = useMemo(() => new Date(), []);
   const defaultStart = useMemo(() => {
     const firstDay = new Date(today);
@@ -157,4 +157,4 @@ const DownloadReportButton = ({ tasksDone }: { tasksDone: number }) => {
   );
 };
 
-export default DownloadReportButton;
+export { DownloadReportAction };

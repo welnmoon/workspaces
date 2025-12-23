@@ -1,15 +1,16 @@
-import { Button, type ButtonProps } from '../ui/button';
 import { forwardRef } from 'react';
-import { cn } from '@/lib/utils';
 import { PlusCircle } from 'lucide-react';
 
-type MainBtnProps = ButtonProps & {
+import { Button, type ButtonProps } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+type MainButtonProps = ButtonProps & {
   text?: string;
   icon?: React.ReactNode;
   children?: React.ReactNode;
 };
 
-const MainBtn = forwardRef<HTMLButtonElement, MainBtnProps>(
+const MainButton = forwardRef<HTMLButtonElement, MainButtonProps>(
   ({ text, icon, className, children, ...props }, ref) => {
     const Icon = icon ?? <PlusCircle className="text-white" size={20} />;
 
@@ -29,6 +30,7 @@ const MainBtn = forwardRef<HTMLButtonElement, MainBtnProps>(
   }
 );
 
-MainBtn.displayName = 'MainBtn';
+MainButton.displayName = 'MainButton';
 
-export default MainBtn;
+export default MainButton;
+export { MainButton, type MainButtonProps };

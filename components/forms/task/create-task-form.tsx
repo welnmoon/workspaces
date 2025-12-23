@@ -7,7 +7,6 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from '../form-input';
-import SubmitBtn from '../../buttons/submit-btn';
 import toast from 'react-hot-toast';
 import { DueDateField } from './due-date-field';
 import { useRouter } from 'next/navigation';
@@ -15,6 +14,7 @@ import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import SelectAssignee from './select-assignee';
 import SelectPriority from './select-priority';
 import { useCreateTask } from '@/hooks/tasks/use-create-task';
+import { SubmitButton } from '@/ui/button/submit-button';
 
 const CreateTaskForm = ({
   projectId,
@@ -91,7 +91,7 @@ const CreateTaskForm = ({
 
           <DueDateField control={form.control} name="dueDate" />
         </fieldset>
-        <SubmitBtn text="Создать задачу" isLoading={isPending} />
+        <SubmitButton text="Создать задачу" isLoading={isPending} />
       </form>
     </FormProvider>
   );

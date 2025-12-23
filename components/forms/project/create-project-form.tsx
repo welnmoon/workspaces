@@ -7,11 +7,11 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from '../form-input';
-import SubmitBtn from '../../buttons/submit-btn';
 import toast from 'react-hot-toast';
 import { Dispatch, SetStateAction } from 'react';
 import { useCreateProject } from '@/hooks/project/use-create-project';
 import { AppError } from '@/lib/errors';
+import { SubmitButton } from '@/ui/button/submit-button';
 
 const CreateProjectForm = ({
   workspaceId,
@@ -95,7 +95,7 @@ const CreateProjectForm = ({
               placeholder="Description"
             />
           </div>
-          <SubmitBtn text="Создать" isLoading={isPending} />
+          <SubmitButton text="Создать" isLoading={isPending} />
         </fieldset>
       </form>
     </FormProvider>

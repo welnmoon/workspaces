@@ -8,12 +8,12 @@ import { useRouter } from 'next/navigation';
 
 import { registerSchema, RegisterSchema } from './register-schema';
 import FormInput from '../form-input';
-import SubmitBtn from '@/components/buttons/submit-btn';
 import BaseLink from '@/components/base-link';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import { PROVIDERS } from '@/lib/providers';
 import LoginOauthButton from '@/components/buttons/auth/login-oauth-btn';
 import DividerWithText from '@/components/divider-with-text';
+import { SubmitButton } from '@/ui/button/submit-button';
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -115,7 +115,7 @@ const RegisterForm = () => {
                   required
                 />
 
-                <SubmitBtn
+                <SubmitButton
                   text="Зарегистрироваться"
                   isLoading={form.formState.isSubmitting}
                   className="w-full mt-1"

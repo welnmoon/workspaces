@@ -1,6 +1,6 @@
 'use client';
 
-import SubmitBtn from '@/components/buttons/submit-btn';
+import { SubmitButton } from '@/ui/button/submit-button';
 import FormInput from '@/components/forms/form-input';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import {
@@ -85,7 +85,7 @@ const EditWorkspaceForm = ({
           label="Описание"
           placeholder="Короткое описание"
         />
-        <SubmitBtn
+        <SubmitButton
           isLoading={form.formState.isSubmitting}
           text="Сохранить"
         />

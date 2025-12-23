@@ -5,10 +5,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import MainBtn from '../../buttons/main-btn';
 import { UserRoundCog } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
 import EditProfileForm from '../../forms/profile/edit-profile-form';
+import MainButton from '@/ui/button/main-button';
 
 const ProfileEditDialog = ({
   setEditing,
@@ -28,7 +28,7 @@ const ProfileEditDialog = ({
   return (
     <Dialog open={open} onOpenChange={setEditing}>
       <DialogTrigger asChild>
-        <MainBtn
+        <MainButton
           onClick={() => setEditing(true)}
           variant="default"
           size="sm"
@@ -36,7 +36,7 @@ const ProfileEditDialog = ({
           icon={<UserRoundCog className="h-4 w-4" />}
         >
           Редактировать
-        </MainBtn>
+        </MainButton>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

@@ -1,11 +1,11 @@
-import DeleteProjectButton from '@/components/buttons/delete-project-btn';
-import EditProjectDialog from '@/components/dialogs/edit-project-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import EditProjectDialog from '@/components/dialogs/edit-project-dialog';
+import { DeleteProjectAction } from '@/features/projects/delete-project/delete-project.action';
 import { MoreVertical } from 'lucide-react';
 
 type EditProjectPopoverProps = {
@@ -35,7 +35,10 @@ const EditProjectPopover = ({
           name={projectName}
           description={projectDescription}
         />
-        <DeleteProjectButton projectId={projectId} workspaceId={workspaceId} />
+        <DeleteProjectAction
+          projectId={projectId}
+          workspaceId={workspaceId}
+        />
       </PopoverContent>
     </Popover>
   );

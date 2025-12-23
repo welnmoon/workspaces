@@ -7,6 +7,7 @@ import FaqRoot from '@/components/root/main/faq/faq-root';
 import NewHeroSection from '@/components/root/main/hero/new-hero';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import SmoothScrollProvider from '@/components/layout/Providers/SmoothScrollProvider';
+import ShowCase from '@/components/root/main/show-case/show-case';
 
 export type RootStats = {
   workspaces: number;
@@ -38,26 +39,29 @@ async function Home() {
 
       {/*Product Mockup*/}
       <section className="bg-gray-100 pt-8 relative mb-8">
-        <div className="w-[60%] mx-auto">
+        <div className="w-[90%] md:w-[80%] lg:w-[70%] xl:w-[80%] mx-auto">
           <div className="bg-gradient-to-t from-white absolute z-10 inset-0" />
           <img
             alt="product mockup"
-            src="/images/dashboard-screen.webp"
+            src="/images/kanban-page.png"
             className="block w-full object-contain mx-auto rounded-t-lg"
           />
         </div>
       </section>
 
-      <Advantages />
       <RootContainer
-      // className="sm:max-w-screen-sm
-      //     md:max-w-screen-sm
-      //     lg:max-w-screen-md
-      //     xl:max-w-screen-xl
-      //     2xl:max-w-screen-xl"
+        size="md"
+        // className="sm:max-w-screen-sm
+        //     md:max-w-screen-sm
+        //     lg:max-w-screen-md
+        //     xl:max-w-screen-xl
+        //     2xl:max-w-screen-xl"
       >
+        <Advantages />
+        <ShowCase />
         <FaqRoot />
       </RootContainer>
+
       <Footer />
     </main>
   );

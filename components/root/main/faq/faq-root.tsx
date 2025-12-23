@@ -70,7 +70,7 @@ const FaqRoot = () => {
   }, [activeCategory, filteredFaqData]);
 
   return (
-    <section className="w-3/4 mx-auto">
+    <section className="">
       <div className="mb-6">
         <span className="font-semibold text-zinc-500">FAQ</span>
         <Heading level={1} className="mb-4 mt-4">

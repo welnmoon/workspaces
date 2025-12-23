@@ -1,9 +1,10 @@
-import { cn } from '@/lib/utils';
 import { forwardRef } from 'react';
-import { Button } from '../ui/button';
 import { TiUserAdd } from 'react-icons/ti';
 
-const CreateInvitationButton = forwardRef<
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+const CreateInvitationAction = forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
 >(({ className, children, ...props }, ref) => (
@@ -21,6 +22,6 @@ const CreateInvitationButton = forwardRef<
   </Button>
 ));
 
-CreateInvitationButton.displayName = 'CreateInvitationButton';
+CreateInvitationAction.displayName = 'CreateInvitationAction';
 
-export default CreateInvitationButton;
+export { CreateInvitationAction };
