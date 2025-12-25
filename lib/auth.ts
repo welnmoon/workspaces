@@ -9,6 +9,7 @@ import type { JWT } from 'next-auth/jwt';
 import customPrismaAdapter from './custom-prisma-adapter';
 import { prisma } from './prisma';
 import { AppError } from './errors';
+import { NEXT_AUTH_SECRET } from './next-auth-secret';
 
 const callbacks: AuthOptions['callbacks'] = {
   async jwt({ token, user }) {
@@ -43,6 +44,7 @@ const callbacks: AuthOptions['callbacks'] = {
 
 export const authOptions: AuthOptions = {
   adapter: customPrismaAdapter,
+  secret: NEXT_AUTH_SECRET,
   session: {
     strategy: 'jwt',
   },

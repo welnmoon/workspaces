@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { fail } from '@/lib/http/http';
 import { SignJWT } from 'jose';
-const SECRET = new TextEncoder().encode(process.env.NEXTAUTH_SECRET!);
+import { NEXT_AUTH_SECRET } from '@/lib/next-auth-secret';
+const SECRET = new TextEncoder().encode(NEXT_AUTH_SECRET);
 
 export async function GET(req: NextRequest) {
   try {
