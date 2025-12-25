@@ -1,0 +1,114 @@
+import { Badge } from '@/components/ui/badge';
+import { Loader, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ReceivedInvitationDTO } from '@/types/prisma/DTO/invitations';
+import { useAcceptInvitation } from '@/hooks/notifications/invitations/use-accept-inviation';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { clientRoutes } from '@/lib/routes/client-routes';
+
+export type InvitationNotificationData = {
+  id: number;
+  workspaceId: number;
+  workspaceName?: string | null;
+  invitedRole: string;
+  status: string;
+  createdAt: string;
+  inviterName?: string | null;
+};
+
+const statusMap: Record<string, string> = {
+  PENDING: 'Ожидание',
+  ACCEPTED: 'Принято',
+  REVOKED: 'Отозвано',
+  EXPIRED: 'Просрочено',
+};
+
+export function InvitationNotification({
+  userId,
+  invitation,
+}: {
+  userId: string;
+  invitation: ReceivedInvitationDTO;
+}) {
+  const router = useRouter();
+  const { mutate, isPending } = useAcceptInvitation(userId);
+  const workspaceLabel =
+    invitation.workspace.name ?? `Workspace #${invitation.workspaceId}`;
+
+  const dateLabel = new Intl.DateTimeFormat('ru-RU', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(invitation.createdAt));
+
+  const statusLabel = statusMap[invitation.status] ?? invitation.status;
+  const workspaceHref = clientRoutes.workspacePage(invitation.workspaceId);
+
+  const handleAccept = () => {
+    try {
+      mutate(
+        { workspaceId: invitation.workspaceId, invId: invitation.id },
+        {
+          onSuccess: () => {
+            toast.success('Приглашение принято');
+            router.refresh();
+          },
+          onError: () => {
+            toast.error('Приглашение не принято');
+          },
+        }
+      );
+    } finally {
+      router.refresh();
+    }
+  };
+
+  return (
+    <li className="flex items-start gap-3 px-4 py-3 text-sm">
+      <span className="rounded-full bg-primary/10 p-2 text-primary">
+        <Users className="h-4 w-4" />
+      </span>
+      <div className="flex-1 space-y-1">
+        <p className="font-medium leading-tight">{workspaceLabel}</p>
+        <p className="text-xs text-muted-foreground">
+          Приглашение на роль{' '}
+          <span className="font-semibold">{invitation.invitedRole}</span>
+          {invitation.invitedUserEmail ? ` · от ${invitation.inviterId}` : ''}
+        </p>
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">{dateLabel}</span>
+          <Badge variant="outline" className="text-[11px]">
+            {statusLabel}
+          </Badge>
+        </div>
+        {invitation.status === 'ACCEPTED' && (
+          <Link
+            href={workspaceHref}
+            className="inline-flex text-[12px] font-medium text-primary-600 hover:text-primary-700 underline-anim"
+          >
+            Перейти в рабочее пространство
+          </Link>
+        )}
+        {invitation.status === 'PENDING' && (
+          <div className="space-x-2 ">
+            <Button
+              onClick={() => handleAccept()}
+              variant="outline"
+              className="text-[11px] px-2 py-0"
+              disabled={isPending}
+            >
+              {isPending ? <Loader className="animate-spin" /> : 'Принять'}
+            </Button>
+            <Button
+              variant="destructive"
+              className="text-[11px] text-white px-2 py-1"
+            >
+              Отклонить
+            </Button>
+          </div>
+        )}
+      </div>
+    </li>
+  );
+}
