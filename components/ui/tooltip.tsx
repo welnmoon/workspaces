@@ -4,12 +4,102 @@ import * as React from "react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
 import { cn } from "@/lib/utils"
+import useMediaQuery from "@/hooks/use-media-query"
 
 const TooltipProvider = TooltipPrimitive.Provider
 
-const Tooltip = TooltipPrimitive.Root
+type TooltipContextValue = {
+  isTouch: boolean
+  toggle: () => void
+}
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+const TooltipContext = React.createContext<TooltipContextValue | null>(null)
+
+const Tooltip = ({
+  children,
+  open: openProp,
+  defaultOpen,
+  onOpenChange,
+  delayDuration,
+  ...props
+}: React.ComponentProps<typeof TooltipPrimitive.Root>) => {
+  const isDesktop = useMediaQuery("(hover: hover) and (pointer: fine)")
+  const isTouch = !isDesktop
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(
+    defaultOpen ?? false
+  )
+  const isControlled = openProp !== undefined
+  const open = isControlled ? !!openProp : uncontrolledOpen
+
+  React.useEffect(() => {
+    if (!isTouch) {
+      setUncontrolledOpen(false)
+    }
+  }, [isTouch])
+
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      if (!isControlled) {
+        setUncontrolledOpen(next)
+      }
+      onOpenChange?.(next)
+    },
+    [isControlled, onOpenChange]
+  )
+
+  const contextValue = React.useMemo<TooltipContextValue>(
+    () => ({
+      isTouch,
+      toggle: () => handleOpenChange(!open),
+    }),
+    [isTouch, open, handleOpenChange]
+  )
+
+  const rootProps = isTouch
+    ? {
+        ...props,
+        open,
+        onOpenChange: handleOpenChange,
+        delayDuration: 0,
+      }
+    : {
+        ...props,
+        open: openProp,
+        defaultOpen,
+        onOpenChange,
+        delayDuration,
+      }
+
+  return (
+    <TooltipContext.Provider value={contextValue}>
+      <TooltipPrimitive.Root {...rootProps}>{children}</TooltipPrimitive.Root>
+    </TooltipContext.Provider>
+  )
+}
+
+const TooltipTrigger = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>
+>(({ onClick, ...props }, ref) => {
+  const ctx = React.useContext(TooltipContext)
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    onClick?.(event)
+    if (event.defaultPrevented) return
+    if (ctx?.isTouch) {
+      ctx.toggle()
+    }
+  }
+
+  return (
+    <TooltipPrimitive.Trigger
+      ref={ref}
+      onClick={handleClick}
+      {...props}
+    />
+  )
+})
+TooltipTrigger.displayName = TooltipPrimitive.Trigger.displayName
 
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,

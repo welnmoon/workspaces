@@ -14,7 +14,6 @@ import AuditsView from './presentational/audits-view';
 import SLAGaugeView from './presentational/sla-gauge-view';
 import { Heading } from '@/components/ui/heading';
 import { cn } from '@/lib/utils';
-import useMediaQuery from '@/hooks/use-media-query';
 
 // Project Card — метрики проекта, прогресс/статусы
 
@@ -35,8 +34,6 @@ import useMediaQuery from '@/hooks/use-media-query';
 // Empty/Skeleton/Error states — покажи “качество”, а не только happy path
 
 const ShowCase = () => {
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
-
   return (
     <section>
       <h2 className="visually-hidden">Show Worknest advantages</h2>
@@ -53,7 +50,6 @@ const ShowCase = () => {
         {/* COL #1 */}
         <aside className="w-full flex flex-col md:flex-row lg:border-r border-zinc-100">
           <CaseCard
-          isDesktop={isDesktop}
             title="Пространства"
             info="Ключевые данные по рабочему пространству"
           >
