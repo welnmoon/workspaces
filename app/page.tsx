@@ -1,6 +1,6 @@
 import Footer from '@/components/root/main/footer';
 import Advantages from '@/components/root/main/advantages/advantages';
-import { RootNavigationMenu } from '@/components/root/main/header';
+import { RootNavigationMenu } from '@/components/root/main/header/header';
 
 import RootContainer from '@/components/root/root-container';
 import FaqRoot from '@/components/root/main/faq/faq-root';

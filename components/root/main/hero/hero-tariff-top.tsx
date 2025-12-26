@@ -4,7 +4,7 @@ type TariffKey = keyof typeof tariffs;
 
 const HeroTariffTop = ({ currentTariff }: { currentTariff: TariffKey }) => {
   return (
-    <div className="min-h-fit h-[340px] w-full">
+    <div className="min-h-fit h-[350px] h-max-[360px] w-full">
       {currentTariff === tariffs.FREE.name && (
         <div className="flex justify-between h-full gap-4">
           <div className="bg-neutral-100 border border-zinc-200 w-1/2 rounded-md relative">
@@ -13,7 +13,7 @@ const HeroTariffTop = ({ currentTariff }: { currentTariff: TariffKey }) => {
             </p>
             <img
               src="/images/hero/hero-free-1_cropped.avif"
-              className="absolute bottom-0 object-cover h-[90%] lg:h-[70%]"
+              className="absolute bottom-0 object-cover h-[80%] lg:h-[60%]"
               alt=""
             />
           </div>

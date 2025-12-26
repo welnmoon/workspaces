@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
-import { AuthButtons } from '../buttons/auth-btns';
+import { AuthButtons } from '../../buttons/auth-btns';
 import { navSections } from '@/const/root-navigation';
 
 import {
@@ -18,6 +18,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
+import NavImg from './nav-img';
 
 export function RootNavigationMenu() {
   return (
@@ -31,8 +32,8 @@ export function RootNavigationMenu() {
             {navSections.map((section) => (
               <NavigationMenuItem key={section.title}>
                 <NavigationMenuTrigger>{section.title}</NavigationMenuTrigger>
-                <NavigationMenuContent className="p-4 md:w-[320px]">
-                  <ul className="flex-1 list-none space-y-1">
+                <NavigationMenuContent className="p-4 md:w-[500px] flex flex-row gap-6">
+                  <ul className="min-w-1/2 list-none space-y-1">
                     {section.links.map((link) => (
                       <li key={link.label}>
                         <NavigationMenuLink asChild>
@@ -46,6 +47,14 @@ export function RootNavigationMenu() {
                       </li>
                     ))}
                   </ul>
+
+                  {section.info && (
+                    <NavImg
+                      img={section.info.img}
+                      title={section.info.title}
+                      desc={section.info.description}
+                    />
+                  )}
                 </NavigationMenuContent>
               </NavigationMenuItem>
             ))}

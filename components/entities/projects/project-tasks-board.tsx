@@ -47,7 +47,7 @@ const ProjectTasksBoard = ({
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="mt-4 relative w-full">
         {filteredTasks.length === 0 && (
-          <div>
+          <div className="bg-white rounded-2xl border border-zinc-100 p-6">
             <EmptyState
               iconIsImage={true}
               // icon={

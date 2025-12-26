@@ -1,8 +1,10 @@
+import Link from 'next/link';
 import { ArrowLeftIcon } from 'lucide-react';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { tariffs } from '@/const/tariffs';
 import { Button } from '@/components/ui/button';
+import { clientRoutes } from '@/lib/routes/client-routes';
 
 const tariff_tabs = Object.entries(tariffs).map((t) => {
   return {
@@ -22,9 +24,18 @@ const TariffTabs = ({
 }) => {
   return (
     <div className="text-right inset-shadow-sm py-4 px-4 md:px-4 rounded-md w-full mx flex flex-row  items-center justify-between">
-      <Button variant="ghost" className="group order-2 md:order-1">
-        <ArrowLeftIcon className="transition-transform duration-200 group-hover:-translate-x-0.5" />
-        К тарифам
+      <Button
+        variant="link"
+        asChild
+        className="group order-2 md:order-1 gap-2 items-center"
+      >
+        <Link
+          href={clientRoutes.pricingPage()}
+          className="inline-flex items-center gap-2"
+        >
+          <ArrowLeftIcon className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+          К тарифам
+        </Link>
       </Button>
       <Tabs defaultValue={currentTariff} className="gap-4 order-1 md:order-2">
         <TabsList className="h-full">
@@ -40,12 +51,6 @@ const TariffTabs = ({
             </TabsTrigger>
           ))}
         </TabsList>
-
-        {/* {tariff_tabs.map((tab) => (
-          <TabsContent key={tab.value} value={tab.value}>
-            <p className="text-muted-foreground text-sm">{tab.name}</p>
-          </TabsContent>
-        ))} */}
       </Tabs>
     </div>
   );

@@ -25,7 +25,7 @@ export default function PricingPage() {
   return (
     <section className="py-16">
       <div className="container mx-auto max-w-6xl px-4">
-        <Heading level={1}>Выберите тариф</Heading>
+        <Heading level={1} className='mb-8'>Тарифы</Heading>
         {/* <Description text={`Простанрство: ${wName}, id: ${wId}`} /> */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {tariffKeys.map((key) => {
@@ -50,11 +50,11 @@ export default function PricingPage() {
                   )}
                 </div>
 
-                <ul className="space-y-2 mb-8 text-gray-700">
-                  {t.features.map((f) => (
-                    <li key={f} className="flex gap-2">
-                      <span className="text-green-600">✔</span>
-                      {f}
+                <ul className="mt-2 list-inside list-none space-y-2">
+                  {tariffs.FREE.features.map((f) => (
+                    <li key={f.label}>
+                      <f.icon className="w-4 h-4 mr-2 inline text-amber-600" />
+                      {f.label}
                     </li>
                   ))}
                 </ul>

@@ -8,26 +8,7 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        primary: {
-          50: '#f0f5ff',
-          100: '#d6e4ff', // применение
-          500: '#2f54eb', // основной цвет бренда - кнопки, акценты, активные элементы
-          600: '#1d39c4',
-        },
-        secondary: '#13c2c2', // вторичные акценты, ссылки
-        background: '#ffffff',
-        backgroundDark: '#0A0A0A', // темный фон
-        foreground: '#000000', // основной текст
-        foregroundMuted: '#595959', // второстепенный текст
-        error: '#ff4d4f', // ошибки, предупреждения
-        success: '#52c41a', // успех, подтверждения
-        warning: '#faad14', // предупреждения
-        muted: '#f5f5f5', // карточки, бордеры, ховеры
-      },
-      // screens: {
-      //   mdlg: '900px',
-      // },
+
       keyframes: {
         'accordion-down': {
           from: { height: '0' },
@@ -37,10 +18,21 @@ module.exports = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+
+        'pulse-soft': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.85' },
+        },
+        'pulse-strong': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.4' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'pulse-soft': 'pulse-soft 1.8s ease-in-out infinite',
+        'pulse-strong': 'pulse-strong 1.2s ease-in-out infinite',
       },
     },
   },
