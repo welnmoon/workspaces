@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import useMediaQuery from '@/hooks/use-media-query';
 
 type WorkspaceCardViewProps = {
   name: string;
@@ -34,6 +35,7 @@ export function WorkspaceCardView({
     .slice(0, 2)
     .toUpperCase();
 
+
   return (
     <TooltipProvider>
       <div className="flex gap-3 rounded-lg border border-zinc-100 bg-white p-4 shadow-sm">
@@ -44,7 +46,9 @@ export function WorkspaceCardView({
 
         <div className="flex-1 space-y-2">
           <div className="flex items-center gap-2">
-            <p className="text-[18px] font-semibold leading-tight underline-anim">{name}</p>
+            <p className="text-[18px] font-semibold leading-tight underline-anim">
+              {name}
+            </p>
             {roleLabel && (
               <Badge variant="outline" className="text-[11px]">
                 {roleLabel}

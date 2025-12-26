@@ -309,65 +309,68 @@ const TasksSprintAccordion = ({
           <div className="flex w-full items-start sm:items-center justify-between gap-3">
             {/* Левая часть */}
             <div className="w-full">
-  {/* Мобилка: 1 ряд = title слева, 2 ряд = date+stats справа
-      sm+: всё столбиком, каждый блок на своей строке */}
-  <div className="flex flex-col gap-2 sm:gap-2">
-    {/* Row 1 */}
-    <div className="flex items-center justify-start">
-      <span className="font-semibold text-lg sm:text-xl">
-        {sprint.name}
-      </span>
-    </div>
+              <div className="w-full flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                {/* TITLE (всегда слева, на md+ остаётся слева) */}
+                <div className="w-full md:w-auto">
+                  <span className="font-semibold text-lg md:text-xl">
+                    {sprint.name}
+                  </span>
+                </div>
 
-    {/* Row 2 (mobile) / Row 2 (sm+) */}
-    <div className="flex items-center justify-end sm:justify-start">
-      <span className="text-xs text-muted-foreground">
-        {formatDateTimeRange(
-          sprint.startDate,
-          sprint.endDate,
-          'ru-RU',
-          undefined,
-          'UTC'
-        )}
-      </span>
-    </div>
+                {/* RIGHT SIDE */}
+                <div
+                  className="
+      w-full
+      flex flex-row items-center justify-end gap-3
+      sm:flex-col sm:items-start sm:justify-start sm:gap-2
+      md:w-auto md:flex-row md:items-center md:justify-end md:gap-3
+    "
+                >
+                  {/* DATE */}
+                  <span className="text-xs text-muted-foreground">
+                    {formatDateTimeRange(
+                      sprint.startDate,
+                      sprint.endDate,
+                      'ru-RU',
+                      undefined,
+                      'UTC'
+                    )}
+                  </span>
 
-    {/* Row 3 (mobile stays on row2 with date) / Row 3 (sm+) */}
-    <div className="flex items-center justify-end sm:justify-start">
-      {!isSprintTasksStatsLoading ? (
-        <div className="flex gap-2 items-center">
-          <Badge variant="outline" className="gap-1">
-            <BookOpen size={14} />
-            {sprintTasksStats?.tasksCount}
-          </Badge>
+                  {/* STATS */}
+                  {!isSprintTasksStatsLoading ? (
+                    <div className="flex gap-2 items-center">
+                      <Badge variant="outline" className="gap-1">
+                        <BookOpen size={14} />
+                        {sprintTasksStats?.tasksCount}
+                      </Badge>
 
-          <Badge variant="success" className="gap-1">
-            <GoalIcon size={14} />
-            {sprintTasksStats?.tasksDoneCount}
-          </Badge>
+                      <Badge variant="success" className="gap-1">
+                        <GoalIcon size={14} />
+                        {sprintTasksStats?.tasksDoneCount}
+                      </Badge>
 
-          <Badge variant="default" className="gap-1 bg-primary-100">
-            <Timer size={14} />
-            {sprintTasksStats?.tasksInProgressCount}
-          </Badge>
-        </div>
-      ) : (
-        <div className="flex gap-2 items-center">
-          <Badge variant="outline">
-            <Skeleton className="h-4 w-4" />
-          </Badge>
-          <Badge variant="success">
-            <Skeleton className="h-4 w-4" />
-          </Badge>
-          <Badge variant="default">
-            <Skeleton className="h-4 w-4" />
-          </Badge>
-        </div>
-      )}
-    </div>
-  </div>
-</div>
-
+                      <Badge variant="default" className="gap-1 bg-primary-100">
+                        <Timer size={14} />
+                        {sprintTasksStats?.tasksInProgressCount}
+                      </Badge>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2 items-center">
+                      <Badge variant="outline">
+                        <Skeleton className="h-4 w-4" />
+                      </Badge>
+                      <Badge variant="success">
+                        <Skeleton className="h-4 w-4" />
+                      </Badge>
+                      <Badge variant="default">
+                        <Skeleton className="h-4 w-4" />
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
 
             <ChevronDown
               className="

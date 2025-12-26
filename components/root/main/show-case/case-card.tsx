@@ -6,6 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useState, useEffect } from 'react';
 
 const CaseCard = ({
   children,
@@ -14,6 +15,7 @@ const CaseCard = ({
   titleClassName,
   titleHoverEffect,
   info,
+  isDesktop,
 }: {
   children: React.ReactNode;
   title: string;
@@ -21,7 +23,14 @@ const CaseCard = ({
   titleClassName?: string;
   titleHoverEffect?: boolean;
   info?: string;
+  isDesktop?: boolean;
 }) => {
+  // for mobile / click tooltip support
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  useEffect(() => {
+    setTooltipOpen(false);
+  }, [isDesktop]);
   return (
     <div
       className={`group border border-b-zinc-100 px-4 py-4 space-y-2 ${containerClassName}`}
@@ -34,9 +43,17 @@ const CaseCard = ({
           >
             {title}
           </RootHeading>
-          {info && (
+          {info && isDesktop && (
             <Tooltip>
               <TooltipTrigger asChild>
+                <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+              </TooltipTrigger>
+              <TooltipContent side="bottom">{info}</TooltipContent>
+            </Tooltip>
+          )}
+          {info && !isDesktop && (
+            <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
+              <TooltipTrigger onClick={() => setTooltipOpen((v) => !v)} asChild>
                 <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
               </TooltipTrigger>
               <TooltipContent side="bottom">{info}</TooltipContent>
