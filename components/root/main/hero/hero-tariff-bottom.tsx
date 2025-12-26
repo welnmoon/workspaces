@@ -4,9 +4,9 @@ import clsx from 'clsx';
 type TariffKey = keyof typeof tariffBottomCards;
 
 const colorMap: Record<TariffKey, string> = {
-  FREE: 'bg-neutral-50 border-neutral-200 text-neutral-700',
-  PRO: 'bg-amber-50 border-amber-200 text-amber-700',
-  BUSINESS: 'bg-red-50 border-red-200 text-red-700',
+  FREE: 'sm:bg-neutral-50 sm:border-neutral-200 text-neutral-700',
+  PRO: 'sm:bg-amber-50 sm:border-amber-200 text-amber-700',
+  BUSINESS: 'sm:bg-red-50 sm:border-red-200 text-red-700',
 };
 
 const HeroTariffBottom = ({ currentTariff }: { currentTariff: TariffKey }) => {
@@ -19,7 +19,7 @@ const HeroTariffBottom = ({ currentTariff }: { currentTariff: TariffKey }) => {
           <div
             key={title}
             className={clsx(
-              'rounded-lg border px-4 py-4 flex lg:flex-col items-start gap-3',
+              'sm:rounded-lg sm:border px-2 sm:px-4 sm:py-4 flex flex-col md:flex-row lg:flex-col items-start gap-3',
               colorMap[currentTariff]
             )}
           >

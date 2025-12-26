@@ -23,7 +23,7 @@ const TariffTabs = ({
   setCurrentTariff: (tariff: string) => void;
 }) => {
   return (
-    <div className="text-right inset-shadow-sm py-4 px-4 md:px-4 rounded-md w-full mx flex flex-row  items-center justify-between">
+    <div className="text-right inset-shadow-sm py-4 px-4 md:px-4 rounded-md w-full mx flex gap-4 flex-col sm:flex-row sm:gap-0  items-center justify-between">
       <Button
         variant="link"
         asChild
@@ -44,7 +44,7 @@ const TariffTabs = ({
               key={value}
               value={name}
               onClick={() => setCurrentTariff(name)}
-              className="flex flex-col items-center gap-1 px-6 sm:px-4"
+              className="flex flex-col items-center gap-1 px-4 md:px-6"
             >
               <Icon />
               {label}

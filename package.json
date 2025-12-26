@@ -60,7 +60,7 @@
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
     "lucide-react": "^0.545.0",
-    "motion": "^12.23.24",
+    "motion": "^12.23.26",
     "next": "^15.5.7",
     "next-auth": "4.24.11",
     "pg": "^8.16.3",

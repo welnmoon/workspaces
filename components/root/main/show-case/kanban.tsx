@@ -17,11 +17,11 @@ type KanbanProps = {
 };
 
 const Kanban = ({ className = '', info }: KanbanProps) => {
-  const { ref, isFullyVisible } = useFullyInView<HTMLDivElement>();
+  const { ref, inView } = useFullyInView<HTMLDivElement>();
 
   // Hover-анимации включаем ТОЛЬКО когда секция полностью в экране
-  const hoverAnim = isFullyVisible
-    ? 'transition-transform duration-300 ease-out group-hover:-translate-x-10 group-hover:rotate-3'
+  const hoverAnim = inView
+    ? 'group-hover:-translate-x-10 group-hover:rotate-3'
     : '';
 
   return (
@@ -51,7 +51,8 @@ const Kanban = ({ className = '', info }: KanbanProps) => {
             <div
               className={cn(
                 'h-[130%] bg-blue-200 w-10 absolute right-8 -top-10 z-0 flex items-center justify-center',
-                hoverAnim
+                hoverAnim,
+                'transition-transform duration-300 ease-out '
               )}
             >
               <span className="text-md font-semibold text-blue-800 whitespace-nowrap -rotate-90">
@@ -63,7 +64,8 @@ const Kanban = ({ className = '', info }: KanbanProps) => {
             <div
               className={cn(
                 'h-[130%] bg-green-200 w-10 absolute -right-2 -top-10 z-0',
-                hoverAnim
+                hoverAnim,
+                'transition-transform duration-300 ease-out '
               )}
             />
 
@@ -71,7 +73,8 @@ const Kanban = ({ className = '', info }: KanbanProps) => {
             <div
               className={cn(
                 'h-[130%] bg-yellow-200 w-10 absolute right-18 -top-10 z-0',
-                hoverAnim
+                hoverAnim,
+                'transition-transform duration-300 ease-out '
               )}
             />
 
@@ -79,7 +82,8 @@ const Kanban = ({ className = '', info }: KanbanProps) => {
             <div
               className={cn(
                 'h-[130%] bg-red-200 w-10 absolute -right-12 -top-10 z-0',
-                hoverAnim
+                hoverAnim,
+                'transition-transform duration-300 ease-out '
               )}
             />
           </div>
