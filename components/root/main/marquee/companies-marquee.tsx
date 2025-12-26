@@ -3,26 +3,15 @@ import Marquee from 'react-fast-marquee';
 
 export const logos = [
   { id: 1, name: 'Google', url: 'https://cdn.simpleicons.org/google/9ca3af' },
-  {
-    id: 2,
-    name: 'Microsoft',
-    url: 'https://cdn.simpleicons.org/microsoft/9ca3af',
-  },
-  { id: 3, name: 'Amazon', url: 'https://cdn.simpleicons.org/amazon/9ca3af' },
+
   { id: 4, name: 'Stripe', url: 'https://cdn.simpleicons.org/stripe/9ca3af' },
   { id: 5, name: 'GitHub', url: 'https://cdn.simpleicons.org/github/9ca3af' },
   { id: 6, name: 'Notion', url: 'https://cdn.simpleicons.org/notion/9ca3af' },
   { id: 7, name: 'Vercel', url: 'https://cdn.simpleicons.org/vercel/9ca3af' },
   { id: 9, name: 'Figma', url: 'https://cdn.simpleicons.org/figma/9ca3af' },
 
-  // повтор набора — НОРМ для marquee
   { id: 11, name: 'Google', url: 'https://cdn.simpleicons.org/google/9ca3af' },
-  {
-    id: 12,
-    name: 'Microsoft',
-    url: 'https://cdn.simpleicons.org/microsoft/9ca3af',
-  },
-  { id: 13, name: 'Amazon', url: 'https://cdn.simpleicons.org/amazon/9ca3af' },
+
   { id: 14, name: 'Stripe', url: 'https://cdn.simpleicons.org/stripe/9ca3af' },
   { id: 15, name: 'GitHub', url: 'https://cdn.simpleicons.org/github/9ca3af' },
   { id: 16, name: 'Notion', url: 'https://cdn.simpleicons.org/notion/9ca3af' },
