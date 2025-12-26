@@ -9,7 +9,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import useMediaQuery from '@/hooks/use-media-query';
 
 type WorkspaceCardViewProps = {
   name: string;
