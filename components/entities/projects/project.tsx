@@ -22,7 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { ProjectLockProvider } from './context/project-lock-context';
 import { useProject } from '@/hooks/project/use-project';
 import { RippleButton } from '@/ui/button/ripple-button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -62,6 +62,7 @@ const ProjectComponent = ({
   members: MembershipSelectUserDTO[];
 }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [bgImgLoaded, setBgImgLoaded] = useState(false);
   const { data: optimisticProject, isLoading: isProjectLoading } =
     useProject(project);
   const { mutate: toggleProjectEnd, isPending: isToggleProjectPending } =
@@ -95,6 +96,12 @@ const ProjectComponent = ({
     : 'После завершения нельзя создавать/редактировать/удалять задачи.';
   const dialogConfirm = projectEnded ? 'Вернуть' : 'Завершить';
 
+  // BG IMAGE
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/images/workspaces/project-bg.jpg';
+    img.onload = () => setBgImgLoaded(true);
+  }, []);
   return (
     <ProjectLockProvider
       value={{
@@ -104,7 +111,10 @@ const ProjectComponent = ({
     >
       <article className="space-y-4">
         {isProjectLoading && 'Загрузка...'}
-        <Heading className="mb-2 flex justify-between" level={3}>
+        <Heading
+          className="mb-2 flex flex-col sm:flex-row gap-2 justify-between"
+          level={3}
+        >
           <div className="flex gap-2 items-center">
             <Breadcrumbs
               items={[
@@ -178,9 +188,14 @@ const ProjectComponent = ({
         <Divider />
 
         <div
-          className="p-4 rounded-md bg-cover bg-center bg-fixed min-h-screen"
+          className={cn(
+            'p-4 rounded-md bg-cover bg-center bg-fixed min-h-screen',
+            !bgImgLoaded && 'animate-pulse bg-zinc-200'
+          )}
           style={{
-            backgroundImage: "url('/images/workspaces/project-bg.jpg')",
+            backgroundImage: bgImgLoaded
+              ? "url('/images/workspaces/project-bg.jpg')"
+              : 'none',
           }}
         >
           <ProjectTabs

@@ -301,4 +301,8 @@ button {
     @apply bg-background text-foreground;
     font-family: var(--font-satoshi), sans-serif;
   }
+
+  body.react-remove-scroll-body {
+    padding-right: 0 !important;
+  }
 }

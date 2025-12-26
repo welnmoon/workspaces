@@ -29,6 +29,7 @@ const CreateTaskDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <MainButton
+        
           text="Создать задачу"
           icon={<PlusCircle className="text-white" size={20} />}
         />

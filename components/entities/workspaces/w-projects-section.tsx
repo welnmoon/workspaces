@@ -26,7 +26,7 @@ const WProjectsSection = ({
   const { data: optimisticProjects } = useProjects(workspaceId, projects);
   return (
     <section>
-      <div className="flex justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-0 sm:justify-between">
         <Heading>Projects</Heading>
         {(userRole === RolesEnum.ADMIN || userRole === RolesEnum.OWNER) && (
           <CreateProjectDialog workspaceId={workspaceId} />

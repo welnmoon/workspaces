@@ -23,7 +23,7 @@ const WorkspaceTabs = ({
     role: member.role as RoleWithoutOwnerDTO,
   }));
   return (
-    <Tabs defaultValue="projects">
+    <Tabs className="mb-6" defaultValue="projects">
       <TabsList className="">
         <TabsTrigger value="projects">Проекты</TabsTrigger>
         <TabsTrigger value="members">Участники</TabsTrigger>

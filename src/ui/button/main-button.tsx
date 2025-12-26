@@ -18,7 +18,7 @@ const MainButton = forwardRef<HTMLButtonElement, MainButtonProps>(
       <Button
         ref={ref}
         className={cn(
-          'bg-zinc-800 hover:bg-zinc-900 inline-flex items-center gap-2',
+          'bg-zinc-800 hover:bg-zinc-900 m-0 items-center gap-2',
           className
         )}
         {...props}

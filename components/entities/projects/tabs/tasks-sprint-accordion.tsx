@@ -115,6 +115,10 @@ const TasksSprintAccordion = ({
     return new Map(sprints && sprints.map((s) => [s.id, s.name]));
   }, [sprints]);
 
+  const sprintIsEnded = Boolean(
+    sprint.endDate && new Date(sprint.endDate) < new Date()
+  );
+
   // stats
   const { data: sprintTasksStats, isLoading: isSprintTasksStatsLoading } =
     useSprintTasksStats(workspaceId!, projectId!, sprint.id);
@@ -293,62 +297,88 @@ const TasksSprintAccordion = ({
         <AccordionTrigger
           asChild
           className={cn(
-            'flex items-center justify-between bg-zinc-50 rounded-t-md px-4'
+            'bg-zinc-50 rounded-t-md px-4 py-3',
+            sprintIsEnded && 'bg-red-50'
           )}
           style={{
-            backgroundColor: SprintColors[sprint.color],
+            backgroundColor: !sprintIsEnded
+              ? SprintColors[sprint.color]
+              : '#fdc7c7',
           }}
         >
-          <div className="flex justify-between items-center w-full">
-            <div className="flex gap-4 items-center">
-              <div className="flex gap-4 items-center min-w-60">
-                <span className="font-semibold text-xl min-w-30 ">
-                  {sprint.name}
-                </span>
+          <div className="flex w-full items-start sm:items-center justify-between gap-3">
+            {/* Левая часть */}
+            <div className="w-full">
+  {/* Мобилка: 1 ряд = title слева, 2 ряд = date+stats справа
+      sm+: всё столбиком, каждый блок на своей строке */}
+  <div className="flex flex-col gap-2 sm:gap-2">
+    {/* Row 1 */}
+    <div className="flex items-center justify-start">
+      <span className="font-semibold text-lg sm:text-xl">
+        {sprint.name}
+      </span>
+    </div>
 
-                <span className="text-xs text-muted-foreground hover:no-underline">
-                  {formatDateTimeRange(
-                    sprint.startDate,
-                    sprint.endDate,
-                    'ru-RU',
-                    undefined,
-                    'UTC'
-                  )}
-                </span>
-              </div>
+    {/* Row 2 (mobile) / Row 2 (sm+) */}
+    <div className="flex items-center justify-end sm:justify-start">
+      <span className="text-xs text-muted-foreground">
+        {formatDateTimeRange(
+          sprint.startDate,
+          sprint.endDate,
+          'ru-RU',
+          undefined,
+          'UTC'
+        )}
+      </span>
+    </div>
 
-              {!isSprintTasksStatsLoading && (
-                <div className="flex gap-2 items-center w-30">
-                  <Badge variant="outline" className="gap-1">
-                    <BookOpen size={14} />
-                    {sprintTasksStats?.tasksCount}
-                  </Badge>
-                  <Badge variant="success" className="gap-1">
-                    <GoalIcon size={14} />
-                    {sprintTasksStats?.tasksDoneCount}
-                  </Badge>
-                  <Badge variant="default" className="gap-1 bg-primary-100">
-                    <Timer size={14} />
-                    {sprintTasksStats?.tasksInProgressCount}
-                  </Badge>
-                </div>
-              )}
-              {isSprintTasksStatsLoading && (
-                <div className="flex gap-2 items-center">
-                  <Badge variant="outline" className="gap-1">
-                    <Skeleton className="h-4 w-4" />
-                  </Badge>
-                  <Badge variant="success" className="gap-1">
-                    <Skeleton className="h-4 w-4" />
-                  </Badge>
-                  <Badge variant="default" className="gap-1">
-                    <Skeleton className="h-4 w-4" />
-                  </Badge>
-                </div>
-              )}
-            </div>
+    {/* Row 3 (mobile stays on row2 with date) / Row 3 (sm+) */}
+    <div className="flex items-center justify-end sm:justify-start">
+      {!isSprintTasksStatsLoading ? (
+        <div className="flex gap-2 items-center">
+          <Badge variant="outline" className="gap-1">
+            <BookOpen size={14} />
+            {sprintTasksStats?.tasksCount}
+          </Badge>
 
-            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+          <Badge variant="success" className="gap-1">
+            <GoalIcon size={14} />
+            {sprintTasksStats?.tasksDoneCount}
+          </Badge>
+
+          <Badge variant="default" className="gap-1 bg-primary-100">
+            <Timer size={14} />
+            {sprintTasksStats?.tasksInProgressCount}
+          </Badge>
+        </div>
+      ) : (
+        <div className="flex gap-2 items-center">
+          <Badge variant="outline">
+            <Skeleton className="h-4 w-4" />
+          </Badge>
+          <Badge variant="success">
+            <Skeleton className="h-4 w-4" />
+          </Badge>
+          <Badge variant="default">
+            <Skeleton className="h-4 w-4" />
+          </Badge>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+
+            <ChevronDown
+              className="
+        hidden sm:block
+        h-4 w-4
+        shrink-0
+        text-muted-foreground
+        transition-transform duration-200
+        group-data-[state=open]:rotate-180
+      "
+            />
           </div>
         </AccordionTrigger>
 

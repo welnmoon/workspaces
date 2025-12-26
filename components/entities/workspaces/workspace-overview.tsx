@@ -51,31 +51,33 @@ const WorkspaceOverview = ({
 }: WorkspaceOverviewProps) => {
   return (
     <div className="flex flex-col md:flex-row gap-4 text-sm text-muted-foreground ">
-      <div className="flex gap-4">
-        {/* Members */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="flex items-center gap-1 cursor-default">
-              <Users size={16} />
-              <b>{membersCount}</b>
-            </span>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Участники</TooltipContent>
-        </Tooltip>
+      <div className="flex flex-col xs:flex-row gap-4">
+        <div className="flex gap-4">
+          {/* Members */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1 cursor-default">
+                <Users size={16} />
+                <b>{membersCount}</b>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Участники</TooltipContent>
+          </Tooltip>
 
-        {/* Projects */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="flex items-center gap-1 cursor-default">
-              <FolderKanban size={16} />
-              <b>{projectsCount}</b>
-            </span>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Проекты</TooltipContent>
-        </Tooltip>
+          {/* Projects */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1 cursor-default">
+                <FolderKanban size={16} />
+                <b>{projectsCount}</b>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Проекты</TooltipContent>
+          </Tooltip>
+        </div>
 
         {/* Tasks block */}
-        <div className="bg-zinc-100 px-2 py-1 rounded-md flex gap-3 items-center">
+        <div className="bg-zinc-100 px-2 py-1 rounded-md flex w-fit gap-3 items-center">
           <ListTodo size={16} className="text-zinc-400" />
 
           <Tooltip>

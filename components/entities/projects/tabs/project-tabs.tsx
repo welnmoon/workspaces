@@ -157,8 +157,8 @@ const ProjectTabs = ({
       }
       className="w-full space-y-4"
     >
-      <div className="flex flex-wrap items-center gap-3 sticky top-20 z-10 bg-white p-2 rounded-xl shadow ">
-        <TabsList className="inline-flex flex-wrap gap-1">
+      <div className="flex flex-wrap items-center gap-3 md:sticky top-20 z-10 bg-white p-2 rounded-xl shadow ">
+        <TabsList className="flex flex-wrap flex-start flex-row gap-1 h-auto">
           <TabsTrigger value="list" className="flex items-center gap-2">
             <List className="h-4 w-4" />
             <span>Список</span>

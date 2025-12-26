@@ -115,7 +115,6 @@ const WorkspacePage = async ({
 
       <Divider />
       <WorkspaceTabs
-     
         user={user}
         members={memberships}
         projectSectionProps={projectSectionProps}
