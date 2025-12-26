@@ -33,7 +33,7 @@ export default function Stats({
     },
   ];
   return (
-    <dl className="grid grid-cols-2 gap-4">
+    <dl className="grid grid-cols-2 gap-4 w-full">
       {data.map((item) => (
         <StatsCard
           animatedValueClass={animatedValueClass}

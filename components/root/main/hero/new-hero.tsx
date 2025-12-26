@@ -7,6 +7,7 @@ import { RootStats } from '@/app/page';
 import Stats from './stats';
 import { useCountUp } from '@/hooks/use-count-up';
 import { cn } from '@/lib/utils';
+import CompaniesMarquee from '../marquee/companies-marquee';
 
 const logoWall = [
   { src: '/logos/logo-wall/Airbnb_Logo.svg', alt: 'Airbnb', className: 'w-30' },
@@ -81,14 +82,16 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
         <span className="text-zinc-500 pointer-events-none select-none">
           Нам доверяют
         </span>
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-40 lg:items-center ">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-40 lg:items-center">
           <span
             className={cn('text-amber-500 w-fit lg:w-50', animatedValueClass)}
           >
             {animatedValue}+
           </span>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 flex-1 items-center">
-            {logoWall.map((l) => (
+
+          <div className="overflow-hidden gap-6 flex-1 items-center">
+            <CompaniesMarquee />
+            {/* {logoWall.map((l) => (
               <div key={l.alt} className="flex items-center justify-center">
                 <img
                   className={cn(
@@ -101,7 +104,7 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
                   alt={l.alt}
                 />
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </section>
