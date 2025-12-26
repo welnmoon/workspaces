@@ -67,6 +67,13 @@ const ProjectComponent = ({
     useProject(project);
   const { mutate: toggleProjectEnd, isPending: isToggleProjectPending } =
     useToggleProjectEnd(workspaceId, optimisticProject.id);
+  // BG IMAGE
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/images/workspaces/project-bg.jpg';
+    img.onload = () => setBgImgLoaded(true);
+  }, []);
+
   if (!optimisticProject) return null;
 
   const projectEnded = Boolean(optimisticProject.endedAt);
@@ -96,12 +103,6 @@ const ProjectComponent = ({
     : 'После завершения нельзя создавать/редактировать/удалять задачи.';
   const dialogConfirm = projectEnded ? 'Вернуть' : 'Завершить';
 
-  // BG IMAGE
-  useEffect(() => {
-    const img = new Image();
-    img.src = '/images/workspaces/project-bg.jpg';
-    img.onload = () => setBgImgLoaded(true);
-  }, []);
   return (
     <ProjectLockProvider
       value={{
