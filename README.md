@@ -111,7 +111,8 @@ Workspace Dashboard показывает агрегированное состо
 
 ### Скриншот
 
-📸 `public/images/screens/workspace-dashboard.png`
+<img width="1917" height="902" alt="image" src="https://github.com/user-attachments/assets/7b490926-f7f5-4623-b2c7-f95b5ec464d7" />
+
 
 ---
 
@@ -128,7 +129,9 @@ Project Dashboard — основное рабочее место внутри п
 
 ### Скриншот
 
-📸 `public/images/screens/project-dashboard.png`
+<img width="1902" height="910" alt="image" src="https://github.com/user-attachments/assets/e152a325-a5f6-4552-9509-58cff17efa1f" />
+<img width="1620" height="745" alt="image" src="https://github.com/user-attachments/assets/c44fc0e2-6af1-4f7e-a243-0c668acfedfa" />
+
 
 ---
 
@@ -153,8 +156,10 @@ Project Dashboard — основное рабочее место внутри п
 
 ### Скриншоты
 
-📸 `public/images/screens/project-analytics-1.png`  
-📸 `public/images/screens/project-analytics-2.png`
+<img width="1589" height="464" alt="image" src="https://github.com/user-attachments/assets/b5532cf4-f9ce-4828-80ab-c88d87f256b4" />
+
+<img width="1590" height="516" alt="image" src="https://github.com/user-attachments/assets/a062eaae-e58d-4956-901b-6d5fb16cb6f2" />
+
 
 ---
 
