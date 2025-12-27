@@ -51,7 +51,7 @@ const WorkspaceOverview = ({
 }: WorkspaceOverviewProps) => {
   return (
     <div className="flex flex-col md:flex-row gap-4 text-sm text-muted-foreground ">
-      <div className="flex flex-col xs:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex gap-4">
           {/* Members */}
           <Tooltip>
