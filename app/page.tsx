@@ -8,6 +8,7 @@ import NewHeroSection from '@/components/root/main/hero/new-hero';
 import { apiRoutes } from '@/lib/routes/api-routes';
 import SmoothScrollProvider from '@/components/layout/Providers/SmoothScrollProvider';
 import ShowCase from '@/components/root/main/show-case/show-case';
+import Image from 'next/image';
 
 export type RootStats = {
   workspaces: number;
@@ -41,11 +42,14 @@ async function Home() {
       <section className="bg-gray-100 pt-8 relative mb-8">
         <div className="w-[90%] md:w-[80%] lg:w-[70%] xl:w-[80%] mx-auto">
           <div className="bg-gradient-to-t from-white absolute z-10 inset-0" />
-          <img
+          <Image
             alt="product mockup"
             src="/images/kanban-page.png"
+            width={1896}
+            height={903}
             draggable={false}
             className="block w-full object-contain mx-auto rounded-t-lg select-none"
+            sizes="(min-width: 1024px) 70vw, 90vw"
           />
         </div>
       </section>

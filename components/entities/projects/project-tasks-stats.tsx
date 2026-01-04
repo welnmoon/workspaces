@@ -9,8 +9,8 @@ import UserActivityBarChart from '@/components/charts/user-activity-bar-chart';
 import { TaskStats } from '@/types/service/task-stats';
 
 const ProjectTasksAllStats = ({
-  allTaskStats,
-  memberTaskStats,
+  allTaskStats: _allTaskStats,
+  memberTaskStats: _memberTaskStats,
   workspaceId,
   projectId,
 }: {
@@ -45,7 +45,7 @@ const ProjectTasksAllStats = ({
         defaultFrom={defaultFrom}
         defaultTo={defaultTo}
       />
-      <TasksByStatusPieChart isAnimationActive />
+      <TasksByStatusPieChart />
       <UserActivityBarChart
         workspaceId={workspaceId}
         projectId={projectId}

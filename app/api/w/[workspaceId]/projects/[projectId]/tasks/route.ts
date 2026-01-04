@@ -12,16 +12,10 @@ import { createTaskFormSchema } from '@/schemas/tasks/create-task-form-schemas';
 import { Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { AppError } from '@/lib/errors';
-import z from 'zod';
 
 // POST /api/w/[workspaceId]/projects/[projectId]/tasks
 // Create a new task in the project
 
-const createTasWithSprintSchema = z.object({
-  title: z.string(),
-  assigneeId: z.string().optional(),
-  sprintId: z.number().optional(),
-});
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ workspaceId: string; projectId: string }> }

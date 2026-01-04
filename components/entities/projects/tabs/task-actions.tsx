@@ -17,7 +17,6 @@ type TaskActionsProps = {
   disabled?: boolean;
   onMove: (sprintId: number | null, taskId: number) => void;
   onChangeStatus?: (taskId: number, status: TaskStatusDTO) => void;
-  onChangePriority?: () => void;
   sprintsMap: Map<number, string>;
   onChangeAssignee?: (
     taskId: number,
@@ -35,7 +34,6 @@ const TaskActions = ({
   sprintsMap,
   onMove,
   onChangeStatus,
-  onChangePriority,
   onChangeAssignee,
   onDelete,
 

@@ -24,6 +24,7 @@ import {
 } from '@/schemas/workspace/create-workspace-form-schema';
 import MainButton from '@/ui/button/main-button';
 import { SubmitButton } from '@/ui/button/submit-button';
+import Image from 'next/image';
 
 const CreateWorkspaceDialog = () => {
   const [step, setStep] = useState<1 | 2>(1);
@@ -119,10 +120,13 @@ const CreateWorkspaceDialog = () => {
                   Далее
                 </Button>
                 <div className="w-full flex justify-center">
-                  <img
+                  <Image
                     className="max-w-full max-h-70 object-contain"
                     alt="chill-time"
                     src="/images/workspaces/chill-time-no-bg.png"
+                    width={500}
+                    height={500}
+                    sizes="(min-width: 768px) 320px, 80vw"
                   />
                 </div>
               </div>

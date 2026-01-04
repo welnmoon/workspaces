@@ -14,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { TASK_PRIORITY_LABELS } from '@/const/priority';
 import { STATUS_COLUMNS, TaskStatusDTO } from '@/const/tasks-status';
 import getTaskStatusColor from '@/helpers/get-status-color';
 import type {
@@ -54,7 +53,7 @@ const BacklogAccordion = ({
   selectedIds,
   setSelectedIds,
   isDeleteTasksPending,
-  isTasksLoading = false,
+  isTasksLoading: _isTasksLoading = false,
 }: BacklogAccordionProps) => {
   const isMobile = useIsMobile();
   const [hoverId, setHoverId] = useState<number>();
@@ -74,8 +73,10 @@ const BacklogAccordion = ({
     return new Map(sprints && sprints.map((s) => [s.id, s.name]));
   }, [sprints]);
 
-  const { mutate: onChangeAssignee, isPending: onChangeAssigneePending } =
-    useChangeTaskAssignee(workspaceId!, projectId!);
+  const { mutate: onChangeAssignee } = useChangeTaskAssignee(
+    workspaceId!,
+    projectId!
+  );
 
   const { mutate: onMoveTask } = useMoveTask(workspaceId!, projectId!);
 
@@ -98,11 +99,15 @@ const BacklogAccordion = ({
 
   //--------TASK-----Priority-----------------------------------------//
 
-  const { mutate: onChangePriority, isPending: onChangePriorityPending } =
-    useChangePriority(workspaceId!, projectId!);
+  const { mutate: onChangePriority } = useChangePriority(
+    workspaceId!,
+    projectId!
+  );
 
-  const { mutate: onChangeStatus, isPending: onChangeStatusPending } =
-    useChangeStatus(workspaceId!, projectId!);
+  const { mutate: onChangeStatus } = useChangeStatus(
+    workspaceId!,
+    projectId!
+  );
 
   const { mutate: onDeleteTask } = useDeleteTask(workspaceId!, projectId!);
 
@@ -168,7 +173,11 @@ const BacklogAccordion = ({
     if (!withSelection || !setSelectedIds) return;
     setSelectedIds((prev) => {
       const copy = new Set(prev);
-      copy.has(id) ? copy.delete(id) : copy.add(id);
+      if (copy.has(id)) {
+        copy.delete(id);
+      } else {
+        copy.add(id);
+      }
       return copy;
     });
   };
@@ -220,7 +229,6 @@ const BacklogAccordion = ({
                     const statusTitle =
                       STATUS_COLUMNS.find((s) => s.id === t.status)?.title ??
                       t.status;
-                    const priorityLabel = TASK_PRIORITY_LABELS[t.priority];
                     // const due =
                     //   t.dueDate && new Date(t.dueDate).toLocaleDateString();
                     const assigneeName = t.assignee
@@ -294,7 +302,6 @@ const BacklogAccordion = ({
                               onMove={onMoveTaskHandle}
                               sprintsMap={sprintsMap}
                               onChangeStatus={onChangeStatusHandler}
-                              onChangePriority={() => {}}
                               onChangeAssignee={onChangeAssigneeHandler}
                               onDelete={onDeleteTaskHandler}
                               members={members}
@@ -307,7 +314,6 @@ const BacklogAccordion = ({
                               disabled={isCreateTaskPending}
                               onMove={onMoveTaskHandle}
                               onChangeStatus={onChangeStatusHandler}
-                              onChangePriority={() => {}}
                               onChangeAssignee={onChangeAssigneeHandler}
                               onDelete={onDeleteTaskHandler}
                               members={members}

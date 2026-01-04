@@ -5,11 +5,9 @@ import { useState } from 'react';
 const NavImg = ({
   img,
   title,
-  desc,
 }: {
   img: string;
   title: string;
-  desc: string;
 }) => {
   const [imgLoaded, setImgLoaded] = useState(false);
   return (

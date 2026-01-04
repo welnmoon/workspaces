@@ -3,6 +3,7 @@ import { CreateWorkspaceFormValues } from '@/schemas/workspace/create-workspace-
 import { useFormContext } from 'react-hook-form';
 import { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import Image from 'next/image';
 
 const workspaceAvatarImages = [
   { id: 1, url: '/images/workspaces/avatar/avatar_1.jpeg' },
@@ -57,10 +58,12 @@ const WorkspaceAvatars = ({ className }: { className?: string }) => {
                   <Skeleton className="absolute inset-0 w-full h-full" />
                 )}
 
-                <img
+                <Image
                   src={a.url}
                   alt="avatar"
-                  onLoad={() => handleImageLoaded(a.id)}
+                  fill
+                  sizes="80px"
+                  onLoadingComplete={() => handleImageLoaded(a.id)}
                   onError={() => handleImageLoaded(a.id)} // чтобы не висел вечный скелетон при ошибке
                   className={cn(
                     'w-full h-full object-cover transition-opacity duration-300',

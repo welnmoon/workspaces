@@ -13,9 +13,9 @@ import Image from 'next/image';
 const LoginPage = async ({
   searchParams,
 }: {
-  searchParams: { returnTo: string };
+  searchParams: Promise<{ returnTo?: string }>;
 }) => {
-  const returnTo = searchParams.returnTo ?? '/workspaces';
+  const { returnTo = '/workspaces' } = await searchParams;
   const session = (await getServerSession(authOptions)) as Session | null;
   if (session?.user?.id) {
     const existingUser = await UserService.getUserById(session.user.id);

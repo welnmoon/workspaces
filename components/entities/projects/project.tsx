@@ -50,7 +50,7 @@ const ProjectComponent = ({
   workspaceName,
   allTaskStats,
   memberTaskStats,
-  members,
+  members: _members,
 }: {
   sprints: SprintWithTasksWithAssigneesDTO[];
   project: Project;

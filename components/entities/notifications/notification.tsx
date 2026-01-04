@@ -24,7 +24,6 @@ export const Notification = ({
   message,
   workspaceId,
   isRead,
-  isHidden,
   createdAt,
   userId,
   id,

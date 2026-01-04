@@ -31,6 +31,7 @@ export const SprintColorDropdown = ({
           size="sm"
           variant="outline"
           className="flex items-center gap-2 shadow-none border-zinc-100"
+          disabled={disabled}
         >
           <span
             className="h-3 w-3 rounded-full border "

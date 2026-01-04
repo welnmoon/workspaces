@@ -11,6 +11,7 @@ import {
 import CreateProjectForm from '../forms/project/create-project-form';
 import { useState } from 'react';
 import MainButton from '@/ui/button/main-button';
+import Image from 'next/image';
 
 const CreateProjectDialog = ({ workspaceId }: { workspaceId: number }) => {
   const [open, setOpen] = useState(false);
@@ -37,10 +38,13 @@ const CreateProjectDialog = ({ workspaceId }: { workspaceId: number }) => {
             />
           </div>
           <div className="hidden w-52 shrink-0 items-center justify-center rounded-xl bg-muted/50 p-4 md:flex">
-            <img
+            <Image
               src="/images/workspaces/projecting.png"
               alt="Иллюстрация проекта"
+              width={500}
+              height={500}
               className="h-auto max-h-48 w-full object-contain"
+              sizes="208px"
             />
           </div>
         </div>

@@ -124,11 +124,10 @@ const WorkspaceCardActions = ({
             variant="ghost"
             className="w-full justify-start gap-2"
             onClick={() => {
-              noActions
-                ? null
-                : (setOpenPopover(false),
-                  setNewName(workspaceName),
-                  setOpenEditDialog(true));
+              if (noActions) return;
+              setOpenPopover(false);
+              setNewName(workspaceName);
+              setOpenEditDialog(true);
             }}
           >
             <Pencil className="h-4 w-4" />
@@ -139,9 +138,9 @@ const WorkspaceCardActions = ({
             variant="ghost"
             className="w-full justify-start gap-2"
             onClick={() => {
-              noActions
-                ? null
-                : (setOpenPopover(false), setOpenNotifyDialog(true));
+              if (noActions) return;
+              setOpenPopover(false);
+              setOpenNotifyDialog(true);
             }}
           >
             <Bell className="h-4 w-4" />
@@ -152,9 +151,9 @@ const WorkspaceCardActions = ({
             variant="ghost"
             className="w-full justify-start gap-2 text-destructive"
             onClick={() => {
-              noActions
-                ? null
-                : (setOpenPopover(false), setOpenDeleteDialog(true));
+              if (noActions) return;
+              setOpenPopover(false);
+              setOpenDeleteDialog(true);
             }}
           >
             <Trash2 className="h-4 w-4" />

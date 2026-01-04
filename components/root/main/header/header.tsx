@@ -52,7 +52,6 @@ export function RootNavigationMenu() {
                     <NavImg
                       img={section.info.img}
                       title={section.info.title}
-                      desc={section.info.description}
                     />
                   )}
                 </NavigationMenuContent>

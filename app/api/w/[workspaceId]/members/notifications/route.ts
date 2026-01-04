@@ -23,7 +23,7 @@ export async function POST(
     const res = sendNotificationToWMembersSchema.safeParse(await req.json());
     if (!res.success) return unprocessable(res.error.message);
 
-    const { title, body, sendAt } = res.data;
+    const { title, body } = res.data;
 
     await NotificationService.sendNotificationToWMembers(
       workspaceId,

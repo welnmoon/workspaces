@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { tariffs } from '@/const/tariffs';
 import { useStripePayment } from '@/hooks/payment/use-stripe-payment';
-import { payWithCloudPayments } from '@/lib/payments/cloudpayments';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { cn } from '@/lib/utils';
 import { TariffDTO } from '@/types/prisma/DTO/payment';
@@ -14,8 +13,8 @@ import { usePathname, useRouter } from 'next/navigation';
 
 export default function PricingPage() {
   const router = useRouter();
-  const email = useSession().data?.user?.email;
-  const userId = useSession().data?.user?.id;
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
   const pathname = usePathname();
 
   // const searchParams = useSearchParams();
@@ -26,10 +25,6 @@ export default function PricingPage() {
 
   const { mutate: payWithStripe, isPending: isStripePending } =
     useStripePayment();
-
-  if (pathname.includes('tariff')) {
-    
-  }
 
   return (
     <section className="py-16">
@@ -86,7 +81,7 @@ export default function PricingPage() {
                     // });
                     payWithStripe({ tariff: key });
                   }}
-                  disabled={t.amount === 0}
+                  disabled={t.amount === 0 || isStripePending}
                   className={cn(
                     'mt-auto w-full text-center text-white rounded-lg py-2 transition',
                     t.name === 'Free' && 'bg-zinc-700',

@@ -22,18 +22,19 @@ export async function PATCH(
   }
 ) {
   try {
-    const workspaceId = validateId((await params).workspaceId);
-    const projectId = validateId((await params).projectId);
-    const sprintId = validateId((await params).sprintId);
+    const { workspaceId, projectId, sprintId } = await params;
+    const validatedWorkspaceId = validateId(workspaceId);
+    const _projectId = validateId(projectId);
+    const validatedSprintId = validateId(sprintId);
     await requireWorkspaceMember({
-      workspaceId,
+      workspaceId: validatedWorkspaceId,
       allowed: [Role.OWNER, Role.ADMIN],
     });
 
     const res = changeSprintColorSchema.safeParse(await req.json());
     if (!res.success) return unprocessable(res.error.message);
 
-    await SprintService.changeColor(res.data.color, sprintId);
+    await SprintService.changeColor(res.data.color, validatedSprintId);
 
     return noContent();
   } catch (e) {

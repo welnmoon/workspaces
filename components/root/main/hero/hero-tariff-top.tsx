@@ -1,5 +1,6 @@
 import { BorderBeam } from '@/components/ui/border-beam';
 import { tariffs } from '@/const/tariffs';
+import Image from 'next/image';
 
 type TariffKey = keyof typeof tariffs;
 
@@ -12,11 +13,15 @@ const HeroTariffTop = ({ currentTariff }: { currentTariff: TariffKey }) => {
             <p className="font-[600] text-neutral-700 my-4 mx-6 wrap-break-word text-lg">
               Подходит для старта
             </p>
-            <img
-              src="/images/hero/hero-free-1_cropped.avif"
-              className="absolute bottom-0 object-cover h-[50%] md:h-[80%] lg:h-[70%]"
-              alt=""
-            />
+            <div className="absolute bottom-0 h-[50%] md:h-[80%] lg:h-[70%] w-full relative">
+              <Image
+                src="/images/hero/hero-free-1_cropped.avif"
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 50vw, 50vw"
+                className="object-cover"
+              />
+            </div>
           </div>
 
           <div className="bg-neutral-50 border border-zinc-200 w-1/2 rounded-md py-4 px-6 text-sm text-neutral-600">
@@ -41,11 +46,15 @@ const HeroTariffTop = ({ currentTariff }: { currentTariff: TariffKey }) => {
             <p className="font-[600] text-neutral-800 my-4 mx-6 wrap-break-word text-lg">
               Для небольших команд
             </p>
-            <img
-              src="/images/hero/hero-pro-1_cropped.avif"
-              className="absolute bottom-0 object-cover h-[50%] md:h-[70%] lg:h-[50%]"
-              alt=""
-            />
+            <div className="absolute bottom-0 h-[50%] md:h-[70%] lg:h-[50%] w-full relative">
+              <Image
+                src="/images/hero/hero-pro-1_cropped.avif"
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 50vw, 50vw"
+                className="object-cover"
+              />
+            </div>
           </div>
 
           <div className="bg-amber-50 border border-amber-200 w-1/2 rounded-md py-4 px-6 text-sm text-neutral-700 flex flex-col justify-between">
@@ -75,11 +84,15 @@ const HeroTariffTop = ({ currentTariff }: { currentTariff: TariffKey }) => {
             <p className="font-[600] text-neutral-800 my-4 mx-6 text-lg">
               Для компаний и отделов
             </p>
-            <img
-              src="/images/hero/hero-business-1_cropped.avif"
-              className="absolute bottom-0 object-cover h-[50%] md:h-[80%] lg:h-[70%]"
-              alt=""
-            />
+            <div className="absolute bottom-0 h-[50%] md:h-[80%] lg:h-[70%] w-full relative">
+              <Image
+                src="/images/hero/hero-business-1_cropped.avif"
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 50vw, 50vw"
+                className="object-cover"
+              />
+            </div>
           </div>
 
           <div className="bg-red-50 w-1/2 rounded-md py-4 px-6 text-sm text-neutral-700 flex flex-col justify-between relative overflow-hidden">

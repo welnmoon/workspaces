@@ -9,25 +9,6 @@ import { useCountUp } from '@/hooks/use-count-up';
 import { cn } from '@/lib/utils';
 import CompaniesMarquee from '../marquee/companies-marquee';
 
-const logoWall = [
-  { src: '/logos/logo-wall/Airbnb_Logo.svg', alt: 'Airbnb', className: 'w-30' },
-  {
-    src: '/logos/logo-wall/Halyk_Bank_logo.svg',
-    alt: 'Halyk Bank',
-    className: 'w-15',
-  },
-  {
-    src: '/logos/logo-wall/Launch_Darkly_Logo.svg',
-    alt: 'LaunchDarkly',
-    className: 'w-15',
-  },
-  { src: '/logos/logo-wall/Olo_Logo.svg', alt: 'Olo', className: 'w-15' },
-  {
-    src: '/logos/logo-wall/ZoomInfo_Logo.svg',
-    alt: 'ZoomInfo',
-    className: 'w-15',
-  },
-];
 
 const animatedValueClass =
   'mt-1 text-3xl md:text-4xl lg:text-5xl ml-2 md:ml-0 font-bold wrap-break-word';

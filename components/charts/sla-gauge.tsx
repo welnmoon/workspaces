@@ -34,7 +34,7 @@ const SLAGauge = ({
         <Gauge
           {...settings}
           cornerRadius="50%"
-          sx={(theme) => ({
+          sx={{
             [`& .${gaugeClasses.valueText}`]: {
               fontSize: 40,
             },
@@ -44,7 +44,7 @@ const SLAGauge = ({
             [`& .${gaugeClasses.referenceArc}`]: {
               fill: '#f4f4f5',
             },
-          })}
+          }}
         />
         {isLoading ||
           (isFetching && <Spinner className="absolute top-1/2 left-1/2" />)}
