@@ -10,7 +10,12 @@ import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import Image from 'next/image';
 
 // sign in - это вход
-const LoginPage = async () => {
+const LoginPage = async ({
+  searchParams,
+}: {
+  searchParams: { returnTo: string };
+}) => {
+  const returnTo = searchParams.returnTo ?? '/workspaces';
   const session = (await getServerSession(authOptions)) as Session | null;
   if (session?.user?.id) {
     const existingUser = await UserService.getUserById(session.user.id);
@@ -52,7 +57,7 @@ const LoginPage = async () => {
               <div className="text-slate-100 text-sm italic mt-auto">
                 <p>
                   «Нет ничего бесполезнее, чем эффективно делать то, что вообще
-                  не должно было быть сделано.»
+                  не должно было быть сделано.» {returnTo}
                 </p>
                 <p className="mt-1">— Питер Друкер</p>
               </div>
@@ -60,7 +65,7 @@ const LoginPage = async () => {
           </div>
         </div>
       </section>
-      <LoginForm />
+      <LoginForm returnTo={returnTo} />
     </main>
   );
 };

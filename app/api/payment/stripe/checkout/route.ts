@@ -1,12 +1,22 @@
+import { TariffKey } from '@/const/tariffs';
+import { requireUser } from '@/helpers/require-user';
+import { badRequest } from '@/lib/http/http';
+import { STRIPE_PLANS } from '@/lib/payments/stripe-plans';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
+type Props = {
+  tariff: TariffKey;
+};
 export async function POST(req: Request) {
-  const { priceId, userId } = (await req.json()) as {
-    priceId: string; // 
-    userId: string; // твой id пользователя из базы/авторизации
-  };
+  const { tariff } = (await req.json()) as Props;
+  const { id: userId } = await requireUser();
+
+  if (tariff === 'FREE') {
+    return badRequest('Нельзя оформить подписку на бесплатный тариф');
+  }
+
+  const priceId = STRIPE_PLANS[tariff].priceId;
 
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',

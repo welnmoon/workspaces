@@ -12,7 +12,8 @@ export const clientRoutes = {
   workspacesPage: () => `/w`,
   authErrorPage: () => `/auth/error`,
   authRegisterPage: () => `/register`,
-  authLoginPage: () => `/login`,
+  authLoginPage: (returnTo?: string) =>
+    returnTo ? `/login?returnTo=${encodeURIComponent(returnTo)}` : `/login`,
   profilePage: () => `/profile`,
 
   // pricing

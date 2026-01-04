@@ -3,18 +3,20 @@
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { tariffs } from '@/const/tariffs';
+import { useStripePayment } from '@/hooks/payment/use-stripe-payment';
 import { payWithCloudPayments } from '@/lib/payments/cloudpayments';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { cn } from '@/lib/utils';
 import { TariffDTO } from '@/types/prisma/DTO/payment';
 import { Check } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function PricingPage() {
   const router = useRouter();
   const email = useSession().data?.user?.email;
   const userId = useSession().data?.user?.id;
+  const pathname = usePathname();
 
   // const searchParams = useSearchParams();
   // const wId = Number(searchParams.get('workspaceId'));
@@ -22,10 +24,19 @@ export default function PricingPage() {
 
   const tariffKeys = Object.keys(tariffs) as TariffDTO[];
 
+  const { mutate: payWithStripe, isPending: isStripePending } =
+    useStripePayment();
+
+  if (pathname.includes('tariff')) {
+    
+  }
+
   return (
     <section className="py-16">
       <div className="container mx-auto max-w-6xl px-4">
-        <Heading level={1} className='mb-8'>Тарифы</Heading>
+        <Heading level={1} className="mb-8">
+          Тарифы
+        </Heading>
         {/* <Description text={`Простанрство: ${wName}, id: ${wId}`} /> */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {tariffKeys.map((key) => {
@@ -61,17 +72,19 @@ export default function PricingPage() {
 
                 <Button
                   onClick={() => {
-                    if (!userId || userId === undefined) {
-                      router.push(clientRoutes.authLoginPage());
+                    if (!userId) {
+                      const returnTo = `${pathname}?tariff=${key}`;
+                      router.push(clientRoutes.authLoginPage(returnTo));
                       return;
                     }
-                    payWithCloudPayments(key, email, userId, {
-                      onComplete(success) {
-                        if (success) {
-                          window.location.href = clientRoutes.workspacesPage();
-                        }
-                      },
-                    });
+                    // payWithCloudPayments(key, email, userId, {
+                    //   onComplete(success) {
+                    //     if (success) {
+                    //       window.location.href = clientRoutes.workspacesPage();
+                    //     }
+                    //   },
+                    // });
+                    payWithStripe({ tariff: key });
                   }}
                   disabled={t.amount === 0}
                   className={cn(

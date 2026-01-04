@@ -15,7 +15,7 @@ import { clientRoutes } from '@/lib/routes/client-routes';
 import { loginSchema, LoginSchema } from './login-schema';
 import DividerWithText from '@/components/divider-with-text';
 
-const LoginForm = () => {
+const LoginForm = ({ returnTo }: { returnTo: string }) => {
   const router = useRouter();
 
   const form = useForm<LoginSchema>({
@@ -32,7 +32,7 @@ const LoginForm = () => {
       const loginRes = await signIn('credentials', {
         email,
         password,
-        callbackUrl: clientRoutes.workspacesPage(),
+        callbackUrl: returnTo,
         redirect: false,
       });
 

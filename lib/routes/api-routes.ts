@@ -114,4 +114,7 @@ export const apiRoutes = {
 
   //root
   getRootStats: () => `/api/root/stats`,
+
+  // Payment
+  stripeCheckout: () => `/api/payment/stripe/checkout`,
 };
