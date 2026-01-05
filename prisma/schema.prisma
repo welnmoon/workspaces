@@ -23,6 +23,8 @@ model User {
   updatedAt           DateTime     @updatedAt
   wasOnline           DateTime? 
   nickname            String?
+  platformRole PlatformRole @default(USER)
+
   accounts            Account[]
   auditLogs           AuditLog[]
   invitationsReceived Invitation[] @relation("InvitationsReceived")
@@ -291,6 +293,11 @@ model AuditLog {
   @@index([workspaceId, createdAt])
   @@index([projectId, createdAt])
   @@index([entityType, entityId, createdAt])
+}
+
+enum PlatformRole {
+  USER
+  SYSADMIN
 }
 
 enum PaymentStatus {

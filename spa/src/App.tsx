@@ -1,8 +1,19 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import UsersPage from './pages/users';
+import AdminLayout from './layouts/admin-layout';
 
-function App() {
+export default function SpaApp() {
   return (
-    <div className="p-10 text-5xl font-bold text-red-500">TAILWIND TEST</div>
+    <BrowserRouter basename="/spa">
+      <Routes>
+        <Route element={<AdminLayout />}>
+          <Route index element={<Navigate to="users" replace />} />
+          <Route path="users" element={<UsersPage />} />
+          {/* <Route path="workspaces" element={<WorkspacesPage />} /> */}
+        </Route>
+
+        <Route path="*" element={<div>404</div>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
