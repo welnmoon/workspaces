@@ -32,7 +32,7 @@ const UserActivityBarChart = ({
       ? dateRange.to.toISOString()
       : defaultTo;
 
-  const { data, isFetching, isLoading, isError } = useUserActivity(
+  const { data, isFetching, isLoading } = useUserActivity(
     workspaceId,
     projectId,
     from,

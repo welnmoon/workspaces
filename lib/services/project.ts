@@ -466,7 +466,7 @@ export class ProjectService {
     projectId: number,
     from: Date,
     to: Date,
-    sprintId: number | null
+    _sprintId: number | null
   ): Promise<ProjectCompletedTaskVsCreatedDTO> {
     const tasks = await prisma.task.findMany({
       where: {

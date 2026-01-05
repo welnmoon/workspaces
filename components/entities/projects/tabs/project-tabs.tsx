@@ -26,7 +26,6 @@ import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
 import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
 import { useMembers } from '@/hooks/members/use-members';
 import { FaPenToSquare } from 'react-icons/fa6';
-import { useProjectLock } from '../context/project-lock-context';
 import MainButton from '@/ui/button/main-button';
 
 type ProjectTabsProps = {
@@ -48,11 +47,10 @@ const ProjectTabs = ({
   projectId,
   allTaskStats,
   memberTaskStats,
-  projectEnd,
+  projectEnd: _projectEnd,
 }: ProjectTabsProps) => {
   const [createSprint, setCreateSprint] = useState(false);
   const [openSprintIds, setOpenSprintIds] = useState<string[]>([]);
-  const projectStatus = useProjectLock();
 
   // members for accordions and for create task form
   const { data: members } = useMembers(workspaceId!, projectId!);

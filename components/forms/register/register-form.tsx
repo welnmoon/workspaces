@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 
 import { registerSchema, RegisterSchema } from './register-schema';
 import FormInput from '../form-input';
@@ -16,7 +15,6 @@ import DividerWithText from '@/components/divider-with-text';
 import { SubmitButton } from '@/ui/button/submit-button';
 
 const RegisterForm = () => {
-  const router = useRouter();
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const form = useForm<RegisterSchema>({

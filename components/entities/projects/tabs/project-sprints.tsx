@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from 'react';
 
 const ProjectSprints = ({
   sprints,
-  selectedIds,
+  selectedIds: _selectedIds,
   setSelectedIds,
   isDeleteTasksPending,
   openSprintIds,

@@ -23,7 +23,6 @@ type Props = {
 const NotificationCard = ({
   id,
   userId,
-  type,
   title,
   message,
   workspaceId,

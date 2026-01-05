@@ -89,22 +89,22 @@ export default function CumulativeDoneChart({
   //   { date: '2025-12-10', count: 45 },
   //   { date: '2025-12-11', count: 47 },
   // ];
-  const tasksList = tasks || [];
   const cumulativeTasks = useMemo(() => {
+    const list = tasks ?? [];
     let prev = 0;
     const res: CumulativeTasks[] = [];
 
-    for (let i = 0; i < tasksList.length; i++) {
-      if (!tasksList[i].date) continue;
-      const total = tasksList[i].count + prev;
-      res.push({ total, date: tasksList[i].date });
+    for (let i = 0; i < list.length; i++) {
+      if (!list[i].date) continue;
+      const total = list[i].count + prev;
+      res.push({ total, date: list[i].date });
       prev = total;
     }
 
     return res.sort(
       (a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime()
     );
-  }, [tasksList]);
+  }, [tasks]);
 
   return (
     <ChartsCard

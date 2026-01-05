@@ -1,4 +1,7 @@
 'use client';
+
+/* eslint-disable @next/next/no-img-element */
+
 import Marquee from 'react-fast-marquee';
 
 export const logos = [

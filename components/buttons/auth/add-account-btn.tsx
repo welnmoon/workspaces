@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { ProviderId } from '@/lib/providers';
+import Image from 'next/image';
 
 interface AddAccountButtonProps {
   provider: ProviderId;
@@ -10,9 +11,12 @@ const AddAccountButton = ({ provider }: AddAccountButtonProps) => {
   return (
     <Button>
       <span>{providerName}</span>
-      <img
-        src={`public/icons/${provider}-icon.svg`} // ${provider === 'google' ? '/icons/google.svg' : '/icons/github.svg'}
+      <Image
+        src={`/icons/${provider}-icon.svg`}
         alt={providerName}
+        width={16}
+        height={16}
+        className="h-4 w-4"
       />
     </Button>
   );

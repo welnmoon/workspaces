@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 const HeroSection = () => {
   return (
     <section className="mb-30 pt-20">
@@ -14,10 +16,12 @@ const HeroSection = () => {
 
           {/* Мягкий подсвет на ключевой фразе */}
           <span className="relative inline-block">
-            <img
+            <Image
               aria-hidden
               alt="underline"
               src="/root/underline.png"
+              width={662}
+              height={51}
               className="absolute -bottom-5 -left-5 rotate-1 rounded-md animate-draw"
             />
             рабочий процесс

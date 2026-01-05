@@ -33,7 +33,7 @@ export const CreateTaskRowForm = ({
   });
 
   const handleSubmit = async (values: CreateTaskFormValues) => {
-    onCreate(form.getValues());
+    onCreate(values);
     form.reset();
   };
 

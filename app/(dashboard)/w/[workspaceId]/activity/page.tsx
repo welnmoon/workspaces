@@ -11,7 +11,7 @@ const ActivityPage = async ({
 }: {
   params: Promise<{ workspaceId: string }>;
 }) => {
-  const user = await requireUser();
+  await requireUser();
 
   const workspaceId = validateId((await params).workspaceId);
   const audits = await AuditLogService.getWorkspaceLogs(workspaceId, 100);

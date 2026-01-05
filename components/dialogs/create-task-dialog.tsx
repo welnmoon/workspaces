@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import { PlusCircle } from 'lucide-react';
 import MainButton from '@/ui/button/main-button';
+import Image from 'next/image';
 
 const CreateTaskDialog = ({
   workspaceId,
@@ -54,10 +55,13 @@ const CreateTaskDialog = ({
             />
           </div>
           <div className="hidden w-52 shrink-0 items-center justify-center rounded-xl bg-muted/50 p-4 md:flex">
-            <img
+            <Image
               src="/images/workspaces/checking-notes.png"
               alt="Иллюстрация задачи"
+              width={500}
+              height={500}
               className="h-auto max-h-48 w-full object-contain"
+              sizes="208px"
             />
           </div>
         </div>

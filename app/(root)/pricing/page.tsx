@@ -3,18 +3,19 @@
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { tariffs } from '@/const/tariffs';
-import { payWithCloudPayments } from '@/lib/payments/cloudpayments';
+import { useStripePayment } from '@/hooks/payment/use-stripe-payment';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { cn } from '@/lib/utils';
 import { TariffDTO } from '@/types/prisma/DTO/payment';
 import { Check } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function PricingPage() {
   const router = useRouter();
-  const email = useSession().data?.user?.email;
-  const userId = useSession().data?.user?.id;
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+  const pathname = usePathname();
 
   // const searchParams = useSearchParams();
   // const wId = Number(searchParams.get('workspaceId'));
@@ -22,10 +23,15 @@ export default function PricingPage() {
 
   const tariffKeys = Object.keys(tariffs) as TariffDTO[];
 
+  const { mutate: payWithStripe, isPending: isStripePending } =
+    useStripePayment();
+
   return (
     <section className="py-16">
       <div className="container mx-auto max-w-6xl px-4">
-        <Heading level={1} className='mb-8'>Тарифы</Heading>
+        <Heading level={1} className="mb-8">
+          Тарифы
+        </Heading>
         {/* <Description text={`Простанрство: ${wName}, id: ${wId}`} /> */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {tariffKeys.map((key) => {
@@ -61,19 +67,21 @@ export default function PricingPage() {
 
                 <Button
                   onClick={() => {
-                    if (!userId || userId === undefined) {
-                      router.push(clientRoutes.authLoginPage());
+                    if (!userId) {
+                      const returnTo = `${pathname}?tariff=${key}`;
+                      router.push(clientRoutes.authLoginPage(returnTo));
                       return;
                     }
-                    payWithCloudPayments(key, email, userId, {
-                      onComplete(success) {
-                        if (success) {
-                          window.location.href = clientRoutes.workspacesPage();
-                        }
-                      },
-                    });
+                    // payWithCloudPayments(key, email, userId, {
+                    //   onComplete(success) {
+                    //     if (success) {
+                    //       window.location.href = clientRoutes.workspacesPage();
+                    //     }
+                    //   },
+                    // });
+                    payWithStripe({ tariff: key });
                   }}
-                  disabled={t.amount === 0}
+                  disabled={t.amount === 0 || isStripePending}
                   className={cn(
                     'mt-auto w-full text-center text-white rounded-lg py-2 transition',
                     t.name === 'Free' && 'bg-zinc-700',
