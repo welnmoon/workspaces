@@ -67,6 +67,7 @@ export const apiRoutes = {
     `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/change-color`,
 
   // User
+  getUsers: () => `/api/users`,
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
   deleteUserAccount: (provider: ProviderId) => `/api/auth/accounts/${provider}`,
