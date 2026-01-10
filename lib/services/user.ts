@@ -87,6 +87,7 @@ export class UserService {
         firstName: true,
         email: true,
         lastName: true,
+        wasOnline: true,
       },
     });
   }

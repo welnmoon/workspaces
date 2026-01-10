@@ -1,4 +1,6 @@
+import UsersComponent from '../features/users/users-component';
+
 function UsersPage() {
-  return <div>users</div>;
+  return <UsersComponent />; // Мы тут
 }
 export default UsersPage;
