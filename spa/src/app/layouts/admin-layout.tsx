@@ -3,7 +3,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { toggleTheme } from '../store/theme-slice';
 import type { RootState } from '../store/store';
 import { useEffect } from 'react';
-import { ThemeToggleButton } from '../theme-toggle-button';
+import { ThemeToggleButton } from '../../shared/ui/shadcn-io/theme-toggle-button';
 
 function AdminLayout() {
   const theme = useSelector((state: RootState) => state.theme.mode);
@@ -15,7 +15,7 @@ function AdminLayout() {
 
   return (
     <div className="app flex gap-2">
-      <aside className="hidden lg:block w-[15%]">
+      <aside className="hidden lg:block min-w-[15%] max-w-[15%] sidebar">
         <h1 className="text-6xl title">AdminLayout</h1>
         <ThemeToggleButton
           className=""
@@ -30,7 +30,9 @@ function AdminLayout() {
         </nav>
         <hr />
       </aside>
-      <Outlet />
+      <main className="p-4 w-full flex h-screen">
+        <Outlet />
+      </main>
     </div>
   );
 }

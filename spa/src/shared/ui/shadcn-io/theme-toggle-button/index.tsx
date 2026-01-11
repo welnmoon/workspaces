@@ -15,7 +15,7 @@ type StartPosition =
   | 'bottom-right';
 
 export interface ThemeToggleButtonProps {
-  theme?: 'light' | 'dark';
+  theme?: 'light' | 'dark' | 'system';
   showLabel?: boolean;
   variant?: AnimationVariant;
   start?: StartPosition;

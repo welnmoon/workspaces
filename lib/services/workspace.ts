@@ -1,4 +1,5 @@
 import {
+  systemGetWorkspaceDTO,
   WorkspaceListDTO,
   WorkspaceSelectDTO,
 } from '@/types/prisma/DTO/workspaces';
@@ -9,7 +10,7 @@ import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 export class WorkspaceService {
   // Получение списка воркспейсов
-  static async getList(userId: string): Promise<WorkspaceListDTO[]> {
+  static async getList(userId: string): Promise<systemGetWorkspaceDTO[]> {
     return prisma.workspace.findMany({
       where: {
         memberships: {
@@ -21,6 +22,18 @@ export class WorkspaceService {
         name: true,
         description: true,
         avatarUrl: true,
+        projects: {
+          select: {
+            id: true,
+            name: true,
+            tasks: {
+              select: {
+                title: true,
+                status: true,
+              },
+            },
+          },
+        },
       },
     });
   }

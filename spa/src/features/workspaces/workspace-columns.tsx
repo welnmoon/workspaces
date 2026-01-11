@@ -1,7 +1,6 @@
 'use client';
 
 import type { ColumnDef } from '@tanstack/react-table';
-import type { UserDTO } from '../../types/DTO/user';
 
 import {
   DropdownMenu,
@@ -11,35 +10,52 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../../shared/ui/dropdown-menu';
+import type { WorkspaceDTO } from '../../types/DTO/workspace';
 
-export const userColumns: ColumnDef<UserDTO>[] = [
+export const workspaceColumns: ColumnDef<WorkspaceDTO>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
     cell: ({ row }) => row.getValue('id'),
   },
   {
-    accessorKey: 'firstName',
-    header: 'First name',
-    cell: ({ row }) => row.getValue('firstName'),
+    accessorKey: 'name',
+    header: 'Name',
+    cell: ({ row }) => row.getValue('name'),
   },
+
   {
-    accessorKey: 'lastName',
-    header: 'Last name',
-    cell: ({ row }) => row.getValue('lastName'),
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
+    accessorKey: 'projectsCount',
+    header: 'Projects',
     cell: ({ row }) => (
-      <span className="lowercase">{row.getValue('email')}</span>
+      <span className="lowercase ">{row.original.projects.length}</span>
     ),
   },
   {
-    accessorKey: 'wasOnline',
-    header: 'Was online',
+    accessorKey: 'tasksCount',
+    header: 'Tasks',
+    cell: ({ row }) => {
+      const doneTasks = row.original.projects.reduce(
+        (sum, p) => sum + p.tasks.filter((t) => t.status === 'DONE').length,
+        0
+      );
+      const allTasks = row.original.projects.reduce(
+        (sum, p) => sum + p.tasks.length,
+        0
+      );
+      return (
+        <div className="w-20">
+          <span className="text-green-500">{doneTasks}</span> /{' '}
+          <span>{allTasks}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'avatarUrl',
+    header: 'avatarUrl ',
     cell: ({ row }) => (
-      <span className="capitalize">{row.getValue('wasOnline')}</span>
+      <span className="capitalize">{row.getValue('avatarUrl')}</span>
     ),
   },
   {
@@ -48,7 +64,7 @@ export const userColumns: ColumnDef<UserDTO>[] = [
     enableSorting: false,
     enableHiding: false,
     cell: ({ row }) => {
-      const user = row.original;
+      const w = row.original;
 
       return (
         <DropdownMenu>

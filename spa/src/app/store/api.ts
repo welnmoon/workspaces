@@ -1,14 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { UserDTO } from '../types/DTO/user';
+import type { UserDTO } from '../../types/DTO/user';
+import type { WorkspaceDTO } from '../../types/DTO/workspace';
 
 export type UserResponse = {
   data: UserDTO[];
 };
 
+export type WorkspaceResponse = {
+  data: WorkspaceDTO[];
+};
+
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/api/system',
+    baseUrl: 'http://localhost:3000/api/spa',
     credentials: 'include',
   }),
   endpoints: (builder) => ({
@@ -28,6 +33,9 @@ export const api = createApi({
         };
       },
     }),
+    getWorkspaces: builder.query<WorkspaceResponse, void>({
+      query: () => `/workspaces`,
+    }),
   }),
 });
-export const { useGetUsersQuery } = api;
+export const { useGetUsersQuery, useGetWorkspacesQuery } = api;

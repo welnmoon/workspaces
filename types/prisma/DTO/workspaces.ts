@@ -1,4 +1,4 @@
-import type { Workspace } from '@prisma/client';
+import type { Prisma, Workspace } from '@prisma/client';
 
 export type WorkspaceCreateDTO = Pick<Workspace, 'name' | 'description'>;
 
@@ -21,3 +21,25 @@ export type WorkspaceWithoutDatesDTO = Omit<
 >;
 
 export type WorkspaceDTO = Workspace;
+
+// SPA - System admin
+export type systemGetWorkspaceDTO = Prisma.WorkspaceGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    description: true;
+    avatarUrl: true;
+    projects: {
+      select: {
+        id: true;
+        name: true;
+        tasks: {
+          select: {
+            title: true;
+            status: true;
+          };
+        };
+      };
+    };
+  };
+}>;

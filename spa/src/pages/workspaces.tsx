@@ -1,5 +1,7 @@
+import WorkspacesComponent from '../features/workspaces/workspaces-component';
+
 const WorkspacesPage = () => {
-  return <section>WorkspacesPage</section>;
+  return <WorkspacesComponent />;
 };
 
 export default WorkspacesPage;

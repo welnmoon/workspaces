@@ -152,6 +152,15 @@ html[data-theme='dark'] {
   padding: 16px;
 }
 
+.sidebar {
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+
 .hr {
   height: 1px;
   background: var(--border-default);

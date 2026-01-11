@@ -1,6 +1,6 @@
 import UsersComponent from '../features/users/users-component';
 
 function UsersPage() {
-  return <UsersComponent />; // Мы тут
+  return <UsersComponent />;
 }
 export default UsersPage;
