@@ -31,8 +31,6 @@ export const themeSlice = createSlice({
     },
   },
 });
-// Обязательна ли данная строка? Нельзя ли везде просто импортировать themeSlice и использовать themeSlice.actions? Это про для удобства?
 export const { toggleTheme } = themeSlice.actions;
 
-// А это зачем?
 export default themeSlice.reducer;

@@ -27,19 +27,19 @@ export const api = createApi({
   endpoints: (builder) => ({
     getUsers: builder.query<UsersResponse, void>({
       query: () => `/users`,
-      transformResponse: (res: UsersResponse): UsersResponse => {
-        return {
-          data: res.data.map((u) => ({
-            ...u,
-            wasOnline: u.wasOnline
-              ? new Intl.DateTimeFormat('ru-RU', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(u.wasOnline))
-              : null,
-          })),
-        };
-      },
+      // transformResponse: (res: UsersResponse): UsersResponse => {
+      //   return {
+      //     data: res.data.map((u) => ({
+      //       ...u,
+      //       wasOnline: u.wasOnline
+      //         ? new Intl.DateTimeFormat('ru-RU', {
+      //             dateStyle: 'medium',
+      //             timeStyle: 'short',
+      //           }).format(new Date(u.wasOnline))
+      //         : null,
+      //     })),
+      //   };
+      // },
     }),
     getUser: builder.query<UserResponse, string>({
       // UserResponse - возвращаемый тип, string - аргумент
