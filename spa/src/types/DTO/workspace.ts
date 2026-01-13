@@ -14,3 +14,8 @@ export interface WorkspaceDTO {
 }
 
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED';
+
+export type WorkspaceFullDTO = WorkspaceDTO & {
+  createdAt: Date;
+  updatedAt: Date;
+};

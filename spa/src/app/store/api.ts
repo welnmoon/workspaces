@@ -1,13 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { UserDTO } from '../../types/DTO/user';
+import type { UserDTO, UserFullDTO } from '../../types/DTO/user';
 import type { WorkspaceDTO } from '../../types/DTO/workspace';
 
-export type UserResponse = {
+export type UsersResponse = {
   data: UserDTO[];
 };
 
-export type WorkspaceResponse = {
+export type UserResponse = {
+  data: UserFullDTO;
+};
+
+export type WorkspacesResponse = {
   data: WorkspaceDTO[];
+};
+
+export type WorkspaceRes = {
+  data: WorkspaceDTO;
 };
 
 export const api = createApi({
@@ -17,9 +25,9 @@ export const api = createApi({
     credentials: 'include',
   }),
   endpoints: (builder) => ({
-    getUsers: builder.query<UserResponse, void>({
+    getUsers: builder.query<UsersResponse, void>({
       query: () => `/users`,
-      transformResponse: (res: UserResponse): UserResponse => {
+      transformResponse: (res: UsersResponse): UsersResponse => {
         return {
           data: res.data.map((u) => ({
             ...u,
@@ -33,9 +41,21 @@ export const api = createApi({
         };
       },
     }),
-    getWorkspaces: builder.query<WorkspaceResponse, void>({
+    getUser: builder.query<UserResponse, string>({
+      // UserResponse - возвращаемый тип, string - аргумент
+      query: (id) => `/users/${id}`,
+    }),
+    getWorkspaces: builder.query<WorkspacesResponse, void>({
       query: () => `/workspaces`,
+    }),
+    getWorkspace: builder.query<WorkspaceRes, string>({
+      query: (id) => `workspaces/${id}`,
     }),
   }),
 });
-export const { useGetUsersQuery, useGetWorkspacesQuery } = api;
+export const {
+  useGetUsersQuery,
+  useGetWorkspacesQuery,
+  useGetUserQuery,
+  useGetWorkspaceQuery,
+} = api;

@@ -2,15 +2,8 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../../shared/ui/dropdown-menu';
 import type { WorkspaceDTO } from '../../types/DTO/workspace';
+import WorkspaceEditDropdownMenu from './ui/workspace-edit-dropdown-menu';
 
 export const workspaceColumns: ColumnDef<WorkspaceDTO>[] = [
   {
@@ -66,27 +59,7 @@ export const workspaceColumns: ColumnDef<WorkspaceDTO>[] = [
     cell: ({ row }) => {
       const w = row.original;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-          <DropdownMenuContent
-            style={{ padding: '10px' }}
-            className="w-40 h-full p-3"
-          >
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              style={{ padding: '2px 6px' }}
-              className="px-2 py-1"
-            >
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <WorkspaceEditDropdownMenu workspace={w} />;
     },
   },
 ];

@@ -2,15 +2,7 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 import type { UserDTO } from '../../types/DTO/user';
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../../shared/ui/dropdown-menu';
+import UserEditDropdownMenu from './ui/user-edit-dropdown-menu';
 
 export const userColumns: ColumnDef<UserDTO>[] = [
   {
@@ -50,27 +42,7 @@ export const userColumns: ColumnDef<UserDTO>[] = [
     cell: ({ row }) => {
       const user = row.original;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-          <DropdownMenuContent
-            style={{ padding: '10px' }}
-            className="w-40 h-full p-3"
-          >
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              style={{ padding: '2px 6px' }}
-              className="px-2 py-1"
-            >
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <UserEditDropdownMenu user={user} />;
     },
   },
 ];
