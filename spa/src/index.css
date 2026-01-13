@@ -161,6 +161,123 @@ html[data-theme='dark'] {
   padding: 16px;
 }
 
+/* ========= ADMIN LAYOUT ========= */
+.admin-layout {
+  display: flex;
+  gap: 16px;
+}
+
+.admin-layout__sidebar {
+  width: 260px;
+  min-width: 240px;
+  max-width: 280px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 24px 20px;
+  background: var(--sidebar);
+  color: var(--sidebar-foreground);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-layout__main {
+  flex: 1;
+  min-height: 100vh;
+  padding: 24px;
+  display: flex;
+}
+
+.admin-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-sidebar__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.02em;
+}
+
+.admin-sidebar__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sidebar-foreground);
+}
+
+.admin-sidebar__subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.admin-sidebar__theme-toggle {
+  align-self: flex-start;
+}
+
+.admin-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-sidebar__section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.admin-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--sidebar-foreground);
+  font-weight: 600;
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    transform 50ms ease;
+}
+
+.admin-sidebar__link:hover {
+  background: var(--sidebar-accent);
+  color: var(--sidebar-accent-foreground);
+}
+
+.admin-sidebar__link--active {
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+
+@media (max-width: 1024px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-layout__sidebar {
+    display: none;
+  }
+
+  .admin-layout__main {
+    padding: 16px;
+  }
+}
+
 .hr {
   height: 1px;
   background: var(--border-default);

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, Link } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { toggleTheme } from '../store/theme-slice';
 import type { RootState } from '../store/store';
 import { useEffect } from 'react';
@@ -14,23 +14,48 @@ function AdminLayout() {
   }, [theme]);
 
   return (
-    <div className="app flex gap-2">
-      <aside className="hidden lg:block min-w-[15%] max-w-[15%] sidebar">
-        <h1 className="text-6xl title">AdminLayout</h1>
+    <div className="app admin-layout">
+      <aside className="admin-layout__sidebar">
+        <div className="admin-sidebar__brand">
+          <div className="admin-sidebar__logo">WN</div>
+          <div>
+            <div className="admin-sidebar__title">Worknest</div>
+            <div className="admin-sidebar__subtitle">Админ панель</div>
+          </div>
+        </div>
+
         <ThemeToggleButton
-          className=""
+          className="admin-sidebar__theme-toggle"
           variant="polygon"
           theme={theme}
           onClick={() => dispatch(toggleTheme())}
         />
 
-        <nav style={{ display: 'flex', gap: 12 }}>
-          <Link to="users">Users</Link>
-          <Link to="workspaces">Workspaces</Link>
+        <nav className="admin-sidebar__nav">
+          <div className="admin-sidebar__section-label">Навигация</div>
+          <NavLink
+            to="users"
+            className={({ isActive }) =>
+              isActive
+                ? 'admin-sidebar__link admin-sidebar__link--active'
+                : 'admin-sidebar__link'
+            }
+          >
+            Пользователи
+          </NavLink>
+          <NavLink
+            to="workspaces"
+            className={({ isActive }) =>
+              isActive
+                ? 'admin-sidebar__link admin-sidebar__link--active'
+                : 'admin-sidebar__link'
+            }
+          >
+            Воркспейсы
+          </NavLink>
         </nav>
-        <hr />
       </aside>
-      <main className="p-4 w-full flex h-screen">
+      <main className="admin-layout__main">
         <Outlet />
       </main>
     </div>
