@@ -2,10 +2,12 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
-import type { WorkspaceDTO } from '../../types/DTO/workspace';
+import type { WorkspaceFullDTO } from '../../types/DTO/workspace';
+import { formatDateTimeRu } from '../../shared/lib/date/format-date-time-ru';
 import WorkspaceEditDropdownMenu from './ui/workspace-edit-dropdown-menu';
+import { SortHeader } from '../users/user-columns';
 
-export const workspaceColumns: ColumnDef<WorkspaceDTO>[] = [
+export const workspaceColumns: ColumnDef<WorkspaceFullDTO>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -13,20 +15,21 @@ export const workspaceColumns: ColumnDef<WorkspaceDTO>[] = [
   },
   {
     accessorKey: 'name',
-    header: 'Name',
+    header: ({ column }) => <SortHeader column={column} title="Name" />,
     cell: ({ row }) => row.getValue('name'),
   },
 
   {
     accessorKey: 'projectsCount',
-    header: 'Projects',
+    header: ({ column }) => <SortHeader column={column} title="Projects" />,
     cell: ({ row }) => (
       <span className="lowercase ">{row.original.projects.length}</span>
     ),
+    enableSorting: true,
   },
   {
     accessorKey: 'tasksCount',
-    header: 'Tasks',
+    header: ({ column }) => <SortHeader column={column} title="Tasks" />,
     cell: ({ row }) => {
       const doneTasks = row.original.projects.reduce(
         (sum, p) => sum + p.tasks.filter((t) => t.status === 'DONE').length,
@@ -42,6 +45,17 @@ export const workspaceColumns: ColumnDef<WorkspaceDTO>[] = [
           <span>{allTasks}</span>
         </div>
       );
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const tasksA = rowA.original.projects.reduce(
+        (sum, p) => sum + p.tasks.length,
+        0
+      );
+      const tasksB = rowB.original.projects.reduce(
+        (sum, p) => sum + p.tasks.length,
+        0
+      );
+      return tasksA - tasksB;
     },
   },
   {
@@ -60,6 +74,23 @@ export const workspaceColumns: ColumnDef<WorkspaceDTO>[] = [
       const w = row.original;
 
       return <WorkspaceEditDropdownMenu workspace={w} />;
+    },
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => (
+      <SortHeader column={column} title="Created At" isDate />
+    ),
+    enableSorting: true,
+    cell: ({ row }) => (
+      <span className="capitalize">
+        {formatDateTimeRu(row.getValue('createdAt'))}
+      </span>
+    ),
+    sortingFn: (rowA, rowB, columnId) => {
+      const dateA = new Date(rowA.getValue(columnId));
+      const dateB = new Date(rowB.getValue(columnId));
+      return dateA.getTime() - dateB.getTime();
     },
   },
 ];

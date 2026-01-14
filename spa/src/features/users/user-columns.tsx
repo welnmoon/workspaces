@@ -5,21 +5,22 @@ import type { UserDTO } from '../../types/DTO/user';
 import UserEditDropdownMenu from './ui/user-edit-dropdown-menu';
 import { formatDateTimeRu } from '../../shared/lib/date/format-date-time-ru';
 
-function SortHeader({
-  column,
-  title,
-  isDate,
-}: {
-  column: Column<UserDTO, unknown>;
+type SortHeaderProps<TData> = {
+  column: Column<TData, unknown>;
   title: string;
   isDate?: boolean;
-}) {
+};
+
+export const SortHeader = <TData,>({
+  column,
+  title,
+}: SortHeaderProps<TData>) => {
   const dir = column.getIsSorted();
 
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-0.5 "
+      className="inline-flex items-center gap-0.5"
       onClick={column.getToggleSortingHandler()}
     >
       {title}
@@ -28,7 +29,7 @@ function SortHeader({
       </span>
     </button>
   );
-}
+};
 
 export const userColumns: ColumnDef<UserDTO>[] = [
   {

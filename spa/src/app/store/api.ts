@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { UserDTO, UserFullDTO } from '../../types/DTO/user';
-import type { WorkspaceDTO } from '../../types/DTO/workspace';
+import type { WorkspaceDTO, WorkspaceFullDTO } from '../../types/DTO/workspace';
 
 export type UsersResponse = {
   data: UserDTO[];
@@ -11,11 +11,11 @@ export type UserResponse = {
 };
 
 export type WorkspacesResponse = {
-  data: WorkspaceDTO[];
+  data: WorkspaceFullDTO[];
 };
 
 export type WorkspaceRes = {
-  data: WorkspaceDTO;
+  data: WorkspaceFullDTO;
 };
 
 export const api = createApi({
@@ -42,7 +42,6 @@ export const api = createApi({
       // },
     }),
     getUser: builder.query<UserResponse, string>({
-      // UserResponse - возвращаемый тип, string - аргумент
       query: (id) => `/users/${id}`,
     }),
     getWorkspaces: builder.query<WorkspacesResponse, void>({
