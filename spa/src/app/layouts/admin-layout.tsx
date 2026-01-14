@@ -53,6 +53,36 @@ function AdminLayout() {
           >
             Воркспейсы
           </NavLink>
+          <NavLink
+            to="projects"
+            className={({ isActive }) =>
+              isActive
+                ? 'admin-sidebar__link admin-sidebar__link--active'
+                : 'admin-sidebar__link'
+            }
+          >
+            Проекты
+          </NavLink>
+          <NavLink
+            to="tasks"
+            className={({ isActive }) =>
+              isActive
+                ? 'admin-sidebar__link admin-sidebar__link--active'
+                : 'admin-sidebar__link'
+            }
+          >
+            Задачи
+          </NavLink>
+          <NavLink
+            to="sprints"
+            className={({ isActive }) =>
+              isActive
+                ? 'admin-sidebar__link admin-sidebar__link--active'
+                : 'admin-sidebar__link'
+            }
+          >
+            Спринты
+          </NavLink>
         </nav>
       </aside>
       <main className="admin-layout__main">
