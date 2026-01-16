@@ -1,4 +1,3 @@
-import { requireUser } from '@/helpers/require-user';
 import { ok, serverError } from '@/lib/http/http';
 import { UserService } from '@/lib/services/user';
 import { NextResponse } from 'next/server';

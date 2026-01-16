@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ProjectTabsList from './project-tasks-list';
-import ProjectTasksBoard from '../project-tasks-board';
+
 import type { TaskWithAssigneeDTO } from '@/types/prisma/DTO/tasks';
 import { createTasksBoardOnDragEnd } from '@/helpers/task/on-drag-end';
 import { tasksFilterByStatus } from '@/helpers/task/tasks-filter-by-status';
@@ -13,20 +12,32 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Kanban, List, Trash } from 'lucide-react';
 import type { TaskStats } from '@/types/service/task-stats';
-import ProjectTasksStats from '../project-tasks-stats';
 import { IoStatsChart } from 'react-icons/io5';
 import { useDeleteTasksBulk } from '@/hooks/tasks/use-delete-tasks-bulk';
 import toast from 'react-hot-toast';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
-import BacklogAccordion from './backlog-accordion';
 import { useSprintCreate } from '@/hooks/sprint/use-sprint-create';
 import { CreateSprintSchema } from '@/schemas/sprint/create-sprint-schema';
 import CreateTaskDialog from '@/components/dialogs/create-task-dialog';
 import { useMembers } from '@/hooks/members/use-members';
 import { FaPenToSquare } from 'react-icons/fa6';
 import MainButton from '@/ui/button/main-button';
+import dynamic from 'next/dynamic';
+
+const ProjectTabsList = dynamic(() => import('./project-tasks-list'), {
+  loading: () => <Spinner />,
+});
+const ProjectTasksBoard = dynamic(() => import('../project-tasks-board'), {
+  loading: () => <Spinner />,
+});
+const ProjectTasksStats = dynamic(() => import('../project-tasks-stats'), {
+  loading: () => <Spinner />,
+});
+const BacklogAccordion = dynamic(() => import('./backlog-accordion'), {
+  loading: () => <Spinner />,
+});
 
 type ProjectTabsProps = {
   sprints: SprintWithTasksWithAssigneesDTO[];

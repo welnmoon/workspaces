@@ -151,6 +151,123 @@ export class ProjectService {
     });
   }
 
+  static async getProjectsForUser(userId: string) {
+    return prisma.project.findMany({
+      where: {
+        workspace: {
+          memberships: {
+            some: { userId },
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        workspaceId: true,
+        createdAt: true,
+        updatedAt: true,
+        endedAt: true,
+        workspace: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        sprints: {
+          select: {
+            id: true,
+            name: true,
+            startDate: true,
+            endDate: true,
+            color: true,
+          },
+          orderBy: {
+            startDate: 'asc',
+          },
+        },
+        tasks: {
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            assignee: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  static async getProjectWithRelations(projectId: number) {
+    return prisma.project.findUnique({
+      where: { id: projectId },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        workspaceId: true,
+        createdAt: true,
+        updatedAt: true,
+        endedAt: true,
+        workspace: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        sprints: {
+          select: {
+            id: true,
+            name: true,
+            goal: true,
+            startDate: true,
+            endDate: true,
+            color: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+          orderBy: {
+            startDate: 'asc',
+          },
+        },
+        tasks: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            status: true,
+            priority: true,
+            dueDate: true,
+            sprintId: true,
+            assignee: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+            sprint: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   static async updateProject(
     projectId: number,
     data: CreateProjectFormValues,

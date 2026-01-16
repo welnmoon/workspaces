@@ -1,8 +1,9 @@
 import { SprintTasksStatsDTO } from '@/types/prisma/DTO/sprint';
 import { prisma } from '../prisma';
-import { SprintColor } from '@prisma/client';
+import { Prisma, SprintColor } from '@prisma/client';
 import { ensureProjectActive } from '@/guards/ensure-project-active';
 import { AppError } from '../errors';
+import { UpdateSprintFormValues } from '@/schemas/sprint/update-sprint-schema';
 
 export class SprintService {
   static async getProjectSprints(projectId: number) {
@@ -137,6 +138,148 @@ export class SprintService {
     return prisma.sprint.update({
       where: { id: sprintId },
       data: { color },
+    });
+  }
+
+  static async getSprintsForUser(userId: string) {
+    return prisma.sprint.findMany({
+      where: {
+        project: {
+          workspace: {
+            memberships: {
+              some: { userId },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        goal: true,
+        startDate: true,
+        endDate: true,
+        color: true,
+        projectId: true,
+        createdAt: true,
+        updatedAt: true,
+        project: {
+          select: {
+            id: true,
+            name: true,
+            workspace: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        tasks: {
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            dueDate: true,
+            assignee: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        startDate: 'desc',
+      },
+    });
+  }
+
+  static async getSprintWithRelations(sprintId: number) {
+    return prisma.sprint.findUnique({
+      where: { id: sprintId },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            workspaceId: true,
+            workspace: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  static async updateSprintFromAdmin(
+    sprintId: number,
+    data: UpdateSprintFormValues
+  ) {
+    const sprint = await prisma.sprint.findUnique({
+      where: { id: sprintId },
+      select: {
+        projectId: true,
+      },
+    });
+
+    if (!sprint) {
+      throw new AppError(404, 'SPRINT_NOT_FOUND', 'Спринт не найден');
+    }
+
+    await ensureProjectActive(sprint.projectId);
+
+    const payload: Prisma.SprintUpdateInput = {};
+
+    const parseDate = (value: string | null) => {
+      if (value === null) return null;
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) {
+        throw new AppError(400, 'INVALID_DATE', 'Укажите корректную дату');
+      }
+      return parsed;
+    };
+
+    if (data.name !== undefined) payload.name = data.name;
+    if (data.goal !== undefined) payload.goal = data.goal;
+
+    if (data.startDate !== undefined) {
+      payload.startDate =
+        data.startDate === null ? null : parseDate(data.startDate);
+    }
+
+    if (data.endDate !== undefined) {
+      payload.endDate =
+        data.endDate === null ? null : parseDate(data.endDate);
+    }
+
+    if (data.color !== undefined) payload.color = data.color;
+
+    return prisma.sprint.update({
+      where: { id: sprintId },
+      data: payload,
+    });
+  }
+
+  static async deleteSprint(sprintId: number) {
+    const sprint = await prisma.sprint.findUnique({
+      where: { id: sprintId },
+      select: { projectId: true },
+    });
+
+    if (!sprint) {
+      throw new AppError(404, 'SPRINT_NOT_FOUND', 'Спринт не найден');
+    }
+
+    await ensureProjectActive(sprint.projectId);
+
+    return prisma.sprint.delete({
+      where: { id: sprintId },
     });
   }
 }
