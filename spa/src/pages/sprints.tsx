@@ -1,12 +1,16 @@
+import PageHeader from '../shared/ui/page-header';
+
 const SprintsPage = () => {
   return (
-    <section className="page-placeholder">
-      <div className="page-placeholder__card">
-        <div className="page-placeholder__badge">В разработке</div>
-        <h1 className="page-placeholder__title">Спринты</h1>
-        <p className="page-placeholder__text">
-          Этот раздел скоро будет доступен.
-        </p>
+    <section className="page">
+      <PageHeader title="Спринты" />
+      <div className="page-placeholder">
+        <div className="page-placeholder__card">
+          <div className="page-placeholder__badge">В разработке</div>
+          <p className="page-placeholder__text">
+            Этот раздел скоро будет доступен.
+          </p>
+        </div>
       </div>
     </section>
   );

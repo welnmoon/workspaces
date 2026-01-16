@@ -1,21 +1,52 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { toggleTheme } from '../store/theme-slice';
 import type { RootState } from '../store/store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeToggleButton } from '../../shared/ui/shadcn-io/theme-toggle-button';
 
 function AdminLayout() {
   const theme = useSelector((state: RootState) => state.theme.mode);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleSidebarToggle = () => {
+    setSidebarOpen((prev) => !prev);
+  };
+
+  const handleSidebarClose = () => {
+    setSidebarOpen(false);
+  };
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme; // 'light' | 'dark'
   }, [theme]);
 
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
   return (
     <div className="app admin-layout">
-      <aside className="admin-layout__sidebar">
+      <button
+        type="button"
+        className={
+          isSidebarOpen
+            ? 'admin-layout__sidebar-backdrop admin-layout__sidebar-backdrop--open'
+            : 'admin-layout__sidebar-backdrop'
+        }
+        aria-label="Закрыть меню"
+        onClick={handleSidebarClose}
+      />
+      <aside
+        id="admin-sidebar"
+        className={
+          isSidebarOpen
+            ? 'admin-layout__sidebar admin-layout__sidebar--open'
+            : 'admin-layout__sidebar'
+        }
+      >
         <div className="admin-sidebar__brand">
           <div className="admin-sidebar__logo">WN</div>
           <div>
@@ -86,6 +117,17 @@ function AdminLayout() {
         </nav>
       </aside>
       <main className="admin-layout__main">
+        <div className="admin-layout__mobile-bar">
+          <button
+            type="button"
+            className="admin-layout__sidebar-toggle"
+            aria-controls="admin-sidebar"
+            aria-expanded={isSidebarOpen}
+            onClick={handleSidebarToggle}
+          >
+            Меню
+          </button>
+        </div>
         <Outlet />
       </main>
     </div>
