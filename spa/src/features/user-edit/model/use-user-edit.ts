@@ -1,7 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { editUserSchema, type EditUserSchemaType } from './schema';
-import { useUpdateUserMutation } from '../api/user-edit.api';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  editUserSchema,
+  type EditUserSchemaType,
+} from '../../../entities/user/model/schema';
+import { useUpdateUserMutation } from '../../../entities/user/api/user.api';
 
 type Params = {
   userId: string;

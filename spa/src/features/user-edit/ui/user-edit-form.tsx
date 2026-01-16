@@ -4,7 +4,7 @@ import AdminFormShell, {
   AdminFormSection,
 } from '../../../shared/ui/form/admin-form-shell';
 import FormInput from '../../../shared/ui/form/form-input';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../../shared/lib/utils';
 import type { EditUserSchemaType } from '../model/schema';
 import { useUserEdit } from '../model/use-user-edit';
 import FormSelect from '../../../shared/ui/form/form-select';
@@ -15,7 +15,10 @@ const tariffItems = [
   { label: 'free', value: 'FREE' },
 ];
 
-const UserEditForm = (props: { userId: string; initialValues?: EditUserSchemaType }) => {
+const UserEditForm = (props: {
+  userId: string;
+  initialValues?: EditUserSchemaType;
+}) => {
   const { form, onSubmit, updateState } = useUserEdit({
     userId: props.userId,
     initialValues: props.initialValues,
@@ -47,7 +50,7 @@ const UserEditForm = (props: { userId: string; initialValues?: EditUserSchemaTyp
           eyebrow="Users"
           badge={`ID ${props.userId.slice(0, 8)}`}
           actions={
-            <Button className="btn" type="submit" disabled={isSaving}>
+            <Button type="submit" disabled={isSaving}>
               {isSaving ? 'Saving...' : 'Save changes'}
             </Button>
           }
@@ -100,7 +103,6 @@ const UserEditForm = (props: { userId: string; initialValues?: EditUserSchemaTyp
               label="Password"
               placeholder="Set a new password"
               isPassword
-              
             />
             <FormInput
               name="confirmPassword"

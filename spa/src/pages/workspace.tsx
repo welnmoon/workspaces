@@ -1,7 +1,7 @@
 import { Navigate, useParams } from 'react-router-dom';
 import WorkspaceEditForm from '../features/workspace-edit/ui/w-edit-form';
-import { useGetWorkspaceQuery } from '../app/store/api';
-import type { WorkspaceDTO } from '../types/DTO/workspace';
+import { useGetWorkspaceQuery } from '../entities/workspace/api/workspace.api';
+import type { WorkspaceDTO } from '../shared/types/DTO/workspace';
 
 const WorkspacePage = () => {
   const id = useParams().id;

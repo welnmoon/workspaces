@@ -1,4 +1,4 @@
-import UsersComponent from '../features/users/users-component';
+import UsersComponent from '../widgets/user/ui/users-overview';
 
 function UsersPage() {
   return <UsersComponent />;

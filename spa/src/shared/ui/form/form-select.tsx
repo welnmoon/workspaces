@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormContext } from 'react-hook-form';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 import { ClearButton } from './clear-btn';
 
 type Option = { value: string; label: string };

@@ -1,4 +1,4 @@
-import WorkspacesComponent from '../features/workspaces/workspaces-component';
+import WorkspacesComponent from "../widgets/workspaces-overview/ui/workspaces-overview";
 
 const WorkspacesPage = () => {
   return <WorkspacesComponent />;

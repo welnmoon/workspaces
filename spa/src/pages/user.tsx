@@ -1,8 +1,8 @@
 import { Navigate, useParams } from 'react-router-dom';
-import { useGetUserQuery } from '../app/store/api';
-import type { UserFullDTO } from '../types/DTO/user';
 import UserEditForm from '../features/user-edit/ui/user-edit-form';
-import type { EditUserSchemaType } from '../features/user-edit/model/schema';
+import { useGetUserQuery } from '../entities/user/api/user.api';
+import type { EditUserSchemaType } from '../entities/user/model/schema';
+import type { UserFullDTO } from '../shared/types/DTO/user';
 
 const UserPage = () => {
   const userId = useParams<{ id: string }>().id;

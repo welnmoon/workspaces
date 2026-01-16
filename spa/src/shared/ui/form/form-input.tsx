@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { EyeClosedIcon, EyeIcon } from 'lucide-react';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { Input } from '../input';
 import { ClearButton } from './clear-btn';

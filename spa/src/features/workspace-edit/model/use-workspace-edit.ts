@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
-import type { EditWorkspace } from './schema';
-import { useUpdateWorkspaceMutation } from '../api/workspace-edit.api';
+import type { EditWorkspace } from '../../../entities/workspace/model/schema';
+import { useUpdateWorkspaceMutation } from '../../../entities/workspace/api/workspace.api';
 type Params = {
   wId: string;
   initialValues?: EditWorkspace;

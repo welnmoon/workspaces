@@ -2,7 +2,7 @@
 
 import { X } from 'lucide-react';
 import React from 'react';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 
 interface Props {
   className?: string;
@@ -14,10 +14,7 @@ export const ClearButton: React.FC<Props> = ({ onClick, className }) => {
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        'form-clear-btn',
-        className
-      )}
+      className={cn('form-clear-btn', className)}
     >
       <X className="form-clear-btn__icon" />
     </button>

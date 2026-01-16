@@ -4,9 +4,9 @@ import AdminFormShell, {
   AdminFormSection,
 } from '../../../shared/ui/form/admin-form-shell';
 import FormInput from '../../../shared/ui/form/form-input';
-import { cn } from '../../../lib/utils';
-import type { EditWorkspace } from '../model/schema';
+import { cn } from '../../../shared/lib/utils';
 import { useWorkspaceEdit } from '../model/use-workspace-edit';
+import type { EditWorkspace } from '../../../entities/workspace/model/schema';
 
 const WorkspaceEditForm = (props: {
   wId: string;

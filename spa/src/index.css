@@ -338,7 +338,12 @@ html[data-theme='dark'] {
   max-width: 56rem;
   margin: 0 auto;
   padding: 16px;
-  font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family:
+    'Space Grotesk',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -665,7 +670,6 @@ html[data-theme='dark'] {
 
 .btn:focus-visible {
   outline: none;
-  box-shadow: var(--focus);
 }
 
 .btn-primary {
