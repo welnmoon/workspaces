@@ -48,7 +48,7 @@ const UserEditForm = (props: {
           title="User profile"
           description="Manage identity details and account access from a single panel."
           eyebrow="Users"
-          badge={`ID ${props.userId.slice(0, 8)}`}
+          // badge={`ID ${props.userId.slice(0, 8)}`}
           actions={
             <Button type="submit" disabled={isSaving}>
               {isSaving ? 'Saving...' : 'Save changes'}
