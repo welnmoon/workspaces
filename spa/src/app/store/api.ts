@@ -6,7 +6,7 @@ export const api = createApi({
 
     baseUrl:
       `${import.meta.env.VITE_API_ORIGIN}/api/spa` ||
-      'http://workspaces-phi.vercel.app',
+      'http://workspaces-phi.vercel.app/api/spa',
 
     credentials: 'include',
   }),
