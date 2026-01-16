@@ -59,7 +59,13 @@ function AdminLayout() {
           className="admin-sidebar__theme-toggle"
           variant="polygon"
           theme={theme}
-          onClick={() => dispatch(toggleTheme())}
+          onClick={() => {
+            dispatch(toggleTheme());
+            localStorage.setItem(
+              'theme',
+              theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light'
+            );
+          }}
         />
 
         <nav className="admin-sidebar__nav">

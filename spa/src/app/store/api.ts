@@ -7,4 +7,5 @@ export const api = createApi({
     credentials: 'include',
   }),
   endpoints: () => ({}),
+  tagTypes: ['Users', 'Projects', 'Tasks', 'Sprints', 'Workspaces'],
 });

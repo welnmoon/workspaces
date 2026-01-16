@@ -1,5 +1,5 @@
 import { api } from '../../../app/store/api';
-import type { UserDTO, UserFullDTO } from '../../../types/DTO/user';
+import type { UserDTO, UserFullDTO } from '../../../shared/types/DTO/user';
 import type { EditUserSchemaType } from '../model/schema';
 
 interface DeleteUserReq {
@@ -24,10 +24,16 @@ export const userApi = api.injectEndpoints({
     // get all users
     getUsers: builder.query<UsersResponse, void>({
       query: () => `/users`,
+      providesTags: (result) => [
+        { type: 'Users', id: 'LIST' },
+        ...(result?.data.map(({ id }) => ({ type: 'Users' as const, id })) ||
+          []),
+      ],
     }),
     // get user
     getUser: builder.query<UserResponse, string>({
       query: (id) => `/users/${id}`,
+      providesTags: ['Users'],
     }),
     // delete user
     deleteUser: builder.mutation<void, DeleteUserReq>({
@@ -48,6 +54,10 @@ export const userApi = api.injectEndpoints({
           patchResult.undo();
         }
       },
+      invalidatesTags: (res, err, { id }) => [
+        { type: 'Users', id },
+        { type: 'Users', id: 'LIST' },
+      ],
     }),
     // update user
     updateUser: builder.mutation<UserFullDTO, UpdateUserReq>({
@@ -57,6 +67,7 @@ export const userApi = api.injectEndpoints({
         method: 'PUT',
         body,
       }),
+      invalidatesTags: ['Users'],
     }),
   }),
 });

@@ -26,8 +26,6 @@ export const themeSlice = createSlice({
           state.mode = 'light';
           break;
       }
-
-      localStorage.setItem('theme', state.mode);
     },
   },
 });
