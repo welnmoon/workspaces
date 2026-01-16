@@ -7,7 +7,8 @@
     "postinstall": "prisma generate",
     "prebuild": "prisma generate",
     "build": "npx prisma migrate deploy && npm run build:spa && next build",
-    "build:spa": "npm --prefix spa install --include=dev --include=optional && npm --prefix spa run build && node copy-spa.mjs",
+    
+    "build:spa": "npm --prefix spa ci --include=dev --omit=optional && npm --prefix spa run build && node copy-spa.mjs",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",

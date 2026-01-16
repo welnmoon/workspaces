@@ -1,11 +1,13 @@
-import fs from "node:fs";
-import path from "node:path";
+import fs from 'node:fs';
+import path from 'node:path';
 
-const from = path.resolve("spa", "dist");
-const to = path.resolve("public", "spa");
+const from = path.resolve('spa', 'dist');
+const to = path.resolve('public', 'spa');
 
 fs.rmSync(to, { recursive: true, force: true });
 fs.mkdirSync(to, { recursive: true });
 
 fs.cpSync(from, to, { recursive: true });
-console.log("✅ Copied spa dist -> public/spa");
+console.log('✅ Copied spa dist -> public/spa');
+
+// "build:spa": "npm --prefix spa install --include=dev --include=optional && npm --prefix spa run build && node copy-spa.mjs",
