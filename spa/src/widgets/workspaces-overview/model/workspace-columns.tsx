@@ -45,7 +45,7 @@ export const workspaceColumns: ColumnDef<WorkspaceFullDTO>[] = [
         </div>
       );
     },
-    sortingFn: (rowA, rowB, columnId) => {
+    sortingFn: (rowA, rowB) => {
       const tasksA = rowA.original.projects.reduce(
         (sum, p) => sum + p.tasks.length,
         0

@@ -4,7 +4,7 @@ import { cn } from '../../lib/utils';
 type AdminFormShellProps = {
   title: string;
   description?: string;
-  badge?: string;
+  // badge?: string;
   eyebrow?: string;
   actions?: React.ReactNode;
   aside?: React.ReactNode;
@@ -17,7 +17,7 @@ type AdminFormShellProps = {
 const AdminFormShell = ({
   title,
   description,
-  badge,
+  // badge,
   eyebrow,
   actions,
   aside,

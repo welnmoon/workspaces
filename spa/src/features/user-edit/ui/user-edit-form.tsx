@@ -5,9 +5,9 @@ import AdminFormShell, {
 } from '../../../shared/ui/form/admin-form-shell';
 import FormInput from '../../../shared/ui/form/form-input';
 import { cn } from '../../../shared/lib/utils';
-import type { EditUserSchemaType } from '../model/schema';
 import { useUserEdit } from '../model/use-user-edit';
 import FormSelect from '../../../shared/ui/form/form-select';
+import type { EditUserSchemaType } from '../../../entities/user/model/schema';
 
 const tariffItems = [
   { label: 'pro', value: 'PRO' },

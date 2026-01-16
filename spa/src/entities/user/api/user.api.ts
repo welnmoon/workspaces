@@ -54,7 +54,7 @@ export const userApi = api.injectEndpoints({
           patchResult.undo();
         }
       },
-      invalidatesTags: (res, err, { id }) => [
+      invalidatesTags: (_res, _err, { id }) => [
         { type: 'Users', id },
         { type: 'Users', id: 'LIST' },
       ],

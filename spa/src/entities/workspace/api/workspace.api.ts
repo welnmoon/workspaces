@@ -1,5 +1,5 @@
 import { api } from '../../../app/store/api';
-import type { WorkspaceFullDTO } from '../../../types/DTO/workspace';
+import type { WorkspaceFullDTO } from '../../../shared/types/DTO/workspace';
 import type { EditWorkspace } from '../model/schema';
 
 interface DeleteWorkspaceReq {

@@ -1,4 +1,4 @@
-import type { Tariffs } from '../../shared/types/tariff';
+import type { Tariffs } from '../tariff';
 
 export interface UserDTO {
   id: string;
