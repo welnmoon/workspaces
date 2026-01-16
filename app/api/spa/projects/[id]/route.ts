@@ -25,9 +25,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
       return withCors(badRequest('Invalid project id'));
     }
 
-    const project = await ProjectService.getProjectByIdWithWorkspace(
-      projectId
-    );
+    const project = await ProjectService.getProjectByIdWithWorkspace(projectId);
     if (!project) {
       return withCors(notFound('Project not found'));
     }
@@ -78,7 +76,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       description:
         parsed.data.description !== undefined
           ? parsed.data.description
-          : project.description ?? undefined,
+          : (project.description ?? undefined),
     };
 
     const updated = await ProjectService.updateProject(
@@ -123,7 +121,7 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:5173',
+      'Access-Control-Allow-Origin': process.env.SPA_URL!,
       'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',

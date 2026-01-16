@@ -25,7 +25,10 @@ export async function GET(
     }
 
     const { id: userId } = await requireUser();
-    const workspace = await WorkspaceService.getByIdForUser(userId, workspaceId);
+    const workspace = await WorkspaceService.getByIdForUser(
+      userId,
+      workspaceId
+    );
 
     const res = ok(workspace);
 
@@ -115,7 +118,7 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:5173',
+      'Access-Control-Allow-Origin': process.env.SPA_URL!,
       'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',

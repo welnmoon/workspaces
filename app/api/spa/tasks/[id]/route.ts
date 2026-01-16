@@ -107,7 +107,9 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     const updated = await prisma.task.update({
       where: { id: taskId },
       data: {
-        ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
+        ...(parsed.data.title !== undefined
+          ? { title: parsed.data.title }
+          : {}),
         ...(parsed.data.description !== undefined
           ? { description: parsed.data.description ?? null }
           : {}),
@@ -120,7 +122,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
               status,
               completedAt:
                 status === 'DONE'
-                  ? currentTask.completedAt ?? new Date()
+                  ? (currentTask.completedAt ?? new Date())
                   : null,
             }
           : {}),
@@ -179,7 +181,7 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:5173',
+      'Access-Control-Allow-Origin': process.env.SPA_URL!,
       'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
