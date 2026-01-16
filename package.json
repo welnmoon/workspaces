@@ -6,7 +6,7 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "prebuild": "prisma generate",
-    "build": "node -e \"console.log('NODE_OPTIONS=', process.env.NODE_OPTIONS)\" && npx prisma migrate deploy && npm run build:spa && next build",
+    "build": "node -e \"console.log('NODE_OPTIONS=', process.env.NODE_OPTIONS)\" && next build",
     "build:spa": "npm --prefix spa ci --include=dev --omit=optional && npm --prefix spa run build && node copy-spa.mjs",
     "start": "next start",
     "lint": "next lint",
