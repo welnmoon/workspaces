@@ -12,7 +12,7 @@ import SprintsPage from '../pages/sprints';
 
 export default function SpaApp() {
   return (
-    <BrowserRouter basename="/spa">
+    <BrowserRouter >
       <Routes>
         <Route element={<AdminLayout />}>
           {/* редирект с /spa на /spa/users */}
