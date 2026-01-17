@@ -6,7 +6,7 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "prebuild": "prisma generate",
-    "build": "npm run build:spa && next build",
+    "build": "next build",
     "build:spa": "npm --prefix spa ci --include=dev --omit=optional && npm --prefix spa run build && node copy-spa.mjs",
     "start": "next start",
     "lint": "next lint",
