@@ -10,7 +10,7 @@ export default defineConfig({
       '/api': process.env.VITE_API_ORIGIN!,
     },
   },
-  base: '/spa/',
+  base: '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

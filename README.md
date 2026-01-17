@@ -279,7 +279,6 @@ public/ # Static assets
 
 - ESLint
 - Prettier
-- Husky + lint-staged
 - TypeScript (strict)
 
 ---
