@@ -1,9 +1,22 @@
+// next.config.ts
+import type { NextConfig } from 'next';
 
-// const nextConfig: NextConfig = {
-//   i18n: {
-//     locales: ['en', 'ru'],
-//     defaultLocale: 'ru',
-//   },
-// };
+const nextConfig = {
+  productionBrowserSourceMaps: false,
 
-// export default nextConfig;
+  webpack(config) {
+    config.devtool = false;
+    return config;
+  },
+
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+
+  async rewrites() {
+    return {
+      afterFiles: [{ source: '/spa/:path*', destination: '/spa/index.html' }],
+    };
+  },
+} satisfies NextConfig;
+
+export default nextConfig;

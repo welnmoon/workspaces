@@ -1,6 +1,5 @@
 import {
   systemGetWorkspaceDTO,
-  WorkspaceListDTO,
   WorkspaceSelectDTO,
 } from '@/types/prisma/DTO/workspaces';
 import { prisma } from '../prisma';
@@ -22,6 +21,42 @@ export class WorkspaceService {
         name: true,
         description: true,
         avatarUrl: true,
+        createdAt: true,
+        updatedAt: true,
+        projects: {
+          select: {
+            id: true,
+            name: true,
+            tasks: {
+              select: {
+                title: true,
+                status: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  static async getByIdForUser(
+    userId: string,
+    workspaceId: number
+  ): Promise<systemGetWorkspaceDTO | null> {
+    return prisma.workspace.findFirst({
+      where: {
+        id: workspaceId,
+        memberships: {
+          some: { userId },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        avatarUrl: true,
+        createdAt: true,
+        updatedAt: true,
         projects: {
           select: {
             id: true,

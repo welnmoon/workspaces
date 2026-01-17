@@ -29,6 +29,8 @@ export type systemGetWorkspaceDTO = Prisma.WorkspaceGetPayload<{
     name: true;
     description: true;
     avatarUrl: true;
+    createdAt: true;
+    updatedAt: true;
     projects: {
       select: {
         id: true;

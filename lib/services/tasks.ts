@@ -8,6 +8,7 @@ import { ensureProjectActive } from '@/guards/ensure-project-active';
 import logger from '../logger';
 import { prisma } from '../prisma';
 import { AppError } from '../errors';
+import { UpdateTaskFormValues } from '@/schemas/tasks/update-task-form-schema';
 
 export class TaskService {
   static async getAll(projectId: number) {
@@ -32,6 +33,92 @@ export class TaskService {
       },
       include: {
         assignee: true,
+      },
+    });
+  }
+
+  static async getTasksForUser(userId: string) {
+    return prisma.task.findMany({
+      where: {
+        project: {
+          workspace: {
+            memberships: {
+              some: { userId },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        status: true,
+        priority: true,
+        dueDate: true,
+        projectId: true,
+        assigneeId: true,
+        sprintId: true,
+        createdAt: true,
+        updatedAt: true,
+        completedAt: true,
+        project: {
+          select: {
+            id: true,
+            name: true,
+            workspace: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        sprint: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        assignee: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  static async getTaskWithRelations(taskId: number) {
+    return prisma.task.findUnique({
+      where: { id: taskId },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            workspaceId: true,
+          },
+        },
+        sprint: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        assignee: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
       },
     });
   }
@@ -470,6 +557,82 @@ export class TaskService {
     });
 
     return deleted;
+  }
+
+  static async updateTaskFromAdmin(
+    taskId: number,
+    data: UpdateTaskFormValues,
+    actorId: string
+  ) {
+    const current = await prisma.task.findUnique({
+      where: { id: taskId },
+      select: {
+        id: true,
+        projectId: true,
+        sprintId: true,
+        status: true,
+        completedAt: true,
+        project: {
+          select: {
+            workspaceId: true,
+          },
+        },
+      },
+    });
+
+    if (!current) {
+      throw new AppError(404, 'TASK_NOT_FOUND', 'Задача не найдена');
+    }
+
+    await ensureProjectActive(current.projectId);
+
+    const payload: Prisma.TaskUncheckedUpdateInput = {};
+
+    const parseDueDate = (value: string | null) => {
+      if (value === null) {
+        return null;
+      }
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) {
+        throw new AppError(400, 'INVALID_DUE_DATE', 'Укажите корректный дедлайн');
+      }
+      return parsed;
+    };
+
+    if (data.title !== undefined) payload.title = data.title;
+    if (data.description !== undefined) {
+      payload.description = data.description ?? null;
+    }
+    if (data.dueDate !== undefined) {
+      payload.dueDate =
+        data.dueDate === null ? null : parseDueDate(data.dueDate);
+    }
+    if (data.assigneeId !== undefined) {
+      payload.assigneeId = data.assigneeId;
+    }
+    if (data.priority !== undefined) payload.priority = data.priority;
+    if (data.sprintId !== undefined) payload.sprintId = data.sprintId;
+    if (data.status !== undefined) {
+      payload.status = data.status;
+      payload.completedAt =
+        data.status === 'DONE' ? current.completedAt ?? new Date() : null;
+    }
+
+    const updated = await prisma.task.update({
+      where: { id: taskId },
+      data: payload,
+    });
+
+    await writeTaskAuditLog({
+      userId: actorId,
+      workspaceId: current.project.workspaceId,
+      projectId: current.projectId,
+      taskId,
+      action: AuditActions.UPDATE,
+      details: { changes: data },
+    });
+
+    return updated;
   }
 }
 

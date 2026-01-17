@@ -26,13 +26,9 @@ export const themeSlice = createSlice({
           state.mode = 'light';
           break;
       }
-
-      localStorage.setItem('theme', state.mode);
     },
   },
 });
-// Обязательна ли данная строка? Нельзя ли везде просто импортировать themeSlice и использовать themeSlice.actions? Это про для удобства?
 export const { toggleTheme } = themeSlice.actions;
 
-// А это зачем?
 export default themeSlice.reducer;

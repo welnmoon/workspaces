@@ -1,7 +1,13 @@
-import WorkspacesComponent from '../features/workspaces/workspaces-component';
+import WorkspacesComponent from '../widgets/workspaces-overview/ui/workspaces-overview';
+import PageHeader from '../shared/ui/page-header';
 
 const WorkspacesPage = () => {
-  return <WorkspacesComponent />;
+  return (
+    <section className="page">
+      <PageHeader title="Воркспейсы" />
+      <WorkspacesComponent />
+    </section>
+  );
 };
 
 export default WorkspacesPage;

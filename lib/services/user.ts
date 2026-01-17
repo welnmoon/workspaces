@@ -3,6 +3,7 @@ import { UserProfileDTO } from '@/types/prisma/DTO/user';
 import { prisma } from '../prisma';
 import { Tariff } from '@prisma/client';
 import { tariffs } from '@/const/tariffs';
+import bcrypt from 'bcrypt';
 
 export class UserService {
   static async getUserById(userId: string) {
@@ -64,13 +65,50 @@ export class UserService {
 
   static async updateUser(userId: string, data: unknown) {
     const res = profileSchema.parse(data);
+    const {
+      password,
+      confirmPassword: _confirmPassword,
+      avatarUrl,
+      img,
+      image,
+      ...rest
+    } = res;
+
+    const updateData: Record<string, unknown> = { ...rest };
+
+    const resolvedImage = avatarUrl ?? img ?? image;
+    if (resolvedImage !== undefined) {
+      updateData.image =
+        typeof resolvedImage === 'string' && resolvedImage.trim() === ''
+          ? null
+          : resolvedImage;
+    }
+
+    if (typeof updateData.email === 'string' && updateData.email.trim() === '') {
+      updateData.email = null;
+    }
+
+    if (typeof updateData.firstName === 'string' && updateData.firstName.trim() === '') {
+      updateData.firstName = null;
+    }
+
+    if (typeof updateData.lastName === 'string' && updateData.lastName.trim() === '') {
+      updateData.lastName = null;
+    }
+
+    if (typeof password === 'string' && password.trim() !== '') {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateData.password = hashedPassword;
+    }
+
     return await prisma.user.update({
       where: {
         id: userId,
       },
-      data: res,
+      data: updateData,
     });
   }
+
 
   static async deleteUser(userId: string) {
     return await prisma.user.delete({
