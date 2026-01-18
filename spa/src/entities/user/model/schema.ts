@@ -1,11 +1,15 @@
 import { z } from 'zod';
 
 
-const emptyToUndefined = (v: unknown) => (v === '' ? undefined : v);
-const optionalPasswordSchema = z.preprocess(
-  emptyToUndefined,
-  z.string().min(4, 'Password must be at least 4 characters long').optional()
-);
+const emptyToUndefined = (value: string) =>
+  value === '' ? undefined : value;
+const optionalPasswordSchema = z
+  .union([
+    z.string().min(4, 'Password must be at least 4 characters long'),
+    z.literal(''),
+  ])
+  .transform(emptyToUndefined)
+  .optional();
 
 // User edit schema
 export const editUserSchema = z
@@ -33,4 +37,4 @@ export const editUserSchema = z
     path: ['confirmPassword'],
   });
 
-export type EditUserSchemaType = z.input<typeof editUserSchema>;
+export type EditUserSchemaType = z.infer<typeof editUserSchema>;
