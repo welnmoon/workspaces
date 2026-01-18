@@ -1,6 +1,6 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { parseProjectId } from '@/helpers/parse-id';
-import { withCors } from '@/helpers/with-cors';
+import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
   badRequest,
   noContent,
@@ -22,19 +22,28 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
     const projectId = parseProjectId((await params).id);
     if (projectId === null) {
-      return withCors(badRequest('Invalid project id'));
+      return withCors(
+        badRequest('Invalid project id'),
+        _req.headers.get('origin')
+      );
     }
 
     const project = await ProjectService.getProjectByIdWithWorkspace(projectId);
     if (!project) {
-      return withCors(notFound('Project not found'));
+      return withCors(
+        notFound('Project not found'),
+        _req.headers.get('origin')
+      );
     }
 
     await requireWorkspaceMember({ workspaceId: project.workspaceId });
-    return withCors(ok(project));
+    return withCors(ok(project), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to get project'));
+    return withCors(
+      serverError('Failed to get project'),
+      _req.headers.get('origin')
+    );
   }
 }
 
@@ -42,12 +51,15 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
     const projectId = parseProjectId((await params).id);
     if (projectId === null) {
-      return withCors(badRequest('Invalid project id'));
+      return withCors(
+        badRequest('Invalid project id'),
+        req.headers.get('origin')
+      );
     }
 
     const project = await ProjectService.getProjectById(projectId);
     if (!project) {
-      return withCors(notFound('Project not found'));
+      return withCors(notFound('Project not found'), req.headers.get('origin'));
     }
 
     const { user } = await requireWorkspaceMember({
@@ -57,18 +69,19 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
     const rawBody = await req.json().catch(() => null);
     if (!rawBody) {
-      return withCors(badRequest('Invalid JSON'));
+      return withCors(badRequest('Invalid JSON'), req.headers.get('origin'));
     }
 
     const parsed = createProjectFormSchema.partial().safeParse(rawBody);
     if (!parsed.success) {
       return withCors(
-        unprocessable(parsed.error.message, parsed.error.flatten())
+        unprocessable(parsed.error.message, parsed.error.flatten()),
+        req.headers.get('origin')
       );
     }
 
     if (Object.keys(parsed.data).length === 0) {
-      return withCors(badRequest('No data provided'));
+      return withCors(badRequest('No data provided'), req.headers.get('origin'));
     }
 
     const payload = {
@@ -85,10 +98,13 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       user.id
     );
 
-    return withCors(ok(updated));
+    return withCors(ok(updated), req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to update project'));
+    return withCors(
+      serverError('Failed to update project'),
+      req.headers.get('origin')
+    );
   }
 }
 
@@ -96,12 +112,18 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
     const projectId = parseProjectId((await params).id);
     if (projectId === null) {
-      return withCors(badRequest('Invalid project id'));
+      return withCors(
+        badRequest('Invalid project id'),
+        _req.headers.get('origin')
+      );
     }
 
     const project = await ProjectService.getProjectById(projectId);
     if (!project) {
-      return withCors(notFound('Project not found'));
+      return withCors(
+        notFound('Project not found'),
+        _req.headers.get('origin')
+      );
     }
 
     const { user } = await requireWorkspaceMember({
@@ -110,22 +132,23 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
     });
 
     await ProjectService.deleteProject(projectId, user.id);
-    return withCors(noContent());
+    return withCors(noContent(), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to delete project'));
+    return withCors(
+      serverError('Failed to delete project'),
+      _req.headers.get('origin')
+    );
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'https://workspaces-nyvc.vercel.app',
-      'Access-Control-Allow-Credentials': 'true',
+      ...corsHeaders(req.headers.get('origin')),
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
-      Vary: 'Origin',
     },
   });
 }

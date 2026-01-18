@@ -1,5 +1,5 @@
+import { corsHeaders, withCors } from '@/helpers/with-cors';
 import { requireUser } from '@/helpers/require-user';
-import { withCors } from '@/helpers/with-cors';
 import { requireWorkspaceMember } from '@/guards/workspace';
 import {
   badRequest,
@@ -21,7 +21,7 @@ export async function GET(
   try {
     const workspaceId = Number((await params).id);
     if (Number.isNaN(workspaceId)) {
-      return badRequest('Invalid workspace id');
+      return withCors(badRequest('Invalid workspace id'), _req.headers.get('origin'));
     }
 
     const { id: userId } = await requireUser();
@@ -32,10 +32,13 @@ export async function GET(
 
     const res = ok(workspace);
 
-    return withCors(res);
+    return withCors(res, _req.headers.get('origin'));
   } catch (e) {
     console.error(e);
-    return withCors(serverError('Failed to get workspace'));
+    return withCors(
+      serverError('Failed to get workspace'),
+      _req.headers.get('origin')
+    );
   }
 }
 
@@ -46,7 +49,10 @@ export async function PUT(
   try {
     const workspaceId = Number((await params).id);
     if (Number.isNaN(workspaceId)) {
-      return withCors(badRequest('Invalid workspace id'));
+      return withCors(
+        badRequest('Invalid workspace id'),
+        req.headers.get('origin')
+      );
     }
 
     await requireWorkspaceMember({
@@ -55,12 +61,15 @@ export async function PUT(
     });
 
     const rawBody = await req.json().catch(() => null);
-    if (!rawBody) return withCors(badRequest('Invalid JSON'));
+    if (!rawBody) {
+      return withCors(badRequest('Invalid JSON'), req.headers.get('origin'));
+    }
 
     const parsed = createWorkspaceFormSchema.partial().safeParse(rawBody);
     if (!parsed.success) {
       return withCors(
-        unprocessable(parsed.error.message, parsed.error.flatten())
+        unprocessable(parsed.error.message, parsed.error.flatten()),
+        req.headers.get('origin')
       );
     }
 
@@ -75,19 +84,23 @@ export async function PUT(
       },
     });
 
-    return withCors(ok(updatedWorkspace));
+    return withCors(ok(updatedWorkspace), req.headers.get('origin'));
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2002'
     ) {
       return withCors(
-        unprocessable('Рабочее пространство с таким названием уже существует')
+        unprocessable('Рабочее пространство с таким названием уже существует'),
+        req.headers.get('origin')
       );
     }
 
     console.error(error);
-    return withCors(serverError('Не удалось обновить рабочее пространство'));
+    return withCors(
+      serverError('Не удалось обновить рабочее пространство'),
+      req.headers.get('origin')
+    );
   }
 }
 
@@ -98,7 +111,10 @@ export async function DELETE(
   try {
     const workspaceId = Number((await params).id);
     if (Number.isNaN(workspaceId)) {
-      return withCors(badRequest('Invalid workspace id'));
+      return withCors(
+        badRequest('Invalid workspace id'),
+        _req.headers.get('origin')
+      );
     }
 
     await requireWorkspaceMember({
@@ -107,22 +123,23 @@ export async function DELETE(
     });
 
     await WorkspaceService.delete(workspaceId);
-    return withCors(noContent());
+    return withCors(noContent(), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Не удалось удалить рабочее пространство'));
+    return withCors(
+      serverError('Не удалось удалить рабочее пространство'),
+      _req.headers.get('origin')
+    );
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'https://workspaces-nyvc.vercel.app',
-      'Access-Control-Allow-Credentials': 'true',
+      ...corsHeaders(req.headers.get('origin')),
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
-      Vary: 'Origin',
     },
   });
 }

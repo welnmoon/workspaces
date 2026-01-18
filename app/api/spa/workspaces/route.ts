@@ -1,33 +1,31 @@
+import { corsHeaders, withCors } from '@/helpers/with-cors';
 import { requireUser } from '@/helpers/require-user';
 import { ok, serverError } from '@/lib/http/http';
 import { WorkspaceService } from '@/lib/services/workspace';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     // await requireUser();
     const { id } = await requireUser();
     const workspaces = await WorkspaceService.getList(id);
-    const res = ok(workspaces);
-    res.headers.set('Access-Control-Allow-Origin', 'https://workspaces-nyvc.vercel.app');
-    res.headers.set('Access-Control-Allow-Credentials', 'true');
-    res.headers.set('Vary', 'Origin');
-    return res;
+    return withCors(ok(workspaces), req.headers.get('origin'));
   } catch (e) {
     console.error(e);
-    return serverError('Failed to get workspaces');
+    return withCors(
+      serverError('Failed to get workspaces'),
+      req.headers.get('origin')
+    );
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(req: Request) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'https://workspaces-nyvc.vercel.app',
-      'Access-Control-Allow-Credentials': 'true',
+      ...corsHeaders(req.headers.get('origin')),
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
-      Vary: 'Origin',
     },
   });
 }

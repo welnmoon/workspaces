@@ -1,6 +1,6 @@
 import { requireWorkspaceMember } from '@/guards/workspace';
 import { parseTaskId } from '@/helpers/parse-id';
-import { withCors } from '@/helpers/with-cors';
+import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
   badRequest,
   noContent,
@@ -23,22 +23,25 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
     const taskId = parseTaskId((await params).id);
     if (taskId === null) {
-      return withCors(badRequest('Invalid task id'));
+      return withCors(badRequest('Invalid task id'), _req.headers.get('origin'));
     }
 
     const task = await TaskService.getTaskWithRelations(taskId);
     if (!task) {
-      return withCors(notFound('Task not found'));
+      return withCors(notFound('Task not found'), _req.headers.get('origin'));
     }
 
     await requireWorkspaceMember({
       workspaceId: task.project.workspaceId,
     });
 
-    return withCors(ok(task));
+    return withCors(ok(task), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to get task'));
+    return withCors(
+      serverError('Failed to get task'),
+      _req.headers.get('origin')
+    );
   }
 }
 
@@ -46,7 +49,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
     const taskId = parseTaskId((await params).id);
     if (taskId === null) {
-      return withCors(badRequest('Invalid task id'));
+      return withCors(badRequest('Invalid task id'), req.headers.get('origin'));
     }
 
     const currentTask = await prisma.task.findUnique({
@@ -65,7 +68,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     });
 
     if (!currentTask) {
-      return withCors(notFound('Task not found'));
+      return withCors(notFound('Task not found'), req.headers.get('origin'));
     }
 
     await requireWorkspaceMember({
@@ -75,18 +78,19 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
     const rawBody = await req.json().catch(() => null);
     if (!rawBody) {
-      return withCors(badRequest('Invalid JSON'));
+      return withCors(badRequest('Invalid JSON'), req.headers.get('origin'));
     }
 
     const parsed = updateTaskSchema.safeParse(rawBody);
     if (!parsed.success) {
       return withCors(
-        unprocessable(parsed.error.message, parsed.error.flatten())
+        unprocessable(parsed.error.message, parsed.error.flatten()),
+        req.headers.get('origin')
       );
     }
 
     if (Object.keys(parsed.data).length === 0) {
-      return withCors(badRequest('No data provided'));
+      return withCors(badRequest('No data provided'), req.headers.get('origin'));
     }
 
     const { dueDate, status, sprintId, assigneeId } = parsed.data;
@@ -98,7 +102,10 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       } else {
         const parsedDue = new Date(dueDate);
         if (Number.isNaN(parsedDue.getTime())) {
-          return withCors(badRequest('Invalid due date'));
+          return withCors(
+            badRequest('Invalid due date'),
+            req.headers.get('origin')
+          );
         }
         normalizedDueDate = parsedDue;
       }
@@ -131,10 +138,13 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       },
     });
 
-    return withCors(ok(updated));
+    return withCors(ok(updated), req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to update task'));
+    return withCors(
+      serverError('Failed to update task'),
+      req.headers.get('origin')
+    );
   }
 }
 
@@ -142,7 +152,7 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
     const taskId = parseTaskId((await params).id);
     if (taskId === null) {
-      return withCors(badRequest('Invalid task id'));
+      return withCors(badRequest('Invalid task id'), _req.headers.get('origin'));
     }
 
     const existing = await prisma.task.findUnique({
@@ -158,7 +168,7 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
     });
 
     if (!existing) {
-      return withCors(notFound('Task not found'));
+      return withCors(notFound('Task not found'), _req.headers.get('origin'));
     }
 
     await requireWorkspaceMember({
@@ -170,22 +180,23 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
       where: { id: taskId },
     });
 
-    return withCors(noContent());
+    return withCors(noContent(), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to delete task'));
+    return withCors(
+      serverError('Failed to delete task'),
+      _req.headers.get('origin')
+    );
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'https://workspaces-nyvc.vercel.app',
-      'Access-Control-Allow-Credentials': 'true',
+      ...corsHeaders(req.headers.get('origin')),
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
-      Vary: 'Origin',
     },
   });
 }
