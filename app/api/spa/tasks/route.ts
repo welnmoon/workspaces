@@ -1,22 +1,11 @@
 import { corsHeaders, withCors } from '@/helpers/with-cors';
-import { requireUser } from '@/helpers/require-user';
 import { ok, serverError } from '@/lib/http/http';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
-    const { id } = await requireUser();
     const tasks = await prisma.task.findMany({
-      where: {
-        project: {
-          workspace: {
-            memberships: {
-              some: { userId: id },
-            },
-          },
-        },
-      },
       select: {
         id: true,
         title: true,

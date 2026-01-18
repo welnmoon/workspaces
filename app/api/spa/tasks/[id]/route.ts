@@ -1,4 +1,3 @@
-import { requireWorkspaceMember } from '@/guards/workspace';
 import { parseTaskId } from '@/helpers/parse-id';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
@@ -12,7 +11,6 @@ import {
 import { prisma } from '@/lib/prisma';
 import { TaskService } from '@/lib/services/tasks';
 import { updateTaskSchema } from '@/schemas/tasks/update-task-form-schema';
-import { Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 type RouteParams = {
@@ -30,10 +28,6 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     if (!task) {
       return withCors(notFound('Task not found'), _req.headers.get('origin'));
     }
-
-    await requireWorkspaceMember({
-      workspaceId: task.project.workspaceId,
-    });
 
     return withCors(ok(task), _req.headers.get('origin'));
   } catch (error) {
@@ -70,11 +64,6 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     if (!currentTask) {
       return withCors(notFound('Task not found'), req.headers.get('origin'));
     }
-
-    await requireWorkspaceMember({
-      workspaceId: currentTask.project.workspaceId,
-      allowed: [Role.OWNER, Role.ADMIN],
-    });
 
     const rawBody = await req.json().catch(() => null);
     if (!rawBody) {
@@ -170,11 +159,6 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
     if (!existing) {
       return withCors(notFound('Task not found'), _req.headers.get('origin'));
     }
-
-    await requireWorkspaceMember({
-      workspaceId: existing.project.workspaceId,
-      allowed: [Role.OWNER, Role.ADMIN],
-    });
 
     await prisma.task.delete({
       where: { id: taskId },

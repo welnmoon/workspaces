@@ -8,7 +8,11 @@ import { Workspace } from '@prisma/client';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 export class WorkspaceService {
-  // Получение списка воркспейсов
+  //
+  static async getAllWorkspaces(): Promise<Workspace[]> {
+    return prisma.workspace.findMany();
+  }
+  // Получение списка воркспейсов пользователя
   static async getList(userId: string): Promise<systemGetWorkspaceDTO[]> {
     return prisma.workspace.findMany({
       where: {

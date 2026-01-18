@@ -1,14 +1,30 @@
 import type { NextResponse } from 'next/server';
 
 const SPA_ORIGIN = 'https://workspaces-nyvc.vercel.app';
+const SPA_HOST = 'workspaces-nyvc.vercel.app';
+const PREVIEW_HOST_PREFIX = 'workspaces-nyvc-';
 
 function normalizeOrigin(origin?: string | null) {
   return (origin ?? '').replace(/\/$/, '');
 }
 
+function isAllowedOrigin(normalizedOrigin: string) {
+  if (!normalizedOrigin) return false;
+  try {
+    const { host } = new URL(normalizedOrigin);
+    if (host === SPA_HOST) return true;
+    if (host.startsWith(PREVIEW_HOST_PREFIX) && host.endsWith('.vercel.app')) {
+      return true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
 export function getCorsOrigin(origin?: string | null) {
   const normalized = normalizeOrigin(origin);
-  if (normalized === SPA_ORIGIN) {
+  if (isAllowedOrigin(normalized)) {
     return normalized;
   }
   return SPA_ORIGIN;

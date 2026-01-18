@@ -1,4 +1,3 @@
-import { requireWorkspaceMember } from '@/guards/workspace';
 import { parseProjectId } from '@/helpers/parse-id';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
@@ -11,7 +10,6 @@ import {
 } from '@/lib/http/http';
 import { ProjectService } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
-import { Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 type RouteParams = {
@@ -36,7 +34,6 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
       );
     }
 
-    await requireWorkspaceMember({ workspaceId: project.workspaceId });
     return withCors(ok(project), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
@@ -61,11 +58,6 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     if (!project) {
       return withCors(notFound('Project not found'), req.headers.get('origin'));
     }
-
-    const { user } = await requireWorkspaceMember({
-      workspaceId: project.workspaceId,
-      allowed: [Role.OWNER, Role.ADMIN],
-    });
 
     const rawBody = await req.json().catch(() => null);
     if (!rawBody) {
@@ -92,11 +84,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
           : (project.description ?? undefined),
     };
 
-    const updated = await ProjectService.updateProject(
-      projectId,
-      payload,
-      user.id
-    );
+    const updated = await ProjectService.updateProject(projectId, payload);
 
     return withCors(ok(updated), req.headers.get('origin'));
   } catch (error) {
@@ -126,12 +114,7 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const { user } = await requireWorkspaceMember({
-      workspaceId: project.workspaceId,
-      allowed: [Role.OWNER, Role.ADMIN],
-    });
-
-    await ProjectService.deleteProject(projectId, user.id);
+    await ProjectService.deleteProject(projectId);
     return withCors(noContent(), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);

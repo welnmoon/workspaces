@@ -1,6 +1,4 @@
 import { corsHeaders, withCors } from '@/helpers/with-cors';
-import { requireUser } from '@/helpers/require-user';
-import { requireWorkspaceMember } from '@/guards/workspace';
 import {
   badRequest,
   noContent,
@@ -10,8 +8,7 @@ import {
 } from '@/lib/http/http';
 import { prisma } from '@/lib/prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
-import { WorkspaceService } from '@/lib/services/workspace';
-import { Prisma, Role } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -24,11 +21,29 @@ export async function GET(
       return withCors(badRequest('Invalid workspace id'), _req.headers.get('origin'));
     }
 
-    const { id: userId } = await requireUser();
-    const workspace = await WorkspaceService.getByIdForUser(
-      userId,
-      workspaceId
-    );
+    const workspace = await prisma.workspace.findUnique({
+      where: { id: workspaceId },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        avatarUrl: true,
+        createdAt: true,
+        updatedAt: true,
+        projects: {
+          select: {
+            id: true,
+            name: true,
+            tasks: {
+              select: {
+                title: true,
+                status: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
     const res = ok(workspace);
 
@@ -54,11 +69,6 @@ export async function PUT(
         req.headers.get('origin')
       );
     }
-
-    await requireWorkspaceMember({
-      workspaceId,
-      allowed: [Role.OWNER],
-    });
 
     const rawBody = await req.json().catch(() => null);
     if (!rawBody) {
@@ -117,12 +127,9 @@ export async function DELETE(
       );
     }
 
-    await requireWorkspaceMember({
-      workspaceId,
-      allowed: [Role.OWNER],
+    await prisma.workspace.delete({
+      where: { id: workspaceId },
     });
-
-    await WorkspaceService.delete(workspaceId);
     return withCors(noContent(), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);

@@ -1,4 +1,3 @@
-import { requireWorkspaceMember } from '@/guards/workspace';
 import { parseSprintId } from '@/helpers/parse-id';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
@@ -12,7 +11,6 @@ import {
 import { prisma } from '@/lib/prisma';
 import { SprintService } from '@/lib/services/sprint';
 import { updateSprintSchema } from '@/schemas/sprint/update-sprint-schema';
-import { Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 type RouteParams = {
@@ -33,10 +31,6 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     if (!sprint) {
       return withCors(notFound('Sprint not found'), _req.headers.get('origin'));
     }
-
-    await requireWorkspaceMember({
-      workspaceId: sprint.project.workspaceId,
-    });
 
     return withCors(ok(sprint), _req.headers.get('origin'));
   } catch (error) {
@@ -62,11 +56,6 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     if (!sprint) {
       return withCors(notFound('Sprint not found'), req.headers.get('origin'));
     }
-
-    const { user } = await requireWorkspaceMember({
-      workspaceId: sprint.project.workspaceId,
-      allowed: [Role.OWNER],
-    });
 
     const rawBody = await req.json().catch(() => null);
     if (!rawBody) {
@@ -165,11 +154,6 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
     if (!sprint) {
       return withCors(notFound('Sprint not found'), _req.headers.get('origin'));
     }
-
-    await requireWorkspaceMember({
-      workspaceId: sprint.project.workspaceId,
-      allowed: [Role.OWNER],
-    });
 
     await prisma.sprint.delete({
       where: { id: sprintId },
