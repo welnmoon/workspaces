@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 
 const emptyToUndefined = (v: unknown) => (v === '' ? undefined : v);
+const optionalPasswordSchema = z.preprocess(
+  emptyToUndefined,
+  z.string().min(4, 'Password must be at least 4 characters long').optional()
+);
 
 // User edit schema
 export const editUserSchema = z
@@ -17,18 +21,8 @@ export const editUserSchema = z
       .max(50, 'Name must be at most 50 characters long')
       .optional(),
     email: z.email('Invalid email').optional(),
-    password: z
-      .preprocess(
-        emptyToUndefined,
-        z.string().min(4, 'Password must be at least 4 characters long')
-      )
-      .optional(),
-    confirmPassword: z
-      .preprocess(
-        emptyToUndefined,
-        z.string().min(4, 'Password must be at least 4 characters long')
-      )
-      .optional(),
+    password: optionalPasswordSchema,
+    confirmPassword: optionalPasswordSchema,
     avatarUrl: z.string().optional(),
     currentTariff: z.enum(['FREE', 'PRO', 'BUSINESS']),
     platformRole: z.enum(['USER', 'SYSADMIN']),
