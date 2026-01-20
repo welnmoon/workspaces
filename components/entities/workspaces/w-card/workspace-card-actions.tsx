@@ -31,7 +31,7 @@ type Props = {
   workspaceName: string;
   onNameChange: (name: string) => void;
   userId: string;
-  noActions?: boolean; // нужно чтобы убрать экшены для страницы Главная
+  noActions?: boolean;                                                  
 };
 
 const WorkspaceCardActions = ({
@@ -179,7 +179,7 @@ const WorkspaceCardActions = ({
         </DialogContent>
       </Dialog>
 
-      {/* Edit name dialog */}
+      
       <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
         <DialogContent>
           <DialogHeader>
@@ -210,7 +210,7 @@ const WorkspaceCardActions = ({
         </DialogContent>
       </Dialog>
 
-      {/* Delete dialog */}
+      
       <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
         <DialogContent>
           <DialogHeader>

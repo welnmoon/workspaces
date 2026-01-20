@@ -22,7 +22,7 @@ export type WorkspaceWithoutDatesDTO = Omit<
 
 export type WorkspaceDTO = Workspace;
 
-// SPA - System admin
+                     
 export type systemGetWorkspaceDTO = Prisma.WorkspaceGetPayload<{
   select: {
     id: true;

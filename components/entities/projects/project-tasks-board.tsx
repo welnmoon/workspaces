@@ -50,13 +50,13 @@ const ProjectTasksBoard = ({
           <div className="bg-white rounded-2xl border border-zinc-100 p-6">
             <EmptyState
               iconIsImage={true}
-              // icon={
-              //   <img
-              //     src="/images/tasks-page-banner.png"
-              //     alt="Иллюстрация проекта"
-              //     className="mt-6 w-1/2 mx-auto h-auto object-contain"
-              //   />
-              // }
+                       
+                       
+                                                        
+                                              
+                                                                         
+                     
+                  
               imageSrc="/images/tasks-page-banner.png"
               imageAlt="Иллюстрация проекта"
               imageClassName="mt-6 w-1/2 mx-auto h-auto object-contain"

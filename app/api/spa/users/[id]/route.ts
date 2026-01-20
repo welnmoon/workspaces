@@ -1,4 +1,4 @@
-import { withCors } from '@/helpers/with-cors';
+import { corsHeaders, withCors } from '@/helpers/with-cors';
 import { noContent, ok, serverError } from '@/lib/http/http';
 import { UserService } from '@/lib/services/user';
 import { NextRequest, NextResponse } from 'next/server';
@@ -8,17 +8,17 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // await requireUser();
+                           
     const id = (await params).id;
     const user = await UserService.getUserById(id);
     const res = ok(user);
-    res.headers.set('Access-Control-Allow-Origin', process.env.VITE_URL!);
-    res.headers.set('Access-Control-Allow-Credentials', 'true');
-    res.headers.set('Vary', 'Origin');
-    return res;
+    return withCors(res, _req.headers.get('origin'));
   } catch (e) {
     console.error(e);
-    return withCors(serverError('Failed to update user'));
+    return withCors(
+      serverError('Failed to update user'),
+      _req.headers.get('origin')
+    );
   }
 }
 
@@ -27,18 +27,15 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // await requireUser();
+                           
     const id = (await params).id;
     const user = await req.json();
     const updatedUser = await UserService.updateUser(id, user);
     const res = ok(updatedUser);
-    // res.headers.set('Access-Control-Allow-Origin', process.env.VITE_URL!);
-    // res.headers.set('Access-Control-Allow-Credentials', 'true');
-    // res.headers.set('Vary', 'Origin');
-    return withCors(res);
+    return withCors(res, req.headers.get('origin'));
   } catch (e) {
     console.error(e);
-    return withCors(serverError('Failed to update user'));
+    return withCors(serverError('Failed to update user'), req.headers.get('origin'));
   }
 }
 
@@ -47,25 +44,23 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // await requireUser();
+                           
     const id = (await params).id;
     await UserService.deleteUser(id);
-    return withCors(noContent());
+    return withCors(noContent(), _req.headers.get('origin'));
   } catch (e) {
     console.error(e);
-    return withCors(serverError('Failed to delete user'));
+    return withCors(serverError('Failed to delete user'), _req.headers.get('origin'));
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': process.env.VITE_URL!,
-      'Access-Control-Allow-Credentials': 'true',
+      ...corsHeaders(req.headers.get('origin')),
       'Access-Control-Allow-Methods': 'GET, OPTIONS, PUT, DELETE',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
-      Vary: 'Origin',
     },
   });
 }

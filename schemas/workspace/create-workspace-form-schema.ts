@@ -8,7 +8,7 @@ export const createWorkspaceFormSchema = z.object({
     .max(30, 'Заголовок должен быть не длиннее 30 символов'),
   description: z.string().trim().max(1000).optional(),
   avatarUrl: z.string().trim().max(300).optional(),
-  // TODO - Добавить поле тарифа, затем при создании воркспейса спрашивать какой тариф им нужен. дефолт - FREE, если другая то отправлять их на страницу оплаты
+                                                                                                                                                               
 });
 
 export type CreateWorkspaceFormValues = z.infer<

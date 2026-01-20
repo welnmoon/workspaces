@@ -38,12 +38,12 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider defaultOpen={false} className="flex min-h-screen">
-      {/* Статичный только на lg+ */}
+      
       <div className="hidden lg:block">
         <DashboardSidebarStatic workspaces={workspaces} />
       </div>
 
-      {/* Динамичный только на <lg */}
+      
       <div className="sm:visible lg:hidden">
         <DashboardSidebarDynamic workspaces={workspaces} />
       </div>
@@ -51,11 +51,10 @@ export default async function DashboardLayout({
       <div className="flex-1 flex flex-col min-w-0">
         <div className="sticky top-0 z-30 px-4 py-3 border-b bg-background/80 backdrop-blur overflow-y-hidden">
           <div className="flex items-center justify-between">
-            {/* <SidebarTrigger className="ml-0 lg:hidden z-40" /> */}
+            
             <div className="flex items-center gap-2">
               <NotificationsPopover
                 userId={user.id}
-                // invitations={invitationNotifications}
               />
               <AvatarRoot className="flex gap-2 items-center justify-center">
                 <Link

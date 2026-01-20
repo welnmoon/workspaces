@@ -5,7 +5,7 @@ import { invitationCreateSchema } from '@/schemas/notification/inv-create-schema
 
 import { NextRequest } from 'next/server';
 
-// Создание и отправка приглашения на почту
+                                           
 export async function POST(req: NextRequest) {
   const { id } = await requireUser();
   const body = await req.json().catch(() => null);

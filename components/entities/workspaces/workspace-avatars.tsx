@@ -64,7 +64,7 @@ const WorkspaceAvatars = ({ className }: { className?: string }) => {
                   fill
                   sizes="80px"
                   onLoadingComplete={() => handleImageLoaded(a.id)}
-                  onError={() => handleImageLoaded(a.id)} // чтобы не висел вечный скелетон при ошибке
+                  onError={() => handleImageLoaded(a.id)}                                             
                   className={cn(
                     'w-full h-full object-cover transition-opacity duration-300',
                     isLoaded ? 'opacity-100' : 'opacity-0'

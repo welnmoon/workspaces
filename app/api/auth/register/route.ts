@@ -16,9 +16,9 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Session } from 'next-auth';
 
-// sign up - это регистрация
+                            
 
-// после успешной регистраии на клиенте делаем - await signIn("credentials", { email, password, callbackUrl: "/dashboard" });
+                                                                                                                             
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       return conflict('User already exists', 'USER_ALREADY_EXISTS');
     }
 
-    const rawToken = crypto.randomBytes(32).toString('hex'); // url-safe
+    const rawToken = crypto.randomBytes(32).toString('hex');            
     const tokenHash = crypto
       .createHash('sha256')
       .update(rawToken)
@@ -97,9 +97,9 @@ export async function POST(req: NextRequest) {
       html: `<p>Привет, ${firstName} ${lastName}! Пожалуйста, подтвердите свой email: <a href="${verifyLink}">Подтвердить</a></p>`,
     });
 
-    // Пока resend платный и не позволяет отправлять на почты с других доменов
-    // Поэтому временно для пет проекта сразу будем верифицировать
-    // TODO delete this
+                                                                              
+                                                                  
+                       
     await UserService.verifyUser(email);
 
     return NextResponse.json(

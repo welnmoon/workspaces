@@ -7,21 +7,21 @@ interface DeleteTaskReq {
 
 export const tasksApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // get all tasks
+                    
     getTasks: builder.query<TaskDTO[], void>({
       query: () => ({
         url: '/tasks',
         method: 'GET',
       }),
     }),
-    // get task
+               
     getTask: builder.query<TaskDTO, number>({
       query: (id) => ({
         url: `/tasks/${id}`,
         method: 'GET',
       }),
     }),
-    // delete task
+                  
     deleteTask: builder.mutation<void, DeleteTaskReq>({
       query: ({ id }) => ({
         url: `/tasks/${id}`,

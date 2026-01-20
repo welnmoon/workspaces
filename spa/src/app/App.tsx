@@ -8,14 +8,14 @@ import ProjectsPage from '../pages/projects';
 import TasksPage from '../pages/tasks';
 import SprintsPage from '../pages/sprints';
 
-//TODO Мы хотели достать данные из нашего api next с помощью RTK Query
+                                                                      
 
 export default function SpaApp() {
   return (
     <BrowserRouter >
       <Routes>
         <Route element={<AdminLayout />}>
-          {/* редирект с /spa на /spa/users */}
+          
           <Route index element={<Navigate to="users" replace />} />
 
           <Route path="users" element={<UsersPage />} />

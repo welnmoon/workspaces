@@ -88,8 +88,7 @@ export default function DailyDoneChart({
           <YAxis />
           <Tooltip />
           <Legend />
-          {/* <ReferenceLine x="Page C" stroke="red" label="Max PV PAGE" />
-        <ReferenceLine y={9800} label="Max" stroke="red" /> */}
+          
           <Line
             type="monotone"
             name="Задачи"

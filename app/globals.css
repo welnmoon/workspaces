@@ -56,7 +56,7 @@ button {
   cursor: pointer;
 }
 
-/*for hidden headers*/
+                      
 .visually-hidden { 
   position: absolute;
   width: 1px;
@@ -74,9 +74,9 @@ button {
   font-weight: 700;
 }
 
-/*------------------------------------------------------------------------------*/
-/* Underline                        */
-/*------------------------------------------------------------------------------*/
+                                                                                  
+                                      
+                                                                                  
 .underline-anim {
   position: relative;
   text-decoration: none;
@@ -93,7 +93,7 @@ button {
   width: 100%;
   background-color: #7c7c7c;
   transform: scaleX(0);
-  transform-origin: left; /* 👉 линия начинается слева */
+  transform-origin: left;                               
   transition: transform 0.3s ease;
 }
 
@@ -110,28 +110,28 @@ button {
   word-break: break-word;
 }
 
-/*------------------------------------------------------------------------------*/
-/* Animation                        */
-/*------------------------------------------------------------------------------*/
+                                                                                  
+                                      
+                                                                                  
 
 .animate-draw {
   animation: reveal 1.8s ease forwards;
-  clip-path: inset(0 100% 0 0); /* изначально скрыт */
+  clip-path: inset(0 100% 0 0);                       
 }
 
 @keyframes reveal {
   to {
-    clip-path: inset(0 0 0 0); /* раскрытие слева направо */
+    clip-path: inset(0 0 0 0);                              
   }
 }
 
-/*Стиль для переноса текста*/
+                             
 .your-text {
-  display: block; /* займет доступную ширину и позволит перенос */
-  max-width: 100%; /* не выйдет за контейнер */
-  white-space: normal; /* разрешаем перенос строк */
-  word-break: break-word; /* перенос длинных слов */
-  overflow-wrap: anywhere; /* более агрессивный перенос при необходимости */
+  display: block;                                                 
+  max-width: 100%;                             
+  white-space: normal;                              
+  word-break: break-word;                           
+  overflow-wrap: anywhere;                                                  
   hyphens: auto;
   -webkit-hyphens: auto;
 }
@@ -148,7 +148,7 @@ button {
   }
 }
 
-/* Form animation after scroll*/
+                                
 @keyframes highlight-pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6);
@@ -164,7 +164,7 @@ button {
   animation: highlight-pulse 1.2s ease-out;
 }
 
-/*Shudcn accordion*/
+                    
 @keyframes accordion-down {
   from {
     height: 0;
@@ -192,7 +192,7 @@ button {
 }
 
 @theme inline {
-  /* базовые оттенки бренда */
+                              
   --color-primary-50: #f0f5ff;
   --color-primary-100: #d6e4ff;
   --color-primary-500: #2f54eb;

@@ -2,7 +2,7 @@ export function formatDateRange(
   start: Date | string | null | undefined,
   end: Date | string | null | undefined,
   locale: string = 'ru-RU',
-  entity?: string // project, sprint ...
+  entity?: string                       
 ): string {
   if (!start && !end)
     return entity ? `Дата ${entity} не выбрана` : 'Дата не выбрана';
@@ -22,14 +22,14 @@ function format(date: Date | string, locale: string) {
   });
 }
 
-// ---------------------------------------------- //
+                                                    
 
 export function formatDateTimeRange(
   start: Date | string | null | undefined,
   end: Date | string | null | undefined,
   locale: string = 'ru-RU',
   entity?: string,
-  timeZone?: string // e.g., 'UTC' or 'Europe/Moscow'
+  timeZone?: string                                  
 ): string {
   if (!start && !end)
     return entity ? `Дата ${entity} не выбрана` : 'Дата не выбрана';

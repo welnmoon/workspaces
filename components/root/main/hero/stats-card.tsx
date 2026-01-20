@@ -1,12 +1,15 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useCountUp } from '@/hooks/use-count-up';
 import { cn } from '@/lib/utils';
 const StatsCard = ({
   item,
   animatedValueClass,
+  isLoading,
 }: {
   item: { name: string; value: number; href: string };
   animatedValueClass: string;
+  isLoading: boolean;
 }) => {
   const animatedValue = useCountUp({
     start: 0,
@@ -21,18 +24,9 @@ const StatsCard = ({
         </dt>
 
         <dd className={cn(animatedValueClass, 'text-primary-500')}>
-          {animatedValue}
+          {isLoading ? <Skeleton className="w-10 h-10" /> : animatedValue}
         </dd>
       </CardContent>
-
-      {/* <CardFooter className="flex justify-end border-t border-border p-0!">
-        <a
-          href={item.href}
-          className="px-6 py-3 text-sm font-medium text-primary hover:text-primary/90"
-        >
-          View more →
-        </a>
-      </CardFooter> */}
     </Card>
   );
 };

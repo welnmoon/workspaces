@@ -52,7 +52,7 @@ const RegisterForm = () => {
         'Мы отправили вам ссылку на почту, чтобы подтвердить аккаунт'
       );
 
-      // router.push(clientRoutes.authLoginPage()); // TODO - пока уберу так как нету подвтерждение почты
+                                                                                                         
     } catch (e) {
       const message =
         e instanceof Error ? e.message : 'Произошла непредвиденная ошибка';

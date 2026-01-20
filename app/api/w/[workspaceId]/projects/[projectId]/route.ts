@@ -25,8 +25,8 @@ function parseIds(workspaceId: string, projectId: string) {
   return { workspaceIdNumber, projectIdNumber };
 }
 
-// GET /api/w/[workspaceId]/projects/[projectId]
-// Get single project
+                                                
+                     
 export async function GET(_req: NextRequest, context: Params) {
   try {
     const { workspaceId, projectId } = await context.params;
@@ -48,8 +48,8 @@ export async function GET(_req: NextRequest, context: Params) {
   }
 }
 
-// PATCH /api/w/[workspaceId]/projects/[projectId]
-// Update project details
+                                                  
+                         
 export async function PATCH(req: NextRequest, context: Params) {
   try {
     const { workspaceId, projectId } = await context.params;
@@ -80,8 +80,8 @@ export async function PATCH(req: NextRequest, context: Params) {
   }
 }
 
-// DELETE /api/w/[workspaceId]/projects/[projectId]
-// Delete a project
+                                                   
+                   
 export async function DELETE(_req: NextRequest, context: Params) {
   try {
     const { workspaceId, projectId } = await context.params;

@@ -1,4 +1,4 @@
-// app/api/report/pdf/route.ts
+                              
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generate } from '@pdfme/generator';
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       assigneeName,
       task.dueDate ? new Date(task.dueDate).toLocaleDateString('ru-RU') : '—',
       new Date(task.updatedAt).toLocaleDateString('ru-RU'),
-      '—', // ← Затрачено времени — нет поля → просто прочерк
+      '—',                                                   
     ];
   });
 

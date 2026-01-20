@@ -1,4 +1,4 @@
-// types/cloudpayments.d.ts
+                           
 
 declare global {
   interface Window {
@@ -19,10 +19,10 @@ export interface CloudPaymentsWidgetOptions {
   language?: string;
 }
 
-/**
- * Данные, которые ты прокидываешь в data.
- * Можно расширять, если понадобятся ещё поля.
- */
+   
+                                          
+                                              
+   
 export interface CloudPaymentsData {
   [key: string]:
     | string
@@ -38,9 +38,9 @@ export interface CloudPaymentsData {
   tariff?: string;
 }
 
-/**
- * Опции платёжной формы CloudPayments
- */
+   
+                                      
+   
 export interface CloudPaymentsOptions {
   publicId: string;
   description: string;
@@ -52,30 +52,30 @@ export interface CloudPaymentsOptions {
   skin?: CloudPaymentsSkin;
   autoClose?: boolean;
   data?: CloudPaymentsData;
-  // при желании можно добавить остальные поля из доки
+                                                      
 }
 
-/**
- * То, что CloudPayments отдаёт в onSuccess.
- * Мы точно знаем, что там есть options, остальное — как unknown.
- */
+   
+                                            
+                                                                 
+   
 export interface CloudPaymentsSuccessPayload {
   options: CloudPaymentsOptions;
   [key: string]: unknown;
 }
 
-/**
- * Коллбеки виджета.
- * Вместо any — либо конкретный payload, либо unknown.
- */
+   
+                    
+                                                      
+   
 export interface CloudPaymentsCallbacks {
   onSuccess?: (payload: CloudPaymentsSuccessPayload) => void;
   onFail?: (reason?: string) => void;
 }
 
-/**
- * Интерфейс самого виджета.
- */
+   
+                            
+   
 export interface CloudPaymentsWidget {
   pay: (
     action: CloudPaymentsAction,

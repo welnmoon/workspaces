@@ -21,7 +21,7 @@ export const useMarkReadNotification = (userId: string) => {
 
       return id;
     },
-    // Optimistic UI
+                    
     onMutate: async (id: number) => {
       await qr.cancelQueries({ queryKey: ['notifications', userId] });
 
@@ -36,7 +36,7 @@ export const useMarkReadNotification = (userId: string) => {
           old ? old.map((n) => (n.id === id ? { ...n, isRead: true } : n)) : old
       );
 
-      // context for onError
+                            
       return { previousData };
     },
     onError: (_error, _id, context) => {

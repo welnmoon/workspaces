@@ -10,7 +10,7 @@ const UserPage = () => {
 
   const { data, isLoading, isError, error } = useGetUserQuery(userId!, {
     skip: !userId,
-  }); // skip - запрос не будет отправляться если userId не определен
+  });                                                                
 
   const user = data?.data as UserFullDTO | undefined;
 

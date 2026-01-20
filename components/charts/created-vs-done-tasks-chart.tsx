@@ -110,8 +110,7 @@ export default function CompletedVsCreatedTasks({
             dataKey="completed"
             stroke="#1e3a8a"
           />
-          {/* <ReferenceLine x="Page C" stroke="red" label="Max PV PAGE" />
-        <ReferenceLine y={9800} label="Max" stroke="red" /> */}
+          
         </LineChart>
       </div>
 

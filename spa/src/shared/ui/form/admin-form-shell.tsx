@@ -4,7 +4,7 @@ import { cn } from '../../lib/utils';
 type AdminFormShellProps = {
   title: string;
   description?: string;
-  // badge?: string;
+                    
   eyebrow?: string;
   actions?: React.ReactNode;
   aside?: React.ReactNode;
@@ -17,7 +17,7 @@ type AdminFormShellProps = {
 const AdminFormShell = ({
   title,
   description,
-  // badge,
+           
   eyebrow,
   actions,
   aside,
@@ -42,9 +42,7 @@ const AdminFormShell = ({
             )}
           </div>
           <div className="admin-form-shell__actions">
-            {/* {badge && (
-              <span className="admin-form-shell__badge">{badge}</span>
-            )} */}
+            
             {actions}
           </div>
         </div>

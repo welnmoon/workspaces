@@ -11,16 +11,16 @@ import { Spinner } from '@/components/ui/spinner';
 import EmptyState from '@/components/empty-state';
 
 const NotificationsClient = ({
-  // notifications,
+                   
   userId,
 }: {
   notifications: NotificationFullDTO[];
   userId: string;
 }) => {
   const searchParams = useSearchParams();
-  // const router = useRouter();
+                                
   const currentPage = Number(searchParams.get('page') || '1');
-  // router.push(`?page=${currentPage}`);
+                                         
 
   const {
     data: notificationPages,

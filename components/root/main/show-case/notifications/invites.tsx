@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { getDayYearTime } from '@/helpers/time/day-year-time';
 
-// Этот компонент просто ПРЕЗЕНТАЦИОННЫЙ
+                                        
 
 const statusMap: Record<string, string> = {
   PENDING: 'Ожидание',
@@ -18,13 +18,13 @@ export type InvitationNotificationViewProps = {
   invitedRole: string;
   status: string;
 
-  // optional bits
+                  
   inviterLabel?: string | null;
 
-  // navigation (optional)
+                          
   workspaceHref?: string | null;
 
-  // actions (optional)
+                       
   showActions?: boolean;
   isPending?: boolean;
   onAccept?: () => void;

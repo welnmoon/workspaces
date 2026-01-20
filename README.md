@@ -21,6 +21,9 @@
   - [Слои приложения](#слои-приложения)
 - [Технологический стек](#технологический-стек)
 - [Запуск локально](#запуск-локально)
+- [SPA (Vite)](#spa-vite)
+- [Admin API (/api/spa)](#admin-api-apispa)
+- [Деплой (Vercel)](#деплой-vercel)
 - [Переменные окружения](#переменные-окружения)
 - [Структура проекта](#структура-проекта)
 - [Качество кода](#качество-кода)
@@ -244,6 +247,47 @@ npm run dev
 
 ---
 
+## SPA (Vite)
+
+SPA находится в `spa/` и используется как административная панель.
+Сейчас в `spa/src/app/store/api.ts` прописан захардкоженный API URL:
+
+- `https://workspaces-phi.vercel.app/api/spa`
+
+Если нужно переключиться на другой домен или локальный API — измените этот файл.
+
+### Локальный запуск SPA
+
+npm --prefix spa install  
+npm --prefix spa run dev
+
+---
+
+## Admin API (/api/spa)
+
+Маршруты `app/api/spa/*` предназначены для административного SPA.
+
+Текущий режим (временно):
+- `requireUser` и `requireWorkspaceMember` отключены.
+- эндпоинты возвращают все данные (без фильтра по пользователю).
+
+Перед публичным доступом верните проверки авторизации.
+
+---
+
+## Деплой (Vercel)
+
+Деплой разделён на два проекта:
+
+- **Next app**: корень репозитория, работает на `https://workspaces-phi.vercel.app`.
+- **SPA app**: root directory `spa`, билд `npm run build`, output `dist`,
+  работает на `https://workspaces-nyvc.vercel.app`.
+
+SPA обращается к API Next через захардкоженный `baseUrl`
+в `spa/src/app/store/api.ts`.
+
+---
+
 ## Переменные окружения
 
 DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/DB  
@@ -295,4 +339,3 @@ public/ # Static assets
 - Добавить базовое серверное логирование и audit-логи
 
 ---
-

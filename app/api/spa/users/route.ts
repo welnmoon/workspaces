@@ -1,31 +1,27 @@
+import { corsHeaders, withCors } from '@/helpers/with-cors';
 import { ok, serverError } from '@/lib/http/http';
 import { UserService } from '@/lib/services/user';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    // await requireUser();
+                           
     const users = await UserService.getUsers();
     const res = ok(users);
-    res.headers.set('Access-Control-Allow-Origin', process.env.VITE_URL!);
-    res.headers.set('Access-Control-Allow-Credentials', 'true');
-    res.headers.set('Vary', 'Origin');
-    return res;
+    return withCors(res, req.headers.get('origin'));
   } catch (e) {
     console.error(e);
-    return serverError('Failed to get users');
+    return withCors(serverError('Failed to get users'), req.headers.get('origin'));
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(req: Request) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': process.env.VITE_URL!,
-      'Access-Control-Allow-Credentials': 'true',
+      ...corsHeaders(req.headers.get('origin')),
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
-      Vary: 'Origin',
     },
   });
 }

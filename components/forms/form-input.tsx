@@ -15,8 +15,8 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
   required?: boolean;
   isPassword?: boolean;
-  className?: string; // Input
-  containerClassName?: string; // Container
+  className?: string;         
+  containerClassName?: string;             
   disabled?: boolean;
   isTextarea?: boolean;
 }
@@ -78,7 +78,7 @@ const FormInput = ({
         ) : (
           <Input
             {...register(name)}
-            type={inputType} // <-- вот тут важно
+            type={inputType}                     
             placeholder={placeholder}
             disabled={disabled}
             className={cn(
@@ -108,8 +108,6 @@ const FormInput = ({
         {value && !disabled && (
           <ClearButton
             onClick={onClear}
-            // если твой ClearButton позиционируется absolute справа,
-            // то глазик на right-10, а он на right-3 — они не пересекутся
           />
         )}
       </div>

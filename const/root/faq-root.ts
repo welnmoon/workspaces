@@ -29,16 +29,16 @@ export const FAQ_CATEGORIES = [
 ];
 
 const categoryIcons = {
-  workspace: LayoutGrid, // рабочие пространства
-  projects: KanbanSquare, // проекты и задачи
-  sprints: CalendarRange, // спринты и планирование
-  analytics: BarChart3, // аналитика и отчёты
-  audit: ClipboardList, // аудит и журнал действий
-  notifications: Bell, // уведомления
-  security: ShieldCheck, // безопасность и аккаунт
-  integrations: Plug, // интеграции и API
-  billing: CreditCard, // оплата и тарифы
-  troubleshooting: Wrench, // проблемы и решения
+  workspace: LayoutGrid,                        
+  projects: KanbanSquare,                    
+  sprints: CalendarRange,                          
+  analytics: BarChart3,                      
+  audit: ClipboardList,                           
+  notifications: Bell,               
+  security: ShieldCheck,                          
+  integrations: Plug,                    
+  billing: CreditCard,                   
+  troubleshooting: Wrench,                      
 };
 
 type FaqCategoryId = (typeof FAQ_CATEGORIES)[number]['id'];

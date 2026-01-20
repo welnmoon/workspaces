@@ -62,7 +62,7 @@ export class AuthService {
   }
 
   static async deleteUsersAccount(id: string, provider: ProviderId) {
-    // Есть ли такой аккаунт у пользователя?
+                                            
     const account = await prisma.account.findUnique({
       where: {
         userId_provider: {
@@ -79,7 +79,7 @@ export class AuthService {
     if (!account)
       throw new AppError(404, 'ACCOUNT_NOT_FOUND', 'Аккаунт не найден');
 
-    // пароль есть?
+                   
     const user = await UserService.getUserByIdSelectPassword(id);
     if (!user)
       throw new AppError(400, 'USER_NOT_FOUND', 'Пользователь не найден');

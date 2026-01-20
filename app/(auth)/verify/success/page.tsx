@@ -1,4 +1,4 @@
-// app/verify/success/page.tsx
+                              
 'use client';
 
 import LinkButton from '@/ui/button/link-button';
@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 
 export default function VerifySuccessPage() {
   const params = useSearchParams();
-  const email = params.get('email'); // если передашь email в query
+  const email = params.get('email');                               
 
   return (
     <main className="p-8 text-center">

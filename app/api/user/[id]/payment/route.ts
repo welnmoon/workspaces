@@ -5,8 +5,8 @@ import { UserService } from '@/lib/services/user';
 import { paymentSchema } from '@/schemas/workspace/payment-schema';
 import { NextRequest } from 'next/server';
 
-// PATCH /api/user/:id/payment
-// Manual tariff update (fallback to webhook)
+                              
+                                             
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

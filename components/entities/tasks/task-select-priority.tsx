@@ -17,13 +17,13 @@ import {
 import { JSX } from 'react';
 
 export const priorityIcons: Record<TaskPriorityDTO, JSX.Element> = {
-  // красный треугольник
+                        
   URGENT: <AlertTriangle className="h-4 w-4 text-red-600" />,
-  // стрелка вверх
+                  
   HIGH: <ChevronUp className="h-4 w-4 text-orange-500" />,
-  // синяя точка
+                
   MEDIUM: <Circle className="h-4 w-4 text-blue-600" />,
-  // стрелка вниз
+                 
   LOW: <ChevronDown className="h-4 w-4 text-green-600" />,
 };
 

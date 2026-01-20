@@ -18,13 +18,13 @@ import { RenderNavigation } from '../sidebar-nav';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
-// Этот компонент показывается только на больших экранах
+                                                        
 const DashboardSidebarDynamic = ({
   workspaces,
 }: {
   workspaces: WorkspaceListDTO[];
 }) => {
-  // Selected --------------------------------
+                                              
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(
     null
   );
@@ -36,8 +36,8 @@ const DashboardSidebarDynamic = ({
   const {
     data: projects = [],
     isLoading: pLoading,
-    // isError: pError,
-    // error: pErrorObj,
+                       
+                        
   } = useProjects(
     selectedWorkspaceId ? Number(selectedWorkspaceId) : undefined
   );
@@ -45,76 +45,76 @@ const DashboardSidebarDynamic = ({
   const {
     data: tasks = [],
     isLoading: tLoading,
-    // isError: tError,
-    // error: tErrorObj,
+                       
+                        
   } = useTasks(
     selectedProjectId ? Number(selectedProjectId) : undefined,
     selectedWorkspaceId ? Number(selectedWorkspaceId) : undefined
   );
-  // Data --------------------------------
-  // const [projects, setProjects] = useState<ProjectListDTO[]>([]);
-  // const [tasks, setTasks] = useState<TaskListDTO[]>([]);
+                                          
+                                                                    
+                                                           
 
-  // // Loading --------------------------------
-  // const [pLoading, setPLoading] = useState(false);
-  // const [taskLoading, setTaskLoading] = useState(false);
+                                                
+                                                     
+                                                           
 
-  // Fetch projects
-  // useEffect(() => {
-  //   if (!selectedWorkspaceId) {
-  //     setProjects([]);
-  //     return;
-  //   }
+                   
+                      
+                                  
+                         
+                
+        
 
-  //   setPLoading(true);
+                         
 
-  //   fetchProjects(Number(selectedWorkspaceId))
-  //     .then(setProjects)
-  //     .catch(() => {})
-  //     .finally(() => setPLoading(false));
-  // }, [selectedWorkspaceId]);
+                                                 
+                           
+                         
+                                            
+                               
 
-  // Fetch tasks
-  // useEffect(() => {
-  //   if (!selectedProjectId) {
-  //     setTasks([]);
-  //     setSelectedTaskId(null); // Сбрасываем выбранный проект
-  //     return;
-  //   }
+                
+                      
+                                
+                      
+                                                                
+                
+        
 
-  //   if (selectedWorkspaceId) {
-  //     setTaskLoading(true);
-  //     setSelectedTaskId(null);
-  //     fetchTasks({
-  //       workspaceId: selectedWorkspaceId,
-  //       projectId: selectedProjectId,
-  //     })
-  //       .then(setTasks)
-  //       .catch(() => {
-  //         toast.error('Не удалось загрузить задачи');
-  //       })
-  //       .finally(() => setTaskLoading(false));
-  //   }
-  // }, [selectedProjectId, selectedWorkspaceId]);
+                                 
+                              
+                                 
+                     
+                                            
+                                        
+           
+                          
+                         
+                                                        
+             
+                                                 
+        
+                                                  
 
-  // Routing --------------------------------
+                                             
   const pathname = usePathname();
   useEffect(() => {
     const { projectId: projectIdFromPath, workspaceId: workspaceIdFromPath } =
       getIdsFromPathname(pathname);
 
-    // Всегда синхронизируем стейт
+                                  
     setSelectedWorkspaceId(workspaceIdFromPath);
     setSelectedProjectId(projectIdFromPath);
   }, [pathname]);
 
-  // Handlers --------------------------------
+                                              
   const handleWorkspaceChange = (value: string) => {
     setSelectedWorkspaceId(Number(value));
     setSelectedProjectId(null);
     setSelectedTaskId(null);
-    // setProjects([]);
-    // setTasks([]);
+                       
+                    
   };
 
   const handleProjectChange = (value: string) => {

@@ -9,7 +9,7 @@ import { Spinner } from '../ui/spinner';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 
-// #endregion
+             
 export default function TasksByStatusPieChart() {
   const pathname = usePathname();
   const { projectId, workspaceId } = getIdsFromPathname(pathname);
@@ -28,27 +28,27 @@ export default function TasksByStatusPieChart() {
     {
       name: 'Выполнено',
       value: getPercent(data?.tasksDoneCount ?? 0),
-      fill: '#22C55E', // зелёный — успех
+      fill: '#22C55E',                   
     },
     {
       name: 'В работе',
       value: getPercent(data?.tasksInProgressCount ?? 0),
-      fill: '#3B82F6', // синий — процесс
+      fill: '#3B82F6',                   
     },
     {
       name: 'В очереди',
       value: getPercent(data?.tasksToDoCount ?? 0),
-      fill: '#F59E0B', // оранжевый — ожидание
+      fill: '#F59E0B',                        
     },
     {
       name: 'Заблокировано',
       value: getPercent(data?.tasksBlockedCount ?? 0),
-      fill: '#A855F7', // фиолетовый — нестандартное состояние
+      fill: '#A855F7',                                        
     },
     {
       name: 'Просрочено',
       value: getPercent(data?.tasksOverdueCount ?? 0),
-      fill: '#EF4444', // красный — проблема
+      fill: '#EF4444',                      
     },
   ];
 

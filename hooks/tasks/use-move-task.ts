@@ -45,7 +45,7 @@ export const useMoveTask = (workspaceId: number, projectId: number) => {
           old ? old.map((t) => (t.id === taskId ? { ...t, sprintId } : t)) : old
       );
 
-      // обновляем кэши спринтов для мгновенного UI
+                                                   
       if (prevSprintId !== null) {
         qc.setQueryData<TaskWithAssigneeDTO[] | undefined>(
           ['sprintTasks', prevSprintId, projectId, workspaceId],

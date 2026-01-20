@@ -17,9 +17,9 @@ export default function PricingPage() {
   const userId = session?.user?.id;
   const pathname = usePathname();
 
-  // const searchParams = useSearchParams();
-  // const wId = Number(searchParams.get('workspaceId'));
-  // const wName = searchParams.get('workspaceName');
+                                            
+                                                         
+                                                     
 
   const tariffKeys = Object.keys(tariffs) as TariffDTO[];
 
@@ -32,7 +32,7 @@ export default function PricingPage() {
         <Heading level={1} className="mb-8">
           Тарифы
         </Heading>
-        {/* <Description text={`Простанрство: ${wName}, id: ${wId}`} /> */}
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {tariffKeys.map((key) => {
             const t = tariffs[key];
@@ -72,13 +72,13 @@ export default function PricingPage() {
                       router.push(clientRoutes.authLoginPage(returnTo));
                       return;
                     }
-                    // payWithCloudPayments(key, email, userId, {
-                    //   onComplete(success) {
-                    //     if (success) {
-                    //       window.location.href = clientRoutes.workspacesPage();
-                    //     }
-                    //   },
-                    // });
+                                                                 
+                                              
+                                         
+                                                                                  
+                            
+                           
+                          
                     payWithStripe({ tariff: key });
                   }}
                   disabled={t.amount === 0 || isStripePending}

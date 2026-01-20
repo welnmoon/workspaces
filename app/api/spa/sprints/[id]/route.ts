@@ -1,6 +1,5 @@
-import { requireWorkspaceMember } from '@/guards/workspace';
 import { parseSprintId } from '@/helpers/parse-id';
-import { withCors } from '@/helpers/with-cors';
+import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
   badRequest,
   noContent,
@@ -12,7 +11,6 @@ import {
 import { prisma } from '@/lib/prisma';
 import { SprintService } from '@/lib/services/sprint';
 import { updateSprintSchema } from '@/schemas/sprint/update-sprint-schema';
-import { Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 type RouteParams = {
@@ -23,22 +21,24 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
     const sprintId = parseSprintId((await params).id);
     if (sprintId === null) {
-      return withCors(badRequest('Invalid sprint id'));
+      return withCors(
+        badRequest('Invalid sprint id'),
+        _req.headers.get('origin')
+      );
     }
 
     const sprint = await SprintService.getSprintWithRelations(sprintId);
     if (!sprint) {
-      return withCors(notFound('Sprint not found'));
+      return withCors(notFound('Sprint not found'), _req.headers.get('origin'));
     }
 
-    await requireWorkspaceMember({
-      workspaceId: sprint.project.workspaceId,
-    });
-
-    return withCors(ok(sprint));
+    return withCors(ok(sprint), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to get sprint'));
+    return withCors(
+      serverError('Failed to get sprint'),
+      _req.headers.get('origin')
+    );
   }
 }
 
@@ -46,33 +46,32 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
     const sprintId = parseSprintId((await params).id);
     if (sprintId === null) {
-      return withCors(badRequest('Invalid sprint id'));
+      return withCors(
+        badRequest('Invalid sprint id'),
+        req.headers.get('origin')
+      );
     }
 
     const sprint = await SprintService.getSprintWithRelations(sprintId);
     if (!sprint) {
-      return withCors(notFound('Sprint not found'));
+      return withCors(notFound('Sprint not found'), req.headers.get('origin'));
     }
-
-    const { user } = await requireWorkspaceMember({
-      workspaceId: sprint.project.workspaceId,
-      allowed: [Role.OWNER],
-    });
 
     const rawBody = await req.json().catch(() => null);
     if (!rawBody) {
-      return withCors(badRequest('Invalid JSON'));
+      return withCors(badRequest('Invalid JSON'), req.headers.get('origin'));
     }
 
     const parsed = updateSprintSchema.safeParse(rawBody);
     if (!parsed.success) {
       return withCors(
-        unprocessable(parsed.error.message, parsed.error.flatten())
+        unprocessable(parsed.error.message, parsed.error.flatten()),
+        req.headers.get('origin')
       );
     }
 
     if (Object.keys(parsed.data).length === 0) {
-      return withCors(badRequest('No data provided'));
+      return withCors(badRequest('No data provided'), req.headers.get('origin'));
     }
 
     const { name, goal, startDate, endDate, color } = parsed.data;
@@ -93,7 +92,10 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       } else {
         const parsedStart = new Date(startDate);
         if (Number.isNaN(parsedStart.getTime())) {
-          return withCors(badRequest('Invalid start date'));
+          return withCors(
+            badRequest('Invalid start date'),
+            req.headers.get('origin')
+          );
         }
         normalizedStart = parsedStart;
       }
@@ -106,7 +108,10 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       } else {
         const parsedEnd = new Date(endDate);
         if (Number.isNaN(parsedEnd.getTime())) {
-          return withCors(badRequest('Invalid end date'));
+          return withCors(
+            badRequest('Invalid end date'),
+            req.headers.get('origin')
+          );
         }
         normalizedEnd = parsedEnd;
       }
@@ -125,10 +130,13 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       },
     });
 
-    return withCors(ok(updated));
+    return withCors(ok(updated), req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to update sprint'));
+    return withCors(
+      serverError('Failed to update sprint'),
+      req.headers.get('origin')
+    );
   }
 }
 
@@ -136,39 +144,38 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
     const sprintId = parseSprintId((await params).id);
     if (sprintId === null) {
-      return withCors(badRequest('Invalid sprint id'));
+      return withCors(
+        badRequest('Invalid sprint id'),
+        _req.headers.get('origin')
+      );
     }
 
     const sprint = await SprintService.getSprintWithRelations(sprintId);
     if (!sprint) {
-      return withCors(notFound('Sprint not found'));
+      return withCors(notFound('Sprint not found'), _req.headers.get('origin'));
     }
-
-    await requireWorkspaceMember({
-      workspaceId: sprint.project.workspaceId,
-      allowed: [Role.OWNER],
-    });
 
     await prisma.sprint.delete({
       where: { id: sprintId },
     });
 
-    return withCors(noContent());
+    return withCors(noContent(), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to delete sprint'));
+    return withCors(
+      serverError('Failed to delete sprint'),
+      _req.headers.get('origin')
+    );
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': process.env.VITE_URL!,
-      'Access-Control-Allow-Credentials': 'true',
+      ...corsHeaders(req.headers.get('origin')),
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
-      Vary: 'Origin',
     },
   });
 }

@@ -1,4 +1,4 @@
-// lib/payments/cloudpayments.ts
+                                
 'use client';
 
 import toast from 'react-hot-toast';
@@ -35,7 +35,7 @@ export const payWithCloudPayments = (
   widget.pay(
     'charge',
     {
-      publicId: 'test_api_00000000000000000000002', // потом замени на pk_...
+      publicId: 'test_api_00000000000000000000002',                          
       description: config.description,
       amount: config.amount,
       currency: config.currency,
@@ -45,7 +45,7 @@ export const payWithCloudPayments = (
       data: {
         userId,
         tariff,
-      } satisfies CloudPaymentsData, // полная типизация!
+      } satisfies CloudPaymentsData,                     
     },
     {
       onSuccess: () => {

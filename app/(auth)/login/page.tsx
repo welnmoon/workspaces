@@ -9,7 +9,7 @@ import { RootHeading } from '@/components/root/root-heading';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import Image from 'next/image';
 
-// sign in - это вход
+                     
 const LoginPage = async ({
   searchParams,
 }: {
@@ -40,10 +40,10 @@ const LoginPage = async ({
             <div className="absolute w-full inset-0 bg-gradient-to-br from-indigo-900/40 via-indigo-800/30 to-slate-900/20 pointer-events-none" />
 
             <div className="absolute inset-0 z-10 flex flex-col p-8 text-white">
-              {/* Лого сверху */}
+              
               <WorkspaceLogo className="text-white" />
 
-              {/* Контейнер для заголовка и цитаты */}
+              
               <div className="flex-1 flex flex-col justify-center items-center text-center">
                 <RootHeading
                   level={3}
@@ -53,7 +53,7 @@ const LoginPage = async ({
                 </RootHeading>
               </div>
 
-              {/* Цитата снизу */}
+              
               <div className="text-slate-100 text-sm italic mt-auto">
                 <p>
                   «Нет ничего бесполезнее, чем эффективно делать то, что вообще

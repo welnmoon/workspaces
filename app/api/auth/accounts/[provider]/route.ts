@@ -1,4 +1,4 @@
-// Delete provider
+                  
 
 import { requireUser } from '@/helpers/require-user';
 import { AppError } from '@/lib/errors';

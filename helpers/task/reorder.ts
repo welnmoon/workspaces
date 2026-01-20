@@ -1,4 +1,4 @@
-// взять массив, вытащить элемент с позиции startIndex и вставить на endIndex.
+                                                                              
 export function reorder<T>(
   list: T[],
   startIndex: number,

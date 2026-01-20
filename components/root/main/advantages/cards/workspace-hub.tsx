@@ -6,19 +6,19 @@ import Image from 'next/image';
 
 const WorkspaceHub = ({
   className,
-  //   title,
-  //   desc,
-  //   children,
+             
+            
+                
 }: {
   className?: string;
-  //   title: string;
-  //   desc: string;
-  //   children?: React.ReactNode;
+                     
+                    
+                                  
 }) => {
   return (
     <article
       className={cn(
-        // до lg без флекса, на lg — как было
+                                             
         `bg-white relative pt-4 md:block lg:flex lg:flex-end md:min-h-[420px]`,
         className
       )}

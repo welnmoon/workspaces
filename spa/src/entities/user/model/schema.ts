@@ -1,9 +1,17 @@
 import { z } from 'zod';
 
 
-const emptyToUndefined = (v: unknown) => (v === '' ? undefined : v);
+const emptyToUndefined = (value: string) =>
+  value === '' ? undefined : value;
+const optionalPasswordSchema = z
+  .union([
+    z.string().min(4, 'Password must be at least 4 characters long'),
+    z.literal(''),
+  ])
+  .transform(emptyToUndefined)
+  .optional();
 
-// User edit schema
+                   
 export const editUserSchema = z
   .object({
     firstName: z
@@ -17,18 +25,8 @@ export const editUserSchema = z
       .max(50, 'Name must be at most 50 characters long')
       .optional(),
     email: z.email('Invalid email').optional(),
-    password: z
-      .preprocess(
-        emptyToUndefined,
-        z.string().min(4, 'Password must be at least 4 characters long')
-      )
-      .optional(),
-    confirmPassword: z
-      .preprocess(
-        emptyToUndefined,
-        z.string().min(4, 'Password must be at least 4 characters long')
-      )
-      .optional(),
+    password: optionalPasswordSchema,
+    confirmPassword: optionalPasswordSchema,
     avatarUrl: z.string().optional(),
     currentTariff: z.enum(['FREE', 'PRO', 'BUSINESS']),
     platformRole: z.enum(['USER', 'SYSADMIN']),
@@ -39,4 +37,4 @@ export const editUserSchema = z
     path: ['confirmPassword'],
   });
 
-export type EditUserSchemaType = z.input<typeof editUserSchema>;
+export type EditUserSchemaType = z.infer<typeof editUserSchema>;

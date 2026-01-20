@@ -109,10 +109,10 @@ const TasksSprintAccordion = ({
     sprintQueryKey
   );
 
-  // -------SPRINTS-----------------------------------------//
+                                                              
 
   const { data: sprints } = useSprints(workspaceId!, projectId!);
-  // for sprint select in task actions
+                                      
   const sprintsMap = useMemo(() => {
     return new Map(sprints && sprints.map((s) => [s.id, s.name]));
   }, [sprints]);
@@ -121,11 +121,11 @@ const TasksSprintAccordion = ({
     sprint.endDate && new Date(sprint.endDate) < new Date()
   );
 
-  // stats
+          
   const { data: sprintTasksStats, isLoading: isSprintTasksStatsLoading } =
     useSprintTasksStats(workspaceId!, projectId!, sprint.id);
 
-  // change sprint dates
+                        
   const {
     mutate: changeSprintDates,
     isPending: isChangeSprintDatesPending,
@@ -134,7 +134,7 @@ const TasksSprintAccordion = ({
   } = useChangeSprintDates(workspaceId!, projectId!, sprint.id);
   const closePopover = isChangeSprintDatesSuccess || isChangeSprintDatesError;
 
-  // Sprint color
+                 
   const { mutate: changeSprintColor, isPending: isChangeSprintColorPending } =
     useChangeSprintColor(workspaceId!, projectId!, sprint.id);
 
@@ -154,7 +154,7 @@ const TasksSprintAccordion = ({
     setDateRange(undefined);
   };
 
-  // --------TASK-----MOVE-----------------------------------------//
+                                                                     
 
   const { mutate: onMoveTask } = useMoveTask(workspaceId!, projectId!);
 
@@ -175,7 +175,7 @@ const TasksSprintAccordion = ({
     );
   };
 
-  //--------TASK-----Priority-----------------------------------------//
+                                                                        
 
   const { mutate: onChangePriority } = useChangePriority(
     workspaceId!,
@@ -226,13 +226,13 @@ const TasksSprintAccordion = ({
     );
   };
 
-  // --------------------Conditions-------------------------------------
+                                                                        
   if (!workspaceId || !projectId) {
     router.push(clientRoutes.workspacesPage());
     return;
   }
 
-  // -------------------Handlers-------------------------------------
+                                                                     
   const handleChangeDates = (payload: { startDate: string; endDate: string }) =>
     changeSprintDates(payload, {
       onSuccess: () => {
@@ -265,7 +265,7 @@ const TasksSprintAccordion = ({
       }
     );
 
-  // ---------------------for checkboxes--------------------------
+                                                                  
   const isSelected = (id: number) =>
     selectedIds ? selectedIds.has(id) : false;
 
@@ -317,17 +317,17 @@ const TasksSprintAccordion = ({
           }}
         >
           <div className="flex w-full items-start sm:items-center justify-between gap-3">
-            {/* Левая часть */}
+            
             <div className="w-full">
               <div className="w-full flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                {/* TITLE (всегда слева, на md+ остаётся слева) */}
+                
                 <div className="w-full md:w-auto">
                   <span className="font-semibold text-lg md:text-xl">
                     {sprint.name}
                   </span>
                 </div>
 
-                {/* RIGHT SIDE */}
+                
                 <div
                   className="
       w-full
@@ -336,7 +336,7 @@ const TasksSprintAccordion = ({
       md:w-auto md:flex-row md:items-center md:justify-end md:gap-3
     "
                 >
-                  {/* DATE */}
+                  
                   <span className="text-xs text-muted-foreground">
                     {formatDateTimeRange(
                       sprint.startDate,
@@ -347,7 +347,7 @@ const TasksSprintAccordion = ({
                     )}
                   </span>
 
-                  {/* STATS */}
+                  
                   {!isSprintTasksStatsLoading ? (
                     <div className="flex gap-2 items-center">
                       <Badge variant="outline" className="gap-1">
@@ -455,8 +455,6 @@ const TasksSprintAccordion = ({
                     const statusTitle =
                       STATUS_COLUMNS.find((s) => s.id === t.status)?.title ??
                       t.status;
-                    // const due =
-                    //   t.dueDate && new Date(t.dueDate).toLocaleDateString();
                     const assigneeName = t.assignee
                       ? `${t.assignee.firstName || ''} ${t.assignee.lastName || ''}`.trim() ||
                         t.assignee.email
@@ -530,8 +528,6 @@ const TasksSprintAccordion = ({
                               onDelete={onDeleteTaskHandler}
                               members={members}
                               taskId={t.id}
-                              // startDate={sprint.startDate}
-                              // endDate={sprint.endDate}
                             />
                           )}
                           {isMobile && (
@@ -544,8 +540,6 @@ const TasksSprintAccordion = ({
                               onDelete={onDeleteTaskHandler}
                               members={members}
                               taskId={t.id}
-                              // startDate={sprint.startDate}
-                              // endDate={sprint.endDate}
                             />
                           )}
                         </TableCell>

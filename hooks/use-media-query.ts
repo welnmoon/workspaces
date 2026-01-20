@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// этот хук нужен для проверки медиа-запросов
+                                             
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false);
   useEffect(() => {

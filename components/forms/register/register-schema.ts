@@ -9,7 +9,7 @@ export const registerSchema = z.object({
     .string()
     .min(2, 'Имя должно содержать минимум 2 символа')
     .optional(),
-  email: z.email('Некорректный email'), // юзаем новую версию зод 4
+  email: z.email('Некорректный email'),                            
   password: z.string().min(4, 'Пароль должен содержать минимум 4 символа'),
 });
 

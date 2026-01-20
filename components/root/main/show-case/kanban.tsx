@@ -19,7 +19,7 @@ type KanbanProps = {
 const Kanban = ({ className = '', info }: KanbanProps) => {
   const { ref, inView } = useFullyInView<HTMLDivElement>();
 
-  // Hover-анимации включаем ТОЛЬКО когда секция полностью в экране
+                                                                   
   const hoverAnim = inView
     ? 'group-hover:-translate-x-10 group-hover:rotate-3'
     : '';
@@ -45,9 +45,9 @@ const Kanban = ({ className = '', info }: KanbanProps) => {
             </Tooltip>
           )}
 
-          {/* Полоски */}
+          
           <div className="absolute -top-10 right-0 h-full">
-            {/* Blue */}
+            
             <div
               className={cn(
                 'h-[130%] bg-blue-200 w-10 absolute right-8 -top-10 z-0 flex items-center justify-center',
@@ -60,7 +60,7 @@ const Kanban = ({ className = '', info }: KanbanProps) => {
               </span>
             </div>
 
-            {/* Green */}
+            
             <div
               className={cn(
                 'h-[130%] bg-green-200 w-10 absolute -right-2 -top-10 z-0',
@@ -69,7 +69,7 @@ const Kanban = ({ className = '', info }: KanbanProps) => {
               )}
             />
 
-            {/* Yellow */}
+            
             <div
               className={cn(
                 'h-[130%] bg-yellow-200 w-10 absolute right-18 -top-10 z-0',
@@ -78,7 +78,7 @@ const Kanban = ({ className = '', info }: KanbanProps) => {
               )}
             />
 
-            {/* Red */}
+            
             <div
               className={cn(
                 'h-[130%] bg-red-200 w-10 absolute -right-12 -top-10 z-0',

@@ -10,4 +10,4 @@ fs.mkdirSync(to, { recursive: true });
 fs.cpSync(from, to, { recursive: true });
 console.log('✅ Copied spa dist -> public/spa');
 
-// "build:spa": "npm --prefix spa install --include=dev --include=optional && npm --prefix spa run build && node copy-spa.mjs",
+                                                                                                                               

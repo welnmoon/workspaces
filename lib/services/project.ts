@@ -17,9 +17,9 @@ import { AppError } from '../errors';
 import { endOfDay, startOfDay, subMonths } from 'date-fns';
 
 export class ProjectService {
-  //-------------------------------------//
-  //--------- CRUD ---------------//
-  //-------------------------------------//
+                                           
+                                    
+                                           
 
   static async getProjects(workspaceId: number) {
     return prisma.project.findMany({
@@ -347,20 +347,20 @@ export class ProjectService {
 
   static async getProjectTasks(
     projectId: number
-    // filters?: TaskFilters
+                            
   ) {
     const where: Prisma.TaskWhereInput = {
       projectId: projectId,
     };
 
-    // if (filters?.status) where.status = filters.status;
-    // if (filters?.done) where.done = filters.done;
-    // if (filters?.todo) where.todo = filters.todo;
-    // if (filters?.inProgress) where.inProgress = filters.inProgress;
-    // if (filters?.overdue) where.overdue = filters.overdue;
-    // if (filters?.fromDate) where.dueDate = { gte: filters.fromDate };
-    // if (filters?.toDate) where.dueDate = { lte: filters.toDate };
-    // if (filters?.assigneeId) where.assigneeId = filters.assigneeId;
+                                                          
+                                                    
+                                                    
+                                                                      
+                                                             
+                                                                        
+                                                                    
+                                                                      
 
     return prisma.task.findMany({
       where,
@@ -415,9 +415,9 @@ export class ProjectService {
     });
   }
 
-  //-------------------------------------//
-  //--------- For sidebar ---------------//
-  //-------------------------------------//
+                                           
+                                           
+                                           
 
   static async getSelect(userId: string) {
     return prisma.project.findMany({
@@ -437,9 +437,9 @@ export class ProjectService {
     });
   }
 
-  //-------------------------------------//
-  //--------- TASKS COUNT ---------------//
-  //-------------------------------------//
+                                           
+                                           
+                                           
   static async getProjectTasksStats(projectId: number): Promise<TaskStats> {
     const [all, grouped, overdue, sprintsCount] = await Promise.all([
       prisma.task.count({
@@ -531,9 +531,9 @@ export class ProjectService {
     };
   }
 
-  // --------------------------------------------//
-  // -----------------Analytics-----------------//
-  // --------------------------------------------//
+                                                   
+                                                  
+                                                   
 
   static async getCompletedTasks(
     projectId: number,
@@ -727,7 +727,7 @@ export class ProjectService {
   }
 
   static async getSLA(projectId: number) {
-    // SLA % = (кол-во задач закрытых вовремя / кол-во задач с дедлайном) * 100
+                                                                               
     const [totalTasksCount, completedTasksInDeadlineCount] = await Promise.all([
       prisma.task.count({
         where: { projectId },
@@ -753,9 +753,9 @@ export class ProjectService {
   }
 }
 
-//-----------------------------------------------------//
-//----------------Audit Logging-----------------------//
-//---------------------------------------------------//
+                                                         
+                                                        
+                                                       
 const logProjectAudit = async ({
   userId,
   workspaceId,

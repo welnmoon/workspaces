@@ -34,7 +34,7 @@ export const useHiddenNotification = (userId: string) => {
         (old) => old?.filter((n) => n.id !== id) || old
       );
 
-      // context for onError
+                            
       return { previousData };
     },
     onError: (error, _id, context) => {

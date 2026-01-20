@@ -16,7 +16,7 @@ export const clientRoutes = {
     returnTo ? `/login?returnTo=${encodeURIComponent(returnTo)}` : `/login`,
   profilePage: () => `/profile`,
 
-  // pricing
+            
   pricingPage: () => `/pricing`,
 
   notificationsPage: () => `/notifications`,

@@ -5,7 +5,7 @@ import { ProjectService } from '@/lib/services/project';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 import { NextRequest } from 'next/server';
 
-// return project tasks stats
+                             
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ projectId: string }> }

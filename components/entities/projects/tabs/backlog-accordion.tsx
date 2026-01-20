@@ -63,7 +63,7 @@ const BacklogAccordion = ({
     () => selectedIds !== undefined && setSelectedIds !== undefined,
     [selectedIds, setSelectedIds]
   );
-  // Task
+         
   const { mutate: onCreateTask, isPending: isCreateTaskPending } =
     useCreateTask(workspaceId!, projectId!);
 
@@ -97,7 +97,7 @@ const BacklogAccordion = ({
     );
   };
 
-  //--------TASK-----Priority-----------------------------------------//
+                                                                        
 
   const { mutate: onChangePriority } = useChangePriority(
     workspaceId!,
@@ -147,10 +147,10 @@ const BacklogAccordion = ({
     );
   };
 
-  // Members
+            
   const { data: members } = useMembers(workspaceId!, projectId!);
 
-  // handlers
+             
 
   const onChangeAssigneeHandler = (
     taskId: number,
@@ -229,8 +229,6 @@ const BacklogAccordion = ({
                     const statusTitle =
                       STATUS_COLUMNS.find((s) => s.id === t.status)?.title ??
                       t.status;
-                    // const due =
-                    //   t.dueDate && new Date(t.dueDate).toLocaleDateString();
                     const assigneeName = t.assignee
                       ? `${t.assignee.firstName || ''} ${t.assignee.lastName || ''}`.trim() ||
                         t.assignee.email
@@ -284,7 +282,7 @@ const BacklogAccordion = ({
                           </Badge>
                         </TableCell>
                         <TableCell className="px-4 py-3 text-muted-foreground">
-                          {/* {priorityLabel} */}
+                          
 
                           <TaskSelectPriority
                             taskId={t.id}

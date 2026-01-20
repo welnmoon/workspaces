@@ -19,7 +19,7 @@ export interface ThemeToggleButtonProps {
   showLabel?: boolean;
   variant?: AnimationVariant;
   start?: StartPosition;
-  url?: string; // For gif variant
+  url?: string;                   
   className?: string;
   onClick?: () => void;
 }
@@ -34,12 +34,12 @@ export const ThemeToggleButton = ({
   onClick,
 }: ThemeToggleButtonProps) => {
   const handleClick = useCallback(() => {
-    // Inject animation styles for this specific transition
+                                                           
     const styleId = `theme-transition-${Date.now()}`;
     const style = document.createElement('style');
     style.id = styleId;
 
-    // Generate animation CSS based on variant
+                                              
     let css = '';
     const positions = {
       center: 'center',
@@ -167,7 +167,7 @@ export const ThemeToggleButton = ({
       style.textContent = css;
       document.head.appendChild(style);
 
-      // Clean up animation styles after transition
+                                                   
       setTimeout(() => {
         const styleEl = document.getElementById(styleId);
         if (styleEl) {
@@ -176,7 +176,7 @@ export const ThemeToggleButton = ({
       }, 3000);
     }
 
-    // Call the onClick handler if provided
+                                           
     onClick?.();
   }, [onClick, variant, start, url, theme]);
 
@@ -204,7 +204,7 @@ export const ThemeToggleButton = ({
   );
 };
 
-// Export a helper hook for using with View Transitions API
+                                                           
 export const useThemeTransition = () => {
   const startTransition = useCallback((updateFn: () => void) => {
     if ('startViewTransition' in document) {

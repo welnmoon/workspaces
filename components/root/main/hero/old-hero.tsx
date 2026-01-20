@@ -11,10 +11,10 @@ const HeroSection = () => {
           dark:text-white
         "
         >
-          {/* Нежный градиент по всему заголовку через тень */}
+          
           <span className="">Оптимизируйте свой </span>
 
-          {/* Мягкий подсвет на ключевой фразе */}
+          
           <span className="relative inline-block">
             <Image
               aria-hidden
@@ -29,7 +29,7 @@ const HeroSection = () => {
 
           <span> с помощью мощных инструментов для </span>
 
-          {/* Акцент-бейдж со скошенным лёгким наклоном */}
+          
           <span className="relative inline-block -rotate-1">
             <span className="rounded-md bg-black text-white px-3 py-1 md:px-4 md:py-1.5">
               совместной работы
@@ -38,13 +38,13 @@ const HeroSection = () => {
         </h1>
       </div>
 
-      {/* Поддержка: тонкий градиент в тексте (опционально) */}
+      
       <p className="mt-5 mx-auto text-center text-lg md:text-xl text-zinc-600 dark:text-zinc-300 max-w-2xl">
         Быстрее планируйте, согласовывайте и запускайте — один рабочий простор
         для всей команды.
       </p>
 
-      {/* Кнопки, если нужны рядом */}
+      
 
       <div className="mt-8 flex flex-col justify-center sm:flex-row gap-3">
         <button className="px-6 py-3 border border-black text-black hover:bg-black hover:text-white transition">

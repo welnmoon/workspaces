@@ -3,7 +3,7 @@ import { AppError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import { Role } from '@prisma/client';
 
-// Метод для проверки, является ли пользователь участником рабочего пространства
+                                                                                
 export const requireWorkspaceMember = async ({
   workspaceId,
   allowed,

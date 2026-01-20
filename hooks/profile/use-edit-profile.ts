@@ -6,8 +6,8 @@ export function useEditProfile(userId: string) {
 
   return useMutation({
     mutationFn: async (payload: unknown) => {
-      //   const res = await fetchProfile({ userId, method: 'PUT', body: payload });
-      //   return res;
+                                                                                    
+                      
       const res = await fetch(apiRoutes.getUser(userId), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
