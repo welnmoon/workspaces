@@ -3,12 +3,12 @@ import { AppError } from '@/lib/errors';
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
 }
-// - вызывается isRecord с некоторым значением data
-// - в рантайме проверяется: typeof v === 'object' && v !== null
-// - если функция вернула true,
-//   TypeScript (ТОЛЬКО внутри этой ветки)
-//   считает v типом Record<string, unknown>
-// - если false — v остаётся unknown
+                                                   
+                                                                
+                               
+                                          
+                                            
+                                    
 
 function pickString(v: unknown): string | null {
   return typeof v === 'string' && v.trim() ? v : null;

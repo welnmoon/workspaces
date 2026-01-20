@@ -67,7 +67,7 @@ const ProjectComponent = ({
     useProject(project);
   const { mutate: toggleProjectEnd, isPending: isToggleProjectPending } =
     useToggleProjectEnd(workspaceId, optimisticProject.id);
-  // BG IMAGE
+             
   useEffect(() => {
     const img = new Image();
     img.src = '/images/workspaces/project-bg.jpg';

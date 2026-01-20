@@ -4,8 +4,8 @@ import { MembershipService } from '@/lib/services/membership';
 import { Role } from '@prisma/client';
 import type { NextRequest } from 'next/server';
 
-// GET /api/w/[workspaceId]/projects/[projectId]/members
-// Returns active workspace members (projectId is currently unused, kept for route shape)
+                                                        
+                                                                                         
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ workspaceId: string; projectId: string }> }

@@ -76,7 +76,7 @@ try {
       return NextResponse.json({ error: 'missing data' }, { status: 400 });
     }
 
-    // runtime-список допустимых тарифов из Prisma enum
+                                                       
     const allowedTariffs = Object.values(Tariff) as string[];
 
     if (!allowedTariffs.includes(tariffStr)) {
@@ -89,7 +89,7 @@ try {
       return NextResponse.json({ error: 'invalid tariff' }, { status: 400 });
     }
 
-    // безопасно приводим к типу Tariff
+                                       
     await UserService.updateUserTariff(userId, tariffStr as Tariff);
   }
 

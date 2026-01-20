@@ -7,8 +7,8 @@ import { WorkspaceService } from '@/lib/services/workspace';
 import { MembershipStatus, Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
-// POST /api/w
-// Create a new workspace
+              
+                         
 export async function POST(req: NextRequest) {
   try {
     const { id: userId } = await requireUser();
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     if (!res.success)
       return unprocessable(res.error.message, res.error.flatten());
 
-    // в одной транзации создаем воркспейс и добавляем в него владельца
+                                                                       
     const workspace = await prisma.$transaction(async (tx) => {
       const client = tx as typeof prisma;
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       e instanceof Prisma.PrismaClientKnownRequestError &&
       e.code === 'P2002'
     ) {
-      // P2002 - Нарушено ограничение уникальности в базе данных
+                                                                
       return conflict(e.message);
     }
 
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET workspaces /api/w
+                        
 
 export async function GET() {
   try {

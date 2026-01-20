@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     const tokenHash = crypto
       .createHash('sha256')
       .update(rawToken)
-      .digest('hex'); // TODO - helper
+      .digest('hex');                 
 
     const verificationToken = await prisma.verificationToken.findFirst({
       where: {
@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
       secure: true,
       sameSite: 'lax',
       path: '/verify',
-      maxAge: 120, // сек
+      maxAge: 120,       
     });
 
     return res;

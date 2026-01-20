@@ -3,7 +3,7 @@ import { ok, serverError } from '@/lib/http/http';
 import { MembershipService } from '@/lib/services/membership';
 import { NextRequest } from 'next/server';
 
-// current member role
+                      
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ workspaceId: string }> }

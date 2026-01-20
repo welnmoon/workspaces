@@ -72,8 +72,8 @@ model Project {
 model Workspace {
   id          Int          @id @default(autoincrement())
   name        String
-  // tariff      Tariff       @default(FREE)
-  // payments Payment[]
+                                            
+                       
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   description String?
@@ -172,13 +172,13 @@ model Notification {
   title       String
   message     String
 
-  // опционально – связь с воркспейсом
+                                      
   workspaceId Int?
   workspace   Workspace?        @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
 
   isRead      Boolean           @default(false)
   isHidden    Boolean           @default(false)
-  metadata    Json?             // сюда можно класть workspaceName, старый тариф и т.п.
+  metadata    Json?                                                                    
 
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
@@ -250,17 +250,17 @@ model Payment {
   status          PaymentStatus
   reason          String?   
 
-  // Когда
-  paidAt        DateTime? // когда статус стал Completed
+          
+  paidAt        DateTime?                               
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // Для подписок (будущее)
+                           
   isSubscription Boolean @default(false)
-  subscriptionId String? // если recurring
+  subscriptionId String?                  
 
-  // Связь с тарифом на момент оплаты (чтобы знать, до какого числа продлили)
-  validUntil    DateTime? // например, now() + 30 дней
+                                                                             
+  validUntil    DateTime?                             
 
   @@index([userId])
   @@index([status])
@@ -301,11 +301,11 @@ enum PlatformRole {
 }
 
 enum PaymentStatus {
-  PENDING      // только что создали (если используешь двухстадийку)
-  COMPLETED    // успешно списали
-  FAILED       // отклонено банком
-  CANCELLED    // пользователь отменил
-  REFUNDED     // возврат
+  PENDING                                                           
+  COMPLETED                      
+  FAILED                          
+  CANCELLED                           
+  REFUNDED               
 }
 
 enum Role {

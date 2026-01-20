@@ -1,2 +1,2 @@
--- AlterEnum
+            
 ALTER TYPE "NotificationType" ADD VALUE 'WORKSPACE_NOTIFICATION';

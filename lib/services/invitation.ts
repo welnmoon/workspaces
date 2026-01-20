@@ -14,9 +14,9 @@ type CreateInvitationResult =
   | { kind: 'already_member' };
 
 export class InvitationService {
-  //-------------------------------------//
-  //--------- CRUD ---------------//
-  //-------------------------------------//
+                                           
+                                    
+                                           
   static async createInvitation({
     workspaceId,
     id,
@@ -172,7 +172,7 @@ export class InvitationService {
       action: 'INVITE_ACCEPTED',
     });
 
-    return result.id; // Membership ID
+    return result.id;                 
   }
 }
 

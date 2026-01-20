@@ -15,7 +15,7 @@ import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 type ProjectTabsListProps = {
   sprints: SprintWithTasksWithAssigneesDTO[];
   createSprint: boolean;
-  // sprintsId: Map<number, string>;
+                                    
   backlogTasks: TaskWithAssigneeDTO[];
   selectedIds: Set<number>;
   setSelectedIds: Dispatch<SetStateAction<Set<number>>>;
@@ -30,7 +30,7 @@ type ProjectTabsListProps = {
 const ProjectTabsList = ({
   sprints,
   createSprint,
-  // sprintsId,
+               
   backlogTasks,
   selectedIds,
   setSelectedIds,
@@ -62,7 +62,7 @@ const ProjectTabsList = ({
     <section className="space-y-3">
       <ProjectSprints
         sprints={optimisticSprints!}
-        // sprintsId={sprintsId}
+                                
         selectedIds={selectedIds}
         setSelectedIds={setSelectedIds}
         isDeleteTasksPending={isDeleteTasksPending}
@@ -86,17 +86,7 @@ const ProjectTabsList = ({
         isDeleteTasksPending={isDeleteTasksPending}
       />
 
-      {/* {hasAnyFilter && listTasks.length === 0 && (
-        <EmptyState
-          title={
-            hasStatusFilter && hasDateFilter
-              ? `Нет задач со статусом ${status} в выбранном диапазоне`
-              : hasStatusFilter
-                ? `Нет задач со статусом ${status}`
-                : `Нет задач в выбранном диапазоне`
-          }
-        />
-      )} */}
+      
     </section>
   );
 };

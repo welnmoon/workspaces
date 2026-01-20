@@ -16,15 +16,15 @@ export type WorkspaceRes = {
 
 export const workspaceApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // get all workspaces
+                         
     getWorkspaces: builder.query<WorkspacesResponse, void>({
       query: () => `/workspaces`,
     }),
-    // get workspace
+                    
     getWorkspace: builder.query<WorkspaceRes, string>({
       query: (id) => `workspaces/${id}`,
     }),
-    // delete workspace
+                       
     deleteWorkspace: builder.mutation<void, DeleteWorkspaceReq>({
       query: (id) => ({
         url: `/workspaces/${id}`,
@@ -51,7 +51,7 @@ export const workspaceApi = api.injectEndpoints({
         }
       },
     }),
-    // update workspace
+                       
     updateWorkspace: builder.mutation<
       WorkspaceFullDTO,
       { id: string; body: EditWorkspace }

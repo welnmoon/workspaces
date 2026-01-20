@@ -63,7 +63,7 @@ const ProjectTabs = ({
   const [createSprint, setCreateSprint] = useState(false);
   const [openSprintIds, setOpenSprintIds] = useState<string[]>([]);
 
-  // members for accordions and for create task form
+                                                    
   const { data: members } = useMembers(workspaceId!, projectId!);
 
   const queryClient = useQueryClient();
@@ -72,14 +72,14 @@ const ProjectTabs = ({
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const droppableDirection = isDesktop ? 'vertical' : 'horizontal';
 
-  //----------------------Tasks--------------------------//
+                                                           
   const [allTasks, setAllTasks] = useState<TaskWithAssigneeDTO[]>(tasks);
   const [boardTasks, setBoardTasks] = useState<TaskWithAssigneeDTO[]>([]);
   const [doneTasksCount, setDoneTasksCount] = useState<string>(
     String(doneCounts[0])
   );
 
-  //----------------------Delete Tasks--------------------------//
+                                                                  
   const [selectedIds, setSelectedIds] = useState(new Set<number>());
 
   const { mutate: deleteTasks, isPending: isDeleteTasksPending } =
@@ -114,7 +114,7 @@ const ProjectTabs = ({
   const { data: optimisticTasks, isLoading: isTasksLoading } =
     useTasksWithAssignee(projectId, workspaceId, tasks);
 
-  //----------------------Filter Tasks--------------------------//
+                                                                  
   useEffect(() => {
     if (optimisticTasks && Array.isArray(optimisticTasks)) {
       setAllTasks(optimisticTasks);
@@ -125,7 +125,7 @@ const ProjectTabs = ({
 
   const listTasks = allTasks;
 
-  //---------------------Sprint------------------------------------------//
+                                                                           
 
   const { mutate: onCreateSprint, isPending: isCreateSprintPending } =
     useSprintCreate(workspaceId, projectId);
@@ -141,13 +141,13 @@ const ProjectTabs = ({
     });
   };
 
-  //----------------------Tasks Board - Kanban--------------------------//
+                                                                          
   useEffect(() => {
     setBoardTasks(allTasks.filter((t) => t.sprintId !== null));
   }, [allTasks]);
 
   const tasksByStatus = tasksFilterByStatus({ tasks: boardTasks });
-  // обновляем кэш с помощью sync
+                                 
   const onDragEnd = createTasksBoardOnDragEnd(setBoardTasks, syncCache);
 
   const totalDone = allTaskStats?.tasksDoneCount ?? 0;
@@ -242,7 +242,6 @@ const ProjectTabs = ({
         <ProjectTabsList
           sprints={sprints}
           createSprint={createSprint}
-          // sprintsId={sprintsId}
           backlogTasks={backlogTasks}
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
@@ -278,18 +277,7 @@ const ProjectTabs = ({
       </TabsContent>
 
       <TabsContent value="backlog" className="mt-2">
-        {/* <ProjectTabsBacklog
-          backlogTasks={backlogTasks}
-          hasAnyFilter={hasAnyFilter}
-          hasStatusFilter={hasStatusFilter}
-          hasDateFilter={hasDateFilter}
-          status={status}
-          onStatusChange={changeStatus}
-          isStatusPending={isPending}
-          selectedIds={selectedIds}
-          setSelectedIds={setSelectedIds}
-          isDeleteTasksPending={isDeleteTasksPending}
-        /> */}
+        
         <BacklogAccordion
           tasks={backlogTasks}
           selectedIds={selectedIds}

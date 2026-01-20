@@ -3,7 +3,7 @@ import { AppError } from '@/lib/errors';
 import { InvitationService } from '@/lib/services/invitation';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Accept by ID
+               
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -1,4 +1,4 @@
-// components/entities/workspaces/payments-section.tsx
+                                                      
 import {
   Table,
   TableBody,
@@ -83,7 +83,7 @@ export default function PaymentsSection({
         </TableHeader>
         <TableBody>
           {payments.map((payment) => {
-            // const StatusIcon = statusConfig[payment.status].icon;
+                                                                    
             const isCurrentUser = payment.userId === currentUserId;
             const tariff = payment.tariff as keyof typeof tariffConfig;
             const status = payment.status as keyof typeof statusConfig;
@@ -98,7 +98,7 @@ export default function PaymentsSection({
                 key={payment.id}
                 className={isCurrentUser ? 'bg-primary-50/50' : ''}
               >
-                {/* Дата оплаты */}
+                
                 <TableCell className="font-medium">
                   {paidAt
                     ? format(paidAt, 'dd MMM yyyy, HH:mm', {
@@ -111,25 +111,23 @@ export default function PaymentsSection({
 
  
 
-                {/* Тариф */}
+                
                 <TableCell>
                   <Badge className={tariffConfig[tariff].color}>
                     {tariffConfig[tariff].name}
                   </Badge>
                 </TableCell>
 
-                {/* Сумма */}
+                
                 <TableCell className="font-semibold">
                   {Number(payment.amount).toLocaleString('ru-KZ')}{' '}
                   {payment.currency}
                 </TableCell>
 
-                {/* Статус */}
+                
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    {/* <StatusIcon
-                      className={`w-4 h-4 ${statusConfig[payment.status].color}`}
-                    /> */}
+                    
                     <span className={statusConfig[status].color}>
                       {statusConfig[status].label}
                     </span>
@@ -141,7 +139,7 @@ export default function PaymentsSection({
                   )}
                 </TableCell>
 
-                {/* Действует до */}
+                
                 <TableCell>
                   {validUntil ? (
                     <span

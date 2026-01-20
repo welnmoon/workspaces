@@ -13,8 +13,8 @@ import { Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 import { AppError } from '@/lib/errors';
 
-// POST /api/w/[workspaceId]/projects
-// Create a new project in the workspace
+                                     
+                                        
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ workspaceId: string }> }

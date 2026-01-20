@@ -73,7 +73,7 @@ export const useSprintCreate = (workspaceId: number, projectId: number) => {
       _vars,
       context
     ) => {
-      // заменить оптимистичный спринт на реальный
+                                                  
       qc.setQueryData<SprintWithTasksWithAssigneesDTO[]>(
         ['sprints', projectId, workspaceId],
         (old) => {

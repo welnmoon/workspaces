@@ -25,7 +25,7 @@ export function RootNavigationMenu() {
     <header className="flex items-center justify-between gap-3">
       <WorkspaceLogo />
 
-      {/* Desktop nav */}
+      
       <div className="hidden lg:flex flex-1 justify-center">
         <NavigationMenu className="w-full justify-start">
           <NavigationMenuList className="justify-start space-x-2">
@@ -61,12 +61,12 @@ export function RootNavigationMenu() {
         </NavigationMenu>
       </div>
 
-      {/* Right side desktop */}
+      
       <div className="hidden lg:flex items-center gap-2">
         <AuthButtons />
       </div>
 
-      {/* Mobile controls */}
+      
       <div className="lg:hidden flex items-center gap-2">
         <Sheet>
           <SheetTrigger asChild>

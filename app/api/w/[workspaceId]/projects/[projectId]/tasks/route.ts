@@ -13,8 +13,8 @@ import { Role } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { AppError } from '@/lib/errors';
 
-// POST /api/w/[workspaceId]/projects/[projectId]/tasks
-// Create a new task in the project
+                                                       
+                                   
 
 export async function POST(
   req: NextRequest,

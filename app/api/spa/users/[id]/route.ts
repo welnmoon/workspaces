@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // await requireUser();
+                           
     const id = (await params).id;
     const user = await UserService.getUserById(id);
     const res = ok(user);
@@ -27,7 +27,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // await requireUser();
+                           
     const id = (await params).id;
     const user = await req.json();
     const updatedUser = await UserService.updateUser(id, user);
@@ -44,7 +44,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // await requireUser();
+                           
     const id = (await params).id;
     await UserService.deleteUser(id);
     return withCors(noContent(), _req.headers.get('origin'));

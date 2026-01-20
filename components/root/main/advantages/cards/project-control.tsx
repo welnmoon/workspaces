@@ -6,14 +6,14 @@ import Image from 'next/image';
 
 const ProjectControl = ({
   className,
-  //   title,
-  //   desc,
-  //   children,
+             
+            
+                
 }: {
   className?: string;
-  //   title: string;
-  //   desc: string;
-  //   children?: React.ReactNode;
+                     
+                    
+                                  
 }) => {
   return (
     <article

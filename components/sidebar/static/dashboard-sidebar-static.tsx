@@ -13,13 +13,13 @@ import { RenderNavigation } from '../sidebar-nav';
 import { getIdsFromPathname } from '@/helpers/get-ids-from-path';
 import { clientRoutes } from '@/lib/routes/client-routes';
 
-// Этот компонент показывается только на больших экранах
+                                                        
 const DashboardSidebarStatic = ({
   workspaces,
 }: {
   workspaces: WorkspaceListDTO[];
 }) => {
-  // Selected --------------------------------
+                                              
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(
     null
   );
@@ -28,50 +28,50 @@ const DashboardSidebarStatic = ({
   );
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
-  // Data --------------------------------
-  // const [projects, setProjects] = useState<ProjectListDTO[]>([]);
-  // const [tasks, setTasks] = useState<TaskListDTO[]>([]);
+                                          
+                                                                    
+                                                           
 
-  // Loading --------------------------------
-  // const [pLoading, setPLoading] = useState(false);
-  // const [taskLoading, setTaskLoading] = useState(false);
+                                             
+                                                     
+                                                           
 
-  // useQuery --------------------------------
+                                              
   const {
     data: projects = [],
     isLoading: pLoading,
-    // isError: pError,
-    // error: pErrorObj,
+                       
+                        
   } = useProjects(selectedWorkspaceId || undefined);
 
   const {
     data: tasks = [],
     isLoading: tLoading,
-    // isError: tError,
-    // error: tErrorObj,
+                       
+                        
   } = useTasks(
     selectedProjectId || undefined,
     selectedWorkspaceId || undefined
   );
 
-  // Routing --------------------------------
+                                             
   const pathname = usePathname();
   useEffect(() => {
     const { projectId: projectIdFromPath, workspaceId: workspaceIdFromPath } =
       getIdsFromPathname(pathname);
 
-    // Всегда синхронизируем стейт
+                                  
     setSelectedWorkspaceId(workspaceIdFromPath);
     setSelectedProjectId(projectIdFromPath);
   }, [pathname]);
 
-  // Handlers --------------------------------
+                                              
   const handleWorkspaceChange = (value: string) => {
     setSelectedWorkspaceId(Number(value));
     setSelectedProjectId(null);
     setSelectedTaskId(null);
-    // setProjects([]);
-    // setTasks([]);
+                       
+                    
   };
 
   const handleProjectChange = (value: string) => {

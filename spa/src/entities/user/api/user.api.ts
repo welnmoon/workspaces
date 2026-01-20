@@ -21,7 +21,7 @@ export type UsersResponse = {
 
 export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // get all users
+                    
     getUsers: builder.query<UsersResponse, void>({
       query: () => `/users`,
       providesTags: (result) => [
@@ -30,12 +30,12 @@ export const userApi = api.injectEndpoints({
           []),
       ],
     }),
-    // get user
+               
     getUser: builder.query<UserResponse, string>({
       query: (id) => `/users/${id}`,
       providesTags: ['Users'],
     }),
-    // delete user
+                  
     deleteUser: builder.mutation<void, DeleteUserReq>({
       query: ({ id }) => ({
         url: `/users/${id}`,
@@ -59,9 +59,9 @@ export const userApi = api.injectEndpoints({
         { type: 'Users', id: 'LIST' },
       ],
     }),
-    // update user
+                  
     updateUser: builder.mutation<UserFullDTO, UpdateUserReq>({
-      // UserFullDTO - возвращаемый тип, UpdateUserReq - аргумент
+                                                                  
       query: ({ id, body }) => ({
         url: `/users/${id}`,
         method: 'PUT',

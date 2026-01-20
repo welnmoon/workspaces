@@ -1,4 +1,4 @@
-// User DTO
+           
 
 import type { Prisma, User } from '@prisma/client';
 

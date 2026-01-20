@@ -28,9 +28,9 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
     >
       <h2 className="visually-hidden">Hero section</h2>
       <div className="flex flex-col lg:flex-row gap-8 mb-0 mb-10 lg:mb-0">
-        {/*LEFT SIDE*/}
+        
         <section className="flex flex-col justify-between md:border-r border-zinc-200 pb-8 pr-8">
-          {/* TEXT */}
+          
           <div className="flex flex-col gap-6">
             <Badge className="w-fit text-[14px]" variant="info">
               <FcCollaboration className="mr-2" />
@@ -48,17 +48,17 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
             </p>
           </div>
 
-          {/* DIVIDER */}
+          
           <div className="-mx-8 my-6 h-px bg-zinc-200" />
 
-          {/* STATS */}
+          
           <Stats animatedValueClass={animatedValueClass} stats={stats} />
         </section>
 
-        {/*RIGHT SIDE*/}
+        
         <HeroTariff />
       </div>
-      {/*BOTTOM*/}
+      
       <section className="md:border flex flex-col gap-4 border-zinc-200 px-8 pt-4 pb-8 rounded-md">
         <span className="text-zinc-500 pointer-events-none select-none">
           Нам доверяют
@@ -72,20 +72,7 @@ const NewHeroSection = ({ stats }: { stats: RootStats }) => {
 
           <div className="overflow-hidden gap-6 flex-1 items-center">
             <CompaniesMarquee />
-            {/* {logoWall.map((l) => (
-              <div key={l.alt} className="flex items-center justify-center">
-                <img
-                  className={cn(
-                    'pointer-events-none select-none max-h-10 object-contain',
-                    l.className
-                  )}
-                  draggable={false}
-                  src={l.src}
-                  title={l.alt}
-                  alt={l.alt}
-                />
-              </div>
-            ))} */}
+            
           </div>
         </div>
       </section>

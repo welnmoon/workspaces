@@ -17,7 +17,7 @@ export interface UserFullDTO {
   image: string | null;
   emailVerified: Date | null;
   avatarUrl: string | null;
-  // password: string | null;
+                             
   currentTariff: Tariffs;
   createdAt: Date;
   updatedAt: Date;

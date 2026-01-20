@@ -1,7 +1,7 @@
 import { ProviderId } from '../providers';
 
 export const apiRoutes = {
-  // project
+            
   createProject: (workspaceId: number) => `/api/w/${workspaceId}/projects`,
   someProject: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}`,
@@ -24,7 +24,7 @@ export const apiRoutes = {
   getWorkspaceMemberRole: (workspaceId: number) =>
     `/api/w/${workspaceId}/members/role`,
 
-  // Tasks
+          
   getTasks: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks`,
   getTasksWithAssignee: (workspaceId: number, projectId: number) =>
@@ -42,7 +42,7 @@ export const apiRoutes = {
   moveTask: (workspaceId: number, projectId: number, taskId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/move`,
 
-  // Sprint
+           
   createSprint: (workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/sprints/create`,
   getSprints: (workspaceId: number, projectId: number) =>
@@ -66,25 +66,25 @@ export const apiRoutes = {
   ) =>
     `/api/w/${workspaceId}/projects/${projectId}/sprints/${sprintId}/change-color`,
 
-  // User
+         
   getUsers: () => `/api/system/users`,
   getUser: (id: string) => `/api/user/${id}`,
   changeUserPassword: () => `/api/auth/password`,
   deleteUserAccount: (provider: ProviderId) => `/api/auth/accounts/${provider}`,
 
-  // auth
+         
   register: () => `/api/auth/register`,
   registerWithProvider: (providerId: ProviderId) =>
     `/api/auth/register/${providerId}`,
 
-  // Invitations
+                
   acceptInvitationById: (workspaceId: number, invId: number) =>
     `/api/w/${workspaceId}/invitations/${invId}/accept`,
   getReceivedInvitations: (userId: string) => `/api/user/${userId}/invitations`,
   createInvitation: (workspaceId: number) =>
     `/api/w/${workspaceId}/invitations`,
 
-  // Notifications
+                  
   getNotifications: (userId: string) => `/api/user/${userId}/notifications`,
   markReadNotification: (userId: string, notificationId: number) =>
     `/api/user/${userId}/notifications/${notificationId}/read`,
@@ -95,7 +95,7 @@ export const apiRoutes = {
   getNotificationPages: (userId: string) =>
     `/api/user/${userId}/notifications/pages`,
 
-  // member
+           
   editMember: (memberId: number) => `/api/members/${memberId}/edit`,
   deleteMember: (memberId: number) => `/api/members/${memberId}/delete`,
   getMembers: (workspaceId: number, projectId: number) =>
@@ -103,7 +103,7 @@ export const apiRoutes = {
   changeAssignee: (taskId: number, workspaceId: number, projectId: number) =>
     `/api/w/${workspaceId}/projects/${projectId}/tasks/${taskId}/change-assignee`,
 
-  // Analytics
+              
   getProjectDoneTasks: (workspaceId: number, projectId: number) =>
     `/api/charts/workspace/${workspaceId}/project/${projectId}/done-tasks`,
   getProjectCreatedVsCompletedTasks: (workspaceId: number, projectId: number) =>
@@ -113,9 +113,9 @@ export const apiRoutes = {
   getProjectSLATasks: (workspaceId: number, projectId: number) =>
     `/api/charts/workspace/${workspaceId}/project/${projectId}/sla-tasks`,
 
-  //root
+        
   getRootStats: () => `/api/root/stats`,
 
-  // Payment
+            
   stripeCheckout: () => `/api/payment/stripe/checkout`,
 };

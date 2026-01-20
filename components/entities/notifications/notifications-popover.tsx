@@ -55,9 +55,9 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
 
       <PopoverContent
         align="end"
-        className="w-80 p-0 h-[50vh] flex flex-col" // <- половина экрана, флекс-колонка
+        className="w-80 p-0 h-[50vh] flex flex-col"
       >
-        {/* фиксированный заголовок */}
+        
         <div className="border-b px-4 py-3 shrink-0 flex justify-between">
           <p className="text-sm font-semibold">Уведомления</p>
           <LinkArrow href={clientRoutes.notificationsPage()}>
@@ -65,7 +65,7 @@ const NotificationsPopover = ({ userId }: { userId: string }) => {
           </LinkArrow>
         </div>
 
-        {/* скролящийся контент */}
+        
         <div className="flex-1 overflow-y-auto">
           {isLoading && (
             <div className="px-4 py-6 text-sm text-muted-foreground">

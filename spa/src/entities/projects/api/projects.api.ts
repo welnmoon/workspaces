@@ -7,21 +7,21 @@ interface DeleteProjectReq {
 
 export const projectsApi = api.injectEndpoints({
   endpoints: (build) => ({
-    // get all projects
+                       
     getProjects: build.query<{ data: ProjectFullDTO[] }, void>({
       query: () => ({
         url: '/projects',
         method: 'GET',
       }),
     }),
-    // get project
+                  
     getProject: build.query<ProjectFullDTO, void>({
       query: (id) => ({
         url: `/projects/${id}`,
         method: 'GET',
       }),
     }),
-    // delete project
+                     
     deleteProject: build.mutation<void, DeleteProjectReq>({
       query: ({ id }) => ({
         url: `/projects/${id}`,

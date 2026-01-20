@@ -11,7 +11,7 @@ const optionalPasswordSchema = z
   .transform(emptyToUndefined)
   .optional();
 
-// User edit schema
+                   
 export const editUserSchema = z
   .object({
     firstName: z

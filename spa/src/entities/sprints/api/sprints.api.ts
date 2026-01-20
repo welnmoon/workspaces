@@ -7,21 +7,21 @@ interface DeleteSprintReq {
 
 export const sprintsApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // get all sprints
+                      
     getSprints: builder.query<SprintDTO[], void>({
       query: () => ({
         url: '/sprints',
         method: 'GET',
       }),
     }),
-    // get sprint
+                 
     getSprint: builder.query<SprintDTO, number>({
       query: (id) => ({
         url: `/sprints/${id}`,
         method: 'GET',
       }),
     }),
-    // delete sprint
+                    
     deleteSprint: builder.mutation<void, DeleteSprintReq>({
       query: ({ id }) => ({
         url: `/sprints/${id}`,

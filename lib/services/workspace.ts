@@ -8,11 +8,11 @@ import { Workspace } from '@prisma/client';
 import { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 
 export class WorkspaceService {
-  //
+    
   static async getAllWorkspaces(): Promise<Workspace[]> {
     return prisma.workspace.findMany();
   }
-  // Получение списка воркспейсов пользователя
+                                              
   static async getList(userId: string): Promise<systemGetWorkspaceDTO[]> {
     return prisma.workspace.findMany({
       where: {
@@ -93,7 +93,7 @@ export class WorkspaceService {
     });
   }
 
-  // Получение данных для селекта
+                                 
   static async getSelect(userId: string): Promise<WorkspaceSelectDTO[]> {
     return prisma.workspace.findMany({
       where: {
@@ -108,7 +108,7 @@ export class WorkspaceService {
     });
   }
 
-  // Создание воркспейса
+                        
   static async create({ raw, userId }: { raw: unknown; userId: string }) {
     const data = createWorkspaceFormSchema.parse(raw);
     return prisma.workspace.create({

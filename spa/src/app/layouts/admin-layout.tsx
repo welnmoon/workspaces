@@ -20,7 +20,7 @@ function AdminLayout() {
   };
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme; // 'light' | 'dark'
+    document.documentElement.dataset.theme = theme;                    
   }, [theme]);
 
   useEffect(() => {

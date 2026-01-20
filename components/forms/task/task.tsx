@@ -69,7 +69,7 @@ const TaskComponent = ({
 
   return (
     <main className="space-y-4">
-      {/* Верх: хлебные крошки + кнопка назад */}
+      
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1">
           <Breadcrumbs
@@ -100,7 +100,7 @@ const TaskComponent = ({
         <GoBackButton router={router} />
       </div>
 
-      {/* Заголовок задачи (как в Jira сверху) */}
+      
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-1">
           <Heading level={2}>{task.title}</Heading>
@@ -127,9 +127,9 @@ const TaskComponent = ({
         </span>
       </div>
 
-      {/* Основной Jira-лайк layout: слева контент, справа детали */}
+      
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-        {/* Левая колонка */}
+        
         <div className="flex-1 space-y-4">
           <Card>
             <CardHeader>
@@ -148,7 +148,7 @@ const TaskComponent = ({
             </CardContent>
           </Card>
 
-          {/* Заглушка под "Активность" / комментарии как в Jira */}
+          
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Активность</CardTitle>
@@ -159,7 +159,7 @@ const TaskComponent = ({
           </Card>
         </div>
 
-        {/* Правая колонка — детали задачи (как панель справа в Jira) */}
+        
         <aside className="w-full lg:w-80 space-y-4">
           <Card>
             <CardHeader>
@@ -246,7 +246,7 @@ const TaskComponent = ({
                 }
               />
 
-              {/* Если добавишь поле приоритета — сюда его легко вставить */}
+              
               <Desc label="Приоритет" text={<span>{task.priority}</span>} />
 
               <Desc

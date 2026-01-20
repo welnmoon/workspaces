@@ -13,7 +13,7 @@ export function WorkspaceLogo({
 }: Props) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      {/* Префикс W[space] */}
+      
       <span
         className="font-extrabold leading-none select-none"
         style={{ fontSize: size * 0.32 }}
@@ -22,9 +22,9 @@ export function WorkspaceLogo({
         W&nbsp;
       </span>
 
-      {/* Коробка с буквами */}
+      
       <div className="relative" style={{ width: size, height: size }}>
-        {/* Рамка с разрывом внизу справа */}
+        
         <svg
           viewBox="0 0 100 100"
           className="absolute inset-0"
@@ -35,11 +35,11 @@ export function WorkspaceLogo({
             vectorEffect: 'non-scaling-stroke',
           }}
         >
-          {/* Три стороны и часть нижней, разрыв ~25 ед. справа */}
+          
           <path d="M5 5 H95 V95 M70 95 H5 V5" strokeLinecap="square" />
         </svg>
 
-        {/* Буквы внутри */}
+        
         <div
           className="absolute inset-0 grid grid-cols-3 grid-rows-2 place-items-center"
           style={{ padding: size * 0.12 }}
@@ -74,7 +74,7 @@ export function WorkspaceLogo({
           >
             E
           </span>
-          <span /> {/* пустая ячейка справа внизу */}
+          <span /> 
         </div>
       </div>
     </div>

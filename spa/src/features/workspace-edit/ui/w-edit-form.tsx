@@ -41,7 +41,7 @@ const WorkspaceEditForm = (props: {
           title="Настройки воркспейса"
           description="Обновите название, описание и визуальные атрибуты."
           eyebrow="Воркспейсы"
-          // badge={`ID ${props.wId.slice(0, 8)}`}
+                                                  
           actions={
             <Button type="submit" disabled={isSaving}>
               {isSaving ? 'Сохранение...' : 'Сохранить'}

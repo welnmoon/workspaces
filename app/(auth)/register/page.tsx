@@ -4,7 +4,7 @@ import { WorkspaceLogo } from '@/components/ui/workspace-logo';
 import { RootHeading } from '@/components/root/root-heading';
 import RegisterForm from '@/components/forms/register/register-form';
 
-// sign up - это регистрация
+                            
 
 const RegisterPage = () => {
   return (

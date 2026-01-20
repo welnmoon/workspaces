@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
-// import { Checkbox } from '@/components/ui/checkbox';
+                                                       
 import { FaPenToSquare } from 'react-icons/fa6';
 
 import { FormProvider, useForm } from 'react-hook-form';
@@ -64,10 +64,10 @@ const CreateSprintRowForm = ({
           'flex items-center gap-2 px-2 py-1.5 text-sm',
           'bg-background w-full',
           highlighted && 'animate-highlight'
-          //   isFocused && 'ring-1 ring-primary/40 bg-primary/5'
+                                                                 
         )}
       >
-        {/* <Checkbox disabled /> */}
+        
         <FaPenToSquare size={20} className="text-zinc-500 animate-pulse" />
         <FormInput
           name="name"
@@ -84,13 +84,7 @@ const CreateSprintRowForm = ({
           <Calendar className="h-4 w-4 text-muted-foreground" />
         </button>
 
-        {/* <button
-          type="button"
-          className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-muted"
-          tabIndex={-1}
-        >
-          <User2 className="h-4 w-4 text-muted-foreground" />
-        </button> */}
+        
 
         <Button type="submit" size="sm" disabled={isPending} className="h-8">
           {isPending ? <LoaderComponent /> : 'Создать ↵'}

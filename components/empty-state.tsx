@@ -1,8 +1,8 @@
 'use client';
 
-/* eslint-disable @next/next/no-img-element */
+                                              
 
-// components/ui/empty-state.tsx
+                                
 
 import { cn } from '@/lib/utils';
 import React from 'react';

@@ -34,7 +34,7 @@ export type ProjectCompletedTasksDTO = {
   date: string;
 };
 
-// Completed vs created
+                       
 
 export type CreatedAndCompletedTasksInPoint = {
   created: number;
@@ -52,7 +52,7 @@ export type ProjectCompletedTaskVsCreatedDTO = {
   };
 };
 
-// user activity
+                
 
 export type UserActivity = {
   from: string;
@@ -66,7 +66,7 @@ export type UserActivity = {
   noAssigneeTasks: number;
 };
 
-// SLA
+      
 
 export type SLA = {
   SLA: string;

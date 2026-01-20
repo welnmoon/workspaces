@@ -13,14 +13,14 @@ export const useCountUp = ({
 }) => {
   const [value, setValue] = useState(start);
 
-  const reduceMotion = false; // TODO - вернуть проверку на анимацию
+  const reduceMotion = false;                                       
 
-//   useMemo(() => {
-//     if (typeof window === 'undefined') return true;
-//     return (
-//       window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
-//     );
-//   }, []);
+                    
+                                                      
+               
+                                                                                  
+         
+            
 
   useEffect(() => {
     if (reduceMotion) {

@@ -25,20 +25,20 @@ async function Home() {
     prisma.project.count(),
     prisma.task.count(),
     prisma.user.count(),
-  ]);
-  const stats: RootStats = { workspaces, projects, tasks, users };
+  ]); 
+  const stats: RootStats = { workspaces, projects, tasks, users }; // вот здесь
   return (
     <main>
       <SmoothScrollProvider />
       <RootContainer size="md">
         <RootNavigationMenu />
-        <NewHeroSection stats={stats} />
-        {/* <HeroSection /> */}
-        {/* <Stats stats={stats} /> */}
+        <NewHeroSection stats={stats} /> {/*Здесь внутри еще есть компонент Stats и там используется stats*/}
+        
+        
       </RootContainer>
-      {/* <CompaniesMarquee /> */}
+      
 
-      {/*Product Mockup*/}
+      
       <section className="bg-gray-100 pt-8 relative mb-8">
         <div className="w-[90%] md:w-[80%] lg:w-[70%] xl:w-[80%] mx-auto">
           <div className="bg-gradient-to-t from-white absolute z-10 inset-0" />
@@ -56,11 +56,11 @@ async function Home() {
 
       <RootContainer
         size="md"
-        // className="sm:max-w-screen-sm
-        //     md:max-w-screen-sm
-        //     lg:max-w-screen-md
-        //     xl:max-w-screen-xl
-        //     2xl:max-w-screen-xl"
+                                        
+                                 
+                                 
+                                 
+                                   
         className="flex flex-col gap-20 mb-16"
       >
         <Advantages />

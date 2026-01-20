@@ -25,7 +25,7 @@ const ProjectSprints = ({
           setOpenSprintIds={setOpenSprintIds}
           key={s.id}
           sprint={s}
-          // selectedIds={selectedIds}
+                                      
           setSelectedIds={setSelectedIds}
           isDeleteTasksPending={isDeleteTasksPending}
         />

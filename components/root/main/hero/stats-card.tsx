@@ -25,14 +25,7 @@ const StatsCard = ({
         </dd>
       </CardContent>
 
-      {/* <CardFooter className="flex justify-end border-t border-border p-0!">
-        <a
-          href={item.href}
-          className="px-6 py-3 text-sm font-medium text-primary hover:text-primary/90"
-        >
-          View more →
-        </a>
-      </CardFooter> */}
+      
     </Card>
   );
 };

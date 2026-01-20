@@ -54,9 +54,9 @@ const TaskActions = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        {/*-----------------------------------------*/}
-        {/*---------------Moving----------------*/}
-        {/*-----------------------------------------*/}
+        
+        
+        
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Переместить задачу</DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="w-60">
@@ -86,9 +86,9 @@ const TaskActions = ({
             {membersList === undefined && <span>Ошибка</span>}
           </DropdownMenuSubContent>
         </DropdownMenuSub>
-        {/*-----------------------------------------*/}
-        {/*---------------Status----------------*/}
-        {/*-----------------------------------------*/}
+        
+        
+        
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Изменить статус</DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="w-56">
@@ -103,16 +103,14 @@ const TaskActions = ({
           </DropdownMenuSubContent>
         </DropdownMenuSub>
 
-        {/*-----------------------------------------*/}
-        {/*---------------Priority----------------*/}
-        {/*-----------------------------------------*/}
-        {/* <DropdownMenuItem onClick={onChangePriority}>
-          Изменить приоритет
-        </DropdownMenuItem> */}
+        
+        
+        
+        
 
-        {/*-----------------------------------------*/}
-        {/*---------------Assignee----------------*/}
-        {/*-----------------------------------------*/}
+        
+        
+        
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Изменить исполнителя</DropdownMenuSubTrigger>
 
@@ -131,20 +129,15 @@ const TaskActions = ({
                       onChangeAssignee?.(taskId, member.user.id, member.user)
                     }
                   >
-                    {/* <div className="flex items-center gap-2"> */}
-                    {/* <Avatar className="h-6 w-6">
-                    {member.user.ava && <AvatarImage src={member.avatarUrl} />}
-                    <AvatarFallback>
-                      {member.label.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar> */}
+                    
+                    
                     <span>
                       {getFullName({
                         firstName: member.user.firstName,
                         lastName: member.user.lastName,
                       })}
                     </span>
-                    {/* </div> */}
+                    
                   </DropdownMenuItem>
                 ))}
               </>
@@ -154,9 +147,9 @@ const TaskActions = ({
           </DropdownMenuSubContent>
         </DropdownMenuSub>
 
-        {/*-----------------------------------------*/}
-        {/*---------------Delete----------------*/}
-        {/*-----------------------------------------*/}
+        
+        
+        
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"
           onClick={() => onDelete?.(taskId)}

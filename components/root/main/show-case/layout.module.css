@@ -1,50 +1,50 @@
-/* .root {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-areas:
-    'kanban audit audit'
-    'members members empty3'
-    'empty7 invites invites'
-    'empty5 invites invites'
-    'empty6 empty8 empty4';
-}
+          
+                
+                                     
+                                          
+                      
+                        
+                            
+                            
+                            
+                           
+ 
 
-.kanban {
-  grid-area: kanban;
-}
-.members {
-  grid-area: members;
-}
-.invites {
-  grid-area: invites;
-}
-.analytics {
-  grid-area: analytics;
-}
-.audit {
-  grid-area: audit;
-}
-.empty3 {
-  grid-area: empty3;
-}
-.empty4 {
-  grid-area: empty4;
-}
-.empty5 {
-  grid-area: empty5;
-}
-.empty6 {
-  grid-area: empty6;
-}
-.empty7 {
-  grid-area: empty7;
-}
-.empty8 {
-  grid-area: empty8;
-} */
+         
+                    
+ 
+          
+                     
+ 
+          
+                     
+ 
+            
+                       
+ 
+        
+                   
+ 
+         
+                    
+ 
+         
+                    
+ 
+         
+                    
+ 
+         
+                    
+ 
+         
+                    
+ 
+         
+                    
+    
 
-/*mobile*/
+          
 .root {
   display: grid;
   grid-template-columns: 1fr;
@@ -57,7 +57,7 @@
     'analytics';
 }
 
-/*md*/
+      
 @media (min-width: 768px) {
   .root {
     display: grid;
@@ -75,7 +75,7 @@
   }
 }
 
-/*lg*/
+      
 @media (min-width: 1024px) {
   .root {
     display: grid;
@@ -85,10 +85,10 @@
     grid-template-areas:
       'kanban kanban audit  audit  audit'
       'kanban kanban audit  audit  audit'
-      /* 'kanban kanban audit  audit  audit' */
+                                               
       'members members members analytics   analytics'
       'notifications notifications notifications analytics   analytics'
-      /* 'notifications      notifications notifications .      .      ' */
+                                                                           
       'notifications      notifications notifications analytics   analytics     '
       'notifications      notifications notifications analytics   analytics      '
       'notifications      notifications notifications analytics   analytics ';

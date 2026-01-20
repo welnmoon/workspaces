@@ -53,7 +53,7 @@ const WorkspaceOverview = ({
     <div className="flex flex-col md:flex-row gap-4 text-sm text-muted-foreground ">
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex gap-4">
-          {/* Members */}
+          
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 cursor-default">
@@ -64,7 +64,7 @@ const WorkspaceOverview = ({
             <TooltipContent side="bottom">Участники</TooltipContent>
           </Tooltip>
 
-          {/* Projects */}
+          
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 cursor-default">
@@ -76,7 +76,7 @@ const WorkspaceOverview = ({
           </Tooltip>
         </div>
 
-        {/* Tasks block */}
+        
         <div className="bg-zinc-100 px-2 py-1 rounded-md flex w-fit gap-3 items-center">
           <ListTodo size={16} className="text-zinc-400" />
 
@@ -134,7 +134,7 @@ const WorkspaceOverview = ({
 
       <div className="flex flex-col gap-3">
         <div className="flex gap-4">
-          {/* Role */}
+          
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="bg-primary-100 rounded-md px-2 py-1 flex items-center gap-1 cursor-default">
@@ -145,7 +145,7 @@ const WorkspaceOverview = ({
             <TooltipContent side="bottom">Ваша роль</TooltipContent>
           </Tooltip>
 
-          {/* Tariff */}
+          
           <Tooltip>
             <TooltipTrigger asChild>
               <div

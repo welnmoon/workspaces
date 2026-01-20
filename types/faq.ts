@@ -1,15 +1,15 @@
 export type FaqItem = {
-  id: string; // 'booking-1'
-  question: string; // 'How do I make a booking?'
-  answer: string; // Текст ответа
+  id: string;               
+  question: string;                              
+  answer: string;                
 };
 
-// Категория слева (General Questions, Miscellaneous и т.п.)
+                                                            
 export type FaqCategory = {
-  id: string; // 'general', 'misc', ...
-  title: string; // 'General Questions'
-  items: FaqItem[]; // список вопросов справа
+  id: string;                          
+  title: string;                       
+  items: FaqItem[];                          
 };
 
-// Весь объект с данными для аккордеона
+                                       
 export type FaqData = FaqCategory[];

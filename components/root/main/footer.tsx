@@ -88,7 +88,7 @@ const Footer = () => {
             <div className="flex items-center gap-4 text-neutral-500">
               <Link
                 aria-label="Открыть наше сообщество в X"
-                href="https://x.com"
+                href="https:        
                 className="rounded-full border border-neutral-200 p-2 transition hover:border-neutral-300 hover:text-neutral-900"
               >
                 <FiTwitter className="h-4 w-4" />
@@ -102,7 +102,7 @@ const Footer = () => {
               </Link>
               <Link
                 aria-label="Посмотреть код на GitHub"
-                href="https://github.com"
+                href="https:             
                 className="rounded-full border border-neutral-200 p-2 transition hover:border-neutral-300 hover:text-neutral-900"
               >
                 <FiGithub className="h-4 w-4" />

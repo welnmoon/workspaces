@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
-    // await requireUser();
+                           
     const users = await UserService.getUsers();
     const res = ok(users);
     return withCors(res, req.headers.get('origin'));

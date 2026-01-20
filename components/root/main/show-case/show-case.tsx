@@ -1,5 +1,5 @@
 'use client';
-// Workspace Switcher — выбор рабочего пространства, роль пользователя
+                                                                      
 
 import s from './layout.module.css';
 import CaseCard from './case-card';
@@ -15,23 +15,23 @@ import SLAGaugeView from './presentational/sla-gauge-view';
 import { Heading } from '@/components/ui/heading';
 import { cn } from '@/lib/utils';
 
-// Project Card — метрики проекта, прогресс/статусы
+                                                   
 
-// Task Card — приоритет, дедлайн, исполнитель, статус
+                                                      
 
-// Kanban Board — DnD, статусы, фильтры
+                                       
 
-// Members & Roles — OWNER/ADMIN/MEMBER (это прям важная фича)
+                                                              
 
-// Invites — приглашение по email/ссылка
+                                        
 
-// Billing / Plan — Free vs Pro, ограничения, апгрейд (Stripe)
+                                                              
 
-// Activё
+         
 
-// Analytics Widget — графики “created vs completed” и т.п.
+                                                           
 
-// Empty/Skeleton/Error states — покажи “качество”, а не только happy path
+                                                                          
 
 const ShowCase = () => {
   return (
@@ -47,7 +47,7 @@ const ShowCase = () => {
         </span>
       </div>
       <div className="mx-auto flex flex-col border border-zinc-100 rounded-md ">
-        {/* COL #1 */}
+        
         <aside className="w-full flex flex-col md:flex-row lg:border-r border-zinc-100">
           <CaseCard
             title="Пространства"
@@ -96,7 +96,7 @@ const ShowCase = () => {
           </CaseCard>
         </aside>
 
-        {/* COL #2  GRID */}
+        
         <div className={s.root}>
           <Kanban
             className={s.kanban}

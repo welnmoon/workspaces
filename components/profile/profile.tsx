@@ -4,7 +4,7 @@ import AddAccounts from '@/components/profile/add-accounts';
 import { Heading } from '@/components/ui/heading';
 import { Button } from '@/components/ui/button';
 
-// shadcn/ui pieces
+                   
 import {
   Card,
   CardContent,
@@ -72,7 +72,7 @@ const ProfileComponent = ({ userId }: Props) => {
 
   return (
     <main className="">
-      {/* Page header */}
+      
       <header className="mb-8 flex items-center justify-between gap-4">
         <Heading level={1} className="text-3xl font-semibold tracking-tight">
           Профиль
@@ -98,7 +98,7 @@ const ProfileComponent = ({ userId }: Props) => {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column: user card */}
+        
         <Card className="lg:col-span-1">
           <CardHeader className="flex flex-row items-center gap-4">
             <Avatar className="h-16 w-16">
@@ -139,9 +139,9 @@ const ProfileComponent = ({ userId }: Props) => {
           </CardFooter>
         </Card>
 
-        {/* Right column: accounts + workspaces */}
+        
         <div className="lg:col-span-2 flex flex-col gap-6">
-          {/* Accounts */}
+          
           <Card>
             <CardHeader>
               <CardTitle>Аккаунты</CardTitle>

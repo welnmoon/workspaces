@@ -6,7 +6,7 @@ import ChartsCard from '@/components/charts/charts-card';
 import { Badge } from '@/components/ui/badge';
 
 type SLAGaugeViewProps = {
-  sla: number; // 0-100
+  sla: number;         
   completedInDeadline: number;
   totalWithDeadline: number;
   title?: string;

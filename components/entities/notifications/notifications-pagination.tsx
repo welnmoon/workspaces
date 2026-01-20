@@ -21,7 +21,7 @@ const NotificationsPagination = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-//   if (pagesCount <= 1) return null; 
+                                       
 
   const pages = Array.from({ length: pagesCount }, (_, i) => i + 1);
 
@@ -42,7 +42,7 @@ const NotificationsPagination = ({
   return (
     <Pagination>
       <PaginationContent>
-        {/* PREV */}
+        
         <PaginationItem>
           <PaginationPrevious
             href={hasPrev ? createPageUrl(currentPage - 1) : undefined}
