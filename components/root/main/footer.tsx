@@ -2,10 +2,7 @@ import Link from 'next/link';
 
 import RootContainer from '@/components/root/root-container';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
-import { FiGithub, FiLinkedin, FiTwitter } from 'react-icons/fi';
 import { navSections } from '@/const/root-navigation';
-
-
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -85,27 +82,33 @@ const Footer = () => {
               </Link>
             </div>
 
-            <div className="flex items-center gap-4 text-neutral-500">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-500">
               <Link
-                aria-label="Открыть наше сообщество в X"
-                href="https:        
-                className="rounded-full border border-neutral-200 p-2 transition hover:border-neutral-300 hover:text-neutral-900"
+                href="mailto:elshatuly.nursultan@gmail.com"
+                className="hover:text-neutral-900"
               >
-                <FiTwitter className="h-4 w-4" />
+                elshatuly.nursultan@gmail.com
               </Link>
+              <span className="h-4 w-px bg-neutral-300" aria-hidden="true" />
               <Link
-                aria-label="Открыть наш профиль в LinkedIn"
-                href="https://www.linkedin.com"
-                className="rounded-full border border-neutral-200 p-2 transition hover:border-neutral-300 hover:text-neutral-900"
+                href="https://t.me/nursultan_elshatuly"
+                className="hover:text-neutral-900"
               >
-                <FiLinkedin className="h-4 w-4" />
+                @nursultan_elshatuly
               </Link>
+              <span className="h-4 w-px bg-neutral-300" aria-hidden="true" />
               <Link
-                aria-label="Посмотреть код на GitHub"
-                href="https:             
-                className="rounded-full border border-neutral-200 p-2 transition hover:border-neutral-300 hover:text-neutral-900"
+                href="https://www.linkedin.com/in/nursultan-elshatuly"
+                className="hover:text-neutral-900"
               >
-                <FiGithub className="h-4 w-4" />
+                linkedin.com/in/nursultan-elshatuly
+              </Link>
+              <span className="h-4 w-px bg-neutral-300" aria-hidden="true" />
+              <Link
+                href="https://github.com/welnmoon"
+                className="hover:text-neutral-900"
+              >
+                github.com/welnmoon
               </Link>
             </div>
           </div>

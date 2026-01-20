@@ -8,7 +8,6 @@ import NewHeroSection from '@/components/root/main/hero/new-hero';
 import SmoothScrollProvider from '@/components/layout/Providers/SmoothScrollProvider';
 import ShowCase from '@/components/root/main/show-case/show-case';
 import Image from 'next/image';
-import { prisma } from '@/lib/prisma';
 
 export type RootStats = {
   workspaces: number;
@@ -20,25 +19,22 @@ export type RootStats = {
 export const dynamic = 'force-dynamic';
 
 async function Home() {
-  const [workspaces, projects, tasks, users] = await Promise.all([
-    prisma.workspace.count(),
-    prisma.project.count(),
-    prisma.task.count(),
-    prisma.user.count(),
-  ]); 
-  const stats: RootStats = { workspaces, projects, tasks, users }; // вот здесь
+  // const [workspaces, projects, tasks, users] = await Promise.all([
+  //   prisma.workspace.count(),
+  //   prisma.project.count(),
+  //   prisma.task.count(),
+  //   prisma.user.count(),
+  // ]);
+  // const stats: RootStats = { workspaces, projects, tasks, users }; // вот здесь
   return (
     <main>
       <SmoothScrollProvider />
       <RootContainer size="md">
         <RootNavigationMenu />
-        <NewHeroSection stats={stats} /> {/*Здесь внутри еще есть компонент Stats и там используется stats*/}
-        
-        
+        <NewHeroSection />{' '}
+        {/*Здесь внутри еще есть компонент Stats и там используется stats*/}
       </RootContainer>
-      
 
-      
       <section className="bg-gray-100 pt-8 relative mb-8">
         <div className="w-[90%] md:w-[80%] lg:w-[70%] xl:w-[80%] mx-auto">
           <div className="bg-gradient-to-t from-white absolute z-10 inset-0" />
@@ -54,15 +50,7 @@ async function Home() {
         </div>
       </section>
 
-      <RootContainer
-        size="md"
-                                        
-                                 
-                                 
-                                 
-                                   
-        className="flex flex-col gap-20 mb-16"
-      >
+      <RootContainer size="md" className="flex flex-col gap-20 mb-16">
         <Advantages />
         <ShowCase />
         <FaqRoot />

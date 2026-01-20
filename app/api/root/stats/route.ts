@@ -9,5 +9,12 @@ export async function GET() {
     prisma.user.count(),
   ]);
 
-  return ok({ workspaces, projects, tasks, users });
+  return ok(
+    { workspaces, projects, tasks, users },
+    {
+      headers: {
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=60',
+      },
+    }
+  );
 }
