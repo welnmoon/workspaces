@@ -7,29 +7,31 @@ import WorkspacePage from '../pages/workspace';
 import ProjectsPage from '../pages/projects';
 import TasksPage from '../pages/tasks';
 import SprintsPage from '../pages/sprints';
-
-                                                                      
+import { AdminGate } from '../features/auth/admin-gate';
 
 export default function SpaApp() {
   return (
-    <BrowserRouter >
+    <BrowserRouter>
       <Routes>
-        <Route element={<AdminLayout />}>
-          
-          <Route index element={<Navigate to="users" replace />} />
+        <Route element={<AdminGate />}>
+          <Route element={<AdminLayout />}>
+            <Route index element={<Navigate to="users" replace />} />
 
-          <Route path="users" element={<UsersPage />} />
-          <Route path="users/:id" element={<UserPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="users/:id" element={<UserPage />} />
 
-          <Route path="workspaces" element={<WorkspacesPage />} />
-          <Route path="workspaces/:id" element={<WorkspacePage />} />
+            <Route path="workspaces" element={<WorkspacesPage />} />
+            <Route path="workspaces/:id" element={<WorkspacePage />} />
 
-          <Route path="projects" element={<ProjectsPage />} />
-          <Route path="tasks" element={<TasksPage />} />
-          <Route path="sprints" element={<SprintsPage />} />
+            <Route path="projects" element={<ProjectsPage />} />
+            <Route path="tasks" element={<TasksPage />} />
+            <Route path="sprints" element={<SprintsPage />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<div>404</div>} />
+        <Route path="403" element={<div>403 Forbidden</div>} />
+        <Route path="login" element={<div>Login Page</div>} />
       </Routes>
     </BrowserRouter>
   );
