@@ -28,6 +28,14 @@ const LoginPage = async ({
   }>;
 }) => {
   const { returnTo, reason, from } = await searchParams;
+  const normalizeOrigin = (value?: string) => {
+    if (!value) return undefined;
+    try {
+      return new URL(value).origin;
+    } catch {
+      return undefined;
+    }
+  };
   const normalizeParam = (value?: string | string[]) =>
     Array.isArray(value) ? value[0] : value;
   const normalizeReturnTo = (value?: string) => {
@@ -38,9 +46,12 @@ const LoginPage = async ({
   };
   const rawReturnTo = normalizeParam(returnTo);
   const rawFrom = normalizeParam(from);
+  const spaOrigin = normalizeOrigin(process.env.VITE_URL);
   const safeFrom = normalizeReturnTo(rawFrom);
+  const safeSpaReturnTo =
+    safeFrom && spaOrigin ? new URL(safeFrom, spaOrigin).toString() : safeFrom;
   const safeReturnTo =
-    safeFrom ||
+    safeSpaReturnTo ||
     normalizeReturnTo(rawReturnTo) ||
     clientRoutes.workspacesPage();
   const safeReason = normalizeParam(reason);

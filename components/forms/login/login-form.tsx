@@ -11,7 +11,6 @@ import { SubmitButton } from '@/ui/button/submit-button';
 import LoginOauthButton from '@/components/buttons/auth/login-oauth-btn';
 import { PROVIDERS } from '@/lib/providers';
 import BaseLink from '@/components/base-link';
-import { clientRoutes } from '@/lib/routes/client-routes';
 import { loginSchema, LoginSchema } from './login-schema';
 import DividerWithText from '@/components/divider-with-text';
 
@@ -27,6 +26,8 @@ const reasonHeadings = {
 const isLoginReason = (value?: string): value is LoginReason =>
   typeof value === 'string' &&
   Object.prototype.hasOwnProperty.call(reasonHeadings, value);
+
+const isExternalUrl = (value: string) => /^https?:\/\//i.test(value);
 
 const LoginForm = ({
   returnTo,
@@ -67,6 +68,10 @@ const LoginForm = ({
       }
 
       toast.success('Вы успешно вошли в систему');
+      if (isExternalUrl(returnTo)) {
+        window.location.assign(returnTo);
+        return;
+      }
       router.push(returnTo);
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Неизвестная ошибка';
