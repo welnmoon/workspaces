@@ -1,3 +1,4 @@
+import { requirePlatformRole } from '@/guards/require-platform-role';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
   badRequest,
@@ -8,7 +9,7 @@ import {
 } from '@/lib/http/http';
 import { prisma } from '@/lib/prisma';
 import { createWorkspaceFormSchema } from '@/schemas/workspace/create-workspace-form-schema';
-import { Prisma } from '@prisma/client';
+import { PlatformRole, Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -16,6 +17,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const workspaceId = Number((await params).id);
     if (Number.isNaN(workspaceId)) {
       return withCors(badRequest('Invalid workspace id'), _req.headers.get('origin'));
@@ -62,6 +65,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const workspaceId = Number((await params).id);
     if (Number.isNaN(workspaceId)) {
       return withCors(
@@ -119,6 +124,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const workspaceId = Number((await params).id);
     if (Number.isNaN(workspaceId)) {
       return withCors(

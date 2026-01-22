@@ -1,9 +1,9 @@
 import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth/next';
-import { markUserOnline } from './mark-user-online';
 import { UserService } from '@/lib/services/user';
 import { AppError } from '@/lib/errors';
 import { Session } from 'next-auth';
+import { markUserOnline } from '@/helpers/mark-user-online';
 
 export type SessionUser = {
   id: string;

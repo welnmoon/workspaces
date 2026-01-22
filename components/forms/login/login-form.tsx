@@ -11,12 +11,36 @@ import { SubmitButton } from '@/ui/button/submit-button';
 import LoginOauthButton from '@/components/buttons/auth/login-oauth-btn';
 import { PROVIDERS } from '@/lib/providers';
 import BaseLink from '@/components/base-link';
-import { clientRoutes } from '@/lib/routes/client-routes';
 import { loginSchema, LoginSchema } from './login-schema';
 import DividerWithText from '@/components/divider-with-text';
 
-const LoginForm = ({ returnTo }: { returnTo: string }) => {
+type LoginReason = 'session-expired' | 'unauthorized' | 'forbidden' | 'logged-out';
+
+const reasonHeadings = {
+  'session-expired': 'Сессия истекла',
+  unauthorized: 'Требуется вход',
+  forbidden: 'Недостаточно прав',
+  'logged-out': 'Вы вышли из системы',
+} satisfies Record<LoginReason, string>;
+
+const isLoginReason = (value?: string): value is LoginReason =>
+  typeof value === 'string' &&
+  Object.prototype.hasOwnProperty.call(reasonHeadings, value);
+
+const isExternalUrl = (value: string) => /^https?:\/\//i.test(value);
+
+const LoginForm = ({
+  returnTo,
+  reason,
+  from,
+}: {
+  returnTo: string;
+  reason?: string;
+  from?: string;
+}) => {
   const router = useRouter();
+  const headingText =
+    from && isLoginReason(reason) ? reasonHeadings[reason] : 'Добро пожаловать!';
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -44,7 +68,11 @@ const LoginForm = ({ returnTo }: { returnTo: string }) => {
       }
 
       toast.success('Вы успешно вошли в систему');
-      router.push(clientRoutes.workspacesPage());
+      if (isExternalUrl(returnTo)) {
+        window.location.assign(returnTo);
+        return;
+      }
+      router.push(returnTo);
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Неизвестная ошибка';
       toast.error(message);
@@ -56,7 +84,7 @@ const LoginForm = ({ returnTo }: { returnTo: string }) => {
     <section className="flex-1 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md p-8 space-y-6">
         <div className="flex flex-col gap-2 text-center">
-          <h2 className="text-2xl font-semibold">Добро пожаловать!</h2>
+          <h2 className="text-2xl font-semibold">{headingText}</h2>
           <p className="text-sm text-slate-500">
             Войдите, чтобы продолжить работу.
           </p>
@@ -102,7 +130,11 @@ const LoginForm = ({ returnTo }: { returnTo: string }) => {
 
         <div className="flex gap-2 flex-wrap">
           {PROVIDERS.map((p) => (
-            <LoginOauthButton key={p.id} provider={p.id} />
+            <LoginOauthButton
+              key={p.id}
+              provider={p.id}
+              callbackUrl={returnTo}
+            />
           ))}
         </div>
 

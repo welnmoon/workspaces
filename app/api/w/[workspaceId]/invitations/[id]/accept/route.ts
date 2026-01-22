@@ -1,9 +1,8 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { AppError } from '@/lib/errors';
 import { InvitationService } from '@/lib/services/invitation';
 import { NextRequest, NextResponse } from 'next/server';
 
-               
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -1,6 +1,8 @@
+import { requirePlatformRole } from '@/guards/require-platform-role';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import { noContent, ok, serverError } from '@/lib/http/http';
 import { UserService } from '@/lib/services/user';
+import { PlatformRole } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -8,6 +10,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
                            
     const id = (await params).id;
     const user = await UserService.getUserById(id);
@@ -27,6 +30,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
                            
     const id = (await params).id;
     const user = await req.json();
@@ -44,6 +48,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
                            
     const id = (await params).id;
     await UserService.deleteUser(id);

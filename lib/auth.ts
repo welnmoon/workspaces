@@ -11,6 +11,16 @@ import { prisma } from './prisma';
 import { AppError } from './errors';
 import { NEXT_AUTH_SECRET } from './next-auth-secret';
 
+const spaOrigin = (() => {
+  const raw = process.env.VITE_URL;
+  if (!raw) return undefined;
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return undefined;
+  }
+})();
+
 const callbacks: AuthOptions['callbacks'] = {
   async jwt({ token, user }) {
     if (user) {
@@ -39,6 +49,18 @@ const callbacks: AuthOptions['callbacks'] = {
     }
 
     return session as Session;
+  },
+  async redirect({ url, baseUrl }) {
+    if (url.startsWith('/')) return `${baseUrl}${url}`;
+    try {
+      const redirectUrl = new URL(url);
+      if (redirectUrl.origin === baseUrl || redirectUrl.origin === spaOrigin) {
+        return url;
+      }
+    } catch {
+      return baseUrl;
+    }
+    return baseUrl;
   },
 };
 

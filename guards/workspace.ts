@@ -1,9 +1,8 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { AppError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import { Role } from '@prisma/client';
 
-                                                                                
 export const requireWorkspaceMember = async ({
   workspaceId,
   allowed,

@@ -1,9 +1,18 @@
 import { Breadcrumbs } from '@/components/bread-crumbs';
 import ProfileComponent from '@/components/profile/profile';
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { UserService } from '@/lib/services/user';
 import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Workspaces',
+  description: "Manage your team's work in one space",
+  icons: {
+    icon: '/icons/metadata/w.png',
+  },
+};
 
 const ProfilePage = async () => {
   try {

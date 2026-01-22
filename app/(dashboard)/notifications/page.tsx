@@ -1,10 +1,19 @@
 import NotificationsClient from '@/components/entities/notifications/notifications-client';
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { NotificationService } from '@/lib/services/notifications';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { Heading } from '@/components/ui/heading';
 import Footer from '@/components/root/main/footer';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Workspaces',
+  description: "Manage your team's work in one space",
+  icons: {
+    icon: '/icons/metadata/w.png',
+  },
+};
 
 const NotificationsPage = async () => {
   const { id } = await requireUser();

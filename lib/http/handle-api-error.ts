@@ -8,8 +8,9 @@ import {
   unprocessable,
   notFound,
 } from './http';
+import { NextResponse } from 'next/server';
 
-type Handler = (message?: string, code?: string) => Response;
+type Handler = (message?: string, code?: string) => NextResponse;
 type ErrorMap = Record<number, Handler>;
 
 const defaultMap: ErrorMap = {
@@ -30,11 +31,11 @@ export function handleApiError(
   e: unknown,
   fallback = 'Server error',
   map: ErrorMap = defaultMap
-) {
+): NextResponse {
   if (e instanceof AppError) {
     const handler = map[e.status];
     if (handler) return handler(e.message, e.code);
-    return new Response(JSON.stringify({ code: e.code, message: e.message }), {
+    return new NextResponse(JSON.stringify({ code: e.code, message: e.message }), {
       status: e.status,
     });
   }

@@ -1,3 +1,4 @@
+import { requirePlatformRole } from '@/guards/require-platform-role';
 import { parseSprintId } from '@/helpers/parse-id';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
@@ -11,6 +12,7 @@ import {
 import { prisma } from '@/lib/prisma';
 import { SprintService } from '@/lib/services/sprint';
 import { updateSprintSchema } from '@/schemas/sprint/update-sprint-schema';
+import { PlatformRole } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 type RouteParams = {
@@ -19,6 +21,8 @@ type RouteParams = {
 
 export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const sprintId = parseSprintId((await params).id);
     if (sprintId === null) {
       return withCors(
@@ -44,6 +48,8 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
 
 export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const sprintId = parseSprintId((await params).id);
     if (sprintId === null) {
       return withCors(
@@ -142,6 +148,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const sprintId = parseSprintId((await params).id);
     if (sprintId === null) {
       return withCors(

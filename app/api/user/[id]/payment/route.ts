@@ -1,12 +1,10 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { handleApiError } from '@/lib/http/handle-api-error';
 import { forbidden, noContent, unprocessable } from '@/lib/http/http';
 import { UserService } from '@/lib/services/user';
 import { paymentSchema } from '@/schemas/workspace/payment-schema';
 import { NextRequest } from 'next/server';
 
-                              
-                                             
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

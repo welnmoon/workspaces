@@ -1,4 +1,4 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { AppError } from '@/lib/errors';
 import { serverError } from '@/lib/http/http';
 import { MembershipService } from '@/lib/services/membership';

@@ -1,4 +1,4 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { validateId } from '@/helpers/validate-id';
 import { handleApiError } from '@/lib/http/handle-api-error';
 import { ok } from '@/lib/http/http';

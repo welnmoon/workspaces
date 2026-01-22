@@ -1,3 +1,4 @@
+import { requirePlatformRole } from '@/guards/require-platform-role';
 import { parseTaskId } from '@/helpers/parse-id';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
@@ -11,6 +12,7 @@ import {
 import { prisma } from '@/lib/prisma';
 import { TaskService } from '@/lib/services/tasks';
 import { updateTaskSchema } from '@/schemas/tasks/update-task-form-schema';
+import { PlatformRole } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 type RouteParams = {
@@ -19,6 +21,8 @@ type RouteParams = {
 
 export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const taskId = parseTaskId((await params).id);
     if (taskId === null) {
       return withCors(badRequest('Invalid task id'), _req.headers.get('origin'));
@@ -41,6 +45,8 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
 
 export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const taskId = parseTaskId((await params).id);
     if (taskId === null) {
       return withCors(badRequest('Invalid task id'), req.headers.get('origin'));
@@ -139,6 +145,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const taskId = parseTaskId((await params).id);
     if (taskId === null) {
       return withCors(badRequest('Invalid task id'), _req.headers.get('origin'));

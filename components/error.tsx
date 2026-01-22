@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 const ErrorComponent = ({
   title = 'Произошла ошибка',
@@ -17,6 +17,7 @@ const ErrorComponent = ({
         alt="Ошибка"
         className="h-auto opacity-80"
         width={60}
+        height={60}
       />
     </div>
   );

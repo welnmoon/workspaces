@@ -9,16 +9,15 @@ const HeroTariffTop = ({ currentTariff }: { currentTariff: TariffKey }) => {
     <div className="min-h-fit h-[350px] h-max-[360px] w-full">
       {currentTariff === tariffs.FREE.name && (
         <div className="flex justify-between h-full gap-4">
-          <div className="bg-neutral-100 border border-zinc-200 w-1/2 rounded-md relative">
+          <div className="bg-neutral-100 border border-zinc-200 w-1/2 rounded-md relative overflow-hidden">
             <p className="font-[600] text-neutral-700 my-4 mx-6 wrap-break-word text-lg">
               Подходит для старта
             </p>
-            <div className="absolute bottom-0 h-[50%] md:h-[80%] lg:h-[70%] w-full relative">
+            <div className="absolute bottom-0 left-0 right-0 h-[80%] lg:h-[50%]">
               <Image
                 src="/images/hero/hero-free-1_cropped.avif"
                 alt=""
                 fill
-                sizes="(min-width: 1024px) 50vw, 50vw"
                 className="object-cover"
               />
             </div>
@@ -42,17 +41,16 @@ const HeroTariffTop = ({ currentTariff }: { currentTariff: TariffKey }) => {
 
       {currentTariff === tariffs.PRO.name && (
         <div className="flex justify-between h-full gap-4">
-          <div className="bg-amber-100 border border-amber-200 w-1/2 rounded-md relative">
+          <div className="bg-amber-100 border border-amber-200 w-1/2  rounded-md relative">
             <p className="font-[600] text-neutral-800 my-4 mx-6 wrap-break-word text-lg">
               Для небольших команд
             </p>
-            <div className="absolute bottom-0 h-[50%] md:h-[70%] lg:h-[50%] w-full relative">
+            <div className="absolute bottom-0 left-0 right-0 h-[70%] lg:h-[70%]">
               <Image
                 src="/images/hero/hero-pro-1_cropped.avif"
                 alt=""
                 fill
-                sizes="(min-width: 1024px) 50vw, 50vw"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
           </div>
@@ -80,17 +78,17 @@ const HeroTariffTop = ({ currentTariff }: { currentTariff: TariffKey }) => {
 
       {currentTariff === tariffs.BUSINESS.name && (
         <div className="flex justify-between h-full gap-4">
-          <div className="bg-red-100 w-1/2 rounded-md relative">
+          <div className="bg-red-100 w-1/2 rounded-md relative overflow-hidden">
             <p className="font-[600] text-neutral-800 my-4 mx-6 text-lg">
               Для компаний и отделов
             </p>
-            <div className="absolute bottom-0 h-[50%] md:h-[80%] lg:h-[70%] w-full relative">
+            <div className="absolute bottom-0 left-0 right-0 h-[50%] md:h-[80%] lg:h-[70%]">
               <Image
                 src="/images/hero/hero-business-1_cropped.avif"
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 50vw, 50vw"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
           </div>

@@ -1,17 +1,12 @@
-                
 import { NextResponse } from 'next/server';
 import { withAuth } from 'next-auth/middleware';
 import { jwtVerify } from 'jose';
 
 const SECRET = new TextEncoder().encode(process.env.APP_SECRET!);
 
-                                                            
 const AUTH_PAGES = ['/login', '/register', '/not-auth'];
 
-                                               
 const PRIVATE_PREFIXES = ['/settings', '/dashboard'];
-                                      
-                                
 
 export default withAuth(
   async function middleware(req) {
@@ -28,8 +23,8 @@ export default withAuth(
       }
 
       try {
-        await jwtVerify(token, SECRET);                          
-                                                           
+        await jwtVerify(token, SECRET);
+
         const res = NextResponse.next();
         res.cookies.set('verify_ticket', '', {
           path: '/verify',
@@ -41,49 +36,29 @@ export default withAuth(
       }
     }
 
-                                                                
-                                                                                    
-                                      
-                                                                                    
-                                           
-        
-
-                                 
     return NextResponse.next();
   },
   {
-                                                                      
-    pages: { signIn: '/login' },                                               
+    pages: { signIn: '/login' },
 
-                             
     callbacks: {
       authorized: ({ token, req }) => {
         const path = req.nextUrl.pathname;
-
-                                                     
         if (AUTH_PAGES.includes(path)) return true;
-
-                                                  
         if (PRIVATE_PREFIXES.some((prefix) => path.startsWith(prefix))) {
-          return !!token && token.userExists !== false;                                                   
+          return !!token && token.userExists !== false;
         }
-
         return true;
       },
     },
   }
 );
 
-                                                              
 export const config = {
   matcher: [
-                        
     '/profile/:path*',
     '/settings/:path*',
     '/dashboard/:path*',
-                                                                   
-
-                                                                         
     '/login',
     '/register',
     '/not-auth',

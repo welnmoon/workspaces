@@ -1,6 +1,6 @@
 import Divider from '@/components/divider';
 import { Heading } from '@/components/ui/heading';
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { getWorkspaceStats } from '@/lib/services/func/get-workspace-stats';
 import { MembershipService } from '@/lib/services/membership';
 import { WorkspaceService } from '@/lib/services/workspace';
@@ -11,11 +11,20 @@ import WorkspacePopover from '@/components/entities/workspaces/workspace-popover
 import WorkspaceTabs from '@/components/entities/workspaces/workspace-tabs';
 import { WProjectsSectionProps } from '@/components/entities/workspaces/w-projects-section';
 import WorkspaceOverview from '@/components/entities/workspaces/workspace-overview';
-import { isMember } from '@/helpers/is-member';
+import { isMember } from '@/guards/is-member';
 import EmptyState from '@/components/empty-state';
 import { tariffs } from '@/const/tariffs';
 import { validateId } from '@/helpers/validate-id';
 import { UserService } from '@/lib/services/user';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Workspaces',
+  description: "Manage your team's work in one space",
+  icons: {
+    icon: '/icons/metadata/w.png',
+  },
+};
 
 const WorkspacePage = async ({
   params,

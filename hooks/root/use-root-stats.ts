@@ -7,7 +7,6 @@ export const useRootStats = () => {
     queryKey: ['root-stats'],
     queryFn: async () => {
       const response = await fetch(apiRoutes.getRootStats(), {
-        next: { revalidate: 300 },
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });

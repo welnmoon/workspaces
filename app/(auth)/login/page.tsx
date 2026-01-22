@@ -7,20 +7,59 @@ import { redirect } from 'next/navigation';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { RootHeading } from '@/components/root/root-heading';
 import { WorkspaceLogo } from '@/components/ui/workspace-logo';
+import type { Metadata } from 'next';
 import Image from 'next/image';
 
-                     
+export const metadata: Metadata = {
+  title: 'Workspaces',
+  description: "Manage your team's work in one space",
+  icons: {
+    icon: '/icons/metadata/w.png',
+  },
+};
+
 const LoginPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ returnTo?: string }>;
+  searchParams: Promise<{
+    returnTo?: string | string[];
+    reason?: string | string[];
+    from?: string | string[];
+  }>;
 }) => {
-  const { returnTo = '/workspaces' } = await searchParams;
+  const { returnTo, reason, from } = await searchParams;
+  const normalizeOrigin = (value?: string) => {
+    if (!value) return undefined;
+    try {
+      return new URL(value).origin;
+    } catch {
+      return undefined;
+    }
+  };
+  const normalizeParam = (value?: string | string[]) =>
+    Array.isArray(value) ? value[0] : value;
+  const normalizeReturnTo = (value?: string) => {
+    const trimmed = value?.trim();
+    if (!trimmed) return undefined;
+    if (!trimmed.startsWith('/') || trimmed.startsWith('//')) return undefined;
+    return trimmed;
+  };
+  const rawReturnTo = normalizeParam(returnTo);
+  const rawFrom = normalizeParam(from);
+  const spaOrigin = normalizeOrigin(process.env.VITE_URL);
+  const safeFrom = normalizeReturnTo(rawFrom);
+  const safeSpaReturnTo =
+    safeFrom && spaOrigin ? new URL(safeFrom, spaOrigin).toString() : safeFrom;
+  const safeReturnTo =
+    safeSpaReturnTo ||
+    normalizeReturnTo(rawReturnTo) ||
+    clientRoutes.workspacesPage();
+  const safeReason = normalizeParam(reason);
   const session = (await getServerSession(authOptions)) as Session | null;
   if (session?.user?.id) {
     const existingUser = await UserService.getUserById(session.user.id);
     if (existingUser) {
-      redirect(clientRoutes.workspacesPage());
+      redirect(safeReturnTo);
     }
   }
   return (
@@ -40,10 +79,8 @@ const LoginPage = async ({
             <div className="absolute w-full inset-0 bg-gradient-to-br from-indigo-900/40 via-indigo-800/30 to-slate-900/20 pointer-events-none" />
 
             <div className="absolute inset-0 z-10 flex flex-col p-8 text-white">
-              
               <WorkspaceLogo className="text-white" />
 
-              
               <div className="flex-1 flex flex-col justify-center items-center text-center">
                 <RootHeading
                   level={3}
@@ -53,11 +90,10 @@ const LoginPage = async ({
                 </RootHeading>
               </div>
 
-              
               <div className="text-slate-100 text-sm italic mt-auto">
                 <p>
                   «Нет ничего бесполезнее, чем эффективно делать то, что вообще
-                  не должно было быть сделано.» {returnTo}
+                  не должно было быть сделано.» {safeReturnTo}
                 </p>
                 <p className="mt-1">— Питер Друкер</p>
               </div>
@@ -65,7 +101,7 @@ const LoginPage = async ({
           </div>
         </div>
       </section>
-      <LoginForm returnTo={returnTo} />
+      <LoginForm reason={safeReason} from={safeFrom} returnTo={safeReturnTo} />
     </main>
   );
 };

@@ -19,15 +19,22 @@ const providerConfig: Record<ProviderId, { label: string; icon: ReactNode }> = {
   },
 };
 
-const LoginOauthButton = ({ provider }: { provider: ProviderId }) => {
+const LoginOauthButton = ({
+  provider,
+  callbackUrl,
+}: {
+  provider: ProviderId;
+  callbackUrl?: string;
+}) => {
   const config = providerConfig[provider];
+  const targetUrl = callbackUrl ?? clientRoutes.workspacesPage();
 
   return (
     <Button
       type="button"
       variant="outline"
       className="flex-1 min-w-[200px] justify-center gap-2 border-slate-200 bg-white text-slate-900 hover:bg-slate-100"
-      onClick={() => signIn(provider, { callbackUrl: clientRoutes.workspacesPage() })}
+      onClick={() => signIn(provider, { callbackUrl: targetUrl })}
     >
       {config?.icon}
       Войти через {config?.label ?? provider}
