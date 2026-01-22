@@ -1,7 +1,6 @@
 'use client';
 
-                                              
-
+import { useState } from 'react';
 import Marquee from 'react-fast-marquee';
 
 export const logos = [
@@ -54,33 +53,17 @@ const CompaniesMarquee = () => {
   const firstRow = logos.slice(0, logos.length / 2);
   const secondRow = logos.slice(logos.length / 2);
 
-  const firstRowLoop = [...firstRow, ...firstRow, ...firstRow];
-  const secondRowLoop = [...secondRow, ...secondRow, ...secondRow];
   return (
     <div className="flex flex-col gap-4">
       <Marquee autoFill speed={20}>
-        {firstRowLoop.map((logo, idx) => (
-          <img
-            key={`row1-${idx}-${logo.name}`}
-            src={logo.url}
-            alt={logo.name}
-            width={80}
-            height={32}
-            className="h-6 w-auto opacity-70 mr-12 hover:opacity-100 transition"
-          />
+        {firstRow.map((logo) => (
+          <LogoImage key={logo.id} src={logo.url} alt={logo.name} />
         ))}
       </Marquee>
 
-      <Marquee autoFill speed={21} direction="right">
-        {secondRowLoop.map((logo, idx) => (
-          <img
-            key={`row2-${idx}-${logo.name}`}
-            src={logo.url}
-            alt={logo.name}
-            width={80}
-            height={32}
-            className="h-6 w-auto opacity-70 mr-12 hover:opacity-100 transition"
-          />
+      <Marquee autoFill speed={20}>
+        {secondRow.map((logo) => (
+          <LogoImage key={logo.id} src={logo.url} alt={logo.name} />
         ))}
       </Marquee>
     </div>
@@ -88,3 +71,24 @@ const CompaniesMarquee = () => {
 };
 
 export default CompaniesMarquee;
+
+type Props = {
+  src: string;
+  alt: string;
+};
+
+const LogoImage = ({ src, alt }: Props) => {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  return (
+    <img
+      src={imgSrc}
+      alt={alt}
+      width={80}
+      height={32}
+      loading="lazy"
+      onError={() => setImgSrc('/logos/fallback.svg')}
+      className="h-6 w-auto opacity-70 mr-12 hover:opacity-100 transition"
+    />
+  );
+};

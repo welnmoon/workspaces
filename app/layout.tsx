@@ -3,6 +3,7 @@ import { Manrope } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import RootProviders from '@/components/layout/Providers/root-providers';
+import AdminSpaFab from '@/components/layout/admin-spa-fab';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { Session } from 'next-auth';
@@ -60,7 +61,10 @@ export default async function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${satoshi.variable} ${manrope.variable}`}>
-        <RootProviders session={session}>{children}</RootProviders>{' '}
+        <RootProviders session={session}>
+          {children}
+          <AdminSpaFab />
+        </RootProviders>
         <script
           src="https://widget.cloudpayments.ru/bundles/cloudpayments"
           async

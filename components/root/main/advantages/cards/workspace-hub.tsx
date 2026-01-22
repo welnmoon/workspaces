@@ -4,22 +4,11 @@ import { cn } from '@/lib/utils';
 import { PanelsTopLeft } from 'lucide-react';
 import Image from 'next/image';
 
-const WorkspaceHub = ({
-  className,
-             
-            
-                
-}: {
-  className?: string;
-                     
-                    
-                                  
-}) => {
+const WorkspaceHub = ({ className }: { className?: string }) => {
   return (
     <article
       className={cn(
-                                             
-        `bg-white relative pt-4 md:block lg:flex lg:flex-end md:min-h-[420px]`,
+        `bg-white relative pt-4 md:block lg:flex lg:flex-end md:min-h-[200px]`,
         className
       )}
     >
@@ -29,7 +18,9 @@ const WorkspaceHub = ({
           text="Единое пространство"
           className="bg-blue-50 text-blue-600 border-blue-300/50"
         />
-        <Heading className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Единое пространство для всей команды</Heading>
+        <Heading className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">
+          Единое пространство для всей команды
+        </Heading>
         <p>
           Создавайте рабочие пространства для проектов, отделов или клиентов.
           Вся коммуникация, задачи и участники — в одном месте, без потери
@@ -57,4 +48,3 @@ const WorkspaceHub = ({
 };
 
 export default WorkspaceHub;
-
