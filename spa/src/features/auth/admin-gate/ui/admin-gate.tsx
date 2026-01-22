@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { Spinner } from '../../../../shared/ui/spinner';
 import { useGetSessionQuery } from '../../../../entities/session';
 import { parseRtkError } from '../../../../shared/lib/error/parse-rtk-error';
