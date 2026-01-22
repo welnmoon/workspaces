@@ -1,10 +1,14 @@
+import { requirePlatformRole } from '@/guards/require-platform-role';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import { ok, serverError } from '@/lib/http/http';
 import { prisma } from '@/lib/prisma';
+import { PlatformRole } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const projects = await prisma.project.findMany({
       select: {
         id: true,
@@ -43,7 +47,10 @@ export async function GET(req: Request) {
     return withCors(ok(projects), req.headers.get('origin'));
   } catch (error) {
     console.error(error);
-    return withCors(serverError('Failed to get projects'), req.headers.get('origin'));
+    return withCors(
+      serverError('Failed to get projects'),
+      req.headers.get('origin')
+    );
   }
 }
 

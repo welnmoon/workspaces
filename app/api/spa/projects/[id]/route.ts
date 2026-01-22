@@ -1,3 +1,4 @@
+import { requirePlatformRole } from '@/guards/require-platform-role';
 import { parseProjectId } from '@/helpers/parse-id';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
 import {
@@ -10,6 +11,7 @@ import {
 } from '@/lib/http/http';
 import { ProjectService } from '@/lib/services/project';
 import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
+import { PlatformRole } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 type RouteParams = {
@@ -18,6 +20,8 @@ type RouteParams = {
 
 export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const projectId = parseProjectId((await params).id);
     if (projectId === null) {
       return withCors(
@@ -46,6 +50,8 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
 
 export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const projectId = parseProjectId((await params).id);
     if (projectId === null) {
       return withCors(
@@ -98,6 +104,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
+
     const projectId = parseProjectId((await params).id);
     if (projectId === null) {
       return withCors(

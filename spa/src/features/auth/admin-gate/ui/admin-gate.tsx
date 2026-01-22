@@ -7,7 +7,18 @@ import { mainPaths } from '../../../../shared/api/paths';
 export function AdminGate() {
   const { data: session, isLoading, isError, error } = useGetSessionQuery();
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-muted/20 px-4">
+        <div className="flex flex-col items-center gap-2 rounded-xl border bg-card px-6 py-5 text-center shadow-sm">
+          <Spinner className="size-5 text-primary" />
+          <p className="text-sm font-medium">Проверяем вас...</p>
+          <p className="text-xs text-muted-foreground">
+            Готовим доступ в админку
+          </p>
+        </div>
+      </div>
+    );
 
   if (!session) {
     window.location.href = mainPaths.auth.login({

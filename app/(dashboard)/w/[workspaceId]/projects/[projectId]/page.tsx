@@ -1,12 +1,21 @@
 import NotFound from '@/components/not-found';
 import ProjectComponent from '@/components/entities/projects/project';
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { prisma } from '@/lib/prisma';
 import { ProjectService } from '@/lib/services/project';
 import { WorkspaceService } from '@/lib/services/workspace';
-import { isMember } from '@/helpers/is-member';
+import { isMember } from '@/guards/is-member';
 import EmptyState from '@/components/empty-state';
 import { SprintService } from '@/lib/services/sprint';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Workspaces',
+  description: "Manage your team's work in one space",
+  icons: {
+    icon: '/icons/metadata/w.png',
+  },
+};
 
 const ProjectPage = async ({
   params,

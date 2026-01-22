@@ -1,6 +1,6 @@
-import type { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-const SPA_ORIGIN = 'https://workspaces-nyvc.vercel.app';
+const SPA_ORIGIN = process.env.VITE_URL || 'https://workspaces-nyvc.vercel.app';
 const SPA_HOST = 'workspaces-nyvc.vercel.app';
 const PREVIEW_HOST_PREFIX = 'workspaces-nyvc-';
 
@@ -43,4 +43,11 @@ export function corsHeaders(origin?: string | null) {
     'Access-Control-Allow-Credentials': 'true',
     Vary: 'Origin',
   };
+}
+
+export function corsPreflight() {
+  const res = new NextResponse(null, { status: 204 });
+  res.headers.set('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  return withCors(res);
 }

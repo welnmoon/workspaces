@@ -1,11 +1,10 @@
-                              
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generate } from '@pdfme/generator';
 import { BLANK_A4_PDF } from '@pdfme/common';
 import type { Template, Schema } from '@pdfme/common';
 import { table, text } from '@pdfme/schemas';
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 
 export async function POST(request: Request) {
   const session = await requireUser();
@@ -61,7 +60,7 @@ export async function POST(request: Request) {
       assigneeName,
       task.dueDate ? new Date(task.dueDate).toLocaleDateString('ru-RU') : '—',
       new Date(task.updatedAt).toLocaleDateString('ru-RU'),
-      '—',                                                   
+      '—',
     ];
   });
 

@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import WProjectsSection, { WProjectsSectionProps } from './w-projects-section';
 import type { MembershipSelectUserDTO } from '@/types/prisma/DTO/memberships';
 import WMembersSection from './w-members-section';
-import type { SessionUser } from '@/helpers/require-user';
+import type { SessionUser } from '@/guards/require-user';
 import type { RoleWithoutOwnerDTO } from '@/types/prisma/DTO/role';
 import { InvitationDTO } from '@/types/prisma/DTO/invitations';
 import InvitesSection from './invites-section';

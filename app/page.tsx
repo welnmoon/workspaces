@@ -7,7 +7,16 @@ import FaqRoot from '@/components/root/main/faq/faq-root';
 import NewHeroSection from '@/components/root/main/hero/new-hero';
 import SmoothScrollProvider from '@/components/layout/Providers/SmoothScrollProvider';
 import ShowCase from '@/components/root/main/show-case/show-case';
+import type { Metadata } from 'next';
 import Image from 'next/image';
+
+export const metadata: Metadata = {
+  title: 'Workspaces',
+  description: "Manage your team's work in one space",
+  icons: {
+    icon: '/icons/metadata/w.png',
+  },
+};
 
 export type RootStats = {
   workspaces: number;
@@ -25,14 +34,13 @@ async function Home() {
   //   prisma.task.count(),
   //   prisma.user.count(),
   // ]);
-  // const stats: RootStats = { workspaces, projects, tasks, users }; // вот здесь
+  // const stats: RootStats = { workspaces, projects, tasks, users };
   return (
     <main>
       <SmoothScrollProvider />
       <RootContainer size="md">
         <RootNavigationMenu />
-        <NewHeroSection />{' '}
-        {/*Здесь внутри еще есть компонент Stats и там используется stats*/}
+        <NewHeroSection />
       </RootContainer>
 
       <section className="bg-gray-100 pt-8 relative mb-8">

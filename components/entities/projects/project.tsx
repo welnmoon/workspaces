@@ -12,8 +12,10 @@ import Divider from '../../divider';
 import Description from '../../ui/desc';
 import { Heading } from '../../ui/heading';
 
-import ProjectTabs from './tabs/project-tabs';
-
+// import ProjectTabs from './tabs/project-tabs';
+const ProjectTabs = dynamic(() => import('./tabs/project-tabs'), {
+  loading: () => <Skeleton className="w-20 h-10" />,
+});
 import { SprintWithTasksWithAssigneesDTO } from '@/types/prisma/DTO/sprint';
 import { useToggleProjectEnd } from '@/hooks/project/use-toggle-project-end';
 import toast from 'react-hot-toast';
@@ -39,6 +41,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export type StatusFilter = TaskStatusDTO | 'ALL';
 
@@ -67,7 +71,7 @@ const ProjectComponent = ({
     useProject(project);
   const { mutate: toggleProjectEnd, isPending: isToggleProjectPending } =
     useToggleProjectEnd(workspaceId, optimisticProject.id);
-             
+
   useEffect(() => {
     const img = new Image();
     img.src = '/images/workspaces/project-bg.jpg';

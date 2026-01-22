@@ -7,7 +7,7 @@ import {
 import DashboardSidebarStatic from '@/components/sidebar/static/dashboard-sidebar-static';
 import { WorkspaceListDTO } from '@/types/prisma/DTO/workspaces';
 import { WorkspaceService } from '@/lib/services/workspace';
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import Link from 'next/link';
 import { getInitials } from '@/helpers/profile.ts/getInitials';
@@ -38,12 +38,10 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider defaultOpen={false} className="flex min-h-screen">
-      
       <div className="hidden lg:block">
         <DashboardSidebarStatic workspaces={workspaces} />
       </div>
 
-      
       <div className="sm:visible lg:hidden">
         <DashboardSidebarDynamic workspaces={workspaces} />
       </div>
@@ -51,11 +49,8 @@ export default async function DashboardLayout({
       <div className="flex-1 flex flex-col min-w-0">
         <div className="sticky top-0 z-30 px-4 py-3 border-b bg-background/80 backdrop-blur overflow-y-hidden">
           <div className="flex items-center justify-between">
-            
             <div className="flex items-center gap-2">
-              <NotificationsPopover
-                userId={user.id}
-              />
+              <NotificationsPopover userId={user.id} />
               <AvatarRoot className="flex gap-2 items-center justify-center">
                 <Link
                   href={clientRoutes.profilePage()}

@@ -1,5 +1,5 @@
 import { TASK_STATUSES } from '@/const/tasks-status';
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { AppError } from '@/lib/errors';
 import logger from '@/lib/logger';
 import { badRequest, noContent, serverError } from '@/lib/http/http';

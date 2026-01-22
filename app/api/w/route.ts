@@ -1,4 +1,4 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { conflict, created, serverError, unprocessable } from '@/lib/http/http';
 import { prisma } from '@/lib/prisma';
 import { clientRoutes } from '@/lib/routes/client-routes';
@@ -7,8 +7,6 @@ import { WorkspaceService } from '@/lib/services/workspace';
 import { MembershipStatus, Prisma, Role } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
-              
-                         
 export async function POST(req: NextRequest) {
   try {
     const { id: userId } = await requireUser();
@@ -17,7 +15,6 @@ export async function POST(req: NextRequest) {
     if (!res.success)
       return unprocessable(res.error.message, res.error.flatten());
 
-                                                                       
     const workspace = await prisma.$transaction(async (tx) => {
       const client = tx as typeof prisma;
 
@@ -48,15 +45,12 @@ export async function POST(req: NextRequest) {
       e instanceof Prisma.PrismaClientKnownRequestError &&
       e.code === 'P2002'
     ) {
-                                                                
       return conflict(e.message);
     }
 
     return serverError('Failed to create workspace');
   }
 }
-
-                        
 
 export async function GET() {
   try {

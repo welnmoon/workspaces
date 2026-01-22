@@ -1,4 +1,4 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { forbidden, ok, serverError } from '@/lib/http/http';
 import { UserService } from '@/lib/services/user';
 import { NextRequest } from 'next/server';
@@ -22,4 +22,3 @@ export async function GET(
     return serverError('Failed to get payments');
   }
 }
-

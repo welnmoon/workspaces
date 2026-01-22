@@ -7,11 +7,11 @@ export const mainPaths = {
     login: (params?: LoginParams) => {
       const newUrl = withQuery(`${env.API_ORIGIN}/login`, {
         reason: params?.reason,
+        from: params?.from,
       });
 
       return newUrl;
     },
-    register: () => '/register',
   },
   // TODO: продолжи добавлять пути и используй в AdminGate (<Navigate to="/login" replace />)
 };

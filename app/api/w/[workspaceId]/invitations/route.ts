@@ -1,11 +1,10 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { badRequest, conflict, created } from '@/lib/http/http';
 import { InvitationService } from '@/lib/services/invitation';
 import { invitationCreateSchema } from '@/schemas/notification/inv-create-schema';
 
 import { NextRequest } from 'next/server';
 
-                                           
 export async function POST(req: NextRequest) {
   const { id } = await requireUser();
   const body = await req.json().catch(() => null);

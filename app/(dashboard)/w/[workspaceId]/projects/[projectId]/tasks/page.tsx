@@ -1,11 +1,20 @@
 import TasksPageComponent from '@/components/entities/tasks/tasks-page';
 import ErrorComponent from '@/components/error';
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { AppError } from '@/lib/errors';
 import { clientRoutes } from '@/lib/routes/client-routes';
 import { ProjectService } from '@/lib/services/project';
 import { TaskService } from '@/lib/services/tasks';
 import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Workspaces',
+  description: "Manage your team's work in one space",
+  icons: {
+    icon: '/icons/metadata/w.png',
+  },
+};
 
 const TasksPage = async ({
   params,

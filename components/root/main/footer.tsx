@@ -63,6 +63,12 @@ const Footer = () => {
             ))}
           </div>
 
+          <div className="w-full">
+            <p className="text-center text-[clamp(2.5rem,12vw,7rem)] font-semibold leading-none text-neutral-200">
+              Workspaces
+            </p>
+          </div>
+
           <div className="flex flex-col gap-4 border-t border-neutral-200 pt-6 md:flex-row md:items-center md:justify-between">
             <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-500">
               <span className="font-semibold text-neutral-700">

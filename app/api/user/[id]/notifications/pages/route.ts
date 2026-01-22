@@ -1,4 +1,4 @@
-import { requireUser } from '@/helpers/require-user';
+import { requireUser } from '@/guards/require-user';
 import { handleApiError } from '@/lib/http/handle-api-error';
 import { badRequest, ok } from '@/lib/http/http';
 import { NotificationService } from '@/lib/services/notifications';

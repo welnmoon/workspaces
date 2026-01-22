@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { SessionUser } from '@/helpers/require-user';
+import type { SessionUser } from '@/guards/require-user';
 import EditMemberPopover from './edit-member-popover';
 import { RoleWithoutOwnerDTO, RolesEnum } from '@/types/prisma/DTO/role';
 
