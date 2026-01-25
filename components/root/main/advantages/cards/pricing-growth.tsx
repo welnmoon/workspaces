@@ -33,11 +33,11 @@ const PricingGrowth = ({ className }: { className?: string }) => {
       "
       >
         <Image
-          className="w-full pointer-events-none lg:h-full md:w-full"
+          className="w-full h-auto pointer-events-none"
           src="/images/advantages/PricingGrowth.svg"
           alt="PricingGrowth"
-          width={100}
-          height={150}
+          width={580}
+          height={299}
         />
       </figure>
     </article>

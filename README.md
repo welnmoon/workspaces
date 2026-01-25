@@ -229,6 +229,13 @@ PostgreSQL
 - CloudPayments (billing)
 - Charts: recharts, @mui/x-charts
 
+### Admin SPA (Vite)
+
+- Vite + React Router
+- Redux Toolkit + RTK Query
+- React Hook Form + Zod
+- TailwindCSS + Radix UI
+
 ---
 
 ## Запуск локально
@@ -249,12 +256,27 @@ npm run dev
 
 ## SPA (Vite)
 
-SPA находится в `spa/` и используется как административная панель.
-Сейчас в `spa/src/app/store/api.ts` прописан захардкоженный API URL:
+SPA находится в `spa/` и используется как административная панель Worknest
+(отдельное приложение на Vite + React Router + Redux Toolkit/RTK Query).
 
-- `https://workspaces-phi.vercel.app/api/spa`
+### Что есть сейчас
 
-Если нужно переключиться на другой домен или локальный API — измените этот файл.
+- Пользователи: список, редактирование профиля, удаление.
+- Воркспейсы: список, редактирование, удаление.
+- Проекты: список, удаление (страницы редактирования пока нет).
+- Задачи и спринты: разделы в интерфейсе помечены как "в разработке".
+
+### Доступ
+
+- Перед входом проверяется сессия через `/api/spa/me`.
+- Доступ разрешён только `platformRole = SYSADMIN`.
+- Иначе редирект на `/login` основного приложения с `reason` и `from`.
+- Для локальной работы нужна активная сессия NextAuth (cookie) из основного приложения.
+
+### Настройка API
+
+- Используется `VITE_API_ORIGIN` из `spa/.env`.
+- RTK Query baseUrl: `${VITE_API_ORIGIN}/api/spa`, запросы идут с `credentials: "include"`.
 
 ### Локальный запуск SPA
 
@@ -265,13 +287,21 @@ npm --prefix spa run dev
 
 ## Admin API (/api/spa)
 
-Маршруты `app/api/spa/*` предназначены для административного SPA.
+Маршруты `app/api/spa/*` обслуживают админ-панель и защищены проверкой роли.
 
-Текущий режим (временно):
-- `requireUser` и `requireWorkspaceMember` отключены.
-- эндпоинты возвращают все данные (без фильтра по пользователю).
+### Доступ и безопасность
 
-Перед публичным доступом верните проверки авторизации.
+- На всех эндпоинтах используется `requirePlatformRole([SYSADMIN])`.
+- Поддержан CORS; SPA делает запросы с `credentials: "include"`.
+
+### Основные эндпоинты
+
+- `GET /api/spa/me`
+- `GET /api/spa/users`, `GET/PUT/DELETE /api/spa/users/:id`
+- `GET /api/spa/workspaces`, `GET/PUT/DELETE /api/spa/workspaces/:id`
+- `GET /api/spa/projects`, `GET/PUT/DELETE /api/spa/projects/:id`
+- `GET /api/spa/tasks`, `GET/PUT/DELETE /api/spa/tasks/:id`
+- `GET /api/spa/sprints`, `GET/PUT/DELETE /api/spa/sprints/:id`
 
 ---
 
@@ -283,8 +313,8 @@ npm --prefix spa run dev
 - **SPA app**: root directory `spa`, билд `npm run build`, output `dist`,
   работает на `https://workspaces-nyvc.vercel.app`.
 
-SPA обращается к API Next через захардкоженный `baseUrl`
-в `spa/src/app/store/api.ts`.
+SPA обращается к API Next через `VITE_API_ORIGIN` (см. `spa/.env`),
+итоговый baseUrl: `${VITE_API_ORIGIN}/api/spa`.
 
 ---
 
@@ -304,6 +334,8 @@ RESEND_API_KEY=...
 NEXT_PUBLIC_BASE_URL=http://localhost:3000  
 APP_SECRET=replace_me
 
+VITE_API_ORIGIN=http://localhost:3000 # SPA (spa/.env)
+
 ---
 
 ## Структура проекта
@@ -316,6 +348,7 @@ guards/ # Access control
 hooks/ # Client hooks  
 prisma/ # Schema & migrations  
 public/ # Static assets
+spa/ # Admin SPA (Vite)
 
 ---
 
