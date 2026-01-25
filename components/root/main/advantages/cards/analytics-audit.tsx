@@ -24,11 +24,11 @@ const AnalyticsAudit = ({ className }: { className?: string }) => {
       </div>
       <figure className="hidden sm:block">
         <Image
-          className="w-full pointer-events-none"
+          className="w-full h-auto pointer-events-none"
           src="/images/advantages/WorkspaceHub.svg"
           alt="AnalyticsAudit"
-          width={100}
-          height={150}
+          width={580}
+          height={299}
         />
       </figure>
     </article>

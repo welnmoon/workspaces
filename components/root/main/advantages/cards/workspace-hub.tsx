@@ -8,7 +8,7 @@ const WorkspaceHub = ({ className }: { className?: string }) => {
   return (
     <article
       className={cn(
-        `bg-white relative pt-4 md:block lg:flex lg:flex-end md:min-h-[200px]`,
+        `bg-white relative pt-4 md:block lg:flex lg:flex-end md:min-h-[420px]`,
         className
       )}
     >
@@ -36,11 +36,11 @@ const WorkspaceHub = ({ className }: { className?: string }) => {
     "
       >
         <Image
-          className="w-full pointer-events-none lg:h-full md:w-full"
+          className="w-full h-auto pointer-events-none"
           src="/images/advantages/WorkspaceHub.svg"
           alt="WorkspaceHub"
-          width={100}
-          height={150}
+          width={580}
+          height={299}
         />
       </figure>
     </article>

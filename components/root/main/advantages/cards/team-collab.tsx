@@ -25,11 +25,11 @@ const TeamCollaboration = ({ className }: { className?: string }) => {
       </div>
       <figure className="hidden sm:block">
         <Image
-          className="w-full pointer-events-none"
+          className="w-full h-auto pointer-events-none"
           src="/images/advantages/TeamCollaboration.svg"
           alt="TeamCollaboration"
-          width={100}
-          height={150}
+          width={459}
+          height={170}
         />
       </figure>
     </article>

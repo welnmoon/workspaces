@@ -35,11 +35,11 @@ const ProjectControl = ({
       </div>
       <figure className="hidden sm:block ">
         <Image
-          className="w-full pointer-events-none"
+          className="w-full h-auto pointer-events-none"
           src="/images/advantages/ProjectControl.svg"
           alt="AnalyticsAudit"
-          width={100}
-          height={150}
+          width={627}
+          height={212}
         />
       </figure>
     </article>
@@ -47,4 +47,3 @@ const ProjectControl = ({
 };
 
 export default ProjectControl;
-
