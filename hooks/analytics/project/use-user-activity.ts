@@ -11,6 +11,7 @@ export const useUserActivity = (
 ) => {
   return useQuery({
     queryKey: ['tasks', wId, pId, from, to],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const params = new URLSearchParams();
       if (from) params.set('from', from);

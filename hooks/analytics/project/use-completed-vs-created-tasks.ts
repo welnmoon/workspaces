@@ -11,6 +11,7 @@ export const useCreatedVsCompletedTasks = (
   return useQuery({
     queryKey: ['createdVsCompletedTasks', workspaceId, projectId, from, to],
     enabled: !!workspaceId && !!projectId,
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const params = new URLSearchParams();
       if (from) params.set('from', from);

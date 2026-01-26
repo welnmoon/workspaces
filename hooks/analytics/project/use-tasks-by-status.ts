@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 export const useTasksByStatus = (workspaceId: number, projectId: number) => {
   return useQuery({
     queryKey: ['tasks-by-status', workspaceId, projectId],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const res = await fetch(apiRoutes.getProjectTasksStats(projectId), {
         method: 'GET',

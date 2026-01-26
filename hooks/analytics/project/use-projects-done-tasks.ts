@@ -30,5 +30,6 @@ export const useProjectsDoneTasks = (
       return data.data as ProjectCompletedTasksDTO[];
     },
     enabled: Boolean(workspaceId && projectId),
+    refetchOnWindowFocus: false,
   });
 };
