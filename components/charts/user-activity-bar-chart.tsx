@@ -49,24 +49,32 @@ const UserActivityBarChart = ({
       data: data?.points.map((p) => p.completed) ?? [],
     },
   ];
+  const hasData = (data?.points?.length ?? 0) > 0;
   return (
     <ChartsCard
       dateRange={dateRange}
       onSelectHandler={setDateRange}
       title="Активность участников"
-      className="relative"
+      className="relative h-[520px]"
       info="Сравнивает, сколько задач назначено и завершено каждым участником"
     >
       <div className="overflow-x-auto">
-        <BarChart
-          xAxis={[{ data: xAxis, scaleType: 'band' }]}
-          series={series}
-          height={300}
-          className={cn(
-            '',
-            (isFetching || isLoading) && 'opacity-50 no-pointer-events'
-          )}
-        />
+        {hasData && (
+          <BarChart
+            xAxis={[{ data: xAxis, scaleType: 'band' }]}
+            series={series}
+            height={300}
+            className={cn(
+              '',
+              (isFetching || isLoading) && 'opacity-50 no-pointer-events'
+            )}
+          />
+        )}
+        {!hasData && !isFetching && !isLoading && (
+          <div className="p-4 text-center text-gray-500">
+            Нет данных для отображения
+          </div>
+        )}
       </div>
       {(isFetching || isLoading) && (
         <Spinner className="absolute left-1/2 top-1/2 z-10" />

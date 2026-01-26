@@ -64,54 +64,61 @@ export default function CompletedVsCreatedTasks({
       created: p.created,
       completed: p.completed,
     })) || [];
+  const hasData = tasksList.length > 0;
 
   return (
     <ChartsCard
       title="Здоровье проекта"
       desc=""
-      className="relative"
+      className="relative h-[520px]"
       dateRange={dateRange}
       onSelectHandler={onDateSelectHandler}
       info="Сравнение количества созданных и завершённых задач по дням"
     >
       {isError && 'Произошла ошибка'}
       <div className="">
-        <LineChart
-          desc="ddwdwdwdwddddddddddddddddddd"
-          style={{
-            maxWidth: '700px',
-            maxHeight: '70vh',
-            aspectRatio: 1.618,
-          }}
-          className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
-          responsive
-          data={tasksList}
-          margin={{
-            top: 20,
-            right: 0,
-            left: 0,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            name="Созданные"
-            dataKey="created"
-            stroke="#f43f5e"
-          />
-          <Line
-            type="monotone"
-            name="Выполненные"
-            dataKey="completed"
-            stroke="#1e3a8a"
-          />
-          
-        </LineChart>
+        {hasData && (
+          <LineChart
+            desc="ddwdwdwdwddddddddddddddddddd"
+            style={{
+              maxWidth: '700px',
+              maxHeight: '70vh',
+              aspectRatio: 1.618,
+            }}
+            className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
+            responsive
+            data={tasksList}
+            margin={{
+              top: 20,
+              right: 0,
+              left: 0,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              type="monotone"
+              name="Созданные"
+              dataKey="created"
+              stroke="#f43f5e"
+            />
+            <Line
+              type="monotone"
+              name="Выполненные"
+              dataKey="completed"
+              stroke="#1e3a8a"
+            />
+          </LineChart>
+        )}
+        {!hasData && !isFetching && (
+          <div className="p-4 text-center text-gray-500">
+            Нет данных для отображения
+          </div>
+        )}
       </div>
 
       {isFetching && <Spinner className="absolute top-1/2 left-1/2" />}

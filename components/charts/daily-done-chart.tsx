@@ -54,48 +54,56 @@ export default function DailyDoneChart({
   };
 
   const tasksList = tasks || [];
+  const hasData = tasksList.length > 0;
 
   return (
     <ChartsCard
       title="Завершённые задачи по дням"
       desc=""
-      className="relative"
+      className="relative h-[520px]"
       dateRange={dateRange}
       onSelectHandler={onDateSelectHandler}
       info="Количество задач, закрытых каждый день в выбранном диапазоне"
     >
       {isError && 'Произошла ошибка'}
       <div className="overflow-x-auto">
-        <LineChart
-          desc="ddwdwdwdwddddddddddddddddddd"
-          style={{
-            maxWidth: '700px',
-            maxHeight: '70vh',
-            aspectRatio: 1.618,
-          }}
-          className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
-          responsive
-          data={tasksList}
-          margin={{
-            top: 20,
-            right: 0,
-            left: 0,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          
-          <Line
-            type="monotone"
-            name="Задачи"
-            dataKey="count"
-            stroke="#b7b981"
-          />
-        </LineChart>
+        {hasData && (
+          <LineChart
+            desc="ddwdwdwdwddddddddddddddddddd"
+            style={{
+              maxWidth: '700px',
+              maxHeight: '70vh',
+              aspectRatio: 1.618,
+            }}
+            className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
+            responsive
+            data={tasksList}
+            margin={{
+              top: 20,
+              right: 0,
+              left: 0,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+
+            <Line
+              type="monotone"
+              name="Задачи"
+              dataKey="count"
+              stroke="#b7b981"
+            />
+          </LineChart>
+        )}
+        {!hasData && !isFetching && (
+          <div className="p-4 text-center text-gray-500">
+            Нет данных для отображения
+          </div>
+        )}
       </div>
       {isFetching && <Spinner className="absolute top-1/2 left-1/2" />}
       {isError && (

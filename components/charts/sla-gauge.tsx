@@ -13,7 +13,12 @@ const SLAGauge = ({
   projectId: number;
 }) => {
   const { data, isLoading, isFetching } = useSLATasks(workspaceId, projectId);
-  const slaValue = data?.SLA ? Number(data.SLA) : 0;
+  let slaValue = data?.SLA ? Number(data.SLA) : 0;
+  console.log('SLA raw:', data?.SLA, 'Number:', Number(data?.SLA));
+  if (isNaN(slaValue)) {
+    slaValue = 0;
+  }
+  const hasData = (data?.totalTasksCount ?? 0) > 0;
   const color =
     slaValue < 60 ? '#ef4444' : slaValue < 80 ? '#fbbf24' : '#22c55e';
   const settings = {
@@ -27,28 +32,37 @@ const SLAGauge = ({
       title="SLA"
       noCalendar
       info="Показывает долю задач с дедлайном, закрытых в срок"
+      className="relative h-[520px]"
     >
       <div
         className={cn('relative', (isFetching || isLoading) && 'opacity-30')}
       >
-        <Gauge
-          {...settings}
-          cornerRadius="50%"
-          sx={{
-            [`& .${gaugeClasses.valueText}`]: {
-              fontSize: 40,
-            },
-            [`& .${gaugeClasses.valueArc}`]: {
-              fill: color,
-            },
-            [`& .${gaugeClasses.referenceArc}`]: {
-              fill: '#f4f4f5',
-            },
-          }}
-        />
-        {isLoading ||
-          (isFetching && <Spinner className="absolute top-1/2 left-1/2" />)}
+        {hasData && (
+          <Gauge
+            {...settings}
+            cornerRadius="50%"
+            sx={{
+              [`& .${gaugeClasses.valueText}`]: {
+                fontSize: 40,
+              },
+              [`& .${gaugeClasses.valueArc}`]: {
+                fill: color,
+              },
+              [`& .${gaugeClasses.referenceArc}`]: {
+                fill: '#f4f4f5',
+              },
+            }}
+          />
+        )}
+        {!hasData && !isLoading && !isFetching && (
+          <div className="p-4 text-center text-gray-500">
+            Нет данных для отображения
+          </div>
+        )}
       </div>
+      {(isLoading || isFetching) && (
+        <Spinner className="absolute top-1/2 left-1/2 z-10" />
+      )}
       <div className="flex gap-2 flex-wrap">
         <Badge className="text-[16px]" variant={'outline'}>
           SLA = Завершено в срок <span className="text-red-500 mx-2">/</span>{' '}

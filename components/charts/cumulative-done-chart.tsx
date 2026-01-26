@@ -56,39 +56,7 @@ export default function CumulativeDoneChart({
     isError,
     isFetching,
   } = useProjectsDoneTasks(workspaceId, projectId, from, to);
-                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                         
-                                        
-                                         
-                                        
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-                                         
-       
+
   const cumulativeTasks = useMemo(() => {
     const list = tasks ?? [];
     let prev = 0;
@@ -110,43 +78,49 @@ export default function CumulativeDoneChart({
     <ChartsCard
       title="Кумулятивный прогресс задач"
       desc=""
-      className="relative "
+      className="relative h-[520px]"
       dateRange={dateRange}
       onSelectHandler={onDateSelectHandler}
       info="Накопительный итог завершённых задач за выбранный период"
     >
       {isError && 'Произошла ошибка'}
       <div className="overflow-x-auto">
-        <LineChart
-          desc="ddwdwdwdwddddddddddddddddddd"
-          style={{
-            maxWidth: '700px',
-            maxHeight: '70vh',
-            aspectRatio: 1.618,
-          }}
-          className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
-          responsive
-          data={cumulativeTasks}
-          margin={{
-            top: 20,
-            right: 0,
-            left: 0,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            name="Задачи"
-            dataKey="total"
-            stroke="#10b981"
-          />
-          
-        </LineChart>
+        {cumulativeTasks.length > 0 && (
+          <LineChart
+            desc="ddwdwdwdwddddddddddddddddddd"
+            style={{
+              maxWidth: '700px',
+              maxHeight: '70vh',
+              aspectRatio: 1.618,
+            }}
+            className={cn(`min-w-100 w-full`, isFetching && 'opacity-35')}
+            responsive
+            data={cumulativeTasks}
+            margin={{
+              top: 20,
+              right: 0,
+              left: 0,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              type="monotone"
+              name="Задачи"
+              dataKey="total"
+              stroke="#10b981"
+            />
+          </LineChart>
+        )}
+        {cumulativeTasks.length === 0 && !isFetching && (
+          <div className="p-4 text-center text-gray-500">
+            Нет данных для отображения
+          </div>
+        )}
       </div>
 
       {isFetching && <Spinner className="absolute top-1/2 left-1/2" />}

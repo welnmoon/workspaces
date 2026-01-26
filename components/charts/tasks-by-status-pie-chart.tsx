@@ -17,11 +17,13 @@ export default function TasksByStatusPieChart() {
     workspaceId!,
     projectId!
   );
+  const totalTasks = data?.tasksCount ?? 0;
+  const hasData = totalTasks > 0;
 
   const getPercent = (stat: number) => {
-    const total = data?.tasksCount ?? 0;
+    if (totalTasks <= 0) return 0;
 
-    return Math.round((stat / total) * 100);
+    return Math.round((stat / totalTasks) * 100);
   };
 
   const tasksStats = [
@@ -56,55 +58,65 @@ export default function TasksByStatusPieChart() {
     <>
       <ChartsCard
         noCalendar
-        className="pb-2"
+        className="relative h-[520px] pb-2"
         title="Задачи по статусам"
         info="Распределение задач по статусам в текущем проекте"
       >
         <Badge variant={'warning'} className="mb-4">
-          Пока что только по проекту, скоро добавлю по спринтам
+          Данные доступны только по проекту. Аналитика по спринтам будет добавлена позже
         </Badge>
         <div className="flex items-center flex-col xl:flex-row gap-4">
           <div className="relative overflow-x-auto">
-            <PieChart
-              series={[
-                {
-                  data: tasksStats,
-                  highlightScope: { fade: 'global', highlight: 'item' },
-                  faded: {
-                    innerRadius: 30,
-                    additionalRadius: -30,
-                    color: 'gray',
+            {hasData && (
+              <PieChart
+                series={[
+                  {
+                    data: tasksStats,
+                    highlightScope: { fade: 'global', highlight: 'item' },
+                    faded: {
+                      innerRadius: 30,
+                      additionalRadius: -30,
+                      color: 'gray',
+                    },
+                    valueFormatter: (item: { value: number }) =>
+                      `${item.value}%`,
                   },
-                  valueFormatter: (item: { value: number }) => `${item.value}%`,
-                },
-              ]}
-              className={cn(
-                '',
-                (isLoading || isFetching) && 'opacity-50 pointer-events-none'
-              )}
-              height={200}
-              width={200}
-            />
-            {(isFetching || isLoading) && (
-              <Spinner className="absolute left-1/2 top-1/2" />
+                ]}
+                className={cn(
+                  '',
+                  (isLoading || isFetching) && 'opacity-50 pointer-events-none'
+                )}
+                height={200}
+                width={200}
+              />
+            )}
+            {!hasData && !isLoading && !isFetching && (
+              <div className="p-4 text-center text-gray-500">
+                Нет данных для отображения
+              </div>
             )}
           </div>
 
-          <section>
-            {tasksStats.map((s) => (
-              <p key={s.name} className="flex gap-2">
-                <span
-                  className={cn(
-                    'rounded-full w-5 h-5 inline-block',
-                    s.value === 0 && 'opacity-50'
-                  )}
-                  style={{ backgroundColor: s.fill }}
-                />{' '}
-                {s.name}
-              </p>
-            ))}
-          </section>
+          {hasData && (
+            <section>
+              {tasksStats.map((s) => (
+                <p key={s.name} className="flex gap-2">
+                  <span
+                    className={cn(
+                      'rounded-full w-5 h-5 inline-block',
+                      s.value === 0 && 'opacity-50'
+                    )}
+                    style={{ backgroundColor: s.fill }}
+                  />{' '}
+                  {s.name}
+                </p>
+              ))}
+            </section>
+          )}
         </div>
+        {(isFetching || isLoading) && (
+          <Spinner className="absolute left-1/2 top-1/2 z-10" />
+        )}
       </ChartsCard>
     </>
   );
