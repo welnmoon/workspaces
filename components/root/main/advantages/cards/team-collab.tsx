@@ -26,7 +26,7 @@ const TeamCollaboration = ({ className }: { className?: string }) => {
       <figure className="hidden sm:block">
         <Image
           className="w-full h-auto pointer-events-none"
-          src="/images/advantages/TeamCollaboration.svg"
+          src="/images/advantages/TeamCollaboration.webp"
           alt="TeamCollaboration"
           width={459}
           height={170}
@@ -37,4 +37,3 @@ const TeamCollaboration = ({ className }: { className?: string }) => {
 };
 
 export default TeamCollaboration;
-

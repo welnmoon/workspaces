@@ -34,7 +34,7 @@ const PricingGrowth = ({ className }: { className?: string }) => {
       >
         <Image
           className="w-full h-auto pointer-events-none"
-          src="/images/advantages/PricingGrowth.svg"
+          src="/images/advantages/PricingGrowth.webp"
           alt="PricingGrowth"
           width={580}
           height={299}
@@ -45,4 +45,3 @@ const PricingGrowth = ({ className }: { className?: string }) => {
 };
 
 export default PricingGrowth;
-
