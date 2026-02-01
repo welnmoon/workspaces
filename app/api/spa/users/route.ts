@@ -14,7 +14,10 @@ export async function GET(req: Request) {
     return withCors(res, req.headers.get('origin'));
   } catch (e) {
     console.error(e);
-    return withCors(serverError('Failed to get users'), req.headers.get('origin'));
+    return withCors(
+      serverError('Failed to get users'),
+      req.headers.get('origin')
+    );
   }
 }
 
