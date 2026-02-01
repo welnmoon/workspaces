@@ -5,7 +5,15 @@ import { parseRtkError } from '../../../../shared/lib/error/parse-rtk-error';
 import { mainPaths } from '../../../../shared/api/paths';
 
 export function AdminGate() {
-  const { data: session, isLoading, isError, error } = useGetSessionQuery();
+  const {
+    data: session,
+    isLoading,
+    isError,
+    error,
+  } = useGetSessionQuery(undefined, {
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+  });
 
   if (isLoading)
     return (
@@ -20,25 +28,25 @@ export function AdminGate() {
       </div>
     );
 
-  if (!session) {
-    window.location.href = mainPaths.auth.login({
-      reason: 'unauthorized',
-      from: window.location.pathname,
-    });
-    return;
-  }
-
-  const isAdmin = session.user.platformRole === 'SYSADMIN';
-  if (!isAdmin) {
-    window.location.href = mainPaths.auth.login({
-      reason: 'forbidden',
-      from: window.location.pathname,
-    });
-    return;
-  }
-
   if (isError) {
     const parsedError = parseRtkError(error);
+
+    if (!session) {
+      window.location.href = mainPaths.auth.login({
+        reason: 'unauthorized',
+        from: window.location.pathname,
+      });
+      return;
+    }
+
+    const isAdminFromSession = session.user.platformRole === 'SYSADMIN';
+    if (!isAdminFromSession) {
+      window.location.href = mainPaths.auth.login({
+        reason: 'forbidden',
+        from: window.location.pathname,
+      });
+      return;
+    }
 
     return (
       <div>

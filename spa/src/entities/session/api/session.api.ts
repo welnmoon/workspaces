@@ -7,6 +7,7 @@ export const sessionApi = api.injectEndpoints({
       query: () => ({
         url: '/me',
       }),
+      keepUnusedDataFor: 60,
     }),
   }),
 });

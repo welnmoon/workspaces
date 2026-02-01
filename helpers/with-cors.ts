@@ -30,11 +30,17 @@ export function getCorsOrigin(origin?: string | null) {
   return SPA_ORIGIN;
 }
 
-export function withCors(res: NextResponse<unknown>, origin?: string | null) {
-  res.headers.set('Access-Control-Allow-Origin', getCorsOrigin(origin));
-  res.headers.set('Access-Control-Allow-Credentials', 'true');
-  res.headers.set('Vary', 'Origin');
-  return res;
+export function withCors(res: Response, origin?: string | null) {
+  const headers = new Headers(res.headers);
+  headers.set('Access-Control-Allow-Origin', getCorsOrigin(origin));
+  headers.set('Access-Control-Allow-Credentials', 'true');
+  headers.set('Vary', 'Origin');
+
+  return new Response(res.body, {
+    status: res.status,
+    statusText: res.statusText,
+    headers,
+  });
 }
 
 export function corsHeaders(origin?: string | null) {
