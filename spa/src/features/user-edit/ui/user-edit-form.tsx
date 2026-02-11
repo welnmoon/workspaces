@@ -23,7 +23,6 @@ const UserEditForm = (props: {
     userId: props.userId,
     initialValues: props.initialValues,
   });
-  console.log('watch', form.getValues());
 
   const isSaving = form.formState.isSubmitting || updateState.isLoading;
   const statusLabel = updateState.isError
@@ -48,7 +47,6 @@ const UserEditForm = (props: {
           title="User profile"
           description="Manage identity details and account access from a single panel."
           eyebrow="Users"
-                                                     
           actions={
             <Button type="submit" disabled={isSaving}>
               {isSaving ? 'Saving...' : 'Save changes'}

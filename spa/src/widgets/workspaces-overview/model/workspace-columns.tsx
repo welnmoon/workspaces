@@ -22,7 +22,7 @@ export const workspaceColumns: ColumnDef<WorkspaceFullDTO>[] = [
     accessorKey: 'projectsCount',
     header: ({ column }) => <SortHeader column={column} title="Projects" />,
     cell: ({ row }) => (
-      <span className="lowercase ">{row.original.projects.length}</span>
+      <span className="lowercase ">{row.original.Project.length}</span>
     ),
     enableSorting: true,
   },
@@ -30,12 +30,12 @@ export const workspaceColumns: ColumnDef<WorkspaceFullDTO>[] = [
     accessorKey: 'tasksCount',
     header: ({ column }) => <SortHeader column={column} title="Tasks" />,
     cell: ({ row }) => {
-      const doneTasks = row.original.projects.reduce(
-        (sum, p) => sum + p.tasks.filter((t) => t.status === 'DONE').length,
+      const doneTasks = row.original.Project.reduce(
+        (sum, p) => sum + p.Task.filter((t) => t.status === 'DONE').length,
         0
       );
-      const allTasks = row.original.projects.reduce(
-        (sum, p) => sum + p.tasks.length,
+      const allTasks = row.original.Project.reduce(
+        (sum, p) => sum + p.Task.length,
         0
       );
       return (
@@ -46,12 +46,12 @@ export const workspaceColumns: ColumnDef<WorkspaceFullDTO>[] = [
       );
     },
     sortingFn: (rowA, rowB) => {
-      const tasksA = rowA.original.projects.reduce(
-        (sum, p) => sum + p.tasks.length,
+      const tasksA = rowA.original.Project.reduce(
+        (sum, p) => sum + p.Task.length,
         0
       );
-      const tasksB = rowB.original.projects.reduce(
-        (sum, p) => sum + p.tasks.length,
+      const tasksB = rowB.original.Project.reduce(
+        (sum, p) => sum + p.Task.length,
         0
       );
       return tasksA - tasksB;

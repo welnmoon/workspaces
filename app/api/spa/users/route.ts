@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    // await requirePlatformRole([PlatformRole.SYSADMIN]);
+    await requirePlatformRole([PlatformRole.SYSADMIN]);
 
     // const users = await UserService.getUsers();
     // const res = ok(users);
