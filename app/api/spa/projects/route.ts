@@ -1,49 +1,17 @@
 import { requirePlatformRole } from '@/guards/require-platform-role';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
+import { proxyToNest } from '@/lib/bff/proxy-to-nest';
 import { ok, serverError } from '@/lib/http/http';
-import { prisma } from '@/lib/prisma';
 import { PlatformRole } from '@prisma/client';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     await requirePlatformRole([PlatformRole.SYSADMIN]);
 
-    const projects = await prisma.project.findMany({
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        workspaceId: true,
-        createdAt: true,
-        updatedAt: true,
-        endedAt: true,
-        workspace: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        tasks: {
-          select: {
-            id: true,
-            title: true,
-            status: true,
-          },
-        },
-        sprints: {
-          select: {
-            id: true,
-            name: true,
-            status: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
+    const res = await proxyToNest(req, '/projects');
+    if (!res.ok) return withCors(res, req.headers.get('origin'));
+    const projects = await res.json();
     return withCors(ok(projects), req.headers.get('origin'));
   } catch (error) {
     console.error(error);

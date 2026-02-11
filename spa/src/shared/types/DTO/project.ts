@@ -1,6 +1,21 @@
 import type { TaskPriority } from './task';
 import type { TaskStatus } from './workspace';
 
+// для таблиц
+export type ProjectListItemDto = {
+  id: number;
+  name: string;
+  description: string | null;
+  workspaceId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  endedAt: Date | null;
+
+  tasksTotal?: number;
+  tasksDone?: number;
+  Sprint?: { id: number; name: string }[] | null;
+};
+
 export type ProjectWorkspaceRef = {
   id: number;
   name: string;

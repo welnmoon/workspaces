@@ -9,9 +9,13 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ProjectDeleteDialog from '../../../features/project-delete/ui/project-delete-dialog';
-import type { ProjectFullDTO } from '../../../shared/types/DTO/project';
+import type { ProjectListItemDto } from '../../../shared/types/DTO/project';
 
-const ProjectEditDropdownMenu = ({ project }: { project: ProjectFullDTO }) => {
+const ProjectEditDropdownMenu = ({
+  project,
+}: {
+  project: ProjectListItemDto;
+}) => {
   const [deletingProjectId, setDeletingProjectId] = useState<number | null>(
     null
   );

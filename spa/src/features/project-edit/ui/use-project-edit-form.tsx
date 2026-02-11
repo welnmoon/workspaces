@@ -9,16 +9,26 @@ import {
   getFormStatusLabel,
   getFormStatusTone,
 } from '../../../shared/lib/form-status';
-import { useWorkspaceEdit } from '../model/use-workspace-edit';
-import type { EditWorkspace } from '../../../entities/workspace/model/schema';
+import { useProjectEdit } from '../model/use-project-edit';
+import type { EditProjectType } from '../../../entities/projects/model/schema';
 
-const WorkspaceEditForm = (props: {
-  wId: string;
-  initialValues?: EditWorkspace;
-}) => {
-  const { form, onSubmit, updateState } = useWorkspaceEdit({
-    wId: props.wId,
-    initialValues: props.initialValues,
+type Props = {
+  pId: number;
+  initialValues: EditProjectType;
+  onSuccess?: () => void;
+  isFetching?: boolean;
+};
+
+const ProjectEditForm = ({
+  pId,
+  initialValues,
+  onSuccess,
+  isFetching,
+}: Props) => {
+  const { form, onSubmit, updateState } = useProjectEdit({
+    pId,
+    initialValues,
+    onSuccess,
   });
 
   const isSaving = form.formState.isSubmitting || updateState.isLoading;
@@ -43,13 +53,11 @@ const WorkspaceEditForm = (props: {
 
   return (
     <FormProvider {...form}>
-      {JSON.stringify(updateState.error)}
       <form onSubmit={onSubmit} className="admin-form">
         <AdminFormShell
-          title="Настройки воркспейса"
-          description="Обновите название, описание и визуальные атрибуты."
-          eyebrow="Воркспейсы"
-                                                  
+          title="Проект"
+          description="Обновите основные сведения и статус проекта."
+          eyebrow="Проекты"
           actions={
             <Button type="submit" disabled={isSaving}>
               {isSaving ? 'Сохранение...' : 'Сохранить'}
@@ -66,31 +74,34 @@ const WorkspaceEditForm = (props: {
                 </span>
               </div>
               <div className="admin-form-meta__row">
-                <span className="admin-form-meta__label">ID воркспейса</span>
-                <span className="admin-form-meta__id">{props.wId}</span>
+                <span className="admin-form-meta__label">ID проекта</span>
+                <span className="admin-form-meta__id">{pId}</span>
               </div>
             </div>
           }
         >
           <AdminFormSection
-            title="Данные воркспейса"
-            description="Название, описание и изображение."
+            title="Данные проекта"
+            description="Название, описание и дата завершения."
             contentClassName="admin-form-section__content--two"
           >
             <FormInput
+              disabled={isFetching}
               name="name"
               label="Название"
-              placeholder="Например, Worknest"
+              placeholder="Например, Worknest MVP"
             />
+            {/* <FormInput
+              name="endedAt"
+              label="Дата завершения"
+              placeholder="YYYY-MM-DD"
+              type="date"
+            /> */}
             <FormInput
-              name="avatarUrl"
-              label="Аватар (URL)"
-              placeholder="https://..."
-            />
-            <FormInput
+              disabled={isFetching}
               name="description"
               label="Описание"
-              placeholder="Коротко о воркспейсе"
+              placeholder="Коротко о проекте"
               containerClassName="admin-form-field--full"
               isTextarea
             />
@@ -101,4 +112,4 @@ const WorkspaceEditForm = (props: {
   );
 };
 
-export default WorkspaceEditForm;
+export default ProjectEditForm;

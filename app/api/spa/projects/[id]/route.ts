@@ -1,16 +1,7 @@
 import { requirePlatformRole } from '@/guards/require-platform-role';
-import { parseProjectId } from '@/helpers/parse-id';
 import { corsHeaders, withCors } from '@/helpers/with-cors';
-import {
-  badRequest,
-  noContent,
-  notFound,
-  ok,
-  serverError,
-  unprocessable,
-} from '@/lib/http/http';
-import { ProjectService } from '@/lib/services/project';
-import { createProjectFormSchema } from '@/schemas/projects/create-project-form-schemas';
+import { proxyToNest } from '@/lib/bff/proxy-to-nest';
+import { ok, serverError } from '@/lib/http/http';
 import { PlatformRole } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -22,22 +13,10 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
     await requirePlatformRole([PlatformRole.SYSADMIN]);
 
-    const projectId = parseProjectId((await params).id);
-    if (projectId === null) {
-      return withCors(
-        badRequest('Invalid project id'),
-        _req.headers.get('origin')
-      );
-    }
-
-    const project = await ProjectService.getProjectByIdWithWorkspace(projectId);
-    if (!project) {
-      return withCors(
-        notFound('Project not found'),
-        _req.headers.get('origin')
-      );
-    }
-
+    const projectId = (await params).id;
+    const res = await proxyToNest(_req, `/projects/${projectId}`);
+    if (!res.ok) return withCors(res, _req.headers.get('origin'));
+    const project = await res.json();
     return withCors(ok(project), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
@@ -48,51 +27,16 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: RouteParams) {
+export async function PATCH(req: NextRequest, { params }: RouteParams) {
   try {
     await requirePlatformRole([PlatformRole.SYSADMIN]);
 
-    const projectId = parseProjectId((await params).id);
-    if (projectId === null) {
-      return withCors(
-        badRequest('Invalid project id'),
-        req.headers.get('origin')
-      );
-    }
-
-    const project = await ProjectService.getProjectById(projectId);
-    if (!project) {
-      return withCors(notFound('Project not found'), req.headers.get('origin'));
-    }
-
-    const rawBody = await req.json().catch(() => null);
-    if (!rawBody) {
-      return withCors(badRequest('Invalid JSON'), req.headers.get('origin'));
-    }
-
-    const parsed = createProjectFormSchema.partial().safeParse(rawBody);
-    if (!parsed.success) {
-      return withCors(
-        unprocessable(parsed.error.message, parsed.error.flatten()),
-        req.headers.get('origin')
-      );
-    }
-
-    if (Object.keys(parsed.data).length === 0) {
-      return withCors(badRequest('No data provided'), req.headers.get('origin'));
-    }
-
-    const payload = {
-      name: parsed.data.name ?? project.name,
-      description:
-        parsed.data.description !== undefined
-          ? parsed.data.description
-          : (project.description ?? undefined),
-    };
-
-    const updated = await ProjectService.updateProject(projectId, payload);
-
-    return withCors(ok(updated), req.headers.get('origin'));
+    const projectId = (await params).id;
+    const res = await proxyToNest(req, `/projects/${projectId}`);
+    if (!res.ok) return withCors(res, req.headers.get('origin'));
+    if (res.status === 204) return withCors(res, req.headers.get('origin'));
+    const project = await res.json();
+    return withCors(ok(project), req.headers.get('origin'));
   } catch (error) {
     console.error(error);
     return withCors(
@@ -106,24 +50,12 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
     await requirePlatformRole([PlatformRole.SYSADMIN]);
 
-    const projectId = parseProjectId((await params).id);
-    if (projectId === null) {
-      return withCors(
-        badRequest('Invalid project id'),
-        _req.headers.get('origin')
-      );
-    }
-
-    const project = await ProjectService.getProjectById(projectId);
-    if (!project) {
-      return withCors(
-        notFound('Project not found'),
-        _req.headers.get('origin')
-      );
-    }
-
-    await ProjectService.deleteProject(projectId);
-    return withCors(noContent(), _req.headers.get('origin'));
+    const projectId = (await params).id;
+    const res = await proxyToNest(_req, `/projects/${projectId}`);
+    if (!res.ok) return withCors(res, _req.headers.get('origin'));
+    if (res.status === 204) return withCors(res, _req.headers.get('origin'));
+    const project = await res.json();
+    return withCors(ok(project), _req.headers.get('origin'));
   } catch (error) {
     console.error(error);
     return withCors(
@@ -138,7 +70,7 @@ export async function OPTIONS(req: NextRequest) {
     status: 204,
     headers: {
       ...corsHeaders(req.headers.get('origin')),
-      'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, PUT, PATCH, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
     },
   });

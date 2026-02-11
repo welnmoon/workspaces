@@ -13,9 +13,15 @@ export const proxyToNest = async (req: NextRequest, nestPath: string) => {
 
   const hasBody = req.method !== 'GET' && req.method !== 'HEAD';
 
-  return fetch(target, {
+  const init: RequestInit & { duplex?: 'half' } = {
     method: req.method,
     headers,
     body: hasBody ? req.body : undefined,
-  });
+  };
+
+  if (hasBody) {
+    init.duplex = 'half';
+  }
+
+  return fetch(target, init);
 };
